@@ -45,6 +45,9 @@ MainWindow::MainWindow(QWidget *parent)
     chart->createDefaultAxes();
     chart->setTitle("Poredjenje efikasnosti");
 
+    chart->axes(Qt::Horizontal).back()->setRange(0, X_MAX_VAL);
+    chart->axes(Qt::Vertical).back()->setRange(0, Y_MAX_VAL);
+
     // Same formatting
     chart->setBackgroundVisible(false);
     chart->setPlotAreaBackgroundVisible(true);
@@ -69,6 +72,7 @@ void MainWindow::animacijaButtonAktivni(bool param_aktivnosti)
     ui->Sledeci_dugme->setEnabled(param_aktivnosti);
     ui->Zaustavi_dugme->setEnabled(param_aktivnosti);
     ui->Zapocni_dugme->setEnabled(param_aktivnosti);
+    ui->merenjeButton->setEnabled(param_aktivnosti);
 }
 
 void MainWindow::animacijaParametriButtonAktivni(bool param_aktivnosti)
@@ -122,6 +126,7 @@ void MainWindow::on_Zapocni_dugme_clicked()
 {
     ui->Zapocni_dugme->setEnabled(false);
     animacijaParametriButtonAktivni(false);
+    ui->merenjeButton->setEnabled(false);
 
     if (_pAlgoritamBaza)
         _pAlgoritamBaza->pokreniAnimaciju();
@@ -153,10 +158,31 @@ void MainWindow::on_Ispocetka_dugme_clicked()
     }
 }
 
+void MainWindow::on_tipAlgoritma_currentIndexChanged(int index)
+{
+    QString trenutniAlg = ui->tipAlgoritma->itemText(index);
+
+    if (trenutniAlg == "SA CASOVA VEZBI" || trenutniAlg == "STUDENTSKI PROJEKTI")
+    {
+        ui->datoteka_dugme->setEnabled(false);
+        ui->Nasumicni_dugme->setEnabled(false);
+        animacijaButtonAktivni(false);
+    }
+    else
+    {
+        ui->datoteka_dugme->setEnabled(true);
+        ui->Nasumicni_dugme->setEnabled(true);
+        animacijaButtonAktivni(false);
+        ui->merenjeButton->setEnabled(true);
+    }
+}
+
 /* za Chart, poredjenje. */
 void MainWindow::on_merenjeButton_clicked()
 {
     QString tipAlgoritma = ui->tipAlgoritma->currentText();
+
+    _mThread = new TimeMeasurementThread(tipAlgoritma, MIN_DIM, STEP, MAX_DIM);
 
     connect(_mThread, &TimeMeasurementThread::updateChart, this, &MainWindow::on_lineSeriesChange);
     _mThread->start();
@@ -200,6 +226,8 @@ void MainWindow::napraviNoviAlgoritam()
         connect(_pAlgoritamBaza, SIGNAL(animacijaZavrsila()), this, SLOT(na_krajuAnimacije()));
     }
 }
+
+
 
 
 

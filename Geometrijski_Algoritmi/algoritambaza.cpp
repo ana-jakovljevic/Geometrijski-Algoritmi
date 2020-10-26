@@ -68,18 +68,30 @@ void AlgoritamBaza::promeniDuzinuPauze(int duzinaPauze)
 
 bool AlgoritamBaza::updateCanvasAndBlock()
 {
-    _pCrtanje->update();
-    _pCrtanjeGL->update();
-    _semafor.acquire();
+    if (_pCrtanje) {
+        _pCrtanje->update();
+        _pCrtanjeGL->update();
+        _semafor.acquire();
+    }
     return _unistiAnimaciju;
 }
 
 std::vector<QPoint> AlgoritamBaza::generisiNasumicneTacke(int broj_tacaka)
 {
     srand(static_cast<unsigned>(time(0)));
+    int xMax;
+    int yMax;
 
-    int xMax = _pCrtanje->width()-DRAWING_BORDER;
-    int yMax = _pCrtanje->height() - DRAWING_BORDER;
+    if (_pCrtanje)
+    {
+        xMax = _pCrtanje->width()-DRAWING_BORDER;
+        yMax = _pCrtanje->height() - DRAWING_BORDER;
+    }
+    else
+    {
+        xMax = CANVAS_WIDTH;
+        yMax = CANVAS_HEIGHT;
+    }
 
     int xMin = DRAWING_BORDER;
     int yMin = DRAWING_BORDER;
