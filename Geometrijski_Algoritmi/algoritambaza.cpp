@@ -1,0 +1,107 @@
+#include "algoritambaza.h"
+#include "animacijanit.h"
+#include <fstream>
+
+void AlgoritamBaza::timerEvent(QTimerEvent */* unused */)
+{
+     _semafor.release();
+}
+
+AlgoritamBaza::AlgoritamBaza(QWidget *pCrtanje, QOpenGLWidget *pCrtanjeGL, int pauzaKoraka)
+    : QObject{}, _pauzaKoraka {pauzaKoraka},
+      _timerId{INVALID_TIMER_ID}, _semafor(0),
+      _unistiAnimaciju(false), _pNit(nullptr),
+      _pCrtanje {pCrtanje}, _pCrtanjeGL {pCrtanjeGL}
+{}
+
+void AlgoritamBaza::pokreniAnimaciju()
+{
+    delete _pNit;
+    _pNit = new AnimacijaNit(this);
+    _pNit->start();
+    _timerId = startTimer(_pauzaKoraka);
+    _pCrtanje->update();
+    _pCrtanjeGL->update();
+}
+
+void AlgoritamBaza::pauzirajIliNastaviAnimaciju()
+{
+    if (INVALID_TIMER_ID != _timerId)
+    {
+        killTimer(_timerId);
+        _timerId = INVALID_TIMER_ID;
+    }
+    else
+        _timerId = startTimer(_pauzaKoraka);
+}
+
+void AlgoritamBaza::sledeciKorakAnimacije()
+{
+    if (INVALID_TIMER_ID != _timerId)
+    {
+        killTimer(_timerId);
+        _timerId = INVALID_TIMER_ID;
+    }
+
+    _semafor.release();
+}
+
+void AlgoritamBaza::zaustaviAnimaciju()
+{
+    _unistiAnimaciju = true;
+    _semafor.release();
+    _pNit->quit();
+    _pNit->wait();
+
+    delete _pNit;
+    _pNit = nullptr;
+    _unistiAnimaciju = false;
+}
+
+void AlgoritamBaza::promeniDuzinuPauze(int duzinaPauze)
+{
+    if (INVALID_TIMER_ID != _timerId)
+        killTimer(_timerId);
+    _pauzaKoraka = duzinaPauze;
+    _timerId = startTimer(_pauzaKoraka);
+}
+
+bool AlgoritamBaza::updateCanvasAndBlock()
+{
+    _pCrtanje->update();
+    _pCrtanjeGL->update();
+    _semafor.acquire();
+    return _unistiAnimaciju;
+}
+
+std::vector<QPoint> AlgoritamBaza::generisiNasumicneTacke(int broj_tacaka)
+{
+    srand(static_cast<unsigned>(time(0)));
+
+    int xMax = _pCrtanje->width()-DRAWING_BORDER;
+    int yMax = _pCrtanje->height() - DRAWING_BORDER;
+
+    int xMin = DRAWING_BORDER;
+    int yMin = DRAWING_BORDER;
+
+    std::vector<QPoint> randomPoints;
+
+    int xDiff = xMax-xMin;
+    int yDiff = yMax-yMin;
+    for(int i=0; i < broj_tacaka; i++)
+        randomPoints.push_back(QPoint(xMin + rand()%xDiff, yMin + rand()%yDiff));
+
+    return randomPoints;
+}
+
+std::vector<QPoint> AlgoritamBaza::ucitajPodatkeIzDatoteke(std::string imeDatoteke)
+{
+    std::ifstream inputFile(imeDatoteke);
+    std::vector<QPoint> points;
+    int x, y;
+    while(inputFile >> x >> y)
+    {
+        points.emplace_back(x, y);
+    }
+    return points;
+}
