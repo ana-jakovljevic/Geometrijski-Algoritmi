@@ -9,6 +9,9 @@
 #include "timemeasurementthread.h"
 
 /* Ovde ukljuciti zaglavlja novih algoritma. */
+#include "./algoritmi_sa_vezbi/ga00_demoiscrtavanja.h"
+#include "./algoritmi_sa_vezbi/ga01_brisucaprava.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -41,6 +44,8 @@ private slots:
     void on_merenjeButton_clicked();
     void on_lineSeriesChange(double dim, double optimal, double naive);
 
+    void on_tipAlgoritma_currentIndexChanged(int index);
+
 public slots:
     void na_krajuAnimacije();
 
@@ -53,6 +58,7 @@ private:
 
 private:
     Ui::MainWindow *ui;
+
     AlgoritamBaza *_pAlgoritamBaza;
     OblastCrtanja *_pOblastCrtanja;
     OblastCrtanjaOpenGL *_pOblastCrtanjaOpenGL;

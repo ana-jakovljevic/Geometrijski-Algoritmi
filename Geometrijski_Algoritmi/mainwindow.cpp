@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
       _naivni(false)
 {
     ui->setupUi(this);
-    ui->tipAlgoritma->insertSeparator(1);
+    ui->tipAlgoritma->insertSeparator(3);
     animacijaButtonAktivni(false);
     animacijaParametriButtonAktivni(true);
 
@@ -215,6 +215,10 @@ void MainWindow::napraviNoviAlgoritam()
     QString tipAlgoritma = ui->tipAlgoritma->currentText();
 
     /* Ovde se kreiraju instance algoritama pozivom njihovih konstruktora. */
+    if (tipAlgoritma == "Demonstracija iscrtavanja")
+        _pAlgoritamBaza = new DemoIscrtavanja(_pOblastCrtanja, _pOblastCrtanjaOpenGL, _duzinaPauze, _imeDatoteke,_broj_nasumicnih_tacaka);
+    else if (tipAlgoritma == "Brisuca prava")
+        _pAlgoritamBaza = new BrisucaPrava(_pOblastCrtanja, _pOblastCrtanjaOpenGL, _duzinaPauze, _imeDatoteke,_broj_nasumicnih_tacaka);
 
     if (_pAlgoritamBaza)
     {

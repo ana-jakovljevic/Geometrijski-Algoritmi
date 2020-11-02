@@ -12,6 +12,8 @@ CONFIG += c++14
 
 SOURCES += \
     algoritambaza.cpp \
+    algoritmi_sa_vezbi/ga00_demoiscrtavanja.cpp \
+    algoritmi_sa_vezbi/ga01_brisucaprava.cpp \
     animacijanit.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -21,6 +23,8 @@ SOURCES += \
 
 HEADERS += \
     algoritambaza.h \
+    algoritmi_sa_vezbi/ga00_demoiscrtavanja.h \
+    algoritmi_sa_vezbi/ga01_brisucaprava.h \
     animacijanit.h \
     config.h \
     mainwindow.h \

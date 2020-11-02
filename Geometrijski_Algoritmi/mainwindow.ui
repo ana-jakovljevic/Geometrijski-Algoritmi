@@ -694,6 +694,16 @@
            </item>
            <item>
             <property name="text">
+             <string>Demonstracija iscrtavanja</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Brisuca prava</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
              <string>STUDENTSKI PROJEKTI</string>
             </property>
            </item>
