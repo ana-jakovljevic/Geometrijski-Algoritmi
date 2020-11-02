@@ -1,7 +1,5 @@
 #include "ga01_brisucaprava.h"
 
-#include <QPainter>
-
 BrisucaPrava::BrisucaPrava(QWidget* pCrtanje, QOpenGLWidget* pCrtanjeGL,
                            int pauzaKoraka,
                            std::string imeDatoteke,

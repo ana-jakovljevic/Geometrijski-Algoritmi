@@ -22,6 +22,7 @@
 #define ALGORITAMBAZA_H
 
 #include <QObject>
+#include <QPainter>
 #include <QSemaphore>
 #include <QWidget>
 #include <QOpenGLWidget>

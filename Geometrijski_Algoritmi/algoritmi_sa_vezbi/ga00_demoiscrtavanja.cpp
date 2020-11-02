@@ -1,7 +1,5 @@
 #include "ga00_demoiscrtavanja.h"
 
-#include <QPainter>
-
 DemoIscrtavanja::DemoIscrtavanja(QWidget* pCrtanje, QOpenGLWidget* pCrtanjeGL,
                                  int pauzaKoraka,
                                  std::string imeDatoteke,
