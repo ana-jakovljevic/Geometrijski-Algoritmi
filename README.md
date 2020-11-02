@@ -66,13 +66,15 @@ _**Da bi se pokretali Google testovi neophodno je da u root direktorijumu projek
 ## Primer podešavanja
 
 Primer podešavanja (preuzimanja) okruženja za Ubuntu:
-   * sudo apt-get install build-essential
-   * sudo apt-get install qtcreator
-   * sudo apt-get install qt5-default
+
+   * sudo apt install build-essential
+   * sudo apt install qtcreator
+   * sudo apt install qt5-default
 
 Ako charts pravi problem:
+
    * sudo apt install libqt5charts5 libqt5charts5-dev
 
 Ako okruženje prijavljuje lažna upozorenja:
-   * sudo apt install libclang-common-8-dev
 
+   * sudo apt install libclang-common-8-dev
