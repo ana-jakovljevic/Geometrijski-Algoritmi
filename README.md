@@ -11,10 +11,10 @@ Asistent: [dr Danijela Simić](www.matf.bg.ac.rs/~danijela)
 
 **Inicijalna podešavanja**
 
-   * **Instalirati Qt i git**
+   * **Instalirati Qt i git (detaljnije na dnu)**
    * **Napraviti nalog na bitbucket-u**
    * **[Upisati nalog u tabelu:](https://docs.google.com/spreadsheets/d/1S-QJQNRnt59KoZLHLpdVfhZbjv8NLtsucuAXb112wHg/edit?usp=sharing)** (bez obzira što još uvek nemate izabrane projekte, upišite ime, prezime i korisničko ime)
-   * **Napraviti folder na lokalnom računaru**, pozicionirati se u folder i klonirati repozirotijum komandom ```git clone https://danijela_simic@bitbucket.org/geoalg1819/c.git```
+   * **Napraviti folder na lokalnom računaru**, pozicionirati se u folder i klonirati repozirotijum komandom ```git clone https://bitbucket.org/geoalg2021/velikiseminarski```
 
 [Link do šablona za projektnu dokumentaciju.](https://docs.google.com/document/d/1m8cPjdLozvlJ_rWD65epozbCq894KYWkZ6jXciUtN38/edit?usp=sharing)
 
@@ -63,4 +63,16 @@ _**Potrebno je da podizete samo .cpp, .hpp/.h, .pro (ne .pro.user* niti bilo sta
 
 _**Da bi se pokretali Google testovi neophodno je da u root direktorijumu projekta imate klonirane googletest (git clone https://github.com/google/googletest.git) **_
 
+## Primer podešavanja
+
+Primer podešavanja (preuzimanja) okruženja za Ubuntu:
+* sudo apt-get install build-essential
+* sudo apt-get install qtcreator
+* sudo apt-get install qt5-default
+
+Ako charts pravi problem:
+* sudo apt install libqt5charts5 libqt5charts5-dev
+
+Ako okruženje prijavljuje lažna upozorenja:
+* sudo apt install libclang-common-8-dev
 
