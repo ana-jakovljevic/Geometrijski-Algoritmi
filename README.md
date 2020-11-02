@@ -65,7 +65,21 @@ _**Da bi se pokretali Google testovi neophodno je da u root direktorijumu projek
 
 ## Primer podešavanja
 
-Primer podešavanja (preuzimanja) okruženja za Ubuntu:
+Primer podešavanja (preuzimanja) git-a za Ubuntu:
+
+  * sudo apt install git
+
+Preuzimanje repozitorijuma:
+
+  * git clone https://bitbucket.org/geoalg2021/velikiseminarski
+  * cd velikiseminarski
+
+Povezivanje sa Atlassian nalogom
+
+  * git config user.name "korisničko ime iz tabele"
+  * git config user.email "povezani mejl iz tabele"
+
+Primer podešavanja (preuzimanja) Qt-a za Ubuntu:
 
    * sudo apt install build-essential
    * sudo apt install qtcreator
@@ -78,3 +92,4 @@ Ako charts pravi problem:
 Ako okruženje prijavljuje lažna upozorenja:
 
    * sudo apt install libclang-common-8-dev
+
