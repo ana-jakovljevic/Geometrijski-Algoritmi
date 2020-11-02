@@ -68,6 +68,13 @@ private:
 public:
     AlgoritamBaza(QWidget *pCrtanje, QOpenGLWidget *pCrtanjeGL, int pauzaKoraka);
 
+    /* Algoritme ne treba da bude moguce kopirati */
+    virtual ~AlgoritamBaza() = default;
+    AlgoritamBaza(const AlgoritamBaza &) = delete;
+    AlgoritamBaza(AlgoritamBaza &&) = delete;
+    AlgoritamBaza& operator=(const AlgoritamBaza &) = delete;
+    AlgoritamBaza& operator=(AlgoritamBaza &&) = delete;
+
     ///
     /// \brief pokreniAlgoritam - funkcija koju ce svaka podklasa implementirati,
     ///         a koja predstavlja izvrsavanje konkretnog algoritma
