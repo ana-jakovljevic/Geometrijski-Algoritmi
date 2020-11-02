@@ -4,16 +4,16 @@
 //#define SKIP_OPTIMAL
 //#define SKIP_NAIVE
 
-//Measurement testing params
+// Measurement testing params
 #define MIN_DIM         (3)
 #define STEP            (100)
 #define MAX_DIM         (1000)
 
-//Axes params
+// Axes params
 #define Y_MAX_VAL       (1)
 #define X_MAX_VAL       (MAX_DIM)
 
-//Velicina kanvasa
+// Velicina kanvasa
 #define CANVAS_WIDTH    (MAX_DIM)
 #define CANVAS_HEIGHT   (MAX_DIM)
 

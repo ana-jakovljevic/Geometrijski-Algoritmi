@@ -68,9 +68,10 @@ private:
     bool _naivni;
 
     /* Chart deo */
-    QLineSeries* _naiveSeries;
-    QLineSeries* _optimalSeries;
+    QLineSeries *_naiveSeries;
+    QLineSeries *_optimalSeries;
 
-    TimeMeasurementThread* _mThread;
+    TimeMeasurementThread *_mThread;
 };
+
 #endif // MAINWINDOW_H

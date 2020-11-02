@@ -10,7 +10,7 @@ class OblastCrtanjaOpenGL : public QOpenGLWidget
 {
      Q_OBJECT
 public:
-    explicit OblastCrtanjaOpenGL(QWidget* parent = 0);
+    explicit OblastCrtanjaOpenGL(QWidget *parent = nullptr);
 
     /* OpenGL podesavanja */
     void initializeGL() override;
@@ -30,8 +30,8 @@ public:
     void setYRotation(int angle);
     void setZRotation(int angle);
 
-    void mousePressEvent(QMouseEvent * event) override;
-    void mouseMoveEvent(QMouseEvent * event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
 
 private:
     AlgoritamBaza *_pAlgoritamBaza;

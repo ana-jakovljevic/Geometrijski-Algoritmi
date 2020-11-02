@@ -6,7 +6,8 @@
 class DemoIscrtavanja : public AlgoritamBaza
 {
 public:
-    DemoIscrtavanja(QWidget* pCrtanje, QOpenGLWidget* pCrtanjeGL, int pauzaKoraka, std::string imeDatoteke="",
+    DemoIscrtavanja(QWidget *pCrtanje, QOpenGLWidget *pCrtanjeGL,
+                    int pauzaKoraka, std::string imeDatoteke = "",
                     int broj_tacaka = BROJ_NASUMICNIH_TACAKA);
 
     void pokreniAlgoritam();

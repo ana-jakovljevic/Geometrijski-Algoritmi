@@ -21,7 +21,7 @@ protected:
     ///         Funkcija (preciznije event handler) u kojoj je implementirano
     ///         iscrtavanje po nasoj oblasti za crtanje.
     ///
-    void paintEvent(QPaintEvent*) override;
+    void paintEvent(QPaintEvent *) override;
 
 private:
     AlgoritamBaza *_pAlgoritamBaza;

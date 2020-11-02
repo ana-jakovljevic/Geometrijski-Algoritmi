@@ -1,7 +1,7 @@
 #include "oblastcrtanjaopengl.h"
 #include <GL/glut.h>
 
-OblastCrtanjaOpenGL::OblastCrtanjaOpenGL(QWidget* parent)
+OblastCrtanjaOpenGL::OblastCrtanjaOpenGL(QWidget *parent)
     :QOpenGLWidget(parent), _pAlgoritamBaza(nullptr), _obrisiSve(false)
 {
     xRot = 0;
@@ -11,7 +11,7 @@ OblastCrtanjaOpenGL::OblastCrtanjaOpenGL(QWidget* parent)
 
 void OblastCrtanjaOpenGL::initializeGL()
 {
-    glClearColor(0.2,0.2,0.2,0);
+    glClearColor(0.2, 0.2, 0.2, 0);
     glEnable(GL_DEPTH_TEST);
     glPointSize(5);
 }
@@ -21,7 +21,9 @@ void OblastCrtanjaOpenGL::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(1, 2, 3, 0, 0, 0, 0, 1, 0);
+    gluLookAt(1, 2, 3,
+              0, 0, 0,
+              0, 1, 0);
 
     glRotatef(xRot, 1.0, 0.0, 0.0);
     glRotatef(yRot, 0.0, 1.0, 0.0);
@@ -44,7 +46,9 @@ void OblastCrtanjaOpenGL::resizeGL(int w, int h)
     gluPerspective(45, (float)w/h, 0.01, 100.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(1,2,3,0,0,0,0,1,0);
+    gluLookAt(1, 2, 3,
+              0, 0, 0,
+              0, 1, 0);
 }
 
 void OblastCrtanjaOpenGL::postaviAlgoritamKojiSeIzvrsava(AlgoritamBaza *pAlgoritamBaza)

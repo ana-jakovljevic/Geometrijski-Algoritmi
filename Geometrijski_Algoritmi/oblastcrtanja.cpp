@@ -27,7 +27,7 @@ void OblastCrtanja::paintEvent(QPaintEvent *)
     qpainter.translate(this->rect().bottomLeft());
     qpainter.scale(1.0, -1.0);
 
-    qpainter.setRenderHint(QPainter::Antialiasing, true);
+    qpainter.setRenderHint(QPainter::Antialiasing);
 
     QPen p = qpainter.pen();
     p.setColor(Qt::black);
@@ -46,4 +46,3 @@ void OblastCrtanja::paintEvent(QPaintEvent *)
     else
         qpainter.eraseRect(0, 0, width() - 1, height() - 1);
 }
-

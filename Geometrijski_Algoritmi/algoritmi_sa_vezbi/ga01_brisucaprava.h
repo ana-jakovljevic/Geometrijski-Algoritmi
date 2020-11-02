@@ -6,7 +6,8 @@
 class BrisucaPrava : public AlgoritamBaza
 {
 public:
-    BrisucaPrava(QWidget* pCrtanje, QOpenGLWidget* pCrtanjeGL, int pauzaKoraka, std::string imeDatoteke="",
+    BrisucaPrava(QWidget *pCrtanje, QOpenGLWidget *pCrtanjeGL,
+                 int pauzaKoraka, std::string imeDatoteke = "",
                  int broj_tacaka = BROJ_NASUMICNIH_TACAKA);
 
     void pokreniAlgoritam();

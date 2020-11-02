@@ -9,7 +9,7 @@
 #include "ga01_brisucaprava.h"
 
 TimeMeasurementThread::TimeMeasurementThread(QString tipAlgoritma, int minValue, int step, int maxValue)
-    :QThread (), _algorithmType(tipAlgoritma), _minValue(minValue), _step(step), _maxValue(maxValue)
+    : QThread(), _algorithmType(tipAlgoritma), _minValue(minValue), _step(step), _maxValue(maxValue)
 {
 }
 
@@ -18,7 +18,7 @@ void TimeMeasurementThread::run()
     clock_t begin, end;
     double optimalTime, naiveTime;
 
-    AlgoritamBaza* pAlgorithm = nullptr;
+    AlgoritamBaza *pAlgorithm = nullptr;
 
     /* _i_ je broj nasumicnih tacaka.
      * Kada se radi poredjenje, onda se instancira algoritam sa _i_ nasumicnih tacaka
@@ -31,7 +31,6 @@ void TimeMeasurementThread::run()
         /* Ovde kreirati instancu klase algoritma. */
         if (_algorithmType == "Demonstracija iscrtavanja")
             pAlgorithm = new DemoIscrtavanja(nullptr, nullptr, 0, "", i);
-
 
         if(pAlgorithm)
         {
@@ -52,7 +51,7 @@ void TimeMeasurementThread::run()
 #else
             naiveTime = 0;
 #endif
-            // std::cout << "Zavrsio oba poziva, stigao do crtanja" <<std::endl;
+            // std::cout << "Zavrsio oba poziva, stigao do crtanja" << std::endl;
             emit updateChart(i, optimalTime, naiveTime);
             delete pAlgorithm;
             pAlgorithm = nullptr;

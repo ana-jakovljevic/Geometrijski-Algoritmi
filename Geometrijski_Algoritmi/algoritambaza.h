@@ -1,6 +1,6 @@
 ///
 /// Svaki algoritam koji cemo implementirati treba da:
-/// 1. Nasledi AlgorithmBase (koji predstavlja apstrakciju koja vodi racuna o animaciji i iscrtavanju)
+/// 1. Nasledi AlgoritamBaza (koji predstavlja apstrakciju koja vodi racuna o animaciji i iscrtavanju)
 /// 2. Da implementira metod "pokreniAlgoritam()" u kom ce biti implementacija algoritma.
 /// 3. Da implementira metod "crtajAlgoritam()" u kom ce biti implementirano iscrtavanje
 ///
@@ -59,12 +59,14 @@ private:
     ///     U njoj samo oslobadjamo semafor i na taj nacin omogucavamo da se predje na sledeci
     ///     korak algoritma
     /// \param event
-    /// The QTimer class provides a high-level programming interface for timers. To use it, create a QTimer, connect its timeout() signal to the appropriate slots, and call start(). From then on, it will emit the timeout() signal at constant intervals.
+    /// The QTimer class provides a high-level programming interface for timers. To use it, create a QTimer,
+    /// connect its timeout() signal to the appropriate slots, and call start(). From then on, it will emit
+    /// the timeout() signal at constant intervals.
     ///
     void timerEvent(QTimerEvent */* unused */);
 
 public:
-    AlgoritamBaza(QWidget* pCrtanje, QOpenGLWidget *pCrtanjeGL, int pauzaKoraka);
+    AlgoritamBaza(QWidget *pCrtanje, QOpenGLWidget *pCrtanjeGL, int pauzaKoraka);
 
     ///
     /// \brief pokreniAlgoritam - funkcija koju ce svaka podklasa implementirati,
@@ -82,7 +84,6 @@ public:
     ///     2. Pokrece tajmer
     ///
     void pokreniAnimaciju();
-
 
     ///
     /// \brief pauzirajIliNastaviAnimaciju - pauziranja, odnosno ponovno pokretanje animacije
@@ -131,7 +132,6 @@ protected:
     /// \return true ako animacija treba da se zaustavi, false u suprotnom
     ///
     bool updateCanvasAndBlock();
-
 
     std::vector<QPoint> generisiNasumicneTacke(int broj_tacaka = BROJ_NASUMICNIH_TACAKA);
     std::vector<QPoint> ucitajPodatkeIzDatoteke(std::string imeDatoteke);

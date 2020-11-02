@@ -8,10 +8,10 @@ void AlgoritamBaza::timerEvent(QTimerEvent */* unused */)
 }
 
 AlgoritamBaza::AlgoritamBaza(QWidget *pCrtanje, QOpenGLWidget *pCrtanjeGL, int pauzaKoraka)
-    : QObject{}, _pauzaKoraka {pauzaKoraka},
+    : QObject{}, _pauzaKoraka{pauzaKoraka},
       _timerId{INVALID_TIMER_ID}, _semafor(0),
       _unistiAnimaciju(false), _pNit(nullptr),
-      _pCrtanje {pCrtanje}, _pCrtanjeGL {pCrtanjeGL}
+      _pCrtanje{pCrtanje}, _pCrtanjeGL{pCrtanjeGL}
 {}
 
 void AlgoritamBaza::pokreniAnimaciju()
@@ -84,7 +84,7 @@ std::vector<QPoint> AlgoritamBaza::generisiNasumicneTacke(int broj_tacaka)
 
     if (_pCrtanje)
     {
-        xMax = _pCrtanje->width()-DRAWING_BORDER;
+        xMax = _pCrtanje->width() - DRAWING_BORDER;
         yMax = _pCrtanje->height() - DRAWING_BORDER;
     }
     else
@@ -101,7 +101,7 @@ std::vector<QPoint> AlgoritamBaza::generisiNasumicneTacke(int broj_tacaka)
     int xDiff = xMax-xMin;
     int yDiff = yMax-yMin;
     for(int i=0; i < broj_tacaka; i++)
-        randomPoints.push_back(QPoint(xMin + rand()%xDiff, yMin + rand()%yDiff));
+        randomPoints.emplace_back(xMin + rand()%xDiff, yMin + rand()%yDiff);
 
     return randomPoints;
 }
@@ -112,8 +112,6 @@ std::vector<QPoint> AlgoritamBaza::ucitajPodatkeIzDatoteke(std::string imeDatote
     std::vector<QPoint> points;
     int x, y;
     while(inputFile >> x >> y)
-    {
         points.emplace_back(x, y);
-    }
     return points;
 }

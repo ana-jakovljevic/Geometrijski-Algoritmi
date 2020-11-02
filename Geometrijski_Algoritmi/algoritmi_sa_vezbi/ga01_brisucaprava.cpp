@@ -1,6 +1,7 @@
 #include "ga01_brisucaprava.h"
 
-BrisucaPrava::BrisucaPrava(QWidget* pCrtanje, QOpenGLWidget* pCrtanjeGL,
+BrisucaPrava::BrisucaPrava(QWidget *pCrtanje,
+                           QOpenGLWidget *pCrtanjeGL,
                            int pauzaKoraka,
                            std::string imeDatoteke,
                            int broj_tacaka)
@@ -34,7 +35,7 @@ void BrisucaPrava::crtajAlgoritam(QPainter &painter) const
     painter.drawLine(0, _yPoz, _pCrtanje->width(), _yPoz);
 
     p.setWidth(5);
-    for(const QPoint pt : _tacke)
+    for(const QPoint &pt : _tacke)
     {
         if (pt.y() < _yPoz)
             p.setColor(Qt::red);
@@ -44,7 +45,6 @@ void BrisucaPrava::crtajAlgoritam(QPainter &painter) const
         painter.setPen(p);
         painter.drawPoint(pt);
     }
-
 }
 
 void BrisucaPrava::crtajAlgoritam3D() const

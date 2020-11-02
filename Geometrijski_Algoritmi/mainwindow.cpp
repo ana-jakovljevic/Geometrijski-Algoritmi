@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent)
     QChartView *chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
 
-    QBoxLayout* chartBoxLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+    QBoxLayout *chartBoxLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     chartBoxLayout->addWidget(chartView);
 
     ui->tab_2->setLayout(chartBoxLayout);
@@ -98,9 +98,7 @@ void MainWindow::on_datoteka_dugme_clicked()
 void MainWindow::on_Nasumicni_dugme_clicked()
 {
     if (ui->brojNasumicniTacaka->text() != "" )
-    {
         _broj_nasumicnih_tacaka = ui->brojNasumicniTacaka->text().toInt();
-    }
 
     napraviNoviAlgoritam();
     animacijaButtonAktivni(true);
@@ -190,7 +188,6 @@ void MainWindow::on_merenjeButton_clicked()
 
 void MainWindow::on_lineSeriesChange(double dim, double optimal, double naive)
 {
-
     _optimalSeries->append(dim, optimal);
     _naiveSeries->append(dim, naive);
 }
@@ -216,9 +213,9 @@ void MainWindow::napraviNoviAlgoritam()
 
     /* Ovde se kreiraju instance algoritama pozivom njihovih konstruktora. */
     if (tipAlgoritma == "Demonstracija iscrtavanja")
-        _pAlgoritamBaza = new DemoIscrtavanja(_pOblastCrtanja, _pOblastCrtanjaOpenGL, _duzinaPauze, _imeDatoteke,_broj_nasumicnih_tacaka);
+        _pAlgoritamBaza = new DemoIscrtavanja(_pOblastCrtanja, _pOblastCrtanjaOpenGL, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
     else if (tipAlgoritma == "Brisuca prava")
-        _pAlgoritamBaza = new BrisucaPrava(_pOblastCrtanja, _pOblastCrtanjaOpenGL, _duzinaPauze, _imeDatoteke,_broj_nasumicnih_tacaka);
+        _pAlgoritamBaza = new BrisucaPrava(_pOblastCrtanja, _pOblastCrtanjaOpenGL, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
 
     if (_pAlgoritamBaza)
     {
@@ -227,11 +224,6 @@ void MainWindow::napraviNoviAlgoritam()
         else
             _pOblastCrtanjaOpenGL->postaviAlgoritamKojiSeIzvrsava(_pAlgoritamBaza);
 
-        connect(_pAlgoritamBaza, SIGNAL(animacijaZavrsila()), this, SLOT(na_krajuAnimacije()));
+        connect(_pAlgoritamBaza, &AlgoritamBaza::animacijaZavrsila, this, &MainWindow::na_krajuAnimacije);
     }
 }
-
-
-
-
-

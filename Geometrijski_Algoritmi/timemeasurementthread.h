@@ -3,7 +3,7 @@
 
 #include <QThread>
 
-/*QChart*/
+/* QChart */
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
 
