@@ -32,7 +32,7 @@ void OblastCrtanjaOpenGL::paintGL()
     if (_obrisiSve == false)
     {
         if (_pAlgoritamBaza)
-            _pAlgoritamBaza->crtajAlgoritam3D();
+            _pAlgoritamBaza->crtajAlgoritam();
     }
     else
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

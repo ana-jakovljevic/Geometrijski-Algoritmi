@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
       _naivni(false)
 {
     ui->setupUi(this);
-    ui->tipAlgoritma->insertSeparator(3);
+    ui->tipAlgoritma->insertSeparator(4);
     animacijaButtonAktivni(false);
     animacijaParametriButtonAktivni(true);
 
@@ -211,18 +211,19 @@ void MainWindow::napraviNoviAlgoritam()
 
     QString tipAlgoritma = ui->tipAlgoritma->currentText();
 
-    /* Ovde se kreiraju instance algoritama pozivom njihovih konstruktora. */
+    /* Ovde se kreiraju instance algoritama pozivom njihovih konstruktora. Svi
+       2D algoritmi crtaju po _pOblastCrtanja, a 3D po _pOblastCrtanjaOpenGL. */
     if (tipAlgoritma == "Demonstracija iscrtavanja")
-        _pAlgoritamBaza = new DemoIscrtavanja(_pOblastCrtanja, _pOblastCrtanjaOpenGL, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
+        _pAlgoritamBaza = new DemoIscrtavanja(_pOblastCrtanja, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
     else if (tipAlgoritma == "Brisuca prava")
-        _pAlgoritamBaza = new BrisucaPrava(_pOblastCrtanja, _pOblastCrtanjaOpenGL, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
+        _pAlgoritamBaza = new BrisucaPrava(_pOblastCrtanja, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
+    else if (tipAlgoritma == "3D iscrtavanje")
+        _pAlgoritamBaza = new Discrtavanje(_pOblastCrtanjaOpenGL, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
 
     if (_pAlgoritamBaza)
     {
-        if (_pAlgoritamBaza->is_3D() == false)
-            _pOblastCrtanja->postaviAlgoritamKojiSeIzvrsava(_pAlgoritamBaza);
-        else
-            _pOblastCrtanjaOpenGL->postaviAlgoritamKojiSeIzvrsava(_pAlgoritamBaza);
+        _pOblastCrtanja->postaviAlgoritamKojiSeIzvrsava(_pAlgoritamBaza);
+        _pOblastCrtanjaOpenGL->postaviAlgoritamKojiSeIzvrsava(_pAlgoritamBaza);
 
         connect(_pAlgoritamBaza, &AlgoritamBaza::animacijaZavrsila, this, &MainWindow::na_krajuAnimacije);
     }

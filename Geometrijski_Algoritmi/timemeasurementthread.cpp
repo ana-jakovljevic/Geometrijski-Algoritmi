@@ -7,6 +7,7 @@
 /* Ovde ukluciti zaglavlja novih algoritama. */
 #include "ga00_demoiscrtavanja.h"
 #include "ga01_brisucaprava.h"
+#include "ga02_3discrtavanje.h"
 
 TimeMeasurementThread::TimeMeasurementThread(QString tipAlgoritma, int minValue, int step, int maxValue)
     : QThread(), _algorithmType(tipAlgoritma), _minValue(minValue), _step(step), _maxValue(maxValue)
@@ -30,7 +31,7 @@ void TimeMeasurementThread::run()
 
         /* Ovde kreirati instancu klase algoritma. */
         if (_algorithmType == "Demonstracija iscrtavanja")
-            pAlgorithm = new DemoIscrtavanja(nullptr, nullptr, 0, "", i);
+            pAlgorithm = new DemoIscrtavanja(nullptr, 0, "", i);
 
         if(pAlgorithm)
         {

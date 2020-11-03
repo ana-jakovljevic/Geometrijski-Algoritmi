@@ -1,11 +1,10 @@
 #include "ga01_brisucaprava.h"
 
 BrisucaPrava::BrisucaPrava(QWidget *pCrtanje,
-                           QOpenGLWidget *pCrtanjeGL,
                            int pauzaKoraka,
                            std::string imeDatoteke,
                            int broj_tacaka)
-    :AlgoritamBaza(pCrtanje, pCrtanjeGL, pauzaKoraka), _yPoz(0)
+    :AlgoritamBaza(pCrtanje, pauzaKoraka), _yPoz(0)
 {
     if (imeDatoteke == "")
       _tacke = generisiNasumicneTacke(broj_tacaka);
@@ -24,15 +23,17 @@ void BrisucaPrava::pokreniAlgoritam()
     emit animacijaZavrsila();
 }
 
-void BrisucaPrava::crtajAlgoritam(QPainter &painter) const
+void BrisucaPrava::crtajAlgoritam(QPainter *painter) const
 {
-    QPen p = painter.pen();
+    if (!painter) return;
+
+    QPen p = painter->pen();
     p.setColor(Qt::magenta);
     p.setWidth(2);
     p.setCapStyle(Qt::RoundCap);
 
-    painter.setPen(p);
-    painter.drawLine(0, _yPoz, _pCrtanje->width(), _yPoz);
+    painter->setPen(p);
+    painter->drawLine(0, _yPoz, _pCrtanje->width(), _yPoz);
 
     p.setWidth(5);
     for(const QPoint &pt : _tacke)
@@ -42,22 +43,12 @@ void BrisucaPrava::crtajAlgoritam(QPainter &painter) const
         else
             p.setColor(Qt::black);
 
-        painter.setPen(p);
-        painter.drawPoint(pt);
+        painter->setPen(p);
+        painter->drawPoint(pt);
     }
-}
-
-void BrisucaPrava::crtajAlgoritam3D() const
-{
-
 }
 
 void BrisucaPrava::pokreniNaivniAlgoritam()
 {
 
-}
-
-bool BrisucaPrava::is_3D() const
-{
-    return false;
 }

@@ -7,11 +7,11 @@ void AlgoritamBaza::timerEvent(QTimerEvent */* unused */)
      _semafor.release();
 }
 
-AlgoritamBaza::AlgoritamBaza(QWidget *pCrtanje, QOpenGLWidget *pCrtanjeGL, int pauzaKoraka)
+AlgoritamBaza::AlgoritamBaza(QWidget *pCrtanje, int pauzaKoraka)
     : QObject{}, _pauzaKoraka{pauzaKoraka},
       _timerId{INVALID_TIMER_ID}, _semafor(0),
       _unistiAnimaciju(false), _pNit(nullptr),
-      _pCrtanje{pCrtanje}, _pCrtanjeGL{pCrtanjeGL}
+      _pCrtanje{pCrtanje}
 {}
 
 void AlgoritamBaza::pokreniAnimaciju()
@@ -21,7 +21,6 @@ void AlgoritamBaza::pokreniAnimaciju()
     _pNit->start();
     _timerId = startTimer(_pauzaKoraka);
     _pCrtanje->update();
-    _pCrtanjeGL->update();
 }
 
 void AlgoritamBaza::pauzirajIliNastaviAnimaciju()
@@ -70,7 +69,6 @@ bool AlgoritamBaza::updateCanvasAndBlock()
 {
     if (_pCrtanje) {
         _pCrtanje->update();
-        _pCrtanjeGL->update();
         _semafor.acquire();
     }
     return _unistiAnimaciju;

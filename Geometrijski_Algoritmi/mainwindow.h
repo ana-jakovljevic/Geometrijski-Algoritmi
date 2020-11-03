@@ -11,6 +11,7 @@
 /* Ovde ukljuciti zaglavlja novih algoritma. */
 #include "ga00_demoiscrtavanja.h"
 #include "ga01_brisucaprava.h"
+#include "ga02_3discrtavanje.h"
 
 
 QT_BEGIN_NAMESPACE

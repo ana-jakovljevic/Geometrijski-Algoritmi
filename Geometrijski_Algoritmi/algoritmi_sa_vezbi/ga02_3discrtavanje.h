@@ -1,12 +1,13 @@
-#ifndef BRISUCAPRAVA_H
-#define BRISUCAPRAVA_H
+#ifndef DISCRTAVANJE_H
+#define DISCRTAVANJE_H
+
 
 #include "algoritambaza.h"
 
-class BrisucaPrava : public AlgoritamBaza
+class Discrtavanje : public AlgoritamBaza
 {
 public:
-    BrisucaPrava(QWidget *pCrtanje,
+    Discrtavanje(QWidget *pCrtanje,
                  int pauzaKoraka,
                  std::string imeDatoteke = "",
                  int broj_tacaka = BROJ_NASUMICNIH_TACAKA);
@@ -14,10 +15,11 @@ public:
     void pokreniAlgoritam();
     void crtajAlgoritam(QPainter *painter) const;
     void pokreniNaivniAlgoritam();
+    std::vector<QVector3D> generisiNasumicneTacke(int broj_tacaka = BROJ_NASUMICNIH_TACAKA);
 
 private:
-    std::vector<QPoint> _tacke;
-    int _yPoz;
+    std::vector<QVector3D> _tacke;
+    unsigned int _n;
 };
 
-#endif // BRISUCAPRAVA_H
+#endif // DISCRTAVANJE_H

@@ -41,7 +41,7 @@ void OblastCrtanja::paintEvent(QPaintEvent *)
         qpainter.drawRect(0, 0, width() - 1, height() - 1);
 
         if (_pAlgoritamBaza)
-            _pAlgoritamBaza->crtajAlgoritam(qpainter);
+            _pAlgoritamBaza->crtajAlgoritam(&qpainter);
     }
     else
         qpainter.eraseRect(0, 0, width() - 1, height() - 1);

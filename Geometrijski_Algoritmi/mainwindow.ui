@@ -704,6 +704,11 @@
            </item>
            <item>
             <property name="text">
+             <string>3D iscrtavanje</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
              <string>STUDENTSKI PROJEKTI</string>
             </property>
            </item>

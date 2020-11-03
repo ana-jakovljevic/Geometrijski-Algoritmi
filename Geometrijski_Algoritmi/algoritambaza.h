@@ -1,8 +1,9 @@
 ///
 /// Svaki algoritam koji cemo implementirati treba da:
-/// 1. Nasledi AlgoritamBaza (koji predstavlja apstrakciju koja vodi racuna o animaciji i iscrtavanju)
-/// 2. Da implementira metod "pokreniAlgoritam()" u kom ce biti implementacija algoritma.
-/// 3. Da implementira metod "crtajAlgoritam()" u kom ce biti implementirano iscrtavanje
+/// 1. Nasledi AlgoritamBaza (koji predstavlja apstrakciju koja vodi racuna o animaciji i iscrtavanju).
+/// 2. Implementira metod "pokreniAlgoritam()" u kom ce biti implementacija algoritma.
+/// 3. Implementira metod "crtajAlgoritam()" u kom ce biti implementirano iscrtavanje.
+/// 4. Implementira metod "pokreniNaivniAlgoritam()" za potrebe poredjenja performansi.
 ///
 /// Svaki put kada se promeni stanje algoritma (kada je potrebno promeniti crtez),
 /// potrebno je pozvati metod AlgoritamBaza_updateCanvasAndBlock();
@@ -66,7 +67,7 @@ private:
     void timerEvent(QTimerEvent */* unused */);
 
 public:
-    AlgoritamBaza(QWidget *pCrtanje, QOpenGLWidget *pCrtanjeGL, int pauzaKoraka);
+    AlgoritamBaza(QWidget *pCrtanje, int pauzaKoraka);
 
     /* Algoritme ne treba da bude moguce kopirati */
     virtual ~AlgoritamBaza() = default;
@@ -80,10 +81,8 @@ public:
     ///         a koja predstavlja izvrsavanje konkretnog algoritma
     ///
     virtual void pokreniAlgoritam() = 0;
-    virtual void crtajAlgoritam(QPainter &painter) const = 0;
-    virtual void crtajAlgoritam3D() const = 0;
+    virtual void crtajAlgoritam(QPainter *painter = nullptr) const = 0;
     virtual void pokreniNaivniAlgoritam() = 0;
-    virtual bool is_3D() const = 0;
 
     ///
     /// \brief pokreniAnimaciju - funkcija za pokretanje animacije
@@ -129,7 +128,6 @@ protected:
     /// \brief _pCrtanje - oblast crtanja
     ///
     QWidget *_pCrtanje;
-    QOpenGLWidget *_pCrtanjeGL;
 
     ///
     /// \brief updateCanvasAndBlock - azuriranje crteza i blokiranje dok se semafor ne oslobodi
