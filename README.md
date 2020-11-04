@@ -69,10 +69,15 @@ Primer podešavanja (preuzimanja) git-a za Ubuntu:
 
   * sudo apt install git
 
-Preuzimanje repozitorijuma:
+Preuzimanje repozitorijuma i Google testova:
 
   * git clone https://bitbucket.org/geoalg2021/velikiseminarski
   * cd velikiseminarski
+  * git clone https://github.com/google/googletest
+
+Prezentacija o jediničnim testovima:
+
+  * http://poincare.matf.bg.ac.rs/~asimic/2017/ga/7/UnitTests.pdf
 
 Povezivanje sa Atlassian nalogom
 

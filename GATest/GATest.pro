@@ -14,21 +14,30 @@ QT += core gui charts widgets opengl
 # Greske se traze i ispravljaju u debug modu, ne u release modu.
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
-HEADERS +=     \
+HEADERS += \
     ../Geometrijski_Algoritmi/algoritambaza.h \
     ../Geometrijski_Algoritmi/animacijanit.h \
     ../Geometrijski_Algoritmi/config.h \
     ../Geometrijski_Algoritmi/oblastcrtanja.h \
     ../Geometrijski_Algoritmi/timemeasurementthread.h \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga00_demoiscrtavanja.h \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga01_brisucaprava.h \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga02_3discrtavanje.h
 
+INCLUDEPATH += \
+    ../Geometrijski_Algoritmi \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/
 
-INCLUDEPATH += ../Geometrijski_Algoritmi
 win32 {
 INCLUDEPATH += \
     $$(BOOST_FOLDER_LOCATION)
 }
-SOURCES +=     main.cpp \
+
+SOURCES += main.cpp \
     ../Geometrijski_Algoritmi/algoritambaza.cpp \
     ../Geometrijski_Algoritmi/animacijanit.cpp \
     ../Geometrijski_Algoritmi/oblastcrtanja.cpp \
     ../Geometrijski_Algoritmi/timemeasurementthread.cpp \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga00_demoiscrtavanja.cpp \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga01_brisucaprava.cpp \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga02_3discrtavanje.cpp
