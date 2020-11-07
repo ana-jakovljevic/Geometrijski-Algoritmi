@@ -6,13 +6,16 @@ LIBS += -lglut -lGLU
 
 CONFIG += c++14
 
-INCLUDEPATH += $$PWD/algoritmi_sa_vezbi
+INCLUDEPATH += \
+    $$PWD/algoritmi_sa_vezbi \
+    $$PWD/algoritmi_studentski_projekti
 
 SOURCES += \
     algoritambaza.cpp \
     algoritmi_sa_vezbi/ga00_demoiscrtavanja.cpp \
     algoritmi_sa_vezbi/ga01_brisucaprava.cpp \
     algoritmi_sa_vezbi/ga02_3discrtavanje.cpp \
+    algoritmi_studentski_projekti/ga06_presekPravougaonika.cpp \
     animacijanit.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -25,6 +28,7 @@ HEADERS += \
     algoritmi_sa_vezbi/ga00_demoiscrtavanja.h \
     algoritmi_sa_vezbi/ga01_brisucaprava.h \
     algoritmi_sa_vezbi/ga02_3discrtavanje.h \
+    algoritmi_studentski_projekti/ga06_presekPravougaonika.h \
     animacijanit.h \
     config.h \
     mainwindow.h \

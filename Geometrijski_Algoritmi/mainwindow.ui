@@ -712,6 +712,11 @@
              <string>STUDENTSKI PROJEKTI</string>
             </property>
            </item>
+           <item>
+            <property name="text">
+             <string>Presek pravougaonika</string>
+            </property>
+           </item>
           </widget>
          </item>
         </layout>

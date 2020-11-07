@@ -219,6 +219,8 @@ void MainWindow::napraviNoviAlgoritam()
         _pAlgoritamBaza = new BrisucaPrava(_pOblastCrtanja, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
     else if (tipAlgoritma == "3D iscrtavanje")
         _pAlgoritamBaza = new Discrtavanje(_pOblastCrtanjaOpenGL, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
+    else if (tipAlgoritma == "Presek pravougaonika")
+        _pAlgoritamBaza = new PresekPravougaonika(_pOblastCrtanja, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
 
     if (_pAlgoritamBaza)
     {
