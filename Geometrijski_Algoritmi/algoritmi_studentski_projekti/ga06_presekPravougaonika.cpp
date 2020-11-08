@@ -17,8 +17,11 @@ Pravougaonik::Pravougaonik(int x, int y, int w, int h)
 /* Struktura za poredjenje pravougaonika */
 bool PravougaonikComp::operator()(const Pravougaonik *l, const Pravougaonik *d) const
 {
+    /* Odustajanje u slucaju greske */
+    if (!l && !d) {
+        return false;
     /* Manji je levlji pravougaonik */
-    if (l->xLevo != d->xLevo) {
+    } else if (l->xLevo != d->xLevo) {
         return l->xLevo < d->xLevo;
     /* Manji je levlji pravougaonik */
     } else if (l->xDesno != d->xDesno) {
@@ -168,6 +171,40 @@ void PresekPravougaonika::pokreniNaivniAlgoritam()
 
     /* Ciscenje reda dogadjaja */
     _dogadjaji.clear();
+}
+
+/* Provera da li postoji presek para pravougaonika */
+bool PresekPravougaonika::sekuSe(const Pravougaonik *p1, const Pravougaonik *p2)
+{
+    /* Odustajanje u slucaju greske */
+    if (!p1 || !p2) return false;
+
+    /* Izdvajanje presecnog pravougaonika */
+    const auto presek = *p1 & *p2;
+
+    /* Provera da li je sve u redu */
+    return presek.width() && presek.height();
+}
+
+/* Kvadratni algoritam grube sile */
+void PresekPravougaonika::pokreniAlgoritamGrubeSile()
+{
+    /* Ciscenje skupa preseka */
+    _preseci.clear();
+
+    /* Uporedjivanje pravougaonika u parovima */
+    for (auto i = 0ul; i < _n; i++) {
+        auto *p1 = _pravougaonici[i];
+        for (auto j = i+1; j < _n; j++) {
+            auto *p2 = _pravougaonici[j];
+
+            /* Odredjivanje preseka i dodavanje
+             * u skup ako postoji (nije prazan) */
+            if (sekuSe(p1, p2)) {
+                _preseci.emplace(p1, p2);
+            }
+        }
+    }
 }
 
 /* Pravljenje slucajnih pravougaonika */

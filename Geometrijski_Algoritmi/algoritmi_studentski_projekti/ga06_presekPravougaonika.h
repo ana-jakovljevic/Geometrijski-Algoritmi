@@ -63,8 +63,8 @@ struct IntervalUpdatePolicy {
     bool imaPreseka(const Pravougaonik *i1,
                     CIterator i2)
     {
-        return i1->xLevo <= (**i2)->xDesno &&
-               (**i2)->xLevo <= i1->xDesno;
+        return i1->xLevo < (**i2)->xDesno &&
+               (**i2)->xLevo < i1->xDesno;
     }
 
     /* Trazenje intervala u podstablu */
@@ -79,7 +79,7 @@ struct IntervalUpdatePolicy {
         /* Hvatanje preseka sa korenom */
         if (imaPreseka(i, it)) {
             /* Izdvajanje pravougaonika */
-            auto* p = **it;
+            auto *p = **it;
 
             /* Komparator pravougaonika */
             PravougaonikComp pc;
@@ -211,6 +211,10 @@ public:
     void crtajAlgoritam(QPainter *) const final;
     void pokreniNaivniAlgoritam() final;
 
+    /* Dodatni metod za grubu silu */
+    inline bool sekuSe(const Pravougaonik *, const Pravougaonik *);
+    void pokreniAlgoritamGrubeSile();
+
 private:
     /* Rad sa podacima, inicijalizacija */
     void generisiNasumicnePravougaonike(int);
@@ -220,14 +224,14 @@ private:
     Pravougaonik **_pravougaonici = nullptr;
     unsigned int _n = 0;
 
-    /* Pomocne metode za strategiju podeli pa vladaj */
+    /* Pomocni metodi za strategiju podeli pa vladaj */
     inline bool proveriIndeks(unsigned int, unsigned int);
     inline void azurirajIndeks(unsigned int &,
                                unsigned int,
                                KandidatS);
     inline int uzmiIvicu(const VertIvica &);
 
-    /* Glavne metode za strategiju podeli pa vladaj */
+    /* Glavni metodi za strategiju podeli pa vladaj */
     void stab(unsigned int, unsigned int,
               KandidatS, KandidatS);
     void detect(unsigned int, unsigned int);
