@@ -7,7 +7,7 @@
 // Measurement testing params
 #define MIN_DIM         (3)
 #define STEP            (100)
-#define MAX_DIM         (1000)
+#define MAX_DIM         (1003)
 
 // Axes params
 #define Y_MAX_VAL       (1)

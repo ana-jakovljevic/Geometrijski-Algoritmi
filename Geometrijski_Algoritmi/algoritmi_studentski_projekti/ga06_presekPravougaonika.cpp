@@ -103,11 +103,18 @@ PresekPravougaonika::~PresekPravougaonika()
         delete _pravougaonici[i];
     }
     delete [] _pravougaonici;
+    delete [] _V;
+    delete [] _H;
+    delete [] _Hh;
 }
 
-/* Algoritam zasnovan na strategiji podeli pa vladaj */
+/* Algoritam zasnovan na strategiji podeli pa vladaj, pogledati
+ * https://www.widelands.org/~sirver/wl/141229_devail_rects.pdf */
 void PresekPravougaonika::pokreniAlgoritam()
 {
+    /* Prijavljivanje svih preseka u paru */
+    report();
+
     /* Obavestavanje pozivaoca o finalizovanoj animaciji */
     emit animacijaZavrsila();
 }
@@ -205,4 +212,50 @@ void PresekPravougaonika::ucitajPodatkeIzDatoteke(std::string imeDatoteke)
         datoteka >> x >> y >> w >> h;
         _pravougaonici[i] = new Pravougaonik(x, y, w, h);
     }
+}
+
+/* Odredjivanje preseka izmedju najuzih kandidata */
+void PresekPravougaonika::stab(unsigned int, unsigned int, unsigned int, unsigned int)
+{
+
+}
+
+/* Pronalazenje preseka u potprostoru [l, d) */
+void PresekPravougaonika::detect(unsigned int l, unsigned int d)
+{
+    /* Nema preseka ako je samo jedan pravougaonik */
+    if (d-l < 2) return;
+}
+
+/* Prijavljivanje svih preseka u paru */
+void PresekPravougaonika::report()
+{
+    /* Pravljenje i sortiranje niza vertikalnih ivica */
+    VertIvica V[2*_n];
+    for (auto i = 0ul; i < _n; i++) {
+        V[2*i] = std::make_pair(_pravougaonici[i]->xLevo, _pravougaonici[i]);
+        V[2*i+1] = std::make_pair(_pravougaonici[i]->xDesno, _pravougaonici[i]);
+    }
+    std::sort(V, V+2*_n);
+
+    /* Uproscavanje gornjeg rezultata na pravougaonike */
+    _V = new Pravougaonik *[2*_n];
+    for (auto i = 0ul; i < 2*_n; i++) {
+        _V[i] = V[i].second;
+    }
+
+    /* Pravljenje i sortiranje niza pravougaonika
+     * posmatranih kao vertikalnih intervala */
+    _H = new Pravougaonik *[2*_n];
+    for (auto i = 0ul; i < _n; i++) {
+        _H[i] = _pravougaonici[i];
+    }
+    std::sort(_H, _H+_n, [](const auto a, const auto b)
+                           { return a->yDole < b->yDole; });
+
+    /* Pravljenje pomocnog sortiranog niza */
+    _Hh = new Pravougaonik *[2*_n];
+
+    /* Pronalazenje preseka u potprostoru */
+    detect(0, 2*_n);
 }

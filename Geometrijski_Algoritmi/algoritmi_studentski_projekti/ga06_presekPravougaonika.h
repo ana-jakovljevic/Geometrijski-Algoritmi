@@ -187,6 +187,9 @@ struct DogadjajComp {
 /* Definisanje reda dogadjaja */
 using EventQueue = std::set<Dogadjaj, DogadjajComp>;
 
+/* Definisanje vertikalne stranice */
+using VertIvica = std::pair<int, Pravougaonik *>;
+
 /* Klasa koja predstavlja algoritam */
 class PresekPravougaonika : public AlgoritamBaza {
 public:
@@ -209,10 +212,21 @@ private:
     Pravougaonik **_pravougaonici;
     unsigned int _n;
 
+    /* Funkcije za strategiju podeli pa vladaj */
+    void stab(unsigned int, unsigned int,
+              unsigned int, unsigned int);
+    void detect(unsigned int, unsigned int);
+    void report();
+
     /* Strukture za metod brisuce prave */
     EventQueue _dogadjaji;
     IntervalTree _status;
     IntersecSet _preseci;
+
+    /* Nizovi za strategiju podeli pa vladaj */
+    Pravougaonik **_V;
+    Pravougaonik **_H;
+    Pravougaonik **_Hh;
 };
 
 #endif // GA06_PRESEKPRAVOUGAONIKA_H
