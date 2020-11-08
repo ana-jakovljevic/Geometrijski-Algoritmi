@@ -70,13 +70,13 @@ bool DogadjajComp::operator()(const Dogadjaj &l, const Dogadjaj &d) const
     /* Manji je dogadjaj na visoj poziciji */
     if (l.y != d.y) {
         return l.y > d.y;
-        /* Manji je dogadjaj na levljoj poziciji */
+    /* Manji je dogadjaj na levljoj poziciji */
     } else if (l.getXLevo() != d.getXLevo()) {
         return l.getXLevo() < d.getXLevo();
-        /* Manji je dogadjaj na levljoj poziciji */
+    /* Manji je dogadjaj na levljoj poziciji */
     } else if (l.getXDesno() != d.getXDesno()) {
         return l.getXDesno() < d.getXDesno();
-        /* Manji je dogadjaj dodavanja od izbacivanja */
+    /* Manji je dogadjaj dodavanja od izbacivanja */
     } else {
         return l.tipDogadjaja < d.tipDogadjaja;
     }
@@ -136,8 +136,8 @@ void PresekPravougaonika::pokreniNaivniAlgoritam()
 {
     /* Popunjavanje niza dogadjaja */
     for (auto i = 0ul; i < _n; i++) {
-        _dogadjaji.insert(Dogadjaj(_pravougaonici[i], GORNJA));
-        _dogadjaji.insert(Dogadjaj(_pravougaonici[i], DONJA));
+        _dogadjaji.emplace(_pravougaonici[i], GORNJA);
+        _dogadjaji.emplace(_pravougaonici[i], DONJA);
     }
 
     /* Prolazak redom kroz dogadjaje */
@@ -238,7 +238,7 @@ void PresekPravougaonika::report()
     }
     std::sort(V, V+2*_n);
 
-    /* Uproscavanje gornjeg rezultata na pravougaonike */
+    /* Uproscavanje prethodnog rezultata na pravougaonike */
     _V = new Pravougaonik *[2*_n];
     for (auto i = 0ul; i < 2*_n; i++) {
         _V[i] = V[i].second;

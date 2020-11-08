@@ -7,7 +7,7 @@
 
 /* Struktura koja predstavlja pravougaonik */
 struct Pravougaonik : QRect {
-    /* Konstruktor i destruktor klase */
+    /* Konstruktori i destruktor strukture */
     Pravougaonik(QPoint &, QPoint &);
     Pravougaonik(int, int, int, int);
     virtual ~Pravougaonik() = default;
@@ -40,7 +40,6 @@ template <class CIterator,
           class Iterator,
           class, class>
 struct IntervalUpdatePolicy {
-
     /* Definisanje metapodatka kao celobrojne
      * vrednosti, posto intervalno drvo cuva
      * maksimalnu desnu tacku poddrveta */
@@ -53,13 +52,12 @@ struct IntervalUpdatePolicy {
     virtual CIterator node_begin() const = 0;
     virtual CIterator node_end() const = 0;
 
-
     /* Provera presecanja dva intervala */
     bool imaPreseka(const Pravougaonik *i1,
                     CIterator i2)
     {
-        return i1->xLevo <= (**i2)->xDesno
-               && (**i2)->xLevo <= i1->xDesno;
+        return i1->xLevo <= (**i2)->xDesno &&
+               (**i2)->xLevo <= i1->xDesno;
     }
 
     /* Trazenje intervala u podstablu */
@@ -164,7 +162,7 @@ enum TipDogadjaja {GORNJA, DONJA};
 
 /* Struktura koja predstavlja dogadjaj */
 struct Dogadjaj {
-    /* Konstruktor i destruktor klase */
+    /* Konstruktor strukture */
     Dogadjaj(Pravougaonik *, TipDogadjaja);
 
     /* Cuvanje pravougaonika i tipa */
