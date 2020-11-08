@@ -5,6 +5,9 @@
 
 #include <ext/pb_ds/assoc_container.hpp>
 
+/* Enumeracija pripadnosti skupu kandidata */
+enum class KandidatS {Sxx, S11, S12, S21, S22};
+
 /* Struktura koja predstavlja pravougaonik */
 struct Pravougaonik : QRect {
     /* Konstruktori i destruktor strukture */
@@ -15,6 +18,10 @@ struct Pravougaonik : QRect {
     /* Cuvanje intervala za brisucu pravu */
     const int xLevo, xDesno,
               yGore, yDole;
+
+    /* Cuvanje pripadnosti S skupovima
+     * kandidata za podeli pa vladaj */
+    KandidatS kS;
 };
 
 /* Struktura za poredjenje pravougaonika */
@@ -158,7 +165,7 @@ using IntervalTree = __gnu_pbds::tree<Pravougaonik *, /* nas interval */
                      IntervalUpdatePolicy>; /* nasa politika */
 
 /* Enumeracija tipa dogadjaja */
-enum TipDogadjaja {GORNJA, DONJA};
+enum class TipDogadjaja {GORNJA, DONJA};
 
 /* Struktura koja predstavlja dogadjaj */
 struct Dogadjaj {
@@ -185,8 +192,11 @@ struct DogadjajComp {
 /* Definisanje reda dogadjaja */
 using EventQueue = std::set<Dogadjaj, DogadjajComp>;
 
+/* Enumeracija tipa vertikalne ivice */
+enum class TipIvice {LEVA, DESNA};
+
 /* Definisanje vertikalne stranice */
-using VertIvica = std::pair<int, Pravougaonik *>;
+using VertIvica = std::pair<TipIvice, Pravougaonik *>;
 
 /* Klasa koja predstavlja algoritam */
 class PresekPravougaonika : public AlgoritamBaza {
@@ -211,8 +221,11 @@ private:
     unsigned int _n;
 
     /* Funkcije za strategiju podeli pa vladaj */
+    inline void azurirajIndeks(unsigned int &,
+                               unsigned int,
+                               KandidatS);
     void stab(unsigned int, unsigned int,
-              unsigned int, unsigned int);
+              KandidatS, KandidatS);
     void detect(unsigned int, unsigned int);
     void report();
 
@@ -222,7 +235,7 @@ private:
     IntersecSet _preseci;
 
     /* Nizovi za strategiju podeli pa vladaj */
-    Pravougaonik **_V;
+    VertIvica *_V;
     Pravougaonik **_H;
     Pravougaonik **_Hh;
 };
