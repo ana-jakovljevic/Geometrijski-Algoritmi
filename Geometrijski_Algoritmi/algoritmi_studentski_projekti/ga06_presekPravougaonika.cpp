@@ -113,6 +113,9 @@ PresekPravougaonika::~PresekPravougaonika()
  * https://www.widelands.org/~sirver/wl/141229_devail_rects.pdf */
 void PresekPravougaonika::pokreniAlgoritam()
 {
+    /* Ciscenje skupa preseka */
+    _preseci.clear();
+
     /* Prijavljivanje svih preseka u paru */
     report();
 
@@ -135,6 +138,9 @@ void PresekPravougaonika::crtajAlgoritam(QPainter *painter) const
 /* Algoritam zasnovan na brisucoj (pokretnoj) pravoj */
 void PresekPravougaonika::pokreniNaivniAlgoritam()
 {
+    /* Ciscenje skupa preseka */
+    _preseci.clear();
+
     /* Popunjavanje niza dogadjaja */
     for (auto i = 0ul; i < _n; i++) {
         _dogadjaji.emplace(_pravougaonici[i], TipDogadjaja::GORNJA);
@@ -159,6 +165,9 @@ void PresekPravougaonika::pokreniNaivniAlgoritam()
             _status.erase(pravougaonik);
         }
     }
+
+    /* Ciscenje reda dogadjaja */
+    _dogadjaji.clear();
 }
 
 /* Pravljenje slucajnih pravougaonika */
@@ -215,12 +224,19 @@ void PresekPravougaonika::ucitajPodatkeIzDatoteke(std::string imeDatoteke)
     }
 }
 
+/* Pomocna funkcija za proveru indeksa */
+bool PresekPravougaonika::proveriIndeks(unsigned int i,
+                                        unsigned int d)
+{
+    return i < d && _H[i];
+}
+
 /* Pomocna funkcija za azuriranje indeksa */
 void PresekPravougaonika::azurirajIndeks(unsigned int &i,
                                          unsigned int d,
                                          KandidatS k)
 {
-    while (i < d && _H[i]->kS != k) i++;
+    do i++; while (proveriIndeks(i, d) && _H[i]->kS != k);
 }
 
 /* Odredjivanje preseka najuzih kandidata; skupovi
@@ -229,16 +245,17 @@ void PresekPravougaonika::stab(unsigned int l, unsigned int d,
                                KandidatS A, KandidatS B)
 {
     /* Odredjivanje pocetnih indeksa */
-    auto i = l; azurirajIndeks(i, d, A);
-    auto j = l; azurirajIndeks(j, d, B);
+    auto i = l-1; azurirajIndeks(i, d, A);
+    auto j = l-1; azurirajIndeks(j, d, B);
 
     /* Prolazak kroz sve kandidate */
-    while (i < d && j < d) {
+    while (proveriIndeks(i, d) && proveriIndeks(j, d)) {
         /* Ako je prvi skup ispod drugog */
-        if (_H[i]->yDole <= _H[j]->yDole) {
+        if (_H[i]->yDole < _H[j]->yDole) {
             auto k = j;
             /* Registrovanje svih susednih */
-            while (k < d && _H[k]->yDole <= _H[i]->yGore) {
+            while (proveriIndeks(k, d) &&
+                   _H[k]->yDole < _H[i]->yGore) {
                 _preseci.emplace(_H[i], _H[k]);
                 azurirajIndeks(k, d, B);
             }
@@ -247,8 +264,9 @@ void PresekPravougaonika::stab(unsigned int l, unsigned int d,
         } else {
             auto k = i;
             /* Registrovanje svih susednih */
-            while (k < d && _H[k]->yDole <= _H[j]->yGore) {
-                _preseci.emplace(_H[i], _H[k]);
+            while (proveriIndeks(k, d) &&
+                   _H[k]->yDole < _H[j]->yGore) {
+                _preseci.emplace(_H[j], _H[k]);
                 azurirajIndeks(k, d, A);
             }
             azurirajIndeks(j, d, B);
@@ -256,11 +274,23 @@ void PresekPravougaonika::stab(unsigned int l, unsigned int d,
     }
 }
 
+/* Uzimanje odgovarajuce ivice pravougaonika */
+int PresekPravougaonika::uzmiIvicu(const VertIvica &ivica)
+{
+    return ivica.first == TipIvice::LEVA ?
+                ivica.second->xLevo : ivica.second->xDesno;
+}
+
 /* Pronalazenje preseka u potprostoru [l, d) */
 void PresekPravougaonika::detect(unsigned int l, unsigned int d)
 {
     /* Nema preseka ako je samo jedan pravougaonik */
     if (d-l < 2) return;
+
+    /* Podrazumevano nijedan pravougaonik nije zanimljiv */
+    for (auto i = l; i < d; i++) {
+        _V[i].second->kS = KandidatS::Sxx;
+    }
 
     /* Odredjivanje sredine intervala za podelu; ovo
      * imitira skupove V1 i V2 iz rada bez kopiranja */
@@ -272,11 +302,8 @@ void PresekPravougaonika::detect(unsigned int l, unsigned int d)
         if (_V[i].first == TipIvice::DESNA) {
             _V[i].second->kS = KandidatS::S11;
         /* Pravougaonik obuhvata desnu polovinu */
-        } else if (_V[i].second->xDesno >= _V[d-1].second->xDesno) {
+        } else if (_V[i].second->xDesno > uzmiIvicu(_V[d-1])) {
             _V[i].second->kS = KandidatS::S12;
-        /* Pravougaonik nije zanimljiv u ovom pozivu */
-        } else {
-            _V[i].second->kS = KandidatS::Sxx;
         }
     }
 
@@ -286,17 +313,19 @@ void PresekPravougaonika::detect(unsigned int l, unsigned int d)
         if (_V[i].first == TipIvice::LEVA) {
             _V[i].second->kS = KandidatS::S22;
         /* Pravougaonik obuhvata levu polovinu */
-        } else if (_V[i].second->xLevo <= _V[l].second->xLevo) {
+        } else if (_V[i].second->xLevo < uzmiIvicu(_V[l])) {
             _V[i].second->kS = KandidatS::S21;
-        /* Pravougaonik nije zanimljiv u ovom pozivu */
-        } else {
-            _V[i].second->kS = KandidatS::Sxx;
         }
     }
 
+    /* Odredjivanje preseka najuzih kandidata */
+    stab(l, d, KandidatS::S12, KandidatS::S22);
+    stab(l, d, KandidatS::S21, KandidatS::S11);
+    stab(l, d, KandidatS::S12, KandidatS::S21);
+
     /* Particionisanje niza H na H1 i H2 iz rada */
     auto H1 = l, H2 = s;
-    for (auto i = l; i < d && _H[i]; i++) {
+    for (auto i = l; proveriIndeks(i, d); i++) {
         switch (_H[i]->kS) {
         /* Neodredjeni idu u obe polovine */
         case KandidatS::Sxx:
@@ -329,11 +358,6 @@ void PresekPravougaonika::detect(unsigned int l, unsigned int d)
         _H[i] = _Hh[i];
     }
 
-    /* Odredjivanje preseka najuzih kandidata */
-    stab(l, d, KandidatS::S12, KandidatS::S22);
-    stab(l, d, KandidatS::S21, KandidatS::S11);
-    stab(l, d, KandidatS::S12, KandidatS::S21);
-
     /* Pronalazenje preseka u potprostorima */
     detect(l, s); detect(s, d);
 }
@@ -347,19 +371,16 @@ void PresekPravougaonika::report()
         _V[2*i] = std::make_pair(TipIvice::LEVA, _pravougaonici[i]);
         _V[2*i+1] = std::make_pair(TipIvice::DESNA, _pravougaonici[i]);
     }
-    std::sort(_V, _V+2*_n, [](const VertIvica &a, const VertIvica &b)
-                             /* Poredjenje odgovarajucih ivica */
-                             { const auto xA = a.first == TipIvice::LEVA ?
-                                   a.second->xLevo : a.second->xDesno;
-                               const auto xB = b.first == TipIvice::LEVA ?
-                                   b.second->xLevo : b.second->xDesno;
-                               return xA < xB; });
+    std::sort(_V, _V+2*_n, [this](const VertIvica &a, const VertIvica &b)
+                                 /* Poredjenje odgovarajucih ivica */
+                                 { return uzmiIvicu(a) < uzmiIvicu(b); });
 
     /* Pravljenje i sortiranje niza pravougaonika
      * posmatranih kao vertikalnih intervala */
     _H = new Pravougaonik *[2*_n];
     for (auto i = 0ul; i < _n; i++) {
         _H[i] = _pravougaonici[i];
+        _H[_n+i] = nullptr;
     }
     std::sort(_H, _H+_n, [](const Pravougaonik *a, const Pravougaonik *b)
                            { return a->yDole < b->yDole; });

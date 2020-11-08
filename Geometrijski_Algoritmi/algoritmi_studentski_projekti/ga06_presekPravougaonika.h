@@ -217,13 +217,17 @@ private:
     void ucitajPodatkeIzDatoteke(std::string);
 
     /* Niz pravougaonika, pokazivaca */
-    Pravougaonik **_pravougaonici;
-    unsigned int _n;
+    Pravougaonik **_pravougaonici = nullptr;
+    unsigned int _n = 0;
 
-    /* Funkcije za strategiju podeli pa vladaj */
+    /* Pomocne metode za strategiju podeli pa vladaj */
+    inline bool proveriIndeks(unsigned int, unsigned int);
     inline void azurirajIndeks(unsigned int &,
                                unsigned int,
                                KandidatS);
+    inline int uzmiIvicu(const VertIvica &);
+
+    /* Glavne metode za strategiju podeli pa vladaj */
     void stab(unsigned int, unsigned int,
               KandidatS, KandidatS);
     void detect(unsigned int, unsigned int);
@@ -235,9 +239,9 @@ private:
     IntersecSet _preseci;
 
     /* Nizovi za strategiju podeli pa vladaj */
-    VertIvica *_V;
-    Pravougaonik **_H;
-    Pravougaonik **_Hh;
+    VertIvica *_V = nullptr;
+    Pravougaonik **_H = nullptr;
+    Pravougaonik **_Hh = nullptr;
 };
 
 #endif // GA06_PRESEKPRAVOUGAONIKA_H
