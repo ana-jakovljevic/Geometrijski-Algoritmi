@@ -74,6 +74,9 @@ bool DogadjajComp::operator()(const Dogadjaj &l, const Dogadjaj &d) const
     /* Manji je dogadjaj na visoj poziciji */
     if (l.y != d.y) {
         return l.y > d.y;
+    /* Odustajanje u slucaju greske */
+    } else if (!l.pravougaonik || !d.pravougaonik) {
+        return false;
     /* Manji je dogadjaj na levljoj poziciji */
     } else if (l.getXLevo() != d.getXLevo()) {
         return l.getXLevo() < d.getXLevo();
@@ -81,8 +84,11 @@ bool DogadjajComp::operator()(const Dogadjaj &l, const Dogadjaj &d) const
     } else if (l.getXDesno() != d.getXDesno()) {
         return l.getXDesno() < d.getXDesno();
     /* Manji je dogadjaj dodavanja od izbacivanja */
-    } else {
+    } else if (l.tipDogadjaja != d.tipDogadjaja) {
         return l.tipDogadjaja < d.tipDogadjaja;
+    /* Inace se porede pokazivaci */
+    } else {
+        return l.pravougaonik < d.pravougaonik;
     }
 }
 
