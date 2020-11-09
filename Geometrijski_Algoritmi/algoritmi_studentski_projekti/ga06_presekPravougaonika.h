@@ -101,7 +101,7 @@ struct IntervalUpdatePolicy {
 
         /* Provera levog sina ako ima nade */
         if (levo != node_end() &&
-            levo.get_metadata() >= i->xLevo){
+            levo.get_metadata() > i->xLevo){
             const auto velicina = preseci.size();
             pretrazi(levo, i, preseci);
 
@@ -212,11 +212,14 @@ public:
     void pokreniNaivniAlgoritam() final;
 
     /* Dodatni metod za grubu silu */
-    inline bool sekuSe(const Pravougaonik *, const Pravougaonik *);
+    inline bool sekuSe(const Pravougaonik *, const Pravougaonik *) const;
     void pokreniAlgoritamGrubeSile();
+    inline bool dodirujuSe(const Pravougaonik *, const Pravougaonik *) const;
 
 private:
     /* Rad sa podacima, inicijalizacija */
+    void ubaciPresek(Pravougaonik *, Pravougaonik *);
+    void popraviNasumicnoGenerisane();
     void generisiNasumicnePravougaonike(int);
     void ucitajPodatkeIzDatoteke(std::string);
 
@@ -225,11 +228,11 @@ private:
     unsigned int _n = 0;
 
     /* Pomocni metodi za strategiju podeli pa vladaj */
-    inline bool proveriIndeks(unsigned int, unsigned int);
+    inline bool proveriIndeks(unsigned int, unsigned int) const;
     inline void azurirajIndeks(unsigned int &,
                                unsigned int,
-                               KandidatS);
-    inline int uzmiIvicu(const VertIvica &);
+                               KandidatS) const;
+    inline int uzmiIvicu(const VertIvica &) const;
 
     /* Glavni metodi za strategiju podeli pa vladaj */
     void stab(unsigned int, unsigned int,

@@ -174,16 +174,27 @@ void PresekPravougaonika::pokreniNaivniAlgoritam()
 }
 
 /* Provera da li postoji presek para pravougaonika */
-bool PresekPravougaonika::sekuSe(const Pravougaonik *p1, const Pravougaonik *p2)
+bool PresekPravougaonika::sekuSe(const Pravougaonik *p1,
+                                 const Pravougaonik *p2) const
 {
-    /* Odustajanje u slucaju greske */
-    if (!p1 || !p2) return false;
+    return p1 && p2 && /* nisu null */
+           p1->xLevo < p2->xDesno &&
+           p1->xDesno > p2->xLevo &&
+           p1->yDole < p2->yGore &&
+           p1->yGore > p2->yDole;
+}
 
-    /* Izdvajanje presecnog pravougaonika */
-    const auto presek = *p1 & *p2;
+void PresekPravougaonika::ubaciPresek(Pravougaonik *p1, Pravougaonik *p2)
+{
+    /* Instanciranje komparatora pravougaonika */
+    PravougaonikComp pc;
 
-    /* Provera da li je sve u redu */
-    return presek.width() && presek.height();
+    /* Dodavanje u dobrom poretku */
+    if (pc(p1, p2)) {
+        _preseci.emplace(p1, p2);
+    } else {
+        _preseci.emplace(p2, p1);
+    }
 }
 
 /* Kvadratni algoritam grube sile */
@@ -201,8 +212,28 @@ void PresekPravougaonika::pokreniAlgoritamGrubeSile()
             /* Odredjivanje preseka i dodavanje
              * u skup ako postoji (nije prazan) */
             if (sekuSe(p1, p2)) {
-                _preseci.emplace(p1, p2);
+                ubaciPresek(p1, p2);
             }
+        }
+    }
+}
+
+/* Provera da li postoji dodirna tacka para pravougaonika */
+bool PresekPravougaonika::dodirujuSe(const Pravougaonik *p1, const Pravougaonik *p2) const
+{
+    return p1 && p2 && /* nisu null */
+        (((p1->xLevo == p2->xDesno || p1->xDesno == p2->xLevo) &&
+           p1->yDole <= p2->yGore && p1->yGore >= p2->yDole) ||
+         ((p1->yDole == p2->yGore || p1->yGore == p2->yDole) &&
+           p1->xLevo <= p2->xDesno && p1->xDesno >= p2->xLevo));
+}
+
+/* Odbacivanje novih pravougaonika koji kvare stanje */
+void PresekPravougaonika::popraviNasumicnoGenerisane()
+{
+    for (auto i = 0ul; i < _n-1; i++) {
+        if (dodirujuSe(_pravougaonici[i], _pravougaonici[_n-1])) {
+            delete _pravougaonici[-1+_n--]; return;
         }
     }
 }
@@ -211,8 +242,8 @@ void PresekPravougaonika::pokreniAlgoritamGrubeSile()
 void PresekPravougaonika::generisiNasumicnePravougaonike(int brojPravougaonika)
 {
     /* Alokacija potrebnog prostora */
-    _n = brojPravougaonika;
-    _pravougaonici = new Pravougaonik *[_n];
+    _n = 0;
+    _pravougaonici = new Pravougaonik *[brojPravougaonika];
 
     /* Generisanje duplo veceg broja tacaka */
     const auto tacke = generisiNasumicneTacke(2*brojPravougaonika);
@@ -223,7 +254,7 @@ void PresekPravougaonika::generisiNasumicnePravougaonike(int brojPravougaonika)
         auto tacka2 = tacke[i+1];
 
         /* Preskakanje losih parova */
-        if (tacka1.x() == tacka2.x() &&
+        if (tacka1.x() == tacka2.x() ||
             tacka1.y() == tacka2.y()) {
             continue;
         }
@@ -239,7 +270,8 @@ void PresekPravougaonika::generisiNasumicnePravougaonike(int brojPravougaonika)
         }
 
         /* Pravljenje pomocu sredjenih tacaka */
-        _pravougaonici[i/2] = new Pravougaonik(tacka1, tacka2);
+        _pravougaonici[_n++] = new Pravougaonik(tacka1, tacka2);
+        popraviNasumicnoGenerisane();
     }
 }
 
@@ -263,7 +295,7 @@ void PresekPravougaonika::ucitajPodatkeIzDatoteke(std::string imeDatoteke)
 
 /* Pomocna funkcija za proveru indeksa */
 bool PresekPravougaonika::proveriIndeks(unsigned int i,
-                                        unsigned int d)
+                                        unsigned int d) const
 {
     return i < d && _H[i];
 }
@@ -271,7 +303,7 @@ bool PresekPravougaonika::proveriIndeks(unsigned int i,
 /* Pomocna funkcija za azuriranje indeksa */
 void PresekPravougaonika::azurirajIndeks(unsigned int &i,
                                          unsigned int d,
-                                         KandidatS k)
+                                         KandidatS k) const
 {
     do i++; while (proveriIndeks(i, d) && _H[i]->kS != k);
 }
@@ -293,7 +325,7 @@ void PresekPravougaonika::stab(unsigned int l, unsigned int d,
             /* Registrovanje svih susednih */
             while (proveriIndeks(k, d) &&
                    _H[k]->yDole < _H[i]->yGore) {
-                _preseci.emplace(_H[i], _H[k]);
+                ubaciPresek(_H[i], _H[k]);
                 azurirajIndeks(k, d, B);
             }
             azurirajIndeks(i, d, A);
@@ -303,7 +335,7 @@ void PresekPravougaonika::stab(unsigned int l, unsigned int d,
             /* Registrovanje svih susednih */
             while (proveriIndeks(k, d) &&
                    _H[k]->yDole < _H[j]->yGore) {
-                _preseci.emplace(_H[j], _H[k]);
+                ubaciPresek(_H[j], _H[k]);
                 azurirajIndeks(k, d, A);
             }
             azurirajIndeks(j, d, B);
@@ -312,7 +344,7 @@ void PresekPravougaonika::stab(unsigned int l, unsigned int d,
 }
 
 /* Uzimanje odgovarajuce ivice pravougaonika */
-int PresekPravougaonika::uzmiIvicu(const VertIvica &ivica)
+int PresekPravougaonika::uzmiIvicu(const VertIvica &ivica) const
 {
     return ivica.first == TipIvice::LEVA ?
                 ivica.second->xLevo : ivica.second->xDesno;
@@ -339,7 +371,7 @@ void PresekPravougaonika::detect(unsigned int l, unsigned int d)
         if (_V[i].first == TipIvice::DESNA) {
             _V[i].second->kS = KandidatS::S11;
         /* Pravougaonik obuhvata desnu polovinu */
-        } else if (_V[i].second->xDesno > uzmiIvicu(_V[d-1])) {
+        } else if (_V[i].second->xDesno >= uzmiIvicu(_V[d-1])) {
             _V[i].second->kS = KandidatS::S12;
         }
     }
@@ -350,7 +382,7 @@ void PresekPravougaonika::detect(unsigned int l, unsigned int d)
         if (_V[i].first == TipIvice::LEVA) {
             _V[i].second->kS = KandidatS::S22;
         /* Pravougaonik obuhvata levu polovinu */
-        } else if (_V[i].second->xLevo < uzmiIvicu(_V[l])) {
+        } else if (_V[i].second->xLevo <= uzmiIvicu(_V[l])) {
             _V[i].second->kS = KandidatS::S21;
         }
     }
