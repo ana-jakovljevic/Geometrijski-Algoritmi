@@ -67,50 +67,47 @@ struct IntervalUpdatePolicy {
                (**i2)->xLevo < i1->xDesno;
     }
 
+    /* Registrovanje preseka po potrebi */
+    void registruj(Pravougaonik *p,
+                   Pravougaonik *i,
+                   IntersecSet &preseci) {
+        /* Odredjivanje adekvatnog poretka */
+        PravougaonikComp pc;
+        if (!pc(p, i)) {
+            std::swap(p, i);
+        }
+
+        /* Dodavanje ako nema dodirivanja */
+        if (p->yGore != i->yDole &&
+            i->yGore != p->yDole) {
+            preseci.emplace(p, i);
+        }
+    }
+
     /* Trazenje intervala u podstablu */
     void pretrazi(CIterator it,
                   Pravougaonik *i,
                   IntersecSet &preseci)
     {
         /* Baza indukcije je prazno podstablo */
-        if (it == node_end())
-            return;
+        if (it == node_end()) return;
 
         /* Hvatanje preseka sa korenom */
         if (imaPreseka(i, it)) {
-            /* Izdvajanje pravougaonika */
-            auto *p = **it;
-
-            /* Komparator pravougaonika */
-            PravougaonikComp pc;
-
-            /* Dodavanje u dobrom poretku */
-            if (pc(i, p)) {
-                preseci.emplace(i, p);
-            } else {
-                preseci.emplace(p, i);
-            }
+            registruj(**it, i, preseci);
         }
 
-        /* Uzimanje dostupne dece */
-        const auto levo = it.get_l_child();
-        const auto desno = it.get_r_child();
-
-        /* Indikator obostranog obilaska */
-        auto idiDesno = true;
-
         /* Provera levog sina ako ima nade */
+        const auto levo = it.get_l_child();
         if (levo != node_end() &&
             levo.get_metadata() > i->xLevo){
-            const auto velicina = preseci.size();
             pretrazi(levo, i, preseci);
-
-            /* Odluka za obostrani obilazak */
-            idiDesno = velicina < preseci.size();
         }
 
         /* Provera desnog sina ako ima nade */
-        if (idiDesno) {
+        const auto desno = it.get_r_child();
+        if (desno != node_end() &&
+            i->xDesno > (**it)->xLevo) {
             pretrazi(desno, i, preseci);
         }
     }
@@ -165,7 +162,7 @@ using IntervalTree = __gnu_pbds::tree<Pravougaonik *, /* nas interval */
                      IntervalUpdatePolicy>; /* nasa politika */
 
 /* Enumeracija tipa dogadjaja */
-enum class TipDogadjaja {GORNJA, DONJA};
+enum class TipDogadjaja {DONJA, GORNJA};
 
 /* Struktura koja predstavlja dogadjaj */
 struct Dogadjaj {
@@ -211,15 +208,13 @@ public:
     void crtajAlgoritam(QPainter *) const final;
     void pokreniNaivniAlgoritam() final;
 
-    /* Dodatni metod za grubu silu */
+    /* Dodatni metodi za grubu silu */
     inline bool sekuSe(const Pravougaonik *, const Pravougaonik *) const;
     void pokreniAlgoritamGrubeSile();
-    inline bool dodirujuSe(const Pravougaonik *, const Pravougaonik *) const;
 
 private:
     /* Rad sa podacima, inicijalizacija */
     void ubaciPresek(Pravougaonik *, Pravougaonik *);
-    void popraviNasumicnoGenerisane();
     void generisiNasumicnePravougaonike(int);
     void ucitajPodatkeIzDatoteke(std::string);
 

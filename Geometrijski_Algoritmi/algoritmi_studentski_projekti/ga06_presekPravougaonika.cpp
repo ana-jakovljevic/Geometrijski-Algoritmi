@@ -190,16 +190,18 @@ bool PresekPravougaonika::sekuSe(const Pravougaonik *p1,
            p1->yGore > p2->yDole;
 }
 
+/* Ubacivanje preseka u skup ako treba */
 void PresekPravougaonika::ubaciPresek(Pravougaonik *p1, Pravougaonik *p2)
 {
-    /* Instanciranje komparatora pravougaonika */
+    /* Odredjivanje adekvatnog poretka */
     PravougaonikComp pc;
+    if (!pc(p1, p2)) {
+        std::swap(p1, p2);
+    }
 
-    /* Dodavanje u dobrom poretku */
-    if (pc(p1, p2)) {
+    /* Dodavanje ako nema dodirivanja */
+    if (p1->xDesno != p2->xLevo) {
         _preseci.emplace(p1, p2);
-    } else {
-        _preseci.emplace(p2, p1);
     }
 }
 
@@ -220,26 +222,6 @@ void PresekPravougaonika::pokreniAlgoritamGrubeSile()
             if (sekuSe(p1, p2)) {
                 ubaciPresek(p1, p2);
             }
-        }
-    }
-}
-
-/* Provera da li postoji dodirna tacka para pravougaonika */
-bool PresekPravougaonika::dodirujuSe(const Pravougaonik *p1, const Pravougaonik *p2) const
-{
-    return p1 && p2 && /* nisu null */
-        (((p1->xLevo == p2->xDesno || p1->xDesno == p2->xLevo) &&
-           p1->yDole <= p2->yGore && p1->yGore >= p2->yDole) ||
-         ((p1->yDole == p2->yGore || p1->yGore == p2->yDole) &&
-           p1->xLevo <= p2->xDesno && p1->xDesno >= p2->xLevo));
-}
-
-/* Odbacivanje novih pravougaonika koji kvare stanje */
-void PresekPravougaonika::popraviNasumicnoGenerisane()
-{
-    for (auto i = 0ul; i < _n-1; i++) {
-        if (dodirujuSe(_pravougaonici[i], _pravougaonici[_n-1])) {
-            delete _pravougaonici[-1+_n--]; return;
         }
     }
 }
@@ -277,7 +259,6 @@ void PresekPravougaonika::generisiNasumicnePravougaonike(int brojPravougaonika)
 
         /* Pravljenje pomocu sredjenih tacaka */
         _pravougaonici[_n++] = new Pravougaonik(tacka1, tacka2);
-        popraviNasumicnoGenerisane();
     }
 }
 
