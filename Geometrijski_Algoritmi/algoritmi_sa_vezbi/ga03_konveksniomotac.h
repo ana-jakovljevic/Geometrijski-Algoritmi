@@ -18,6 +18,7 @@ public:
 private:
     std::vector<QPoint> _tacke;
     std::vector<QPoint> konveksni_omotac;
+    std::vector<QPoint> naivni_konveksni_omotac;
     QPoint maks_tacka;
 };
 

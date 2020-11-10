@@ -1,5 +1,6 @@
 #include "ga03_konveksniomotac.h"
 #include "pomocnefunkcije.h"
+#include <algorithm>
 
 konveksniomotac::konveksniomotac(QWidget *pCrtanje,
                                  int pauzaKoraka,
@@ -72,5 +73,35 @@ void konveksniomotac::crtajAlgoritam(QPainter *painter) const {
 }
 
 void konveksniomotac::pokreniNaivniAlgoritam() {
+    for (auto i = 0;i < _tacke.size(); i++) {
+        for (auto j = 0; j < _tacke.size(); j++) {
+            if (i == j){
+                continue;
+            }
+            bool a = true;
+            for (auto k = 0; k < _tacke.size(); k++){
+                if (k == i || k == j){
+                    continue;
+                }
+                if (pomocneFunkcije::povrsinaTrougla(_tacke.at(i), _tacke.at(j), _tacke.at(k)) > 0){
+                    a = false;
+                    break;
+                }
+            }
+            if (a){
+                if(std::find(naivni_konveksni_omotac.begin(), naivni_konveksni_omotac.end(), _tacke[i]) == naivni_konveksni_omotac.end()){
+                   naivni_konveksni_omotac.push_back(_tacke[i]);
+                }
+                if(std::find(naivni_konveksni_omotac.begin(), naivni_konveksni_omotac.end(), _tacke[j]) == naivni_konveksni_omotac.end()){
+                   naivni_konveksni_omotac.push_back(_tacke[j]);
+                }
+            }
+        }
 
+    }
+
+    std::sort(naivni_konveksni_omotac.begin(), naivni_konveksni_omotac.end(), [&](const auto& lhs, const auto& rhs) {
+        double P = pomocneFunkcije::povrsinaTrougla(maks_tacka, lhs, rhs);
+        return  (P < 0) ||  (std::abs(P) < 0.000001 && pomocneFunkcije::distanceKvadrat(maks_tacka, lhs) < pomocneFunkcije::distanceKvadrat(maks_tacka, rhs));
+    });
 }
