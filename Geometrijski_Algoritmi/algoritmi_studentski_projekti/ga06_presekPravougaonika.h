@@ -157,8 +157,8 @@ struct IntervalUpdatePolicy {
 
 /* Definisanje intervalnog drveta */
 using IntervalTree = __gnu_pbds::tree<const Pravougaonik *, /* interval */
-                     __gnu_pbds::null_type, /* pomocni tip nas ne zanima */
-                     PravougaonikComp, /* podrazumevano uredjenje */
+                     __gnu_pbds::null_type, /* mapiranje (ne postoji) */
+                     PravougaonikComp, /* uredjenje nad pravougaonicima */
                      __gnu_pbds::rb_tree_tag, /* crveno-crno stablo */
                      IntervalUpdatePolicy>; /* politika azuriranja */
 
