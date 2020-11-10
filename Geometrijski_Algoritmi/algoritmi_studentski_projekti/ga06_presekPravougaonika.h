@@ -30,7 +30,7 @@ struct PravougaonikComp {
 };
 
 /* Definisanje preseka */
-using Presek = std::pair<Pravougaonik *, Pravougaonik *>;
+using Presek = std::pair<const Pravougaonik *, const Pravougaonik *>;
 
 /* Struktura za poredjenje preseka */
 struct PresekComp {
@@ -39,6 +39,9 @@ struct PresekComp {
 
 /* Definisanje skupa preseka */
 using IntersecSet = std::set<Presek, PresekComp>;
+
+/* Definisanje niza preseka */
+using IntersecVec = std::vector<Presek>;
 
 /* Politika azuriranja cvorova stabla; sabloni
  * su iteratori, kao i dva koja zanemarujemo:
@@ -61,16 +64,17 @@ struct IntervalUpdatePolicy {
 
     /* Provera presecanja dva intervala */
     bool imaPreseka(const Pravougaonik *i1,
-                    CIterator i2)
+                    CIterator i2) const
     {
         return i1->xLevo < (**i2)->xDesno &&
                (**i2)->xLevo < i1->xDesno;
     }
 
     /* Registrovanje preseka po potrebi */
-    void registruj(Pravougaonik *p,
-                   Pravougaonik *i,
-                   IntersecSet &preseci) {
+    void registruj(const Pravougaonik *p,
+                   const Pravougaonik *i,
+                   IntersecVec &preseci) const
+    {
         /* Odredjivanje adekvatnog poretka */
         PravougaonikComp pc;
         if (!pc(p, i)) {
@@ -80,14 +84,14 @@ struct IntervalUpdatePolicy {
         /* Dodavanje ako nema dodirivanja */
         if (p->yGore != i->yDole &&
             i->yGore != p->yDole) {
-            preseci.emplace(p, i);
+            preseci.emplace_back(p, i);
         }
     }
 
     /* Trazenje intervala u podstablu */
     void pretrazi(CIterator it,
-                  Pravougaonik *i,
-                  IntersecSet &preseci)
+                  const Pravougaonik *i,
+                  IntersecVec &preseci) const
     {
         /* Baza indukcije je prazno podstablo */
         if (it == node_end()) return;
@@ -98,25 +102,24 @@ struct IntervalUpdatePolicy {
         }
 
         /* Provera levog sina ako ima nade */
-        const auto levo = it.get_l_child();
-        if (levo != node_end() &&
-            levo.get_metadata() > i->xLevo){
-            pretrazi(levo, i, preseci);
+        const auto levi = it.get_l_child();
+        if (levi != node_end() &&
+            levi.get_metadata() > i->xLevo){
+            pretrazi(levi, i, preseci);
         }
 
         /* Provera desnog sina ako ima nade */
-        const auto desno = it.get_r_child();
-        if (desno != node_end() &&
-            i->xDesno > (**it)->xLevo) {
-            pretrazi(desno, i, preseci);
+        if (i->xDesno > (**it)->xLevo) {
+            const auto desni = it.get_r_child();
+            pretrazi(desni, i, preseci);
         }
     }
 
     /* Pronalazak svih preklapajucih intervala,
      * pocevsi od korena intervalnog stabla */
-    IntersecSet nadjiPreseke(Pravougaonik *i)
+    IntersecVec nadjiPreseke(const Pravougaonik *i) const
     {
-        IntersecSet preseci;
+        IntersecVec preseci;
         pretrazi(node_begin(), i, preseci);
         return preseci;
     }
@@ -148,18 +151,16 @@ struct IntervalUpdatePolicy {
 
         /* Azuriranje metapodatka, uz neophodno
          * uveravanje kompilatora const castom */
-        const_cast<int&>(
-            it.get_metadata())
-            = metadata;
+        const_cast<int&>(it.get_metadata()) = metadata;
     }
 };
 
 /* Definisanje intervalnog drveta */
-using IntervalTree = __gnu_pbds::tree<Pravougaonik *, /* nas interval */
+using IntervalTree = __gnu_pbds::tree<const Pravougaonik *, /* interval */
                      __gnu_pbds::null_type, /* pomocni tip nas ne zanima */
                      PravougaonikComp, /* podrazumevano uredjenje */
                      __gnu_pbds::rb_tree_tag, /* crveno-crno stablo */
-                     IntervalUpdatePolicy>; /* nasa politika */
+                     IntervalUpdatePolicy>; /* politika azuriranja */
 
 /* Enumeracija tipa dogadjaja */
 enum class TipDogadjaja {DONJA, GORNJA};
@@ -167,7 +168,7 @@ enum class TipDogadjaja {DONJA, GORNJA};
 /* Struktura koja predstavlja dogadjaj */
 struct Dogadjaj {
     /* Konstruktor strukture */
-    Dogadjaj(Pravougaonik *, TipDogadjaja);
+    Dogadjaj(const Pravougaonik *, TipDogadjaja);
 
     /* Cuvanje pravougaonika i tipa */
     const Pravougaonik *pravougaonik;
@@ -214,7 +215,7 @@ public:
 
 private:
     /* Rad sa podacima, inicijalizacija */
-    void ubaciPresek(Pravougaonik *, Pravougaonik *);
+    void ubaciPresek(const Pravougaonik *, const Pravougaonik *, IntersecVec &);
     void generisiNasumicnePravougaonike(int);
     void ucitajPodatkeIzDatoteke(std::string);
 
@@ -235,15 +236,19 @@ private:
     void detect(unsigned int, unsigned int);
     void report();
 
+    /* Niz za algoritam grube sile */
+    IntersecVec _preseciGruba;
+
     /* Strukture za metod brisuce prave */
     EventQueue _dogadjaji;
     IntervalTree _status;
-    IntersecSet _preseci;
+    IntersecVec _preseciNaivni;
 
     /* Nizovi za strategiju podeli pa vladaj */
     VertIvica *_V = nullptr;
     Pravougaonik **_H = nullptr;
     Pravougaonik **_Hh = nullptr;
+    IntersecVec _preseciGlavni;
 };
 
 #endif // GA06_PRESEKPRAVOUGAONIKA_H

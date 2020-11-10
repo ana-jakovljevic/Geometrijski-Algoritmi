@@ -15,7 +15,8 @@ Pravougaonik::Pravougaonik(int x, int y, int w, int h)
 { }
 
 /* Struktura za poredjenje pravougaonika */
-bool PravougaonikComp::operator()(const Pravougaonik *l, const Pravougaonik *d) const
+bool PravougaonikComp::operator()(const Pravougaonik *l,
+                                  const Pravougaonik *d) const
 {
     /* Odustajanje u slucaju greske */
     if (!l && !d) {
@@ -51,7 +52,7 @@ bool PresekComp::operator()(const Presek &l, const Presek &d) const
 }
 
 /* Konstrukcija dogadjaja */
-Dogadjaj::Dogadjaj(Pravougaonik *p, TipDogadjaja t)
+Dogadjaj::Dogadjaj(const Pravougaonik *p, TipDogadjaja t)
     : pravougaonik(p), tipDogadjaja(t),
       y(t == TipDogadjaja::GORNJA ? p->yGore : p->yDole)
 { }
@@ -69,7 +70,8 @@ int Dogadjaj::getXDesno() const
 }
 
 /* Struktura za poredjenje dogadjaja */
-bool DogadjajComp::operator()(const Dogadjaj &l, const Dogadjaj &d) const
+bool DogadjajComp::operator()(const Dogadjaj &l,
+                              const Dogadjaj &d) const
 {
     /* Manji je dogadjaj na visoj poziciji */
     if (l.y != d.y) {
@@ -123,7 +125,7 @@ PresekPravougaonika::~PresekPravougaonika()
 void PresekPravougaonika::pokreniAlgoritam()
 {
     /* Ciscenje skupa preseka */
-    _preseci.clear();
+    _preseciGlavni.clear();
 
     /* Prijavljivanje svih preseka u paru */
     report();
@@ -148,7 +150,7 @@ void PresekPravougaonika::crtajAlgoritam(QPainter *painter) const
 void PresekPravougaonika::pokreniNaivniAlgoritam()
 {
     /* Ciscenje skupa preseka */
-    _preseci.clear();
+    _preseciNaivni.clear();
 
     /* Popunjavanje niza dogadjaja */
     for (auto i = 0ul; i < _n; i++) {
@@ -158,13 +160,14 @@ void PresekPravougaonika::pokreniNaivniAlgoritam()
 
     /* Prolazak redom kroz dogadjaje */
     for (const auto &dogadjaj : _dogadjaji) {
-        auto pravougaonik = const_cast<Pravougaonik *>(dogadjaj.pravougaonik);
+        const auto pravougaonik = dogadjaj.pravougaonik;
 
         /* Obrada nailaska na gornju stranicu */
         if (dogadjaj.tipDogadjaja == TipDogadjaja::GORNJA) {
             /* Nalazenje svih trenutnih preseka */
             const auto preseci = _status.nadjiPreseke(pravougaonik);
-            _preseci.insert(std::cbegin(preseci), std::cend(preseci));
+            _preseciNaivni.insert(std::cend(_preseciNaivni),
+                                  std::cbegin(preseci), std::cend(preseci));
 
             /* Ubacivanje novog pravougaonika u status */
             _status.insert(pravougaonik);
@@ -191,7 +194,9 @@ bool PresekPravougaonika::sekuSe(const Pravougaonik *p1,
 }
 
 /* Ubacivanje preseka u skup ako treba */
-void PresekPravougaonika::ubaciPresek(Pravougaonik *p1, Pravougaonik *p2)
+void PresekPravougaonika::ubaciPresek(const Pravougaonik *p1,
+                                      const Pravougaonik *p2,
+                                      IntersecVec &preseci)
 {
     /* Odredjivanje adekvatnog poretka */
     PravougaonikComp pc;
@@ -201,7 +206,7 @@ void PresekPravougaonika::ubaciPresek(Pravougaonik *p1, Pravougaonik *p2)
 
     /* Dodavanje ako nema dodirivanja */
     if (p1->xDesno != p2->xLevo) {
-        _preseci.emplace(p1, p2);
+        preseci.emplace_back(p1, p2);
     }
 }
 
@@ -209,18 +214,18 @@ void PresekPravougaonika::ubaciPresek(Pravougaonik *p1, Pravougaonik *p2)
 void PresekPravougaonika::pokreniAlgoritamGrubeSile()
 {
     /* Ciscenje skupa preseka */
-    _preseci.clear();
+    _preseciGruba.clear();
 
     /* Uporedjivanje pravougaonika u parovima */
     for (auto i = 0ul; i < _n; i++) {
-        auto *p1 = _pravougaonici[i];
+        const auto *p1 = _pravougaonici[i];
         for (auto j = i+1; j < _n; j++) {
-            auto *p2 = _pravougaonici[j];
+            const auto *p2 = _pravougaonici[j];
 
             /* Odredjivanje preseka i dodavanje
              * u skup ako postoji (nije prazan) */
             if (sekuSe(p1, p2)) {
-                ubaciPresek(p1, p2);
+                ubaciPresek(p1, p2, _preseciGruba);
             }
         }
     }
@@ -312,7 +317,7 @@ void PresekPravougaonika::stab(unsigned int l, unsigned int d,
             /* Registrovanje svih susednih */
             while (proveriIndeks(k, d) &&
                    _H[k]->yDole < _H[i]->yGore) {
-                ubaciPresek(_H[i], _H[k]);
+                ubaciPresek(_H[i], _H[k], _preseciGlavni);
                 azurirajIndeks(k, d, B);
             }
             azurirajIndeks(i, d, A);
@@ -322,7 +327,7 @@ void PresekPravougaonika::stab(unsigned int l, unsigned int d,
             /* Registrovanje svih susednih */
             while (proveriIndeks(k, d) &&
                    _H[k]->yDole < _H[j]->yGore) {
-                ubaciPresek(_H[j], _H[k]);
+                ubaciPresek(_H[j], _H[k], _preseciGlavni);
                 azurirajIndeks(k, d, A);
             }
             azurirajIndeks(j, d, B);
