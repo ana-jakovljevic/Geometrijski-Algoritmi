@@ -12,7 +12,7 @@
 #include "ga00_demoiscrtavanja.h"
 #include "ga01_brisucaprava.h"
 #include "ga02_3discrtavanje.h"
-
+#include "ga03_konveksniomotac.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

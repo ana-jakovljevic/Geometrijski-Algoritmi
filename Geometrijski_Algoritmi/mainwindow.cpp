@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
       _naivni(false)
 {
     ui->setupUi(this);
-    ui->tipAlgoritma->insertSeparator(4);
+    ui->tipAlgoritma->insertSeparator(5);
     animacijaButtonAktivni(false);
     animacijaParametriButtonAktivni(true);
 
@@ -219,7 +219,8 @@ void MainWindow::napraviNoviAlgoritam()
         _pAlgoritamBaza = new BrisucaPrava(_pOblastCrtanja, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
     else if (tipAlgoritma == "3D iscrtavanje")
         _pAlgoritamBaza = new Discrtavanje(_pOblastCrtanjaOpenGL, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
-
+    else if (tipAlgoritma == "Konveksni omotac")
+        _pAlgoritamBaza = new konveksniomotac(_pOblastCrtanja, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
     if (_pAlgoritamBaza)
     {
         _pOblastCrtanja->postaviAlgoritamKojiSeIzvrsava(_pAlgoritamBaza);
