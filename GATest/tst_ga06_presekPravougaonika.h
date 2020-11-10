@@ -83,17 +83,19 @@ TEST(ga06_presekPravougaonikaTests, datotekaTest3)
     ASSERT_EQ(glavniPreseci, grubaPreseci);
 }
 
-/* Staticki brojevi tacaka za test primere */
-static const auto randomTacke = "";
-static const auto brojTacaka1 = 10ul;
-static const auto brojTacaka2 = 100ul;
-static const auto brojTacaka3 = 1000ul;
+/* Staticki brojevi pravougaonika za test primere */
+static const auto randomPravougaonici = "";
+static const auto brojPravougaonika1 = 10;
+static const auto brojPravougaonika2 = 100;
+static const auto brojPravougaonika3 = 1000;
 
-/* Testiranje sa prvim slucajnim tackama */
+/* Testiranje sa prvim slucajnim pravougaonicima */
 TEST(ga06_presekPravougaonikaTests, randomTest1)
 {
     /* ARRANGE: instanciranje i izvrsavanje algoritma */
-    PresekPravougaonika algoritam(bezCrtanja, bezPauze, randomTacke, brojTacaka1);
+    PresekPravougaonika algoritam(bezCrtanja, bezPauze,
+                                  randomPravougaonici,
+                                  brojPravougaonika1);
     algoritam.pokreniAlgoritam();
     algoritam.pokreniNaivniAlgoritam();
     algoritam.pokreniAlgoritamGrubeSile();
@@ -108,11 +110,13 @@ TEST(ga06_presekPravougaonikaTests, randomTest1)
     ASSERT_EQ(glavniPreseci, grubaPreseci);
 }
 
-/* Testiranje sa drugim slucajnim tackama */
+/* Testiranje sa drugim slucajnim pravougaonicima */
 TEST(ga06_presekPravougaonikaTests, randomTest2)
 {
     /* ARRANGE: instanciranje i izvrsavanje algoritma */
-    PresekPravougaonika algoritam(bezCrtanja, bezPauze, randomTacke, brojTacaka2);
+    PresekPravougaonika algoritam(bezCrtanja, bezPauze,
+                                  randomPravougaonici,
+                                  brojPravougaonika2);
     algoritam.pokreniAlgoritam();
     algoritam.pokreniNaivniAlgoritam();
     algoritam.pokreniAlgoritamGrubeSile();
@@ -127,11 +131,13 @@ TEST(ga06_presekPravougaonikaTests, randomTest2)
     ASSERT_EQ(glavniPreseci, grubaPreseci);
 }
 
-/* Testiranje sa trecim slucajnim tackama */
+/* Testiranje sa trecim slucajnim pravougaonicima */
 TEST(ga06_presekPravougaonikaTests, randomTest3)
 {
     /* ARRANGE: instanciranje i izvrsavanje algoritma */
-    PresekPravougaonika algoritam(bezCrtanja, bezPauze, randomTacke, brojTacaka3);
+    PresekPravougaonika algoritam(bezCrtanja, bezPauze,
+                                  randomPravougaonici,
+                                  brojPravougaonika3);
     algoritam.pokreniAlgoritam();
     algoritam.pokreniNaivniAlgoritam();
     algoritam.pokreniAlgoritamGrubeSile();
@@ -144,6 +150,54 @@ TEST(ga06_presekPravougaonikaTests, randomTest3)
     /* ASSERT: potvrda ocekivanja test primera */
     ASSERT_EQ(glavniPreseci, naivniPreseci);
     ASSERT_EQ(glavniPreseci, grubaPreseci);
+}
+
+/* Staticki brojevi pravougaonika za granicne slucajeve */
+static const auto nemaPravougaonika = 0;
+static const auto jedanPravougaonik = 1;
+
+/* Testiranje kada nema pravougaonika */
+TEST(ga06_presekPravougaonikaTests, nemaPravougaonika)
+{
+    /* ARRANGE: instanciranje i izvrsavanje algoritma */
+    PresekPravougaonika algoritam(bezCrtanja, bezPauze,
+                                  randomPravougaonici,
+                                  nemaPravougaonika);
+    algoritam.pokreniAlgoritam();
+    algoritam.pokreniNaivniAlgoritam();
+    algoritam.pokreniAlgoritamGrubeSile();
+
+    /* ACT: dohvatanje dobijenih skupova preseka */
+    const auto glavniPreseci = algoritam.getGlavni();
+    const auto naivniPreseci = algoritam.getNaivni();
+    const auto grubaPreseci = algoritam.getGruba();
+
+    /* ASSERT: potvrda ocekivanja test primera */
+    ASSERT_TRUE(glavniPreseci.empty());
+    ASSERT_TRUE(naivniPreseci.empty());
+    ASSERT_TRUE(grubaPreseci.empty());
+}
+
+/* Testiranje kada je samo jedan pravougaonik */
+TEST(ga06_presekPravougaonikaTests, jedanPravougaonik)
+{
+    /* ARRANGE: instanciranje i izvrsavanje algoritma */
+    PresekPravougaonika algoritam(bezCrtanja, bezPauze,
+                                  randomPravougaonici,
+                                  jedanPravougaonik);
+    algoritam.pokreniAlgoritam();
+    algoritam.pokreniNaivniAlgoritam();
+    algoritam.pokreniAlgoritamGrubeSile();
+
+    /* ACT: dohvatanje dobijenih skupova preseka */
+    const auto glavniPreseci = algoritam.getGlavni();
+    const auto naivniPreseci = algoritam.getNaivni();
+    const auto grubaPreseci = algoritam.getGruba();
+
+    /* ASSERT: potvrda ocekivanja test primera */
+    ASSERT_TRUE(glavniPreseci.empty());
+    ASSERT_TRUE(naivniPreseci.empty());
+    ASSERT_TRUE(grubaPreseci.empty());
 }
 
 #endif // TST_GA06_PRESEKPRAVOUGAONIKA_H
