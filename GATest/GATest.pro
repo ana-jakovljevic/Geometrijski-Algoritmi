@@ -22,11 +22,15 @@ HEADERS += \
     ../Geometrijski_Algoritmi/timemeasurementthread.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga00_demoiscrtavanja.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga01_brisucaprava.h \
-    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga02_3discrtavanje.h
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga02_3discrtavanje.h \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.h \
+    tst_ga00_PrimerTest.h \
+    tst_ga06_presekPravougaonika.h
 
 INCLUDEPATH += \
     ../Geometrijski_Algoritmi \
-    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/
 
 win32 {
 INCLUDEPATH += \
@@ -40,4 +44,5 @@ SOURCES += main.cpp \
     ../Geometrijski_Algoritmi/timemeasurementthread.cpp \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga00_demoiscrtavanja.cpp \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga01_brisucaprava.cpp \
-    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga02_3discrtavanje.cpp
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga02_3discrtavanje.cpp \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.cpp

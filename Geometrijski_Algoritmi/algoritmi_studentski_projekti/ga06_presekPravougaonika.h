@@ -204,6 +204,11 @@ public:
                         int = BROJ_NASUMICNIH_TACAKA);
     virtual ~PresekPravougaonika();
 
+    /* Dohvataci rezultata algoritama */
+    IntersecSet getGlavni() const;
+    IntersecSet getNaivni() const;
+    IntersecSet getGruba() const;
+
     /* Virtuelni metodi iz natklase */
     void pokreniAlgoritam() final;
     void crtajAlgoritam(QPainter *) const final;

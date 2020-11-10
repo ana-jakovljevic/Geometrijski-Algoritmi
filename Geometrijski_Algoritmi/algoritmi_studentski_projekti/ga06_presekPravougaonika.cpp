@@ -120,6 +120,27 @@ PresekPravougaonika::~PresekPravougaonika()
     delete [] _Hh;
 }
 
+/* Dohvatanje skupa preseka algoritma podeli pa vladaj */
+IntersecSet PresekPravougaonika::getGlavni() const
+{
+    return IntersecSet(std::cbegin(_preseciGlavni),
+                       std::cend(_preseciGlavni));
+}
+
+/* Dohvatanje skupa preseka algoritma brisuce prave */
+IntersecSet PresekPravougaonika::getNaivni() const
+{
+    return IntersecSet(std::cbegin(_preseciNaivni),
+                       std::cend(_preseciNaivni));
+}
+
+/* Dohvatanje skupa preseka algoritma grube sile */
+IntersecSet PresekPravougaonika::getGruba() const
+{
+    return IntersecSet(std::cbegin(_preseciGruba),
+                       std::cend(_preseciGruba));
+}
+
 /* Algoritam zasnovan na strategiji podeli pa vladaj, pogledati
  * https://www.widelands.org/~sirver/wl/141229_devail_rects.pdf */
 void PresekPravougaonika::pokreniAlgoritam()
