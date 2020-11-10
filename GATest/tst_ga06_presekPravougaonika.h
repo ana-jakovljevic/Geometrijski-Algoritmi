@@ -1,5 +1,5 @@
-#ifndef TST_GA02_PRESEKPRAVOUGAONIKA_H
-#define TST_GA02_PRESEKPRAVOUGAONIKA_H
+#ifndef TST_GA06_PRESEKPRAVOUGAONIKA_H
+#define TST_GA06_PRESEKPRAVOUGAONIKA_H
 
 #include <gtest/gtest.h>
 #include <gmock/gmock-matchers.h>
@@ -146,4 +146,4 @@ TEST(ga06_presekPravougaonikaTests, randomTest3)
     ASSERT_EQ(glavniPreseci, grubaPreseci);
 }
 
-#endif // TST_GA02_PRESEKPRAVOUGAONIKA_H
+#endif // TST_GA06_PRESEKPRAVOUGAONIKA_H
