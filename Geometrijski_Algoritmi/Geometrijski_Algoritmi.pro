@@ -18,6 +18,7 @@ SOURCES += \
     mainwindow.cpp \
     oblastcrtanja.cpp \
     oblastcrtanjaopengl.cpp \
+    pomocnefunkcije.cpp \
     timemeasurementthread.cpp \
     algoritmi_sa_vezbi/ga03_konveksniomotac.cpp
 
@@ -31,6 +32,7 @@ HEADERS += \
     mainwindow.h \
     oblastcrtanja.h \
     oblastcrtanjaopengl.h \
+    pomocnefunkcije.h \
     timemeasurementthread.h \
     algoritmi_sa_vezbi/ga03_konveksniomotac.h
 
