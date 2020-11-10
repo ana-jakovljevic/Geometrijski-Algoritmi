@@ -18,7 +18,8 @@ SOURCES += \
     mainwindow.cpp \
     oblastcrtanja.cpp \
     oblastcrtanjaopengl.cpp \
-    timemeasurementthread.cpp
+    timemeasurementthread.cpp \
+    algoritmi_sa_vezbi/ga03_konveksniomotac.cpp
 
 HEADERS += \
     algoritambaza.h \
@@ -30,7 +31,8 @@ HEADERS += \
     mainwindow.h \
     oblastcrtanja.h \
     oblastcrtanjaopengl.h \
-    timemeasurementthread.h
+    timemeasurementthread.h \
+    algoritmi_sa_vezbi/ga03_konveksniomotac.h
 
 FORMS += \
     mainwindow.ui
