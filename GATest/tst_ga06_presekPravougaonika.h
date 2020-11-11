@@ -13,9 +13,9 @@ static const auto bezCrtanja = nullptr;
 static const auto bezPauze = 0;
 
 /* Staticki nazivi datoteka sa test primerima */
-static const auto datoteka1 = "../Geometrijski_Algoritmi/input_files/ga06_presekPravougaonika_input1.txt";
-static const auto datoteka2 = "../Geometrijski_Algoritmi/input_files/ga06_presekPravougaonika_input2.txt";
-static const auto datoteka3 = "../Geometrijski_Algoritmi/input_files/ga06_presekPravougaonika_input3.txt";
+static const auto datoteka1 = "../Geometrijski_Algoritmi/input_files/ga06_presekPravougaonika/input1.txt";
+static const auto datoteka2 = "../Geometrijski_Algoritmi/input_files/ga06_presekPravougaonika/input2.txt";
+static const auto datoteka3 = "../Geometrijski_Algoritmi/input_files/ga06_presekPravougaonika/input3.txt";
 
 /* Testiranje prve pripremljene datoteke */
 TEST(ga06_presekPravougaonikaTests, datotekaTest1)
