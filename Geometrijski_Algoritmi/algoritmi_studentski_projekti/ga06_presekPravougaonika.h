@@ -3,7 +3,16 @@
 
 #include "algoritambaza.h"
 
+#include <csetjmp>
+#include <experimental/optional>
 #include <ext/pb_ds/assoc_container.hpp>
+
+/* Makro za daleki skok iz duboke rekurzije */
+#define PresekPravougaonika_updateCanvasAndBlock() \
+    if (updateCanvasAndBlock()) \
+    { \
+        longjmp(buf, 1); \
+    }
 
 /* Enumeracija pripadnosti skupu kandidata */
 enum class KandidatS {Sxx, S11, S12, S21, S22};
@@ -228,6 +237,9 @@ private:
     Pravougaonik **_pravougaonici = nullptr;
     unsigned int _n = 0;
 
+    /* Pomocni metod za lepsu animaciju */
+    inline QRect uzmiPresek(unsigned int) const;
+
     /* Pomocni metodi za strategiju podeli pa vladaj */
     inline bool proveriIndeks(unsigned int, unsigned int) const;
     inline void azurirajIndeks(unsigned int &,
@@ -254,6 +266,10 @@ private:
     Pravougaonik **_H = nullptr;
     Pravougaonik **_Hh = nullptr;
     IntersecVec _preseciGlavni;
+
+    /* Pomocna polja za lepsu animaciju */
+    std::vector<double> _podele;
+    std::experimental::optional<unsigned int> _pocetakNovih;
 };
 
 #endif // GA06_PRESEKPRAVOUGAONIKA_H

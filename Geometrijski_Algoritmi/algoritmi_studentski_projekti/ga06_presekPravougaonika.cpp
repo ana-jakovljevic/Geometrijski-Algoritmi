@@ -106,6 +106,11 @@ PresekPravougaonika::PresekPravougaonika(QWidget *pCrtanje,
         generisiNasumicnePravougaonike(brojPravougaonika);
     else
         ucitajPodatkeIzDatoteke(imeDatoteke);
+
+#ifndef GA06_BENCHMARK
+    /* Popunjavanje crteza pocetnim tackama */
+    _pCrtanje->update();
+#endif
 }
 
 /* Deinicijalizacija algoritma */
@@ -141,6 +146,11 @@ IntersecSet PresekPravougaonika::getGruba() const
                        std::cend(_preseciGruba));
 }
 
+#ifndef GA06_BENCHMARK
+/* Staticki bafer dalekog skoka */
+static jmp_buf buf;
+#endif
+
 /* Algoritam zasnovan na strategiji podeli pa vladaj, pogledati
  * https://www.widelands.org/~sirver/wl/141229_devail_rects.pdf */
 void PresekPravougaonika::pokreniAlgoritam()
@@ -148,11 +158,18 @@ void PresekPravougaonika::pokreniAlgoritam()
     /* Ciscenje skupa preseka */
     _preseciGlavni.clear();
 
-    /* Prijavljivanje svih preseka u paru */
-    report();
+#ifndef GA06_BENCHMARK
+    /* Realizacija dalekog skoka iz duboke rekurzije */
+    if (!setjmp(buf)) {
+#endif
+        /* Prijavljivanje svih preseka u paru */
+        report();
 
-    /* Obavestavanje pozivaoca o finalizovanoj animaciji */
-    emit animacijaZavrsila();
+        /* Obavestavanje pozivaoca o finalizovanoj animaciji */
+        emit animacijaZavrsila();
+#ifndef GA06_BENCHMARK
+    }
+#endif
 }
 
 /* Iscrtavanje tekuceg stanja algoritma */
@@ -161,9 +178,46 @@ void PresekPravougaonika::crtajAlgoritam(QPainter *painter) const
     /* Odustajanje u slucaju greske */
     if (!painter) return;
 
+    /* Podesavanje stila crtanja */
+    auto olovka = painter->pen();
+    olovka.setColor(Qt::yellow);
+    painter->setPen(olovka);
+
+    /* Iscrtavanje svih preseka */
+    for (auto i = 0ul; i < _preseciGlavni.size(); i++) {
+        painter->fillRect(uzmiPresek(i), Qt::yellow);
+    }
+
+    /* Podesavanje stila crtanja */
+    olovka.setColor(Qt::red);
+    painter->setPen(olovka);
+
+    /* Iscrtavanje novih preseka */
+    if (_pocetakNovih) {
+        for (auto i = _pocetakNovih.value();
+             i < _preseciGlavni.size(); i++) {
+            painter->fillRect(uzmiPresek(i), Qt::red);
+        }
+    }
+
+    /* Podesavanje stila crtanja */
+    olovka.setColor(Qt::black);
+    painter->setPen(olovka);
+
     /* Iscrtavanje svakog pravougaonika */
     for (auto i = 0ul; i < _n; i++) {
         painter->drawRect(*_pravougaonici[i]);
+    }
+
+    /* Podesavanje stila crtanja */
+    olovka.setColor(Qt::darkGreen);
+    olovka.setWidthF(olovka.widthF()/1.5);
+    painter->setPen(olovka);
+
+    /* Iscrtavanje tekucih podela */
+    for (const auto s : _podele) {
+        painter->drawLine(QPointF(s, 0),
+                          QPointF(s, _pCrtanje->height()));
     }
 }
 
@@ -306,6 +360,12 @@ void PresekPravougaonika::ucitajPodatkeIzDatoteke(std::string imeDatoteke)
     }
 }
 
+/* Racunanje tacnog preseka dva pravougaonika */
+QRect PresekPravougaonika::uzmiPresek(unsigned int i) const
+{
+    return *_preseciGlavni[i].first & *_preseciGlavni[i].second;
+}
+
 /* Pomocna funkcija za proveru indeksa */
 bool PresekPravougaonika::proveriIndeks(unsigned int i,
                                         unsigned int d) const
@@ -378,6 +438,13 @@ void PresekPravougaonika::detect(unsigned int l, unsigned int d)
      * imitira skupove V1 i V2 iz rada bez kopiranja */
     const auto s = l+(d-l)/2;
 
+#ifndef GA06_BENCHMARK
+    /* Ubacivanje podele u niz svih */
+    _podele.push_back((uzmiIvicu(_V[s-1])+
+                       uzmiIvicu(_V[s]))/2.);
+    PresekPravougaonika_updateCanvasAndBlock();
+#endif
+
     /* Odredjivanje skupova S11 i S12 iz rada */
     for (auto i = l; i < s; i++) {
         /* Pravougaonik je skroz levo od podele */
@@ -400,10 +467,24 @@ void PresekPravougaonika::detect(unsigned int l, unsigned int d)
         }
     }
 
+#ifndef GA06_BENCHMARK
+    /* Pamcenje prvog indeksa novih preseka */
+    _pocetakNovih = _preseciGlavni.size();
+#endif
+
     /* Odredjivanje preseka najuzih kandidata */
     stab(l, d, KandidatS::S12, KandidatS::S22);
     stab(l, d, KandidatS::S21, KandidatS::S11);
     stab(l, d, KandidatS::S12, KandidatS::S21);
+
+#ifndef GA06_BENCHMARK
+    /* Osvezavanje crteza novim presecima */
+    if (_pocetakNovih.value() < _preseciGlavni.size()) {
+        PresekPravougaonika_updateCanvasAndBlock();
+        _pocetakNovih = _preseciGlavni.size();
+        PresekPravougaonika_updateCanvasAndBlock();
+    }
+#endif
 
     /* Particionisanje niza H na H1 i H2 iz rada */
     auto H1 = l, H2 = s;
@@ -442,6 +523,12 @@ void PresekPravougaonika::detect(unsigned int l, unsigned int d)
 
     /* Pronalazenje preseka u potprostorima */
     detect(l, s); detect(s, d);
+
+#ifndef GA06_BENCHMARK
+    /* Izbacivanje podele iz niza */
+    _podele.pop_back();
+    PresekPravougaonika_updateCanvasAndBlock();
+#endif
 }
 
 /* Prijavljivanje svih preseka u paru */
