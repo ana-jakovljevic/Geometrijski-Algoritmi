@@ -527,7 +527,7 @@ void PresekPravougaonika::detect(unsigned int l, unsigned int d)
     }
 
     /* Pronalazenje preseka u potprostorima */
-    detect(l, s); detect(s, d);
+    detect(s, d); detect(l, s);
 
 #ifndef GA06_BENCHMARK
     /* Izbacivanje podele iz niza */
