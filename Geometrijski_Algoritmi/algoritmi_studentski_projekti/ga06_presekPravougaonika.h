@@ -273,6 +273,11 @@ private:
     /* Pomocna polja za lepsu animaciju */
     std::vector<double> _podele;
     std::experimental::optional<unsigned int> _pocetakNovih;
+
+#ifndef GA06_BENCHMARK
+    /* Staticki bafer dalekog skoka */
+    static jmp_buf buf;
+#endif
 };
 
 #endif // GA06_PRESEKPRAVOUGAONIKA_H
