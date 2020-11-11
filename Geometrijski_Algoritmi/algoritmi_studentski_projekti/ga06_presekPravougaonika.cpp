@@ -107,10 +107,10 @@ PresekPravougaonika::PresekPravougaonika(QWidget *pCrtanje,
     else
         ucitajPodatkeIzDatoteke(imeDatoteke);
 
-#ifndef GA06_BENCHMARK
     /* Popunjavanje crteza pocetnim tackama */
-    _pCrtanje->update();
-#endif
+    if (_pCrtanje) {
+        _pCrtanje->update();
+    }
 }
 
 /* Deinicijalizacija algoritma */
@@ -168,6 +168,11 @@ void PresekPravougaonika::pokreniAlgoritam()
         /* Obavestavanje pozivaoca o finalizovanoj animaciji */
         emit animacijaZavrsila();
 #ifndef GA06_BENCHMARK
+    }
+#else
+    /* Popunjavanje crteza konacnim rezultatom */
+    if (_pCrtanje) {
+        _pCrtanje->update();
     }
 #endif
 }

@@ -7,6 +7,9 @@
 #include <experimental/optional>
 #include <ext/pb_ds/assoc_container.hpp>
 
+/* Makro za proveru performansi algoritma */
+/*#define GA06_BENCHMARK*/
+
 /* Makro za daleki skok iz duboke rekurzije */
 #define PresekPravougaonika_updateCanvasAndBlock() \
     if (updateCanvasAndBlock()) \
