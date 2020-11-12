@@ -24,25 +24,27 @@ void konveksniomotac::pokreniAlgoritam() {
     AlgoritamBaza_updateCanvasAndBlock();
     std::sort(_tacke.begin(), _tacke.end(), [&](const auto& lhs, const auto& rhs) {
         double P = pomocneFunkcije::povrsinaTrougla(maks_tacka, lhs, rhs);
-        return  (P < 0) ||  (std::abs(P) < 0.000001 && pomocneFunkcije::distanceKvadrat(maks_tacka, lhs) < pomocneFunkcije::distanceKvadrat(maks_tacka, rhs));
+        return  (P < 0) ||  (std::abs(P) == 0 && pomocneFunkcije::distanceKvadrat(maks_tacka, lhs) < pomocneFunkcije::distanceKvadrat(maks_tacka, rhs));
     });
 
     konveksni_omotac.push_back(maks_tacka);
     konveksni_omotac.push_back(_tacke[1]);
     int pom = 2;
+    unsigned j = 2;
 
-    for(unsigned j = 2; j < _tacke.size(); ++j) {
+    while(j < _tacke.size()) {
         if(pomocneFunkcije::povrsinaTrougla(konveksni_omotac[pom-2],
                            konveksni_omotac[pom-1],
                            _tacke[j]) < 0)
         {
             konveksni_omotac.push_back(_tacke[j]);
             ++pom;
+            ++j;
         }
         else {
             konveksni_omotac.pop_back();
             --pom;
-            --j;    //Ne smemo da povecamo j u ovom slucaju, jer nismo zavrsili sa ovom tackom
+                       //Ne smemo da povecamo j u ovom slucaju, jer nismo zavrsili sa ovom tackom
         }
         AlgoritamBaza_updateCanvasAndBlock();
     }
@@ -73,13 +75,13 @@ void konveksniomotac::crtajAlgoritam(QPainter *painter) const {
 }
 
 void konveksniomotac::pokreniNaivniAlgoritam() {
-    for (auto i = 0;i < _tacke.size(); i++) {
-        for (auto j = 0; j < _tacke.size(); j++) {
+    for (auto i = 0ul;i < _tacke.size(); i++) {
+        for (auto j = 0ul; j < _tacke.size(); j++) {
             if (i == j){
                 continue;
             }
             bool a = true;
-            for (auto k = 0; k < _tacke.size(); k++){
+            for (auto k = 0ul; k < _tacke.size(); k++){
                 if (k == i || k == j){
                     continue;
                 }
@@ -102,6 +104,6 @@ void konveksniomotac::pokreniNaivniAlgoritam() {
 
     std::sort(naivni_konveksni_omotac.begin(), naivni_konveksni_omotac.end(), [&](const auto& lhs, const auto& rhs) {
         double P = pomocneFunkcije::povrsinaTrougla(maks_tacka, lhs, rhs);
-        return  (P < 0) ||  (std::abs(P) < 0.000001 && pomocneFunkcije::distanceKvadrat(maks_tacka, lhs) < pomocneFunkcije::distanceKvadrat(maks_tacka, rhs));
+        return  (P < 0) ||  (std::abs(P) == 0 && pomocneFunkcije::distanceKvadrat(maks_tacka, lhs) < pomocneFunkcije::distanceKvadrat(maks_tacka, rhs));
     });
 }
