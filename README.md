@@ -61,19 +61,6 @@ git push origin ime_grane:ime_grane
       *  ...
       *  ga25_temaPoslednjegStudenta
 
-## Osnovne komande
-
-   * **git pull - da prevučete trenutni kod**
-   * **git add \<fajlovi koje hocete da dodate>**
-   * **git commit -m 'Poruka koja opisuje to sto se odradili'**
-   * **git push origin master - da posaljete svoje izmene na server**
-
-_**Svaki put kada nešto radite na projektu, odradite pull komandu pre nego što počnete (kako biste uvek radili sa najnovijom verzijom koda). **_
-
-_**Potrebno je da podizete samo .cpp, .hpp/.h, .pro (ne .pro.user* niti bilo sta slicno) i .ui fajlove, NIKAKO ne podizati QtBuild fajlove **_
-
-_**Da bi se pokretali Google testovi neophodno je da u root direktorijumu projekta imate klonirane googletest (git clone https://github.com/google/googletest.git) **_
-
 ## Primer podešavanja
 
 Primer podešavanja (preuzimanja) git-a za Ubuntu:
