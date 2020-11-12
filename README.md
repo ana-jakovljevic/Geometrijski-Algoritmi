@@ -22,7 +22,7 @@ Asistent: [dr Danijela Simić](www.matf.bg.ac.rs/~danijela)
 ```
 git checkout -b ime_grane
 ```
-Ime grane treba da odgovara nazivu projekta, npr. `ga03_ImeProjekta`. Nakon napravljenih izmena, izmene se mogu podići na repozitorijum:
+Naziv `ime_grane` treba da odgovara nazivu projekta, npr. `ga03_ImeProjekta`. Nakon napravljenih izmena, izmene se mogu podići na repozitorijum:
 ```
 git add <files>
 git commit -m 'opis izmena'
