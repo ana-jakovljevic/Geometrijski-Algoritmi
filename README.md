@@ -26,7 +26,7 @@ Naziv `ime_grane` treba da odgovara nazivu projekta, npr. `ga03_ImeProjekta`. Na
 ```
 git add <files>
 git commit -m 'opis izmena'
-git push origin <ga03_ImeProjekta>:<ga03_ImeProjekta>
+git push origin ime_grane:ime_grane
 ```
 
 **Struktura direktorijuma**
