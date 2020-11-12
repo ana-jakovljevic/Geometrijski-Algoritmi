@@ -515,20 +515,18 @@ void PresekPravougaonika::detect(unsigned int l, unsigned int d)
     }
 
     /* Popunjavanje preostalih rupa */
-    for (auto i = H1; i < s; i++) {
-        _Hh[i] = nullptr;
-    }
-    for (auto j = H2; j < d; j++) {
-        _Hh[j] = nullptr;
-    }
+    std::fill(_Hh+H1, _Hh+s, nullptr);
+    std::fill(_Hh+H2, _Hh+d, nullptr);
 
-    /* Prepisivanje particionisanog niza nazad */
-    for (auto i = l; i < d; i++) {
-        _H[i] = _Hh[i];
-    }
+    /* Prepisivanje particionisanog niza nazad, i
+     * to vrlo jednostavno, zamenom pokazivaca */
+    std::swap(_H, _Hh);
 
     /* Pronalazenje preseka u potprostorima */
     detect(s, d); detect(l, s);
+
+    /* Vracanje pokazivaca kako bi sve bilo okej */
+    std::swap(_H, _Hh);
 
 #ifndef GA06_BENCHMARK
     /* Izbacivanje podele iz niza */
@@ -553,12 +551,12 @@ void PresekPravougaonika::report()
     /* Pravljenje i sortiranje niza pravougaonika
      * posmatranih kao vertikalnih intervala */
     _H = new Pravougaonik *[2*_n];
-    for (auto i = 0ul; i < _n; i++) {
-        _H[i] = _pravougaonici[i];
-        _H[_n+i] = nullptr;
-    }
+    std::copy(_pravougaonici, _pravougaonici+_n, _H);
     std::sort(_H, _H+_n, [](const Pravougaonik *a, const Pravougaonik *b)
                            { return a->yDole < b->yDole; });
+
+    /* Popunjavanje preostalih praznina */
+    std::fill_n(_H+_n, _n, nullptr);
 
     /* Pravljenje pomocnog sortiranog niza */
     _Hh = new Pravougaonik *[2*_n];
