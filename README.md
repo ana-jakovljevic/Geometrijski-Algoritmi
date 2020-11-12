@@ -18,7 +18,7 @@ Asistent: [dr Danijela Simić](www.matf.bg.ac.rs/~danijela)
 
 [Link do šablona za projektnu dokumentaciju.](https://docs.google.com/document/d/1m8cPjdLozvlJ_rWD65epozbCq894KYWkZ6jXciUtN38/edit?usp=sharing)
 
-**Pre početka potrebno je napraviti granu na kojoj će biti projekat.** To se že postići na sledeći način:
+**Pre početka potrebno je napraviti granu na kojoj će biti projekat.** To se može postići na sledeći način:
 ```
 git checkout -b ime_grane
 ```
