@@ -1,4 +1,5 @@
 #include "ga06_presekPravougaonika.h"
+
 #include <fstream>
 
 /* Konstrukcija pravougaonika od dve tacke */
@@ -148,7 +149,7 @@ IntersecSet PresekPravougaonika::getGruba() const
 
 #ifndef GA06_BENCHMARK
 /* Staticki bafer dalekog skoka */
-jmp_buf PresekPravougaonika::buf;
+jmp_buf PresekPravougaonika::_buf;
 #endif
 
 /* Algoritam zasnovan na strategiji podeli pa vladaj, pogledati
@@ -160,7 +161,7 @@ void PresekPravougaonika::pokreniAlgoritam()
 
 #ifndef GA06_BENCHMARK
     /* Realizacija dalekog skoka iz duboke rekurzije */
-    if (!setjmp(buf)) {
+    if (!setjmp(_buf)) {
 #endif
         /* Prijavljivanje svih preseka u paru */
         report();

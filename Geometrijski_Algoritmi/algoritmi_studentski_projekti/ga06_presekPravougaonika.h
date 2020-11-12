@@ -14,7 +14,7 @@
 #define PresekPravougaonika_updateCanvasAndBlock() \
     if (updateCanvasAndBlock()) \
     { \
-        longjmp(buf, 1); \
+        longjmp(_buf, 1); \
     }
 
 /* Enumeracija pripadnosti skupu kandidata */
@@ -226,12 +226,12 @@ public:
     void crtajAlgoritam(QPainter *) const final;
     void pokreniNaivniAlgoritam() final;
 
-    /* Dodatni metodi za grubu silu */
-    inline bool sekuSe(const Pravougaonik *, const Pravougaonik *) const;
+    /* Dodatni metod za grubu silu */
     void pokreniAlgoritamGrubeSile();
 
 private:
     /* Rad sa podacima, inicijalizacija */
+    inline bool sekuSe(const Pravougaonik *, const Pravougaonik *) const;
     void ubaciPresek(const Pravougaonik *, const Pravougaonik *, IntersecVec &);
     void generisiNasumicnePravougaonike(int);
     void ucitajPodatkeIzDatoteke(std::string);
@@ -276,7 +276,7 @@ private:
 
 #ifndef GA06_BENCHMARK
     /* Staticki bafer dalekog skoka */
-    static jmp_buf buf;
+    static jmp_buf _buf;
 #endif
 };
 
