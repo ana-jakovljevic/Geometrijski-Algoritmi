@@ -13,6 +13,7 @@ SOURCES += \
     algoritmi_sa_vezbi/ga00_demoiscrtavanja.cpp \
     algoritmi_sa_vezbi/ga01_brisucaprava.cpp \
     algoritmi_sa_vezbi/ga02_3discrtavanje.cpp \
+    algoritmi_sa_vezbi/ga04_konveksniomotac3d.cpp \
     animacijanit.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -27,6 +28,8 @@ HEADERS += \
     algoritmi_sa_vezbi/ga00_demoiscrtavanja.h \
     algoritmi_sa_vezbi/ga01_brisucaprava.h \
     algoritmi_sa_vezbi/ga02_3discrtavanje.h \
+    algoritmi_sa_vezbi/ga04_konveksni3dDatastructures.h \
+    algoritmi_sa_vezbi/ga04_konveksniomotac3d.h \
     animacijanit.h \
     config.h \
     mainwindow.h \

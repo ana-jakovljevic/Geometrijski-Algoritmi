@@ -714,6 +714,11 @@
            </item>
            <item>
             <property name="text">
+             <string>Konveksni omotac 3D</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
              <string>STUDENTSKI PROJEKTI</string>
             </property>
            </item>
