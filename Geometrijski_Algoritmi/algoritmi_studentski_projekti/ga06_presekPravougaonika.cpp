@@ -185,19 +185,10 @@ void PresekPravougaonika::crtajAlgoritam(QPainter *painter) const
     /* Odustajanje u slucaju greske */
     if (!painter) return;
 
-    /* Podesavanje stila crtanja */
-    auto olovka = painter->pen();
-    olovka.setColor(Qt::yellow);
-    painter->setPen(olovka);
-
     /* Iscrtavanje svih preseka */
     for (auto i = 0ul; i < _preseciGlavni.size(); i++) {
         painter->fillRect(uzmiPresek(i), Qt::yellow);
     }
-
-    /* Podesavanje stila crtanja */
-    olovka.setColor(Qt::red);
-    painter->setPen(olovka);
 
     /* Iscrtavanje novih preseka */
     if (_pocetakNovih) {
@@ -207,16 +198,13 @@ void PresekPravougaonika::crtajAlgoritam(QPainter *painter) const
         }
     }
 
-    /* Podesavanje stila crtanja */
-    olovka.setColor(Qt::black);
-    painter->setPen(olovka);
-
     /* Iscrtavanje svakog pravougaonika */
     for (auto i = 0ul; i < _n; i++) {
         painter->drawRect(*_pravougaonici[i]);
     }
 
     /* Podesavanje stila crtanja */
+    auto olovka = painter->pen();
     olovka.setColor(Qt::darkGreen);
     olovka.setWidthF(olovka.widthF()/1.5);
     painter->setPen(olovka);
