@@ -148,7 +148,7 @@ IntersecSet PresekPravougaonika::getGruba() const
 }
 
 #ifndef GA06_BENCHMARK
-/* Staticki bafer za dalek skok */
+/* Staticki bafer za daleki skok */
 jmp_buf PresekPravougaonika::_buf;
 #endif
 
