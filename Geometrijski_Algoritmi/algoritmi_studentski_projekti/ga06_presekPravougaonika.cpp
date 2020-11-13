@@ -148,7 +148,7 @@ IntersecSet PresekPravougaonika::getGruba() const
 }
 
 #ifndef GA06_BENCHMARK
-/* Staticki bafer dalekog skoka */
+/* Staticki bafer za dalek skok */
 jmp_buf PresekPravougaonika::_buf;
 #endif
 
@@ -160,22 +160,23 @@ void PresekPravougaonika::pokreniAlgoritam()
     _preseciGlavni.clear();
 
 #ifndef GA06_BENCHMARK
-    /* Realizacija dalekog skoka iz duboke rekurzije */
-    if (!setjmp(_buf)) {
+    /* Postavljanje dalekog skoka, za lako iskakanje iz
+     * duboke rekurzije po potrebi (prekid animacije)*/
+    if (setjmp(_buf)) return;
 #endif
-        /* Prijavljivanje svih preseka u paru */
-        report();
 
-        /* Obavestavanje pozivaoca o finalizovanoj animaciji */
-        emit animacijaZavrsila();
-#ifndef GA06_BENCHMARK
-    }
-#else
+    /* Prijavljivanje svih preseka u paru */
+    report();
+
+#ifdef GA06_BENCHMARK
     /* Popunjavanje crteza konacnim rezultatom */
     if (_pCrtanje) {
         _pCrtanje->update();
     }
 #endif
+
+    /* Obavestavanje pozivaoca o gotovoj animaciji */
+    emit animacijaZavrsila();
 }
 
 /* Iscrtavanje tekuceg stanja algoritma */

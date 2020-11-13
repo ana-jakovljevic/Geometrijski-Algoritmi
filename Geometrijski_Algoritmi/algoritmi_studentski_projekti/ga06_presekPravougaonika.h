@@ -10,7 +10,8 @@
 /* Makro za proveru performansi algoritma */
 /*#define GA06_BENCHMARK*/
 
-/* Makro za daleki skok iz duboke rekurzije */
+/* Makro za osvezavanje crteza uz eventualni daleki
+ * skok za potrebe iskakanja iz duboke rekurzije */
 #define PresekPravougaonika_updateCanvasAndBlock() \
     if (updateCanvasAndBlock()) \
     { \
@@ -275,7 +276,7 @@ private:
     std::experimental::optional<unsigned int> _pocetakNovih;
 
 #ifndef GA06_BENCHMARK
-    /* Staticki bafer dalekog skoka */
+    /* Staticki bafer za daleki skok */
     static jmp_buf _buf;
 #endif
 };
