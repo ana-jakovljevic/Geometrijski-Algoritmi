@@ -44,7 +44,7 @@ void konveksniomotac::pokreniAlgoritam() {
         else {
             konveksni_omotac.pop_back();
             --pom;
-            //Ne smemo da povecamo j u ovom slucaju, jer nismo zavrsili sa ovom tackom
+            // Ne smemo da povecamo j u ovom slucaju, jer nismo zavrsili sa ovom tackom
         }
         AlgoritamBaza_updateCanvasAndBlock();
     }
