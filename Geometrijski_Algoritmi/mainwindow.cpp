@@ -227,7 +227,10 @@ void MainWindow::napraviNoviAlgoritam()
     if (_pAlgoritamBaza)
     {
         _pOblastCrtanja->postaviAlgoritamKojiSeIzvrsava(_pAlgoritamBaza);
+        _pOblastCrtanja->update();
+
         _pOblastCrtanjaOpenGL->postaviAlgoritamKojiSeIzvrsava(_pAlgoritamBaza);
+        _pOblastCrtanjaOpenGL->update();
 
         connect(_pAlgoritamBaza, &AlgoritamBaza::animacijaZavrsila, this, &MainWindow::na_krajuAnimacije);
     }
