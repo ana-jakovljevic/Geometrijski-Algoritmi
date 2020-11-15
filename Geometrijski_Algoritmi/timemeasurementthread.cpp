@@ -10,6 +10,7 @@
 #include "ga01_brisucaprava.h"
 #include "ga02_3discrtavanje.h"
 #include "ga03_konveksniomotac.h"
+#include "ga04_konveksniomotac3d.h"
 
 TimeMeasurementThread::TimeMeasurementThread(QString tipAlgoritma, int minValue, int step, int maxValue)
     : QThread(), _algorithmType(tipAlgoritma), _minValue(minValue), _step(step), _maxValue(maxValue)

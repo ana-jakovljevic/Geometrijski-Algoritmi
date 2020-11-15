@@ -97,6 +97,7 @@ void MainWindow::on_datoteka_dugme_clicked()
 
 void MainWindow::on_Nasumicni_dugme_clicked()
 {
+    _imeDatoteke = "";
     if (ui->brojNasumicniTacaka->text() != "" )
         _broj_nasumicnih_tacaka = ui->brojNasumicniTacaka->text().toInt();
 
@@ -118,6 +119,10 @@ void MainWindow::on_Ponisti_dugme_clicked()
 
     ui->brojNasumicniTacaka->clear();
     ui->brojNasumicniTacaka->setPlaceholderText("Uneti broj nasumicnih tacaka, podrazumevana vrednost je 20.");
+
+    _imeDatoteke = "";
+    _optimalSeries->clear();
+    _naiveSeries->clear();
 }
 
 void MainWindow::on_Zapocni_dugme_clicked()
