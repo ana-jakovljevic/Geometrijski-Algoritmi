@@ -9,11 +9,10 @@ MainWindow::MainWindow(QWidget *parent)
       _pAlgoritamBaza(nullptr),
       _imeDatoteke(""),
       _duzinaPauze(DUZINA_PAUZE),
-      _broj_nasumicnih_tacaka(BROJ_NASUMICNIH_TACAKA),
-      _naivni(false)
+      _broj_nasumicnih_tacaka(BROJ_NASUMICNIH_TACAKA)
 {
     ui->setupUi(this);
-    ui->tipAlgoritma->insertSeparator(4);
+    ui->tipAlgoritma->insertSeparator(static_cast<int>(TipAlgoritma::SEPARATOR));
     animacijaButtonAktivni(false);
     animacijaParametriButtonAktivni(true);
 
@@ -85,23 +84,25 @@ void MainWindow::animacijaParametriButtonAktivni(bool param_aktivnosti)
 
 void MainWindow::on_datoteka_dugme_clicked()
 {
-    QString imeDatoteke = QFileDialog::getOpenFileName(this, tr("Datoteka sa koordinatama tacaka"), "./ulazni_podaci/", "*.*");
+    QString imeDatoteke = QFileDialog::getOpenFileName(this,
+                              tr("Datoteka sa koordinatama tacaka"), "./ulazni_podaci/", "*.*");
     if (imeDatoteke.isEmpty())
         return;
 
     _imeDatoteke = imeDatoteke.toStdString();
 
     napraviNoviAlgoritam();
-    animacijaButtonAktivni(true);
+    ui->Zapocni_dugme->setEnabled(true);
 }
 
 void MainWindow::on_Nasumicni_dugme_clicked()
 {
+    _imeDatoteke = "";
     if (ui->brojNasumicniTacaka->text() != "" )
         _broj_nasumicnih_tacaka = ui->brojNasumicniTacaka->text().toInt();
 
     napraviNoviAlgoritam();
-    animacijaButtonAktivni(true);
+    ui->Zapocni_dugme->setEnabled(true);
 }
 
 void MainWindow::on_Ponisti_dugme_clicked()
@@ -118,10 +119,15 @@ void MainWindow::on_Ponisti_dugme_clicked()
 
     ui->brojNasumicniTacaka->clear();
     ui->brojNasumicniTacaka->setPlaceholderText("Uneti broj nasumicnih tacaka, podrazumevana vrednost je 20.");
+
+    _imeDatoteke = "";
+    _optimalSeries->clear();
+    _naiveSeries->clear();
 }
 
 void MainWindow::on_Zapocni_dugme_clicked()
 {
+    animacijaButtonAktivni(true);
     ui->Zapocni_dugme->setEnabled(false);
     animacijaParametriButtonAktivni(false);
     ui->merenjeButton->setEnabled(false);
@@ -158,9 +164,9 @@ void MainWindow::on_Ispocetka_dugme_clicked()
 
 void MainWindow::on_tipAlgoritma_currentIndexChanged(int index)
 {
-    QString trenutniAlg = ui->tipAlgoritma->itemText(index);
-
-    if (trenutniAlg == "SA CASOVA VEZBI" || trenutniAlg == "STUDENTSKI PROJEKTI")
+    TipAlgoritma tipAlgoritma = static_cast<TipAlgoritma>(index);
+    if (tipAlgoritma == TipAlgoritma::ALGORITMI_SA_VEZBI ||
+        tipAlgoritma == TipAlgoritma::STUDENTSKI_PROJEKTI)
     {
         ui->datoteka_dugme->setEnabled(false);
         ui->Nasumicni_dugme->setEnabled(false);
@@ -178,11 +184,15 @@ void MainWindow::on_tipAlgoritma_currentIndexChanged(int index)
 /* za Chart, poredjenje. */
 void MainWindow::on_merenjeButton_clicked()
 {
-    QString tipAlgoritma = ui->tipAlgoritma->currentText();
+    ui->merenjeButton->setEnabled(false);
+    _optimalSeries->clear();
+    _naiveSeries->clear();
+
+    TipAlgoritma tipAlgoritma = static_cast<TipAlgoritma>(ui->tipAlgoritma->currentIndex());
 
     _mThread = new TimeMeasurementThread(tipAlgoritma, MIN_DIM, STEP, MAX_DIM);
-
     connect(_mThread, &TimeMeasurementThread::updateChart, this, &MainWindow::on_lineSeriesChange);
+    connect(_mThread, &TimeMeasurementThread::finishChart, this, &MainWindow::on_chartFinished);
     _mThread->start();
 }
 
@@ -192,6 +202,10 @@ void MainWindow::on_lineSeriesChange(double dim, double optimal, double naive)
     _naiveSeries->append(dim, naive);
 }
 
+void MainWindow::on_chartFinished()
+{
+    ui->merenjeButton->setEnabled(true);
+}
 
 void MainWindow::na_krajuAnimacije()
 {
@@ -199,6 +213,7 @@ void MainWindow::na_krajuAnimacije()
     ui->Ponisti_dugme->setEnabled(true);
     animacijaButtonAktivni(false);
     ui->Ispocetka_dugme->setEnabled(true);
+    ui->merenjeButton->setEnabled(true);
 }
 
 void MainWindow::napraviNoviAlgoritam()
@@ -209,23 +224,45 @@ void MainWindow::napraviNoviAlgoritam()
     delete _pAlgoritamBaza;
     _pAlgoritamBaza = nullptr;
 
-    QString tipAlgoritma = ui->tipAlgoritma->currentText();
-
     /* Ovde se kreiraju instance algoritama pozivom njihovih konstruktora. Svi
        2D algoritmi crtaju po _pOblastCrtanja, a 3D po _pOblastCrtanjaOpenGL. */
-    if (tipAlgoritma == "Demonstracija iscrtavanja")
-        _pAlgoritamBaza = new DemoIscrtavanja(_pOblastCrtanja, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
-    else if (tipAlgoritma == "Brisuca prava")
-        _pAlgoritamBaza = new BrisucaPrava(_pOblastCrtanja, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
-    else if (tipAlgoritma == "3D iscrtavanje")
-        _pAlgoritamBaza = new Discrtavanje(_pOblastCrtanjaOpenGL, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
-    else if (tipAlgoritma == "Presek pravougaonika")
-        _pAlgoritamBaza = new PresekPravougaonika(_pOblastCrtanja, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
+    TipAlgoritma tipAlgoritma = static_cast<TipAlgoritma>(ui->tipAlgoritma->currentIndex());
+    switch (tipAlgoritma) {
+    case TipAlgoritma::DEMO_ISCRTAVANJA:
+        _pAlgoritamBaza = new DemoIscrtavanja(_pOblastCrtanja, _duzinaPauze,
+                                              _imeDatoteke, _broj_nasumicnih_tacaka);
+        break;
+    case TipAlgoritma::BRISUCA_PRAVA:
+        _pAlgoritamBaza = new BrisucaPrava(_pOblastCrtanja, _duzinaPauze,
+                                           _imeDatoteke, _broj_nasumicnih_tacaka);
+        break;
+    case TipAlgoritma::_3D_ISCRTAVANJE:
+        _pAlgoritamBaza = new Discrtavanje(_pOblastCrtanjaOpenGL, _duzinaPauze,
+                                           _imeDatoteke, _broj_nasumicnih_tacaka);
+        break;
+    case TipAlgoritma::KONVEKSNI_OMOTAC:
+        _pAlgoritamBaza = new konveksniomotac(_pOblastCrtanja, _duzinaPauze,
+                                              _imeDatoteke, _broj_nasumicnih_tacaka);
+        break;
+    case TipAlgoritma::KONVEKSNI_OMOTAC_3D:
+        _pAlgoritamBaza = new KonveksniOmotac3D(_pOblastCrtanjaOpenGL, _duzinaPauze,
+                                                _imeDatoteke, _broj_nasumicnih_tacaka);
+        break;
+    case TipAlgoritma::PRESEK_PRAVOUGAONIKA:
+        _pAlgoritamBaza = new PresekPravougaonika(_pOblastCrtanja, _duzinaPauze,
+                                                  _imeDatoteke, _broj_nasumicnih_tacaka);
+        break;
+    default: /* ako nije algoritam uopste */
+        break;
+    }
 
     if (_pAlgoritamBaza)
     {
         _pOblastCrtanja->postaviAlgoritamKojiSeIzvrsava(_pAlgoritamBaza);
+        _pOblastCrtanja->update();
+
         _pOblastCrtanjaOpenGL->postaviAlgoritamKojiSeIzvrsava(_pAlgoritamBaza);
+        _pOblastCrtanjaOpenGL->update();
 
         connect(_pAlgoritamBaza, &AlgoritamBaza::animacijaZavrsila, this, &MainWindow::na_krajuAnimacije);
     }

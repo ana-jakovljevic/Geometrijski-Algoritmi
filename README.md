@@ -13,10 +13,21 @@ Asistent: [dr Danijela Simić](www.matf.bg.ac.rs/~danijela)
 
    * **Instalirati Qt i git (detaljnije na dnu)**
    * **Napraviti nalog na bitbucket-u**
-   * **[Upisati nalog u tabelu:](https://docs.google.com/spreadsheets/d/1S-QJQNRnt59KoZLHLpdVfhZbjv8NLtsucuAXb112wHg/edit?usp=sharing)** (bez obzira što još uvek nemate izabrane projekte, upišite ime, prezime i korisničko ime)
-   * **Napraviti folder na lokalnom računaru**, pozicionirati se u folder i klonirati repozirotijum komandom ```git clone https://bitbucket.org/geoalg2021/velikiseminarski```
+   * **Upisati nalog u [tabelu](https://docs.google.com/spreadsheets/d/1S-QJQNRnt59KoZLHLpdVfhZbjv8NLtsucuAXb112wHg/edit?usp=sharing)**, bez obzira na to što još uvek nemate izabrane projekte, upišite ime, prezime i korisničko ime
+   * **Napraviti folder na lokalnom računaru**, pozicionirati se u folder i klonirati repozitorijum komandom ```git clone https://bitbucket.org/geoalg2021/velikiseminarski```
 
 [Link do šablona za projektnu dokumentaciju.](https://docs.google.com/document/d/1m8cPjdLozvlJ_rWD65epozbCq894KYWkZ6jXciUtN38/edit?usp=sharing)
+
+**Pre početka potrebno je napraviti granu na kojoj će biti projekat.** To se može postići na sledeći način:
+```
+git checkout -b ime_grane
+```
+Naziv `ime_grane` treba da odgovara nazivu projekta, npr. `ga03_ImeProjekta`. Nakon napravljenih izmena, izmene se mogu podići na repozitorijum:
+```
+git add <files>
+git commit -m 'opis izmena'
+git push origin ime_grane:ime_grane
+```
 
 **Struktura direktorijuma**
 
@@ -50,19 +61,6 @@ Asistent: [dr Danijela Simić](www.matf.bg.ac.rs/~danijela)
       *  ...
       *  ga25_temaPoslednjegStudenta
 
-## Osnovne komande
-
-   * **git pull - da prevučete trenutni kod**
-   * **git add \<fajlovi koje hocete da dodate>**
-   * **git commit -m 'Poruka koja opisuje to sto se odradili'**
-   * **git push origin master - da posaljete svoje izmene na server**
-
-_**Svaki put kada nešto radite na projektu, odradite pull komandu pre nego što počnete (kako biste uvek radili sa najnovijom verzijom koda). **_
-
-_**Potrebno je da podizete samo .cpp, .hpp/.h, .pro (ne .pro.user* niti bilo sta slicno) i .ui fajlove, NIKAKO ne podizati QtBuild fajlove **_
-
-_**Da bi se pokretali Google testovi neophodno je da u root direktorijumu projekta imate klonirane googletest (git clone https://github.com/google/googletest.git) **_
-
 ## Primer podešavanja
 
 Primer podešavanja (preuzimanja) git-a za Ubuntu:
@@ -79,7 +77,7 @@ Prezentacija o jediničnim testovima:
 
   * http://poincare.matf.bg.ac.rs/~asimic/2017/ga/7/UnitTests.pdf
 
-Povezivanje sa Atlassian nalogom
+Povezivanje sa Atlassian nalogom:
 
   * git config user.name "korisničko ime iz tabele"
   * git config user.email "povezani mejl iz tabele"

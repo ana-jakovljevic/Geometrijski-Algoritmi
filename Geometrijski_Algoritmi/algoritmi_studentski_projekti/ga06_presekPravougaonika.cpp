@@ -107,11 +107,6 @@ PresekPravougaonika::PresekPravougaonika(QWidget *pCrtanje,
         generisiNasumicnePravougaonike(brojPravougaonika);
     else
         ucitajPodatkeIzDatoteke(imeDatoteke);
-
-    /* Popunjavanje crteza pocetnim tackama */
-    if (_pCrtanje) {
-        _pCrtanje->update();
-    }
 }
 
 /* Deinicijalizacija algoritma */

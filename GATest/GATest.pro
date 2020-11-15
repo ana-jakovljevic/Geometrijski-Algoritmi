@@ -15,6 +15,9 @@ QT += core gui charts widgets opengl
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 HEADERS += \
+    tst_ga00_PrimerTest.h \
+    tst_ga06_presekPravougaonika.h \
+    ../Geometrijski_Algoritmi/pomocnefunkcije.h \
     ../Geometrijski_Algoritmi/algoritambaza.h \
     ../Geometrijski_Algoritmi/animacijanit.h \
     ../Geometrijski_Algoritmi/config.h \
@@ -23,9 +26,8 @@ HEADERS += \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga00_demoiscrtavanja.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga01_brisucaprava.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga02_3discrtavanje.h \
-    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.h \
-    tst_ga00_PrimerTest.h \
-    tst_ga06_presekPravougaonika.h
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga03_konveksniomotac.h \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga04_konveksniomotac3d.h
 
 INCLUDEPATH += \
     ../Geometrijski_Algoritmi \
@@ -38,6 +40,8 @@ INCLUDEPATH += \
 }
 
 SOURCES += main.cpp \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.cpp \
+    ../Geometrijski_Algoritmi/pomocnefunkcije.cpp \
     ../Geometrijski_Algoritmi/algoritambaza.cpp \
     ../Geometrijski_Algoritmi/animacijanit.cpp \
     ../Geometrijski_Algoritmi/oblastcrtanja.cpp \
@@ -45,4 +49,5 @@ SOURCES += main.cpp \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga00_demoiscrtavanja.cpp \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga01_brisucaprava.cpp \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga02_3discrtavanje.cpp \
-    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.cpp
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga03_konveksniomotac.cpp \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga04_konveksniomotac3d.cpp

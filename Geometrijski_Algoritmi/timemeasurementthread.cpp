@@ -8,10 +8,12 @@
 #include "ga00_demoiscrtavanja.h"
 #include "ga01_brisucaprava.h"
 #include "ga02_3discrtavanje.h"
+#include "ga03_konveksniomotac.h"
+#include "ga04_konveksniomotac3d.h"
 
 #include "ga06_presekPravougaonika.h"
 
-TimeMeasurementThread::TimeMeasurementThread(QString tipAlgoritma, int minValue, int step, int maxValue)
+TimeMeasurementThread::TimeMeasurementThread(TipAlgoritma tipAlgoritma, int minValue, int step, int maxValue)
     : QThread(), _algorithmType(tipAlgoritma), _minValue(minValue), _step(step), _maxValue(maxValue)
 {
 }
@@ -32,10 +34,19 @@ void TimeMeasurementThread::run()
     {
 
         /* Ovde kreirati instancu klase algoritma. */
-        if (_algorithmType == "Demonstracija iscrtavanja")
+        switch (_algorithmType) {
+        case TipAlgoritma::DEMO_ISCRTAVANJA:
             pAlgorithm = new DemoIscrtavanja(nullptr, 0, "", i);
-        else if (_algorithmType == "Presek pravougaonika")
+            break;
+        case TipAlgoritma::KONVEKSNI_OMOTAC:
+            pAlgorithm = new konveksniomotac(nullptr, 0, "", i);
+            break;
+        case TipAlgoritma::PRESEK_PRAVOUGAONIKA:
             pAlgorithm = new PresekPravougaonika(nullptr, 0, "", i);
+            break;
+        default:
+            break;
+        }
 
         if(pAlgorithm)
         {
@@ -62,4 +73,6 @@ void TimeMeasurementThread::run()
             pAlgorithm = nullptr;
         }
     }
+
+    emit finishChart();
 }
