@@ -23,6 +23,7 @@ public:
 
 signals:
     void updateChart(double dim, double optimal, double naive);
+    void finishChart();
 
 private:
     QString _algorithmType;

@@ -45,6 +45,7 @@ private slots:
     /* za Chart */
     void on_merenjeButton_clicked();
     void on_lineSeriesChange(double dim, double optimal, double naive);
+    void on_chartFinished();
 
     void on_tipAlgoritma_currentIndexChanged(int index);
 

@@ -36,6 +36,7 @@ void TimeMeasurementThread::run()
             pAlgorithm = new DemoIscrtavanja(nullptr, 0, "", i);
         else if(_algorithmType == "Konveksni omotac")
             pAlgorithm = new konveksniomotac(nullptr, 0, "", i);
+
         if(pAlgorithm)
         {
 #ifndef SKIP_OPTIMAL
@@ -61,4 +62,6 @@ void TimeMeasurementThread::run()
             pAlgorithm = nullptr;
         }
     }
+
+    emit finishChart();
 }

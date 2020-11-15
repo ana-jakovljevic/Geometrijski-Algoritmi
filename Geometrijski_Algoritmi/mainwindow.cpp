@@ -178,11 +178,15 @@ void MainWindow::on_tipAlgoritma_currentIndexChanged(int index)
 /* za Chart, poredjenje. */
 void MainWindow::on_merenjeButton_clicked()
 {
+    ui->merenjeButton->setEnabled(false);
+    _optimalSeries->clear();
+    _naiveSeries->clear();
+
     QString tipAlgoritma = ui->tipAlgoritma->currentText();
 
     _mThread = new TimeMeasurementThread(tipAlgoritma, MIN_DIM, STEP, MAX_DIM);
-
     connect(_mThread, &TimeMeasurementThread::updateChart, this, &MainWindow::on_lineSeriesChange);
+    connect(_mThread, &TimeMeasurementThread::finishChart, this, &MainWindow::on_chartFinished);
     _mThread->start();
 }
 
@@ -192,6 +196,10 @@ void MainWindow::on_lineSeriesChange(double dim, double optimal, double naive)
     _naiveSeries->append(dim, naive);
 }
 
+void MainWindow::on_chartFinished()
+{
+    ui->merenjeButton->setEnabled(true);
+}
 
 void MainWindow::na_krajuAnimacije()
 {
