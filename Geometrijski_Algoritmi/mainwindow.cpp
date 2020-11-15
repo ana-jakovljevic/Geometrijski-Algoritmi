@@ -92,7 +92,7 @@ void MainWindow::on_datoteka_dugme_clicked()
     _imeDatoteke = imeDatoteke.toStdString();
 
     napraviNoviAlgoritam();
-    animacijaButtonAktivni(true);
+    ui->Zapocni_dugme->setEnabled(true);
 }
 
 void MainWindow::on_Nasumicni_dugme_clicked()
@@ -102,7 +102,7 @@ void MainWindow::on_Nasumicni_dugme_clicked()
         _broj_nasumicnih_tacaka = ui->brojNasumicniTacaka->text().toInt();
 
     napraviNoviAlgoritam();
-    animacijaButtonAktivni(true);
+    ui->Zapocni_dugme->setEnabled(true);
 }
 
 void MainWindow::on_Ponisti_dugme_clicked()
@@ -127,6 +127,7 @@ void MainWindow::on_Ponisti_dugme_clicked()
 
 void MainWindow::on_Zapocni_dugme_clicked()
 {
+    animacijaButtonAktivni(true);
     ui->Zapocni_dugme->setEnabled(false);
     animacijaParametriButtonAktivni(false);
     ui->merenjeButton->setEnabled(false);
@@ -212,6 +213,7 @@ void MainWindow::na_krajuAnimacije()
     ui->Ponisti_dugme->setEnabled(true);
     animacijaButtonAktivni(false);
     ui->Ispocetka_dugme->setEnabled(true);
+    ui->merenjeButton->setEnabled(true);
 }
 
 void MainWindow::napraviNoviAlgoritam()
