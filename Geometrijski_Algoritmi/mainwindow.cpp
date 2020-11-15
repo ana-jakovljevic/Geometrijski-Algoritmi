@@ -9,11 +9,10 @@ MainWindow::MainWindow(QWidget *parent)
       _pAlgoritamBaza(nullptr),
       _imeDatoteke(""),
       _duzinaPauze(DUZINA_PAUZE),
-      _broj_nasumicnih_tacaka(BROJ_NASUMICNIH_TACAKA),
-      _naivni(false)
+      _broj_nasumicnih_tacaka(BROJ_NASUMICNIH_TACAKA)
 {
     ui->setupUi(this);
-    ui->tipAlgoritma->insertSeparator(6);
+    ui->tipAlgoritma->insertSeparator(static_cast<int>(TipAlgoritma::SEPARATOR));
     animacijaButtonAktivni(false);
     animacijaParametriButtonAktivni(true);
 
@@ -85,7 +84,8 @@ void MainWindow::animacijaParametriButtonAktivni(bool param_aktivnosti)
 
 void MainWindow::on_datoteka_dugme_clicked()
 {
-    QString imeDatoteke = QFileDialog::getOpenFileName(this, tr("Datoteka sa koordinatama tacaka"), "./ulazni_podaci/", "*.*");
+    QString imeDatoteke = QFileDialog::getOpenFileName(this,
+                              tr("Datoteka sa koordinatama tacaka"), "./ulazni_podaci/", "*.*");
     if (imeDatoteke.isEmpty())
         return;
 
@@ -164,9 +164,9 @@ void MainWindow::on_Ispocetka_dugme_clicked()
 
 void MainWindow::on_tipAlgoritma_currentIndexChanged(int index)
 {
-    QString trenutniAlg = ui->tipAlgoritma->itemText(index);
-
-    if (trenutniAlg == "SA CASOVA VEZBI" || trenutniAlg == "STUDENTSKI PROJEKTI")
+    TipAlgoritma tipAlgoritma = static_cast<TipAlgoritma>(index);
+    if (tipAlgoritma == TipAlgoritma::ALGORITMI_SA_VEZBI ||
+        tipAlgoritma == TipAlgoritma::STUDENTSKI_PROJEKTI)
     {
         ui->datoteka_dugme->setEnabled(false);
         ui->Nasumicni_dugme->setEnabled(false);
@@ -188,7 +188,7 @@ void MainWindow::on_merenjeButton_clicked()
     _optimalSeries->clear();
     _naiveSeries->clear();
 
-    QString tipAlgoritma = ui->tipAlgoritma->currentText();
+    TipAlgoritma tipAlgoritma = static_cast<TipAlgoritma>(ui->tipAlgoritma->currentIndex());
 
     _mThread = new TimeMeasurementThread(tipAlgoritma, MIN_DIM, STEP, MAX_DIM);
     connect(_mThread, &TimeMeasurementThread::updateChart, this, &MainWindow::on_lineSeriesChange);
@@ -224,20 +224,33 @@ void MainWindow::napraviNoviAlgoritam()
     delete _pAlgoritamBaza;
     _pAlgoritamBaza = nullptr;
 
-    QString tipAlgoritma = ui->tipAlgoritma->currentText();
-
     /* Ovde se kreiraju instance algoritama pozivom njihovih konstruktora. Svi
        2D algoritmi crtaju po _pOblastCrtanja, a 3D po _pOblastCrtanjaOpenGL. */
-    if (tipAlgoritma == "Demonstracija iscrtavanja")
-        _pAlgoritamBaza = new DemoIscrtavanja(_pOblastCrtanja, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
-    else if (tipAlgoritma == "Brisuca prava")
-        _pAlgoritamBaza = new BrisucaPrava(_pOblastCrtanja, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
-    else if (tipAlgoritma == "3D iscrtavanje")
-        _pAlgoritamBaza = new Discrtavanje(_pOblastCrtanjaOpenGL, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
-    else if (tipAlgoritma == "Konveksni omotac")
-        _pAlgoritamBaza = new konveksniomotac(_pOblastCrtanja, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
-    else if (tipAlgoritma == "Konveksni omotac 3D")
-        _pAlgoritamBaza = new KonveksniOmotac3D(_pOblastCrtanjaOpenGL, _duzinaPauze, _imeDatoteke, _broj_nasumicnih_tacaka);
+    TipAlgoritma tipAlgoritma = static_cast<TipAlgoritma>(ui->tipAlgoritma->currentIndex());
+    switch (tipAlgoritma) {
+    case TipAlgoritma::DEMO_ISCRTAVANJA:
+        _pAlgoritamBaza = new DemoIscrtavanja(_pOblastCrtanja, _duzinaPauze,
+                                              _imeDatoteke, _broj_nasumicnih_tacaka);
+        break;
+    case TipAlgoritma::BRISUCA_PRAVA:
+        _pAlgoritamBaza = new BrisucaPrava(_pOblastCrtanja, _duzinaPauze,
+                                           _imeDatoteke, _broj_nasumicnih_tacaka);
+        break;
+    case TipAlgoritma::_3D_ISCRTAVANJE:
+        _pAlgoritamBaza = new Discrtavanje(_pOblastCrtanjaOpenGL, _duzinaPauze,
+                                           _imeDatoteke, _broj_nasumicnih_tacaka);
+        break;
+    case TipAlgoritma::KONVEKSNI_OMOTAC:
+        _pAlgoritamBaza = new konveksniomotac(_pOblastCrtanja, _duzinaPauze,
+                                              _imeDatoteke, _broj_nasumicnih_tacaka);
+        break;
+    case TipAlgoritma::KONVEKSNI_OMOTAC_3D:
+        _pAlgoritamBaza = new KonveksniOmotac3D(_pOblastCrtanjaOpenGL, _duzinaPauze,
+                                                _imeDatoteke, _broj_nasumicnih_tacaka);
+        break;
+    default: /* ako nije algoritam uopste */
+        break;
+    }
 
     if (_pAlgoritamBaza)
     {

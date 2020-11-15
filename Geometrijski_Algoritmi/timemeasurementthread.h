@@ -10,13 +10,14 @@
 QT_CHARTS_USE_NAMESPACE
 
 #include "algoritambaza.h"
+enum class TipAlgoritma;
 
 class TimeMeasurementThread : public QThread
 {
     Q_OBJECT
 
 public:
-    TimeMeasurementThread(QString algorithmType, int minValue, int step, int maxValue);
+    TimeMeasurementThread(TipAlgoritma algorithmType, int minValue, int step, int maxValue);
 
     // QThread interface
     void run();
@@ -26,7 +27,7 @@ signals:
     void finishChart();
 
 private:
-    QString _algorithmType;
+    TipAlgoritma _algorithmType;
     int _minValue;
     int _step;
     int _maxValue;
