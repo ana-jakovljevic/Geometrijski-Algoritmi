@@ -15,6 +15,7 @@ Asistent: [dr Danijela Simić](www.matf.bg.ac.rs/~danijela)
    * **Napraviti nalog na bitbucket-u**
    * **[Upisati nalog u tabelu:](https://docs.google.com/spreadsheets/d/1S-QJQNRnt59KoZLHLpdVfhZbjv8NLtsucuAXb112wHg/edit?usp=sharing)** (bez obzira što još uvek nemate izabrane projekte, upišite ime, prezime i korisničko ime)
    * **Napraviti folder na lokalnom računaru**, pozicionirati se u folder i klonirati repozitorijum komandom ```git clone https://bitbucket.org/geoalg2021/velikiseminarski```
+   * Sifra za `knjige.zip` je _geometrijskialgoritmi_
 
 [Link do šablona za projektnu dokumentaciju.](https://docs.google.com/document/d/1m8cPjdLozvlJ_rWD65epozbCq894KYWkZ6jXciUtN38/edit?usp=sharing)
 
