@@ -57,10 +57,11 @@ void KonveksniOmotac3D::pokreniAlgoritam()
         return;
     }
 
-    for(int i=0u;i<_tacke.size();i++){
+    for(auto i=0ul; i<_tacke.size() ;i++){
         if(!_tacke[i]->getObradjeno()){
             DodajTeme(_tacke[i]);
             ObrisiVisak();
+            _tacke[i]->setObradjeno(true);
         }
     }
 
@@ -124,6 +125,31 @@ bool KonveksniOmotac3D::Tetraedar()
 
 void KonveksniOmotac3D::DodajTeme(Teme* t)
 {
+    int vidljiva = 0;
+    for(int i=0; i<_stranice.size(); i++){
+
+        double zapremina = zapremina6(_stranice[i], t);
+
+        if(zapremina<0){
+            vidljiva=1;
+            _stranice[i]->setVidljiva(true);
+        }
+    }
+
+    if(vidljiva==0){
+        return;
+    }
+
+    for(int i=0; i<_ivice.size(); i++){
+        if(_ivice[i]->s1()->getVidljiva() && _ivice[i]->s2()->getVidljiva())
+            _ivice[i]->setObrisati(true);
+        else if(_ivice[i]->s1()->getVidljiva())
+            _ivice[i]->zameniVidljivuStranicu(napraviPrvuStranicu(_ivice[i], t), 0);
+        else if(_ivice[i]->s2()->getVidljiva())
+            _ivice[i]->zameniVidljivuStranicu(napraviDruguStranicu(_ivice[i], t), 1);
+
+    }
+
 
 }
 
