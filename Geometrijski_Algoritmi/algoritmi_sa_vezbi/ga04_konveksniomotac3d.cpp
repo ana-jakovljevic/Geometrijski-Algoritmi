@@ -70,6 +70,55 @@ void KonveksniOmotac3D::pokreniAlgoritam()
 
 bool KonveksniOmotac3D::Tetraedar()
 {
+    auto it = _tacke.begin();
+    Teme *t1 = *it;
+    t1->setObradjeno(true);
+    it++;
+    Teme *t2 = *it;
+    t2->setObradjeno(true);
+    it++;
+    for(;it != _tacke.end(); it++)
+        if(!kolinearne(t1, t2, *it))
+            break;
+    if(it == _tacke.end())
+        return false;
+
+    Teme *t3 = *it;
+    t3->setObradjeno(true);
+
+    for(;it != _tacke.end(); it++)
+        if(pomocneFunkcije::zapremina(t1->koordinate(), t2->koordinate(), t3->koordinate(), (*it)->koordinate()) != 0)
+            break;
+    if(it == _tacke.end())
+        return false;
+
+    Teme *t4 = *it;
+    t4->setObradjeno(true);
+
+    Ivica *i1 = new Ivica(t1, t2);
+    Ivica *i2 = new Ivica(t2, t3);
+    Ivica *i3 = new Ivica(t3, t1);
+    Stranica *s1 = new Stranica(t1, t2, t3);
+    _ivice.push_back(i1);
+    _ivice.push_back(i2);
+    _ivice.push_back(i3);
+    _stranice.push_back(s1);
+
+    i1->postavi_stranicu(s1);
+    i2->postavi_stranicu(s1);
+    i3->postavi_stranicu(s1);
+
+    if(zapremina6(s1, t4) < 0){
+        s1->izmeniRedosledTemena();
+        i1->izmeniRedosledTemena();
+        i2->izmeniRedosledTemena();
+        i3->izmeniRedosledTemena();
+    }
+
+    i1->postavi_stranicu(napraviDruguStranicu(i1, t4));
+    i2->postavi_stranicu(napraviDruguStranicu(i2, t4));
+    i3->postavi_stranicu(napraviDruguStranicu(i3, t4));
+
     return true;
 }
 
