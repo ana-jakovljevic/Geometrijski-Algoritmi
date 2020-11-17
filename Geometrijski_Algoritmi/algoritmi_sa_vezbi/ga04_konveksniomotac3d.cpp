@@ -65,6 +65,7 @@ void KonveksniOmotac3D::pokreniAlgoritam()
             DodajTeme(_tacke[i]);
             ObrisiVisak();
             _tacke[i]->setObradjeno(true);
+            AlgoritamBaza_updateCanvasAndBlock();
         }
     }
 
