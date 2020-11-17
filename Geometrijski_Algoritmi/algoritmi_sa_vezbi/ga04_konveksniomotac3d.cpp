@@ -53,7 +53,19 @@ std::vector<Teme *> KonveksniOmotac3D::ucitajPodatkeIzDatoteke(std::string imeDa
 
 void KonveksniOmotac3D::pokreniAlgoritam()
 {
+    if(Tetraedar() == false){
+        return;
+    }
 
+    for(int i=0u;i<_tacke.size();i++){
+        if(!_tacke[i]->getObradjeno()){
+            DodajTeme(_tacke[i]);
+            ObrisiVisak();
+        }
+    }
+
+    AlgoritamBaza_updateCanvasAndBlock();
+    emit animacijaZavrsila();
 }
 
 bool KonveksniOmotac3D::Tetraedar()
@@ -68,6 +80,23 @@ void KonveksniOmotac3D::DodajTeme(Teme* t)
 
 void KonveksniOmotac3D::ObrisiVisak()
 {
+    int i = 0;
+    while(i < _stranice.size()){
+        if(_stranice[i]->getVidljiva()){
+            _stranice.removeAt(i);
+        } else {
+            i++;
+        }
+    }
+
+    i = 0;
+    while(i < _ivice.size()){
+        if(_ivice[i]->obrisati()){
+            _ivice.removeAt(i);
+        } else {
+            i++;
+        }
+    }
 
 }
 
