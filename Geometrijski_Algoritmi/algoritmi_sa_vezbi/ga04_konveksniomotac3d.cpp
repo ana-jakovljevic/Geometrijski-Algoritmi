@@ -190,6 +190,76 @@ bool KonveksniOmotac3D::kolinearne(Teme *a, Teme *b, Teme *c)
     return pomocneFunkcije::kolinearne3D(a->koordinate(), b->koordinate(), c->koordinate());
 }
 
+Stranica* KonveksniOmotac3D::napraviPrvuStranicu(Ivica *iv, Teme *t){
+    Ivica* i1=nullptr;
+    Ivica* i2=nullptr;
+    bool iv1=false, iv2 =false;
+    for(auto i=0; i<_ivice.size(); i++){
+        if((_ivice[i]->t1() == iv->t1() && _ivice[i]->t2() == t)
+                || (_ivice[i]->t1() == t && _ivice[i]->t2() == iv->t1())){
+            iv1 = true;
+            i1  = _ivice[i];
+        }
+        if((_ivice[i]->t1() == iv->t2() && _ivice[i]->t2() == t)
+                || (_ivice[i]->t1() == t && _ivice[i]->t2() == iv->t2())){
+            iv2 = true;
+            i2  = _ivice[i];
+        }
+
+    }
+    if(!iv1){
+        i1 = new Ivica(t, iv->t1());
+        _ivice.push_back(i1);
+    }
+    if(!iv2){
+        i2 = new Ivica(iv->t2(), t);
+        _ivice.push_back(i2);
+    }
+
+    Stranica *s = new Stranica(iv->t1(),iv->t2(), t);
+    _stranice.push_back(s);
+
+    i1->postavi_stranicu(s);
+    i2->postavi_stranicu(s);
+
+    return s;
+}
+
+Stranica* KonveksniOmotac3D::napraviDruguStranicu(Ivica *iv, Teme *t){
+    Ivica* i1=nullptr;
+    Ivica* i2=nullptr;
+    bool iv1=false, iv2 =false;
+    for(auto i=0; i<_ivice.size(); i++){
+        if((_ivice[i]->t1() == iv->t1() && _ivice[i]->t2() == t)
+                || (_ivice[i]->t1() == t && _ivice[i]->t2() == iv->t1())){
+            iv1 = true;
+            i1  = _ivice[i];
+        }
+        if((_ivice[i]->t1() == iv->t2() && _ivice[i]->t2() == t)
+                || (_ivice[i]->t1() == t && _ivice[i]->t2() == iv->t2())){
+            iv2 = true;
+            i2  = _ivice[i];
+        }
+
+    }
+    if(!iv1){
+        i1 = new Ivica(iv->t1(),t);
+        _ivice.push_back(i1);
+    }
+    if(!iv2){
+        i2 = new Ivica(t,iv->t2());
+        _ivice.push_back(i2);
+    }
+
+    Stranica *s = new Stranica(iv->t2(),iv->t1(), t);
+    _stranice.push_back(s);
+
+    i1->postavi_stranicu(s);
+    i2->postavi_stranicu(s);
+
+    return s;
+}
+
 /*--------------------------------------------------------------------------------------------------*/
 /*---------------------------------Crtanje i Naivni algoritam---------------------------------------*/
 /*--------------------------------------------------------------------------------------------------*/
