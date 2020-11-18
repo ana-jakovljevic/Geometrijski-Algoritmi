@@ -15,6 +15,18 @@
 #include "ga03_konveksniomotac.h"
 #include "ga04_konveksniomotac3d.h"
 
+/* Enumeracija algoritama */
+enum class TipAlgoritma {
+    ALGORITMI_SA_VEZBI,
+    DEMO_ISCRTAVANJA,
+    BRISUCA_PRAVA,
+    _3D_ISCRTAVANJE,
+    KONVEKSNI_OMOTAC,
+    KONVEKSNI_OMOTAC_3D,
+    SEPARATOR,
+    STUDENTSKI_PROJEKTI
+};
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -45,6 +57,7 @@ private slots:
     /* za Chart */
     void on_merenjeButton_clicked();
     void on_lineSeriesChange(double dim, double optimal, double naive);
+    void on_chartFinished();
 
     void on_tipAlgoritma_currentIndexChanged(int index);
 
@@ -67,7 +80,6 @@ private:
     std::string _imeDatoteke;
     int _duzinaPauze;
     int _broj_nasumicnih_tacaka;
-    bool _naivni;
 
     /* Chart deo */
     QLineSeries *_naiveSeries;

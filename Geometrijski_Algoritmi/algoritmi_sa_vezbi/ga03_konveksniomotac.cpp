@@ -23,8 +23,8 @@ void konveksniomotac::pokreniAlgoritam() {
     }
     AlgoritamBaza_updateCanvasAndBlock();
     std::sort(_tacke.begin(), _tacke.end(), [&](const auto& lhs, const auto& rhs) {
-        double P = pomocneFunkcije::povrsinaTrougla(maks_tacka, lhs, rhs);
-        return  (P < 0) ||  (std::abs(P) == 0 && pomocneFunkcije::distanceKvadrat(maks_tacka, lhs) < pomocneFunkcije::distanceKvadrat(maks_tacka, rhs));
+        int P = pomocneFunkcije::povrsinaTrougla(maks_tacka, lhs, rhs);
+        return  (P < 0) ||  (P == 0 && pomocneFunkcije::distanceKvadrat(maks_tacka, lhs) < pomocneFunkcije::distanceKvadrat(maks_tacka, rhs));
     });
 
     konveksni_omotac.push_back(maks_tacka);
@@ -44,7 +44,7 @@ void konveksniomotac::pokreniAlgoritam() {
         else {
             konveksni_omotac.pop_back();
             --pom;
-                       //Ne smemo da povecamo j u ovom slucaju, jer nismo zavrsili sa ovom tackom
+            // Ne smemo da povecamo j u ovom slucaju, jer nismo zavrsili sa ovom tackom
         }
         AlgoritamBaza_updateCanvasAndBlock();
     }
@@ -103,7 +103,7 @@ void konveksniomotac::pokreniNaivniAlgoritam() {
     }
 
     std::sort(naivni_konveksni_omotac.begin(), naivni_konveksni_omotac.end(), [&](const auto& lhs, const auto& rhs) {
-        double P = pomocneFunkcije::povrsinaTrougla(maks_tacka, lhs, rhs);
-        return  (P < 0) ||  (std::abs(P) == 0 && pomocneFunkcije::distanceKvadrat(maks_tacka, lhs) < pomocneFunkcije::distanceKvadrat(maks_tacka, rhs));
+        int P = pomocneFunkcije::povrsinaTrougla(maks_tacka, lhs, rhs);
+        return  (P < 0) ||  (P == 0 && pomocneFunkcije::distanceKvadrat(maks_tacka, lhs) < pomocneFunkcije::distanceKvadrat(maks_tacka, rhs));
     });
 }

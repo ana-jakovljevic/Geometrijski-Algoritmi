@@ -1,9 +1,8 @@
 #ifndef TST_GA00_PRIMERTEST_H
 #define TST_GA00_PRIMERTEST_H
 
-#include<gtest/gtest.h>
-#include<gmock/gmock-matchers.h>
-// #include"../Geometrijski_Algoritmi/algoritmi_sa_vezbi/
+#include <gtest/gtest.h>
+#include <gmock/gmock-matchers.h>
 
 using namespace testing;
 
