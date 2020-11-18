@@ -23,6 +23,10 @@ bool pomocneFunkcije::kolinearne3D(QVector3D a, QVector3D b, QVector3D c)
      * vektora jednaki nuli.
      * Kako je u pitanju float vrednost, gledamo da li je apsultna vrednost manja od
      * nekog malog broja.
+     * Tj. proveravamo sledece
+     * |  i      j      k  |
+     * |ax-bx  ay-by  az-bz| = (0, 0, 0)
+     * |ax-cx  ay-cy  az-cz|
      */
     return (fabs((c.z() - a.z()) * (b.y() - a.y()) -
               (b.z() - a.z()) * (c.y() - a.y())) < 0.000001) &&
