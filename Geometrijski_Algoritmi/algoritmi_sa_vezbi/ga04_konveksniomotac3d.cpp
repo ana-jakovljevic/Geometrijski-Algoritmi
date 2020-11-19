@@ -144,14 +144,21 @@ void KonveksniOmotac3D::DodajTeme(Teme* t)
         return;
     }
 
+    /* Niz ivica nije konstantan. U okviru pravljenja stranica, cesto postoji potreba za pravljenjem
+     * novih ivica, pri cemu im se dodeljuje samo jedna stranica, dok je druga jos nepoznata. Ipak,
+     * ivica moze doci na red za obradu i pre nego sto se otkrije druga stranica, pa _ivice[i]->s2()
+     * lako moze biti nullptr i treba je napraviti, ako je tekuca ivica nova (tada stariSize <= i).
+     * U suprotnom se dobija SIGSEGV (segmentation fault) za sve iole vece ulaze (npr. 100). */
+    const auto stariSize = _ivice.size();
     for(int i=0; i<_ivice.size(); i++){
-        if(_ivice[i]->s1()->getVidljiva() && _ivice[i]->s2()->getVidljiva())
+        const auto s1Losa = _ivice[i]->s1()->getVidljiva();
+        const auto s2Losa = (stariSize <= i && !_ivice[i]->s2()) || _ivice[i]->s2()->getVidljiva();
+        if(s1Losa && s2Losa)
             _ivice[i]->setObrisati(true);
-        else if(_ivice[i]->s1()->getVidljiva())
+        else if(s1Losa)
             _ivice[i]->zameniVidljivuStranicu(napraviPrvuStranicu(_ivice[i], t), 0);
-        else if(_ivice[i]->s2()->getVidljiva())
+        else if(s2Losa)
             _ivice[i]->zameniVidljivuStranicu(napraviDruguStranicu(_ivice[i], t), 1);
-
     }
 
 
@@ -159,8 +166,14 @@ void KonveksniOmotac3D::DodajTeme(Teme* t)
 
 void KonveksniOmotac3D::ObrisiVisak()
 {
-    std::remove_if(_stranice.begin(),_stranice.end(),[](Stranica* stranica){ return stranica->getVidljiva(); });
-    std::remove_if(_ivice.begin(),_ivice.end(),[](Ivica* ivica){ return ivica->obrisati();});
+    _stranice.erase(std::remove_if(_stranice.begin(),
+                                   _stranice.end(),
+                                   [](Stranica* stranica){ return stranica->getVidljiva(); }),
+                    _stranice.end());
+    _ivice.erase(std::remove_if(_ivice.begin(),
+                                _ivice.end(),
+                                [](Ivica* ivica){ return ivica->obrisati();}),
+                 _ivice.end());
 }
 
 /*--------------------------------------------------------------------------------------------------*/

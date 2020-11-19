@@ -37,9 +37,17 @@ void TimeMeasurementThread::run()
         case TipAlgoritma::DEMO_ISCRTAVANJA:
             pAlgorithm = new DemoIscrtavanja(nullptr, 0, "", i);
             break;
+        case TipAlgoritma::BRISUCA_PRAVA:
+            pAlgorithm = new BrisucaPrava(nullptr, 0, "", i);
+            break;
+        case TipAlgoritma::_3D_ISCRTAVANJE:
+            pAlgorithm = new BrisucaPrava(nullptr, 0, "", i);
+            break;
         case TipAlgoritma::KONVEKSNI_OMOTAC:
             pAlgorithm = new konveksniomotac(nullptr, 0, "", i);
             break;
+        case TipAlgoritma::KONVEKSNI_OMOTAC_3D:
+            pAlgorithm = new KonveksniOmotac3D(nullptr, 0, "", i);
         default:
             break;
         }
