@@ -28,21 +28,19 @@ public:
     void ObrisiVisak();
 
     /* Pomocne funkcije. */
-    double zapremina6(Stranica* s, Teme* t);
-    bool kolinearne(Teme*a, Teme*b, Teme*c);
-    Stranica* napraviDruguStranicu(Ivica*i, Teme*t);
-    Stranica* napraviPrvuStranicu(Ivica*iv, Teme*t);
+    double zapremina6(Stranica* s, Teme* t) const;
+    bool kolinearne(Teme* a, Teme* b, Teme* c) const;
+    Stranica* napraviDruguStranicu(Ivica* i, Teme* t);
+    Stranica* napraviPrvuStranicu(Ivica* iv, Teme* t);
 
     /* Ucitavanje podataka. */
-    std::vector<Teme*> generisiNasumicneTacke(int broj_tacaka);
-    std::vector<Teme*> ucitajPodatkeIzDatoteke(std::string imeDatoteke);
+    std::vector<Teme*> generisiNasumicneTacke(int broj_tacaka) const;
+    std::vector<Teme*> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
 
 private:
     std::vector<Teme*> _tacke;
     QList<Ivica*> _ivice;
     QList<Stranica*> _stranice;
-
-    int _znakZapremine;
 };
 
 #endif // KONVEKSNIOMOTAC3D_H

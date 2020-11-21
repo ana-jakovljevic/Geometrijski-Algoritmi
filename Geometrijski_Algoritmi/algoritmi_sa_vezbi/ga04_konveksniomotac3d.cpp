@@ -8,8 +8,6 @@ KonveksniOmotac3D::KonveksniOmotac3D(QWidget *pCrtanje,
                                      int broj_tacaka)
         :AlgoritamBaza(pCrtanje, pauzaKoraka)
 {
-    _znakZapremine = 1;
-
     if (imeDatoteke != "")
         _tacke = ucitajPodatkeIzDatoteke(imeDatoteke);
     else
@@ -19,29 +17,29 @@ KonveksniOmotac3D::KonveksniOmotac3D(QWidget *pCrtanje,
 /*--------------------------------------------------------------------------------------------------*/
 /*---------------------------------Ucitavanje podataka----------------------------------------------*/
 /*--------------------------------------------------------------------------------------------------*/
-std::vector<Teme *> KonveksniOmotac3D::generisiNasumicneTacke(int broj_tacaka)
+std::vector<Teme *> KonveksniOmotac3D::generisiNasumicneTacke(int broj_tacaka) const
 {
     srand(static_cast<unsigned>(time(0)));
 
     std::vector<Teme*> randomPoints;
 
     for(int i=0; i < broj_tacaka; i++)
-        randomPoints.push_back(new Teme(QVector3D(
+        randomPoints.emplace_back(new Teme(
            1.*rand()/RAND_MAX,
            1.*rand()/RAND_MAX,
-           1.*rand()/RAND_MAX)));
+           1.*rand()/RAND_MAX));
 
     return randomPoints;
 }
 
-std::vector<Teme *> KonveksniOmotac3D::ucitajPodatkeIzDatoteke(std::string imeDatoteke)
+std::vector<Teme *> KonveksniOmotac3D::ucitajPodatkeIzDatoteke(std::string imeDatoteke) const
 {
     std::ifstream inputFile(imeDatoteke);
     std::vector<Teme*> points;
     float x, y, z;
     while(inputFile >> x >> y >> z)
     {
-        points.push_back(new Teme(QVector3D(x, y, z)));
+        points.emplace_back(new Teme(x, y, z));
     }
     return points;
 }
@@ -160,8 +158,6 @@ void KonveksniOmotac3D::DodajTeme(Teme* t)
         else if(s2Losa)
             _ivice[i]->zameniVidljivuStranicu(napraviDruguStranicu(_ivice[i], t), 1);
     }
-
-
 }
 
 void KonveksniOmotac3D::ObrisiVisak()
@@ -179,14 +175,14 @@ void KonveksniOmotac3D::ObrisiVisak()
 /*--------------------------------------------------------------------------------------------------*/
 /*---------------------------------Pomocni metodi---------------------------------------------------*/
 /*--------------------------------------------------------------------------------------------------*/
-double KonveksniOmotac3D::zapremina6(Stranica *s, Teme *t)
+double KonveksniOmotac3D::zapremina6(Stranica *s, Teme *t) const
 {
     return pomocneFunkcije::zapremina(s->t1()->koordinate(),
                 s->t2()->koordinate(), s->t3()->koordinate(),
                 t->koordinate());
 }
 
-bool KonveksniOmotac3D::kolinearne(Teme *a, Teme *b, Teme *c)
+bool KonveksniOmotac3D::kolinearne(Teme *a, Teme *b, Teme *c) const
 {
     return pomocneFunkcije::kolinearne3D(a->koordinate(), b->koordinate(), c->koordinate());
 }
