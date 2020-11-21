@@ -142,7 +142,7 @@ void KonveksniOmotac3D::DodajTeme(Teme* t)
         Stranica *s2 = ivica->s2();
         zapremina = zapremina6(s2, t);
 
-        if(zapremina<0){
+        if(zapremina < 0){
             vidljiva = true;
             s2->setVidljiva(true);
         }
