@@ -102,9 +102,9 @@ bool KonveksniOmotac3D::Tetraedar()
     Ivica *i2 = new Ivica(t2, t3);
     Ivica *i3 = new Ivica(t3, t1);
     Stranica *s1 = new Stranica(t1, t2, t3);
-    _ivice.push_back(i1);
-    _ivice.push_back(i2);
-    _ivice.push_back(i3);
+    _ivice.insert(i1);
+    _ivice.insert(i2);
+    _ivice.insert(i3);
     _stranice.push_back(s1);
 
     i1->postavi_stranicu(s1);
@@ -142,22 +142,36 @@ void KonveksniOmotac3D::DodajTeme(Teme* t)
         return;
     }
 
-    /* Niz ivica nije konstantan. U okviru pravljenja stranica, cesto postoji potreba za pravljenjem
-     * novih ivica, pri cemu im se dodeljuje samo jedna stranica, dok je druga jos nepoznata. Ipak,
-     * ivica moze doci na red za obradu i pre nego sto se otkrije druga stranica, pa _ivice[i]->s2()
-     * lako moze biti nullptr i treba je napraviti, ako je tekuca ivica nova (tada stariSize <= i).
-     * U suprotnom se dobija SIGSEGV (segmentation fault) za sve iole vece ulaze (npr. 100). */
-    const auto stariSize = _ivice.size();
-    for(int i=0; i<_ivice.size(); i++){
-        const auto s1Losa = _ivice[i]->s1()->getVidljiva();
-        const auto s2Losa = (stariSize <= i && !_ivice[i]->s2()) || _ivice[i]->s2()->getVidljiva();
+    /* Skup ivica nije konstantan, pa je ovde neophodno kopirati ih u vektor, kako
+     * bi se proslo samo kroz stare ivice, ne i one koje su novododate u prolazu.
+     * Ovo mozda zvuci skupo, ali je zapravo vrlo jeftino i ne utice na slozenost. */
+    for(auto ivica: std::vector<Ivica*>(_ivice.begin(), _ivice.end())){
+        const auto s1Losa = ivica->s1()->getVidljiva();
+        const auto s2Losa = ivica->s2()->getVidljiva();
         if(s1Losa && s2Losa)
-            _ivice[i]->setObrisati(true);
+            ivica->setObrisati(true);
         else if(s1Losa)
-            _ivice[i]->zameniVidljivuStranicu(napraviPrvuStranicu(_ivice[i], t), 0);
+            ivica->zameniVidljivuStranicu(napraviPrvuStranicu(ivica, t), 0);
         else if(s2Losa)
-            _ivice[i]->zameniVidljivuStranicu(napraviDruguStranicu(_ivice[i], t), 1);
+            ivica->zameniVidljivuStranicu(napraviDruguStranicu(ivica, t), 1);
     }
+
+    /* Dakle, u okviru pravljenja stranica, cesto postoji potreba za pravljenjem novih ivica,
+     * pri cemu im se dodeljuje samo jedna stranica, dok je druga jos nepoznata. Pri prolasku kroz
+     * novododate ivice, neka moze doci na red za obradu i pre nego sto se otkrije druga stranica,
+     * pa _noveIvice[i]->s2() lako moze biti nullptr. Stoga je treba napraviti pre nastavka petlje.
+     * U suprotnom se dobija SIGSEGV (segmentation fault) za sve iole vece ulaze (npr. 100). */
+    for (auto i = 0ul; i < _noveIvice.size(); i++) {
+        const auto s1Losa = _noveIvice[i]->s1()->getVidljiva();
+        const auto s2Losa = !_noveIvice[i]->s2() || _noveIvice[i]->s2()->getVidljiva();
+        if(s1Losa && s2Losa)
+            _noveIvice[i]->setObrisati(true);
+        else if(s1Losa)
+            _noveIvice[i]->zameniVidljivuStranicu(napraviPrvuStranicu(_noveIvice[i], t), 0);
+        else if(s2Losa)
+            _noveIvice[i]->zameniVidljivuStranicu(napraviDruguStranicu(_noveIvice[i], t), 1);
+    }
+    _noveIvice.clear();
 }
 
 void KonveksniOmotac3D::ObrisiVisak()
@@ -166,10 +180,7 @@ void KonveksniOmotac3D::ObrisiVisak()
                                    _stranice.end(),
                                    [](Stranica* stranica){ return stranica->getVidljiva(); }),
                     _stranice.end());
-    _ivice.erase(std::remove_if(_ivice.begin(),
-                                _ivice.end(),
-                                [](Ivica* ivica){ return ivica->obrisati();}),
-                 _ivice.end());
+    std::experimental::erase_if(_ivice, [](Ivica* ivica){ return ivica->obrisati(); });
 }
 
 /*--------------------------------------------------------------------------------------------------*/
@@ -191,26 +202,28 @@ Stranica* KonveksniOmotac3D::napraviPrvuStranicu(Ivica *iv, Teme *t){
     Ivica* i1=nullptr;
     Ivica* i2=nullptr;
     bool iv1=false, iv2 =false;
-    for(auto i=0; i<_ivice.size(); i++){
-        if((_ivice[i]->t1() == iv->t1() && _ivice[i]->t2() == t)
-                || (_ivice[i]->t1() == t && _ivice[i]->t2() == iv->t1())){
+    for(auto ivica: _ivice){
+        if((ivica->t1() == iv->t1() && ivica->t2() == t)
+                || (ivica->t1() == t && ivica->t2() == iv->t1())){
             iv1 = true;
-            i1  = _ivice[i];
+            i1  = ivica;
         }
-        if((_ivice[i]->t1() == iv->t2() && _ivice[i]->t2() == t)
-                || (_ivice[i]->t1() == t && _ivice[i]->t2() == iv->t2())){
+        if((ivica->t1() == iv->t2() && ivica->t2() == t)
+                || (ivica->t1() == t && ivica->t2() == iv->t2())){
             iv2 = true;
-            i2  = _ivice[i];
+            i2  = ivica;
         }
 
     }
     if(!iv1){
         i1 = new Ivica(t, iv->t1());
-        _ivice.push_back(i1);
+        _ivice.insert(i1);
+        _noveIvice.push_back(i1);
     }
     if(!iv2){
         i2 = new Ivica(iv->t2(), t);
-        _ivice.push_back(i2);
+        _ivice.insert(i2);
+        _noveIvice.push_back(i2);
     }
 
     Stranica *s = new Stranica(iv->t1(),iv->t2(), t);
@@ -226,26 +239,28 @@ Stranica* KonveksniOmotac3D::napraviDruguStranicu(Ivica *iv, Teme *t){
     Ivica* i1=nullptr;
     Ivica* i2=nullptr;
     bool iv1=false, iv2 =false;
-    for(auto i=0; i<_ivice.size(); i++){
-        if((_ivice[i]->t1() == iv->t1() && _ivice[i]->t2() == t)
-                || (_ivice[i]->t1() == t && _ivice[i]->t2() == iv->t1())){
+    for(auto ivica: _ivice){
+        if((ivica->t1() == iv->t1() && ivica->t2() == t)
+                || (ivica->t1() == t && ivica->t2() == iv->t1())){
             iv1 = true;
-            i1  = _ivice[i];
+            i1  = ivica;
         }
-        if((_ivice[i]->t1() == iv->t2() && _ivice[i]->t2() == t)
-                || (_ivice[i]->t1() == t && _ivice[i]->t2() == iv->t2())){
+        if((ivica->t1() == iv->t2() && ivica->t2() == t)
+                || (ivica->t1() == t && ivica->t2() == iv->t2())){
             iv2 = true;
-            i2  = _ivice[i];
+            i2  = ivica;
         }
 
     }
     if(!iv1){
         i1 = new Ivica(iv->t1(),t);
-        _ivice.push_back(i1);
+        _ivice.insert(i1);
+        _noveIvice.push_back(i1);
     }
     if(!iv2){
         i2 = new Ivica(t,iv->t2());
-        _ivice.push_back(i2);
+        _ivice.insert(i2);
+        _noveIvice.push_back(i2);
     }
 
     Stranica *s = new Stranica(iv->t2(),iv->t1(), t);

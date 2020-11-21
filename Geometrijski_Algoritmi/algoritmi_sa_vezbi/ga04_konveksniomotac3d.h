@@ -3,6 +3,8 @@
 
 #include<vector>
 #include<QList>
+#include <unordered_set>
+#include <experimental/unordered_set>
 
 #include "algoritambaza.h"
 #include "ga04_konveksni3dDatastructures.h"
@@ -39,8 +41,16 @@ public:
 
 private:
     std::vector<Teme*> _tacke;
-    QList<Ivica*> _ivice;
     QList<Stranica*> _stranice;
+
+    /* Neuredjeni skup za cuvanje ivica; nije nam sustinski vazan redosled
+     * ivica u skupu, pa nema potrebe za nizovima kod kojih su pretraga i
+     * brisanje reda O(n) umesto jednostavnog O(1) */
+    std::unordered_set<Ivica*, HashIvica, EqIvica> _ivice;
+
+    /* Ipak, neophodno je tacno znati koje su novododate ivice, tako da
+     * je potreban jedan pomocni vektor, ali se kroz njega samo iterira */
+    std::vector<Ivica*> _noveIvice;
 };
 
 #endif // KONVEKSNIOMOTAC3D_H
