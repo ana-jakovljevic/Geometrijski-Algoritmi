@@ -1,8 +1,6 @@
 #ifndef KONVEKSNIOMOTAC3D_H
 #define KONVEKSNIOMOTAC3D_H
 
-#include<vector>
-#include<QList>
 #include <unordered_set>
 #include <experimental/unordered_set>
 
@@ -41,7 +39,6 @@ public:
 
 private:
     std::vector<Teme*> _tacke;
-    QList<Stranica*> _stranice;
 
     /* Neuredjeni skup za cuvanje ivica; nije nam sustinski vazan redosled
      * ivica u skupu, pa nema potrebe za nizovima kod kojih su pretraga i

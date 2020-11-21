@@ -105,7 +105,6 @@ bool KonveksniOmotac3D::Tetraedar()
     _ivice.insert(i1);
     _ivice.insert(i2);
     _ivice.insert(i3);
-    _stranice.push_back(s1);
 
     i1->postavi_stranicu(s1);
     i2->postavi_stranicu(s1);
@@ -127,18 +126,29 @@ bool KonveksniOmotac3D::Tetraedar()
 
 void KonveksniOmotac3D::DodajTeme(Teme* t)
 {
-    int vidljiva = 0;
-    for(int i=0; i<_stranice.size(); i++){
+    bool vidljiva = false;
 
-        double zapremina = zapremina6(_stranice[i], t);
+    /* Kroz stranice iteriramo tako sto zapravo
+     * uzimamo dve po dve prolaskom kroz ivice */
+    for(auto ivica : _ivice){
+        Stranica *s1 = ivica->s1();
+        double zapremina = zapremina6(s1, t);
+
+        if(zapremina < 0){
+            vidljiva = true;
+            s1->setVidljiva(true);
+        }
+
+        Stranica *s2 = ivica->s2();
+        zapremina = zapremina6(s2, t);
 
         if(zapremina<0){
-            vidljiva=1;
-            _stranice[i]->setVidljiva(true);
+            vidljiva = true;
+            s2->setVidljiva(true);
         }
     }
 
-    if(vidljiva==0){
+    if(!vidljiva){
         return;
     }
 
@@ -176,10 +186,6 @@ void KonveksniOmotac3D::DodajTeme(Teme* t)
 
 void KonveksniOmotac3D::ObrisiVisak()
 {
-    _stranice.erase(std::remove_if(_stranice.begin(),
-                                   _stranice.end(),
-                                   [](Stranica* stranica){ return stranica->getVidljiva(); }),
-                    _stranice.end());
     std::experimental::erase_if(_ivice, [](Ivica* ivica){ return ivica->obrisati(); });
 }
 
@@ -221,8 +227,6 @@ Stranica* KonveksniOmotac3D::napraviPrvuStranicu(Ivica *iv, Teme *t){
     }
 
     Stranica *s = new Stranica(iv->t1(),iv->t2(), t);
-    _stranice.push_back(s);
-
     i1->postavi_stranicu(s);
     i2->postavi_stranicu(s);
 
@@ -249,8 +253,6 @@ Stranica* KonveksniOmotac3D::napraviDruguStranicu(Ivica *iv, Teme *t){
     }
 
     Stranica *s = new Stranica(iv->t2(),iv->t1(), t);
-    _stranice.push_back(s);
-
     i1->postavi_stranicu(s);
     i2->postavi_stranicu(s);
 
