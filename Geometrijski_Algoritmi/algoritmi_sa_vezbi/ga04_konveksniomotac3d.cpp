@@ -199,29 +199,23 @@ bool KonveksniOmotac3D::kolinearne(Teme *a, Teme *b, Teme *c) const
 }
 
 Stranica* KonveksniOmotac3D::napraviPrvuStranicu(Ivica *iv, Teme *t){
-    Ivica* i1=nullptr;
-    Ivica* i2=nullptr;
-    bool iv1=false, iv2 =false;
-    for(auto ivica: _ivice){
-        if((ivica->t1() == iv->t1() && ivica->t2() == t)
-                || (ivica->t1() == t && ivica->t2() == iv->t1())){
-            iv1 = true;
-            i1  = ivica;
-        }
-        if((ivica->t1() == iv->t2() && ivica->t2() == t)
-                || (ivica->t1() == t && ivica->t2() == iv->t2())){
-            iv2 = true;
-            i2  = ivica;
-        }
-
-    }
-    if(!iv1){
-        i1 = new Ivica(t, iv->t1());
+    /* Pretraga u neuredjenom skupu je u konstantnom vremenu. Pravi
+     * se zeljena ivica i zatim pronalazi fjom find. Ako je uspesno
+     * nadjena, uzima se taj pokazivac. Inace se prosiruje skup. */
+    Ivica* i1 = new Ivica(t, iv->t1());
+    auto iv1 = _ivice.find(i1);
+    if(iv1 != _ivice.end()){
+        i1 = *iv1;
+    } else {
         _ivice.insert(i1);
         _noveIvice.push_back(i1);
     }
-    if(!iv2){
-        i2 = new Ivica(iv->t2(), t);
+
+    Ivica* i2 = new Ivica(iv->t2(), t);
+    auto iv2 = _ivice.find(i2);
+    if(iv2 != _ivice.end()){
+        i2 = *iv2;
+    } else {
         _ivice.insert(i2);
         _noveIvice.push_back(i2);
     }
@@ -236,29 +230,20 @@ Stranica* KonveksniOmotac3D::napraviPrvuStranicu(Ivica *iv, Teme *t){
 }
 
 Stranica* KonveksniOmotac3D::napraviDruguStranicu(Ivica *iv, Teme *t){
-    Ivica* i1=nullptr;
-    Ivica* i2=nullptr;
-    bool iv1=false, iv2 =false;
-    for(auto ivica: _ivice){
-        if((ivica->t1() == iv->t1() && ivica->t2() == t)
-                || (ivica->t1() == t && ivica->t2() == iv->t1())){
-            iv1 = true;
-            i1  = ivica;
-        }
-        if((ivica->t1() == iv->t2() && ivica->t2() == t)
-                || (ivica->t1() == t && ivica->t2() == iv->t2())){
-            iv2 = true;
-            i2  = ivica;
-        }
-
-    }
-    if(!iv1){
-        i1 = new Ivica(iv->t1(),t);
+    Ivica* i1 = new Ivica(iv->t1(), t);
+    auto iv1 = _ivice.find(i1);
+    if(iv1 != _ivice.end()){
+        i1 = *iv1;
+    } else {
         _ivice.insert(i1);
         _noveIvice.push_back(i1);
     }
-    if(!iv2){
-        i2 = new Ivica(t,iv->t2());
+
+    Ivica* i2 = new Ivica(t, iv->t2());
+    auto iv2 = _ivice.find(i2);
+    if(iv2 != _ivice.end()){
+        i2 = *iv2;
+    } else {
         _ivice.insert(i2);
         _noveIvice.push_back(i2);
     }
