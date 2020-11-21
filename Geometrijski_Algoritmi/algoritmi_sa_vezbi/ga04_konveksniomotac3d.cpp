@@ -204,11 +204,14 @@ bool KonveksniOmotac3D::kolinearne(Teme *a, Teme *b, Teme *c) const
     return pomocneFunkcije::kolinearne3D(a->koordinate(), b->koordinate(), c->koordinate());
 }
 
-Stranica* KonveksniOmotac3D::napraviPrvuStranicu(Ivica *iv, Teme *t){
+Stranica* KonveksniOmotac3D::napraviStranicu(Teme *i1t1, Teme *i1t2,
+                                             Teme *i2t1, Teme *i2t2,
+                                             Teme *st1, Teme *st2, Teme *st3)
+{
     /* Pretraga u neuredjenom skupu je u konstantnom vremenu. Pravi
      * se zeljena ivica i zatim pronalazi fjom find. Ako je uspesno
      * nadjena, uzima se taj pokazivac. Inace se prosiruje skup. */
-    Ivica* i1 = new Ivica(t, iv->t1());
+    Ivica* i1 = new Ivica(i1t1, i1t2);
     auto iv1 = _ivice.find(i1);
     if(iv1 != _ivice.end()){
         i1 = *iv1;
@@ -217,7 +220,7 @@ Stranica* KonveksniOmotac3D::napraviPrvuStranicu(Ivica *iv, Teme *t){
         _noveIvice.push_back(i1);
     }
 
-    Ivica* i2 = new Ivica(iv->t2(), t);
+    Ivica* i2 = new Ivica(i2t1, i2t2);
     auto iv2 = _ivice.find(i2);
     if(iv2 != _ivice.end()){
         i2 = *iv2;
@@ -226,37 +229,20 @@ Stranica* KonveksniOmotac3D::napraviPrvuStranicu(Ivica *iv, Teme *t){
         _noveIvice.push_back(i2);
     }
 
-    Stranica *s = new Stranica(iv->t1(),iv->t2(), t);
+    Stranica *s = new Stranica(st1, st2, st3);
     i1->postavi_stranicu(s);
     i2->postavi_stranicu(s);
-
     return s;
 }
 
-Stranica* KonveksniOmotac3D::napraviDruguStranicu(Ivica *iv, Teme *t){
-    Ivica* i1 = new Ivica(iv->t1(), t);
-    auto iv1 = _ivice.find(i1);
-    if(iv1 != _ivice.end()){
-        i1 = *iv1;
-    } else {
-        _ivice.insert(i1);
-        _noveIvice.push_back(i1);
-    }
+Stranica* KonveksniOmotac3D::napraviPrvuStranicu(Ivica *iv, Teme *t)
+{
+    return napraviStranicu(t, iv->t1(), iv->t2(), t, iv->t1(), iv->t2(), t);
+}
 
-    Ivica* i2 = new Ivica(t, iv->t2());
-    auto iv2 = _ivice.find(i2);
-    if(iv2 != _ivice.end()){
-        i2 = *iv2;
-    } else {
-        _ivice.insert(i2);
-        _noveIvice.push_back(i2);
-    }
-
-    Stranica *s = new Stranica(iv->t2(),iv->t1(), t);
-    i1->postavi_stranicu(s);
-    i2->postavi_stranicu(s);
-
-    return s;
+Stranica* KonveksniOmotac3D::napraviDruguStranicu(Ivica *iv, Teme *t)
+{
+    return napraviStranicu(iv->t1(), t, t, iv->t2(), iv->t2(), iv->t1(), t);
 }
 
 /*--------------------------------------------------------------------------------------------------*/

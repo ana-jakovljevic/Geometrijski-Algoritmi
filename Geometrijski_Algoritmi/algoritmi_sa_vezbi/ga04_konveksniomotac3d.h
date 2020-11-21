@@ -30,7 +30,10 @@ public:
     /* Pomocne funkcije. */
     double zapremina6(Stranica* s, Teme* t) const;
     bool kolinearne(Teme* a, Teme* b, Teme* c) const;
-    Stranica* napraviDruguStranicu(Ivica* i, Teme* t);
+    Stranica* napraviStranicu(Teme *i1t1, Teme *i1t2,
+                              Teme *i2t1, Teme *i2t2,
+                              Teme *st1, Teme *st2, Teme *st3);
+    Stranica* napraviDruguStranicu(Ivica* iv, Teme* t);
     Stranica* napraviPrvuStranicu(Ivica* iv, Teme* t);
 
     /* Ucitavanje podataka. */
