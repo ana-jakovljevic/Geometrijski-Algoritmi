@@ -117,4 +117,26 @@ private:
     bool _vidljiva;
 };
 
+/* Struktura podataka za hesiranje ivica u neuredjenom skupu (hes tabeli);
+ * kako su pokazivaci na temena jedinstveni, a ideja je da ivica bude jednaka
+ * nezavisno od smera vektora, u redu je hesirati pokazivace na temena
+ * odvojeno, a zatim formirati krajnji rezultat ekskluzivnom disjunkcijom */
+struct HashIvica {
+    inline size_t operator()(const Ivica *const ivica) const
+    {
+        const std::hash<Teme*> hasher;
+        return hasher(ivica->t1()) ^ hasher(ivica->t2());
+    }
+};
+
+/* Struktura za odredjivanje jednakosti dve ivice; jednake su ako su im ista
+ * temena (u smislu pokazivaca), eventualno u suprotnom redosledu */
+struct EqIvica {
+    inline bool operator()(const Ivica *const l, const Ivica *const d) const
+    {
+        return (l->t1() == d->t1() && l->t2() == d->t2()) ||
+               (l->t1() == d->t2() && l->t2() == d->t1());
+    }
+};
+
 #endif // GA04_KONVEKSNI3DDATASTRUCTURES_H
