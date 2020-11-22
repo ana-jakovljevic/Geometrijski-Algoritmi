@@ -1,6 +1,8 @@
 #include "ga04_konveksniomotac3d.h"
 #include "pomocnefunkcije.h"
 #include <fstream>
+#include <cfloat>
+#include <cmath>
 
 KonveksniOmotac3D::KonveksniOmotac3D(QWidget *pCrtanje,
                                      int pauzaKoraka,
@@ -256,10 +258,56 @@ void KonveksniOmotac3D::crtajAlgoritam(QPainter*) const
 
 void KonveksniOmotac3D::pokreniNaivniAlgoritam()
 {
-    /* Kao naivni moze da se uzmu svake 3 tacke i da se gleda da li su sve ostale
-     * tacke sa iste strane stranice koja je kreirana od te 3 izabrane tacke.
-     * Ako jesu sve sa iste strane onda izabrane 3 tacke ulaze u konveksni omotac.
-     * Inace ne ulaze.
-     * U rezultatu pamtimo odabrane stranice.
-     */
+    /* Za svake tri nekolinearne tacke se proverava da li stranica koju obrazuju
+     * pripada konveksnom omotacu.
+     * Ako se sve ostale tacke nalaze sa iste strane stranice, stranica pripada
+     * konveksnom omotacu, u suprotnom ne pripada.
+     * Slozenost algoritma je O(n^4). */
+
+    for (auto teme1 : _tacke) {
+        for (auto teme2 : _tacke) {
+            for (auto teme3 : _tacke) {
+
+                if (teme1 == teme2)
+                    break;
+                if (kolinearne(teme1, teme2, teme3))
+                    continue;
+
+                Stranica *stranica = new Stranica(teme1, teme2, teme3);
+
+                // Pronalazenje jedne nenula zapremine
+                double zapremina = 0;
+                for (auto tacka : _tacke) {
+                    zapremina = zapremina6(stranica, tacka);
+                    if (fabs(zapremina) > DBL_MIN)
+                        break;
+                }
+
+                // Ako ne postoje 4 nekomplanarne tacke zavrsava se algoritam
+                if (fabs(zapremina) <= DBL_MIN)
+                    return;
+
+                int znakZapremine = zapremina > 0 ? 1 : -1;
+
+                auto it = _tacke.begin();
+                for (; it != _tacke.end(); it++) {
+                    double zapremina = zapremina6(stranica, *it);
+                    if (zapremina * znakZapremine < -DBL_MIN)
+                        break;
+                }
+
+                if (it == _tacke.end()) {
+                    /* Sve zapremine su istog znaka (dozvoljavamo da su neke i nula),
+                     * pa stranica pripada konveksnom omotacu */
+                    Ivica *ivica1 = new Ivica(teme1, teme2);
+                    Ivica *ivica2 = new Ivica(teme1, teme3);
+                    Ivica *ivica3 = new Ivica(teme2, teme3);
+                    _ivice.insert(ivica1);
+                    _ivice.insert(ivica2);
+                    _ivice.insert(ivica3);
+                }
+
+            }
+        }
+    }
 }
