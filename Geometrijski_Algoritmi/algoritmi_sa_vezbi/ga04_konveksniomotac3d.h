@@ -18,6 +18,8 @@ public:
 
 public:
     void pokreniAlgoritam();
+    inline void crtajTeme(Teme* t) const;
+    void crtajStranicu(Stranica* s) const;
     void crtajAlgoritam(QPainter *painter) const;
     void pokreniNaivniAlgoritam();
 

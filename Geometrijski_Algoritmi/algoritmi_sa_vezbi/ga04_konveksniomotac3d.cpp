@@ -57,6 +57,7 @@ void KonveksniOmotac3D::pokreniAlgoritam()
         emit animacijaZavrsila();
         return;
     }
+    AlgoritamBaza_updateCanvasAndBlock();
 
     for(auto i=0ul; i<_tacke.size() ;i++)
     {
@@ -69,7 +70,6 @@ void KonveksniOmotac3D::pokreniAlgoritam()
         }
     }
 
-    AlgoritamBaza_updateCanvasAndBlock();
     emit animacijaZavrsila();
 }
 
@@ -173,7 +173,7 @@ void KonveksniOmotac3D::DodajTeme(Teme* t)
      * novododate ivice, neka moze doci na red za obradu i pre nego sto se otkrije druga stranica,
      * pa _noveIvice[i]->s2() lako moze biti nullptr. Stoga je treba napraviti pre nastavka petlje.
      * U suprotnom se dobija SIGSEGV (segmentation fault) za sve iole vece ulaze (npr. 100). */
-    for (auto i = 0ul; i < _noveIvice.size(); i++) {
+    for(auto i = 0ul; i < _noveIvice.size(); i++) {
         const auto s1Losa = _noveIvice[i]->s1()->getVidljiva();
         const auto s2Losa = !_noveIvice[i]->s2() || _noveIvice[i]->s2()->getVidljiva();
         if(s1Losa && s2Losa)
@@ -250,10 +250,45 @@ Stranica* KonveksniOmotac3D::napraviDruguStranicu(Ivica *iv, Teme *t)
 /*--------------------------------------------------------------------------------------------------*/
 /*---------------------------------Crtanje i Naivni algoritam---------------------------------------*/
 /*--------------------------------------------------------------------------------------------------*/
+void KonveksniOmotac3D::crtajTeme(Teme *t) const
+{
+    // crtanje tacaka preko koordinata
+    glColor3d(1, 0, 0.4);
+    glVertex3f(t->x(), t->y(), t->z());
+}
+
+void KonveksniOmotac3D::crtajStranicu(Stranica* s) const
+{
+    // postavljanje slucajne boje
+    const auto red = 1.*rand()/RAND_MAX;
+    const auto green = 1.*rand()/RAND_MAX;
+    const auto blue = 1.*rand()/RAND_MAX;
+    glColor3d(red, green, blue);
+
+    // crtanje stranice kao trougla
+    glBegin(GL_POLYGON);
+        glVertex3f(s->t1()->x(), s->t1()->y(), s->t1()->z());
+        glVertex3f(s->t2()->x(), s->t2()->y(), s->t2()->z());
+        glVertex3f(s->t3()->x(), s->t3()->y(), s->t3()->z());
+    glEnd();
+}
 
 void KonveksniOmotac3D::crtajAlgoritam(QPainter*) const
 {
+    // crtanje svih temena
+    glBegin(GL_POINTS);
+        for(auto teme : _tacke)
+            crtajTeme(teme);
+    glEnd();
 
+    // crtanje svih stranica prolaskom
+    // dve po dve kroz skup ivica
+    srand(0);
+    for(auto ivica: _ivice)
+    {
+        crtajStranicu(ivica->s1());
+        crtajStranicu(ivica->s2());
+    }
 }
 
 void KonveksniOmotac3D::pokreniNaivniAlgoritam()
