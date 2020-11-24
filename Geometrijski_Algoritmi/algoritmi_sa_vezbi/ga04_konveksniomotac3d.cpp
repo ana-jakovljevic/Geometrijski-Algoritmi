@@ -53,12 +53,22 @@ std::vector<Teme *> KonveksniOmotac3D::ucitajPodatkeIzDatoteke(std::string imeDa
 
 void KonveksniOmotac3D::pokreniAlgoritam()
 {
+    /* Slozenost tetraedra: O(n), samo
+     * jedan prolaz kroz temena. */
     if(!Tetraedar()){
         emit animacijaZavrsila();
         return;
     }
     AlgoritamBaza_updateCanvasAndBlock();
 
+    /* Svako teme se dodaje u linearnom vremenu po
+     * tekucem broju ivica. Prema lemi iz knjige, broj
+     * ivica je najvise O(n). Brisanje viska je takodje
+     * linearno, ovog puta po broju izbacenih ivica, ali
+     * i to je svakako ograniceno sa O(n). Sveukupno, ova
+     * petlja i samim tim ceo algoritam su reda O(n^2).
+     * Pre zamene niza skupom, dodavanje temena je bilo
+     * kvadratno, pa je ukupno vreme bilo reda O(n^3). */
     for(auto i=0ul; i<_tacke.size() ;i++)
     {
         if(!_tacke[i]->getObradjeno())
@@ -278,8 +288,7 @@ void KonveksniOmotac3D::pokreniNaivniAlgoritam()
      * pripada konveksnom omotacu.
      * Ako se sve ostale tacke nalaze sa iste strane stranice, stranica pripada
      * konveksnom omotacu, u suprotnom ne pripada.
-     * Slozenost algoritma je O(n^4). */
-
+     * Slozenost naivnog algoritma je O(n^4). */
     for (auto teme1 : _tacke) {
         for (auto teme2 : _tacke) {
             for (auto teme3 : _tacke) {

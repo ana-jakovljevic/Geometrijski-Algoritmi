@@ -15,6 +15,8 @@ konveksniomotac::konveksniomotac(QWidget *pCrtanje,
 }
 
 void konveksniomotac::pokreniAlgoritam() {
+    /* Slozenost ovakvog algoritma: O(nlogn).
+     * Dominira sortiranje, dok su ostali koraci linearni. */
     maks_tacka = _tacke[0];
 
     for (auto i = 1ul; i < _tacke.size(); i++) {
@@ -75,6 +77,7 @@ void konveksniomotac::crtajAlgoritam(QPainter *painter) const {
 }
 
 void konveksniomotac::pokreniNaivniAlgoritam() {
+    /* Slozenost naivnog algoritma: O(n^3) */
     for (auto i = 0ul;i < _tacke.size(); i++) {
         for (auto j = 0ul; j < _tacke.size(); j++) {
             if (i == j){
@@ -99,7 +102,6 @@ void konveksniomotac::pokreniNaivniAlgoritam() {
                 }
             }
         }
-
     }
 
     std::sort(naivni_konveksni_omotac.begin(), naivni_konveksni_omotac.end(), [&](const auto& lhs, const auto& rhs) {
