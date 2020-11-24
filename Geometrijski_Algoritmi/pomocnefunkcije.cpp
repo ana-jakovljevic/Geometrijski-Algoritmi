@@ -2,7 +2,7 @@
 #include "math.h"
 
 /* Ne prevelika tolerancija na numericku gresku */
-#define EPS 0.5e-5
+#define EPS 1e-6
 
 int pomocneFunkcije::povrsinaTrougla(const QPoint& A, const QPoint& B, const QPoint& C)
 {
