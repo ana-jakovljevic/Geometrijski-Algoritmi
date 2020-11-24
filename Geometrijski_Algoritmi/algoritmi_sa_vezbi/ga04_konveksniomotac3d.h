@@ -15,6 +15,16 @@ public:
                       std::string imeDatoteke = "",
                       int broj_tacaka = BROJ_NASUMICNIH_TACAKA);
 
+    ~KonveksniOmotac3D(){
+            for(auto tacka:_tacke)
+                delete tacka;
+            for(auto ivica:_ivice)
+                delete ivica;
+            for(auto nIvica:_naivneIvice)
+                delete nIvica;
+            for(auto stranica:_stranice)
+                delete stranica;
+        }
 
 public:
     void pokreniAlgoritam();
@@ -50,6 +60,9 @@ private:
      * brisanje reda O(n) umesto jednostavnog O(1) u proseku */
     std::unordered_set<Ivica*, HashIvica, EqIvica> _ivice;
     std::unordered_set<Ivica*, HashIvica, EqIvica> _naivneIvice;
+
+    // ovaj vektor je potreban kako bi se memorija uredno oslobodila
+    std::vector<Stranica*> _stranice;
 };
 
 #endif // KONVEKSNIOMOTAC3D_H

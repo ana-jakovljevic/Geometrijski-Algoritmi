@@ -114,6 +114,7 @@ bool KonveksniOmotac3D::Tetraedar()
     Ivica *i2 = new Ivica(t2, t3);
     Ivica *i3 = new Ivica(t3, t1);
     Stranica *s1 = new Stranica(t1, t2, t3);
+     _stranice.push_back(s1);
     _ivice.insert(i1);
     _ivice.insert(i2);
     _ivice.insert(i3);
@@ -185,7 +186,12 @@ void KonveksniOmotac3D::DodajTeme(Teme* t)
 
 void KonveksniOmotac3D::ObrisiVisak()
 {
-    std::experimental::erase_if(_ivice, [](Ivica* ivica){ return ivica->obrisati(); });
+    std::experimental::erase_if(_ivice, [](Ivica* ivica){
+        bool rez = ivica->obrisati();
+        if(rez)
+            delete ivica;
+        return rez;
+    });
 }
 
 /*--------------------------------------------------------------------------------------------------*/
@@ -213,6 +219,7 @@ Stranica* KonveksniOmotac3D::napraviStranicu(Teme *i1t1, Teme *i1t2,
     Ivica* i1 = new Ivica(i1t1, i1t2);
     auto iv1 = _ivice.find(i1);
     if(iv1 != _ivice.end()){
+        delete i1;
         i1 = *iv1;
     } else {
         _ivice.insert(i1);
@@ -221,12 +228,14 @@ Stranica* KonveksniOmotac3D::napraviStranicu(Teme *i1t1, Teme *i1t2,
     Ivica* i2 = new Ivica(i2t1, i2t2);
     auto iv2 = _ivice.find(i2);
     if(iv2 != _ivice.end()){
+        delete i2;
         i2 = *iv2;
     } else {
         _ivice.insert(i2);
     }
 
     Stranica *s = new Stranica(st1, st2, st3);
+     _stranice.push_back(s);
     i1->postavi_stranicu(s);
     i2->postavi_stranicu(s);
     return s;
@@ -299,6 +308,7 @@ void KonveksniOmotac3D::pokreniNaivniAlgoritam()
                     continue;
 
                 Stranica *stranica = new Stranica(teme1, teme2, teme3);
+                 _stranice.push_back(stranica);
 
                 // Pronalazenje jedne nenula zapremine
                 double zapremina = 0;
