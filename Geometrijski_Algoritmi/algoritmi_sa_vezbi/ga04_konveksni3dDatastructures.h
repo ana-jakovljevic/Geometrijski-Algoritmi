@@ -32,7 +32,6 @@ public:
         : _stranice {nullptr, nullptr},
           _obrisati {false},
           _temena {nullptr, nullptr}
-
     {}
 
     Ivica(Teme* t1, Teme* t2)
@@ -111,6 +110,12 @@ public:
      */
     void setVidljiva(bool param) { _vidljiva = param; }
     bool getVidljiva() const { return _vidljiva; }
+
+    /* Niz pri konstrukciji napravljenih boja kako stranice
+     * ne bi u toku algoritma menjale stil, lakse se prati */
+    const double boje[3]{1.*rand()/RAND_MAX,
+                         1.*rand()/RAND_MAX,
+                         1.*rand()/RAND_MAX};
 
 private:
     Teme* _temena[3];

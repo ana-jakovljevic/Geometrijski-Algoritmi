@@ -259,11 +259,8 @@ void KonveksniOmotac3D::crtajTeme(Teme *t) const
 
 void KonveksniOmotac3D::crtajStranicu(Stranica* s) const
 {
-    // postavljanje slucajne boje
-    const auto red = 1.*rand()/RAND_MAX;
-    const auto green = 1.*rand()/RAND_MAX;
-    const auto blue = 1.*rand()/RAND_MAX;
-    glColor3d(red, green, blue);
+    // postavljanje boje
+    glColor3dv(s->boje);
 
     // crtanje stranice kao trougla
     glBegin(GL_POLYGON);
@@ -283,7 +280,6 @@ void KonveksniOmotac3D::crtajAlgoritam(QPainter*) const
 
     // crtanje svih stranica prolaskom
     // dve po dve kroz skup ivica
-    srand(0);
     for(auto ivica: _ivice)
     {
         crtajStranicu(ivica->s1());
