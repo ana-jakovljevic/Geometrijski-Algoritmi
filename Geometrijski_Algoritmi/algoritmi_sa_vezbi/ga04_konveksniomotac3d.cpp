@@ -144,20 +144,20 @@ void KonveksniOmotac3D::DodajTeme(Teme* t)
     /* Kroz stranice iteriramo tako sto zapravo
      * uzimamo dve po dve prolaskom kroz ivice */
     for(auto ivica : _ivice){
-        Stranica *s1 = ivica->s1();
-        double zapremina = zapremina6(s1, t);
+        Stranica *s = ivica->s1();
+        double zapremina = zapremina6(s, t);
 
-        if(zapremina < 0){
+        if(zapremina <= 0){
             vidljiva = true;
-            s1->setVidljiva(true);
+            s->setVidljiva(true);
         }
 
-        Stranica *s2 = ivica->s2();
-        zapremina = zapremina6(s2, t);
+        s = ivica->s2();
+        zapremina = zapremina6(s, t);
 
-        if(zapremina < 0){
+        if(zapremina <= 0){
             vidljiva = true;
-            s2->setVidljiva(true);
+            s->setVidljiva(true);
         }
     }
 
@@ -308,7 +308,6 @@ void KonveksniOmotac3D::pokreniNaivniAlgoritam()
                     continue;
 
                 Stranica *stranica = new Stranica(teme1, teme2, teme3);
-                 _stranice.push_back(stranica);
 
                 // Pronalazenje jedne nenula zapremine
                 double zapremina = 0;
@@ -330,6 +329,8 @@ void KonveksniOmotac3D::pokreniNaivniAlgoritam()
                     if (zapremina * znakZapremine < -DBL_MIN)
                         break;
                 }
+
+                delete stranica;
 
                 if (it == _tacke.end()) {
                     /* Sve zapremine su istog znaka (dozvoljavamo da su neke i nula),
