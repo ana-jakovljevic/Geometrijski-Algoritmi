@@ -46,7 +46,7 @@ std::vector<QLineF> PreseciDuzi::generisiNasumicneDuzi(int brojDuzi) {
             y2 = tmp_y;
             x2 = tmp_x;
         }
-        randomDuzi.emplace_back(x1, y2, x2, y2);
+        randomDuzi.emplace_back(x1, y1, x2, y2);
     }
 
     return randomDuzi;
