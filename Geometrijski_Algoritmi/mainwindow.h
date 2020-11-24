@@ -14,6 +14,7 @@
 #include "ga02_3discrtavanje.h"
 #include "ga03_konveksniomotac.h"
 #include "ga04_konveksniomotac3d.h"
+#include "ga05_preseciduzi.h"
 
 /* Enumeracija algoritama */
 enum class TipAlgoritma {
@@ -23,6 +24,7 @@ enum class TipAlgoritma {
     _3D_ISCRTAVANJE,
     KONVEKSNI_OMOTAC,
     KONVEKSNI_OMOTAC_3D,
+    PRESECI_DUZI,
     SEPARATOR,
     STUDENTSKI_PROJEKTI
 };

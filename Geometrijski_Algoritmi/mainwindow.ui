@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1183</width>
-    <height>962</height>
+    <height>1040</height>
    </rect>
   </property>
   <property name="palette">
@@ -719,6 +719,11 @@
            </item>
            <item>
             <property name="text">
+             <string>Preseci duzi</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
              <string>STUDENTSKI PROJEKTI</string>
             </property>
            </item>
@@ -801,7 +806,7 @@
      <x>0</x>
      <y>0</y>
      <width>1183</width>
-     <height>22</height>
+     <height>39</height>
     </rect>
    </property>
   </widget>

@@ -11,6 +11,7 @@
 #include "ga02_3discrtavanje.h"
 #include "ga03_konveksniomotac.h"
 #include "ga04_konveksniomotac3d.h"
+#include "ga05_preseciduzi.h"
 
 TimeMeasurementThread::TimeMeasurementThread(TipAlgoritma tipAlgoritma, int minValue, int step, int maxValue)
     : QThread(), _algorithmType(tipAlgoritma), _minValue(minValue), _step(step), _maxValue(maxValue)
@@ -48,6 +49,10 @@ void TimeMeasurementThread::run()
             break;
         case TipAlgoritma::KONVEKSNI_OMOTAC_3D:
             pAlgorithm = new KonveksniOmotac3D(nullptr, 0, "", i);
+            break;
+        case TipAlgoritma::PRESECI_DUZI:
+            pAlgorithm = new PreseciDuzi(nullptr, 0, "", i);
+            break;
         default:
             break;
         }

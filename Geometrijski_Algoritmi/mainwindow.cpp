@@ -248,6 +248,12 @@ void MainWindow::napraviNoviAlgoritam()
         _pAlgoritamBaza = new KonveksniOmotac3D(_pOblastCrtanjaOpenGL, _duzinaPauze,
                                                 _imeDatoteke, _broj_nasumicnih_tacaka);
         break;
+
+    case TipAlgoritma::PRESECI_DUZI:
+        _pAlgoritamBaza = new PreseciDuzi(_pOblastCrtanja, _duzinaPauze,
+                                              _imeDatoteke, _broj_nasumicnih_tacaka);
+        break;
+
     default: /* ako nije algoritam uopste */
         break;
     }
