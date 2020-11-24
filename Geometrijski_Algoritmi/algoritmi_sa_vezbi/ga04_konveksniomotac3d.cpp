@@ -156,8 +156,12 @@ void KonveksniOmotac3D::DodajTeme(Teme* t)
 
     /* Skup ivica nije konstantan, pa je ovde neophodno kopirati ih u vektor, kako
      * bi se proslo samo kroz stare ivice, ne i one koje su novododate u prolazu.
-     * Ovo mozda zvuci skupo, ali je zapravo vrlo jeftino i ne utice na slozenost. */
-    for(auto ivica: std::vector<Ivica*>(_ivice.begin(), _ivice.end())){
+     * Ovo mozda zvuci skupo, ali je zapravo vrlo jeftino i ne utice na slozenost.
+     * Problem u originalnom kodu: prolazilo se i kroz novododate ivice, pri cemu
+     * su one po pravilu menjane (samim sobom). U kombinaciji sa preterano velikom
+     * tolerancijom na numericku gresku, ovo je po pravilu vodilo ka null stranicama,
+     * te SIGSEGV (segmentation fault) pri svim iole vecim ulazima (npr. preko sto) */
+    for(auto ivica: std::vector<Ivica*>(_ivice.cbegin(), _ivice.cend())){
         const auto s1Losa = ivica->s1()->getVidljiva();
         const auto s2Losa = ivica->s2()->getVidljiva();
         if(s1Losa && s2Losa)
@@ -167,23 +171,6 @@ void KonveksniOmotac3D::DodajTeme(Teme* t)
         else if(s2Losa)
             ivica->zameniVidljivuStranicu(napraviDruguStranicu(ivica, t), 1);
     }
-
-    /* Dakle, u okviru pravljenja stranica, cesto postoji potreba za pravljenjem novih ivica,
-     * pri cemu im se dodeljuje samo jedna stranica, dok je druga jos nepoznata. Pri prolasku kroz
-     * novododate ivice, neka moze doci na red za obradu i pre nego sto se otkrije druga stranica,
-     * pa _noveIvice[i]->s2() lako moze biti nullptr. Stoga je treba napraviti pre nastavka petlje.
-     * U suprotnom se dobija SIGSEGV (segmentation fault) za sve iole vece ulaze (npr. 100). */
-    for(auto i = 0ul; i < _noveIvice.size(); i++) {
-        const auto s1Losa = _noveIvice[i]->s1()->getVidljiva();
-        const auto s2Losa = !_noveIvice[i]->s2() || _noveIvice[i]->s2()->getVidljiva();
-        if(s1Losa && s2Losa)
-            _noveIvice[i]->setObrisati(true);
-        else if(s1Losa)
-            _noveIvice[i]->zameniVidljivuStranicu(napraviPrvuStranicu(_noveIvice[i], t), 0);
-        else if(s2Losa)
-            _noveIvice[i]->zameniVidljivuStranicu(napraviDruguStranicu(_noveIvice[i], t), 1);
-    }
-    _noveIvice.clear();
 }
 
 void KonveksniOmotac3D::ObrisiVisak()
@@ -219,7 +206,6 @@ Stranica* KonveksniOmotac3D::napraviStranicu(Teme *i1t1, Teme *i1t2,
         i1 = *iv1;
     } else {
         _ivice.insert(i1);
-        _noveIvice.push_back(i1);
     }
 
     Ivica* i2 = new Ivica(i2t1, i2t2);
@@ -228,7 +214,6 @@ Stranica* KonveksniOmotac3D::napraviStranicu(Teme *i1t1, Teme *i1t2,
         i2 = *iv2;
     } else {
         _ivice.insert(i2);
-        _noveIvice.push_back(i2);
     }
 
     Stranica *s = new Stranica(st1, st2, st3);
@@ -333,9 +318,9 @@ void KonveksniOmotac3D::pokreniNaivniAlgoritam()
                     Ivica *ivica1 = new Ivica(teme1, teme2);
                     Ivica *ivica2 = new Ivica(teme1, teme3);
                     Ivica *ivica3 = new Ivica(teme2, teme3);
-                    _ivice.insert(ivica1);
-                    _ivice.insert(ivica2);
-                    _ivice.insert(ivica3);
+                    _naivneIvice.insert(ivica1);
+                    _naivneIvice.insert(ivica2);
+                    _naivneIvice.insert(ivica3);
                 }
 
             }

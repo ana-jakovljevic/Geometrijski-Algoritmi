@@ -1,6 +1,9 @@
 #include "pomocnefunkcije.h"
 #include "math.h"
 
+/* Ne prevelika tolerancija na numericku gresku */
+#define EPS 0.5e-5
+
 int pomocneFunkcije::povrsinaTrougla(const QPoint& A, const QPoint& B, const QPoint& C)
 {
     /* (Dvostruka) Povrsina trougla.
@@ -29,11 +32,11 @@ bool pomocneFunkcije::kolinearne3D(QVector3D a, QVector3D b, QVector3D c)
      * |ax-cx  ay-cy  az-cz|
      */
     return (fabs((c.z() - a.z()) * (b.y() - a.y()) -
-              (b.z() - a.z()) * (c.y() - a.y())) < 0.000001) &&
+              (b.z() - a.z()) * (c.y() - a.y())) < EPS) &&
            (fabs((b.z() - a.z()) * (c.x() - a.x()) -
-              (b.x() - a.x()) * (c.z() - a.z())) < 0.000001) &&
+              (b.x() - a.x()) * (c.z() - a.z())) < EPS) &&
            (fabs((b.x() - a.x()) * (c.y() - a.y()) -
-              (b.y() - a.y()) * (c.x() - a.x())) < 0.000001);
+              (b.y() - a.y()) * (c.x() - a.x())) < EPS);
 }
 
 
@@ -58,7 +61,7 @@ double  pomocneFunkcije::zapremina(QVector3D a, QVector3D b, QVector3D c, QVecto
           +  (a.y()-d.y())*(bzdz*cxdx-bxdx*czdz)
           +  (a.x()-d.x())*(bydy*czdz-bzdz*cydy);
 
-    if (fabs(vol) < 0.0001)
+    if (fabs(vol) < EPS)
         return 0;
     else
         return vol;

@@ -47,12 +47,9 @@ private:
 
     /* Neuredjeni skup za cuvanje ivica; nije nam sustinski vazan redosled
      * ivica u skupu, pa nema potrebe za nizovima kod kojih su pretraga i
-     * brisanje reda O(n) umesto jednostavnog O(1) */
+     * brisanje reda O(n) umesto jednostavnog O(1) u proseku */
     std::unordered_set<Ivica*, HashIvica, EqIvica> _ivice;
-
-    /* Ipak, neophodno je tacno znati koje su novododate ivice, tako da
-     * je potreban jedan pomocni vektor, ali se kroz njega samo iterira */
-    std::vector<Ivica*> _noveIvice;
+    std::unordered_set<Ivica*, HashIvica, EqIvica> _naivneIvice;
 };
 
 #endif // KONVEKSNIOMOTAC3D_H
