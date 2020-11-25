@@ -40,7 +40,7 @@ public:
     void ObrisiVisak();
 
     /* Pomocne funkcije. */
-    double zapremina6(Stranica* s, Teme* t) const;
+    float zapremina6(Stranica* s, Teme* t) const;
     bool kolinearne(Teme* a, Teme* b, Teme* c) const;
     Stranica* napraviStranicu(Teme *i1t1, Teme *i1t2,
                               Teme *i2t1, Teme *i2t2,

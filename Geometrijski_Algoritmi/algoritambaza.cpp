@@ -76,7 +76,7 @@ bool AlgoritamBaza::updateCanvasAndBlock()
 
 std::vector<QPoint> AlgoritamBaza::generisiNasumicneTacke(int broj_tacaka) const
 {
-    srand(static_cast<unsigned>(time(0)));
+    srand(static_cast<unsigned>(time(nullptr)));
     int xMax;
     int yMax;
 

@@ -10,7 +10,7 @@ class AnimacijaNit : public QThread
 public:
     ///
     /// \brief AnimationThread
-    /// \param pAlgorithmBase - algoritam koji se izvrsava unutar thread-a
+    /// \param pAlgoritam - algoritam koji se izvrsava unutar thread-a
     ///
     AnimacijaNit(AlgoritamBaza *pAlgoritam);
 

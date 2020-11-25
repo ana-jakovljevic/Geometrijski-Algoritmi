@@ -10,9 +10,9 @@ PreseciDuzi::PreseciDuzi(QWidget *pCrtanje,
    :AlgoritamBaza(pCrtanje, pauzaKoraka)
 {
     if (imeDatoteke != "")
-        duzi = ucitajPodatkeIzDatoteke(imeDatoteke);
+        _duzi = ucitajPodatkeIzDatoteke(imeDatoteke);
     else
-        duzi = generisiNasumicneDuzi(broj_tacaka);
+        _duzi = generisiNasumicneDuzi(broj_tacaka);
 }
 
 void PreseciDuzi::pokreniAlgoritam() {}

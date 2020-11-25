@@ -17,7 +17,7 @@ void BrisucaPrava::pokreniAlgoritam()
     while (_yPoz < _pCrtanje->height())
     {
         _yPoz += 5;
-        AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock()
     }
 
     emit animacijaZavrsila();

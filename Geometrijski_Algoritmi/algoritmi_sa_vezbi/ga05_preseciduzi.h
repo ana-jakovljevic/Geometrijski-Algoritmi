@@ -21,9 +21,9 @@ public:
     std::vector<QLineF> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
 
 private:
-    std::vector<QLineF> duzi;
+    std::vector<QLineF> _duzi;
     double y_brisuce_prave;
-    std::vector<QPointF> preseci;
+    std::vector<QPointF> _preseci;
 
     // imacemo skup Event Points
     // imacemo skup posmatranih duzi

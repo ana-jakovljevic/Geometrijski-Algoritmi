@@ -21,15 +21,15 @@ KonveksniOmotac3D::KonveksniOmotac3D(QWidget *pCrtanje,
 /*--------------------------------------------------------------------------------------------------*/
 std::vector<Teme *> KonveksniOmotac3D::generisiNasumicneTacke(int broj_tacaka) const
 {
-    srand(static_cast<unsigned>(time(0)));
+    srand(static_cast<unsigned>(time(nullptr)));
 
     std::vector<Teme*> randomPoints;
 
     for(int i=0; i < broj_tacaka; i++)
         randomPoints.emplace_back(new Teme(
-           1.*rand()/RAND_MAX,
-           1.*rand()/RAND_MAX,
-           1.*rand()/RAND_MAX));
+           1.f*rand()/RAND_MAX,
+           1.f*rand()/RAND_MAX,
+           1.f*rand()/RAND_MAX));
 
     return randomPoints;
 }
@@ -59,7 +59,7 @@ void KonveksniOmotac3D::pokreniAlgoritam()
         emit animacijaZavrsila();
         return;
     }
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
 
     /* Svako teme se dodaje u linearnom vremenu po
      * tekucem broju ivica. Prema lemi iz knjige, broj
@@ -76,7 +76,7 @@ void KonveksniOmotac3D::pokreniAlgoritam()
             DodajTeme(_tacke[i]);
             ObrisiVisak();
             _tacke[i]->setObradjeno(true);
-            AlgoritamBaza_updateCanvasAndBlock();
+            AlgoritamBaza_updateCanvasAndBlock()
         }
     }
 
@@ -102,7 +102,10 @@ bool KonveksniOmotac3D::Tetraedar()
     t3->setObradjeno(true);
 
     for(;it != _tacke.end(); it++)
-        if(pomocneFunkcije::zapremina(t1->koordinate(), t2->koordinate(), t3->koordinate(), (*it)->koordinate()) != 0)
+        if(static_cast<bool>(pomocneFunkcije::zapremina(t1->koordinate(),
+                                                        t2->koordinate(),
+                                                        t3->koordinate(),
+                                                        (*it)->koordinate())))
             break;
     if(it == _tacke.end())
         return false;
@@ -145,7 +148,7 @@ void KonveksniOmotac3D::DodajTeme(Teme* t)
      * uzimamo dve po dve prolaskom kroz ivice */
     for(auto ivica : _ivice){
         Stranica *s = ivica->s1();
-        double zapremina = zapremina6(s, t);
+        float zapremina = zapremina6(s, t);
 
         if(zapremina <= 0){
             vidljiva = true;
@@ -197,7 +200,7 @@ void KonveksniOmotac3D::ObrisiVisak()
 /*--------------------------------------------------------------------------------------------------*/
 /*---------------------------------Pomocni metodi---------------------------------------------------*/
 /*--------------------------------------------------------------------------------------------------*/
-double KonveksniOmotac3D::zapremina6(Stranica *s, Teme *t) const
+float KonveksniOmotac3D::zapremina6(Stranica *s, Teme *t) const
 {
     return pomocneFunkcije::zapremina(s->t1()->koordinate(),
                 s->t2()->koordinate(), s->t3()->koordinate(),
@@ -310,23 +313,23 @@ void KonveksniOmotac3D::pokreniNaivniAlgoritam()
                 Stranica *stranica = new Stranica(teme1, teme2, teme3);
 
                 // Pronalazenje jedne nenula zapremine
-                double zapremina = 0;
+                float zapremina = 0;
                 for (auto tacka : _tacke) {
                     zapremina = zapremina6(stranica, tacka);
-                    if (fabs(zapremina) > DBL_MIN)
+                    if (fabsf(zapremina) > EPS)
                         break;
                 }
 
                 // Ako ne postoje 4 nekomplanarne tacke zavrsava se algoritam
-                if (fabs(zapremina) <= DBL_MIN)
+                if (fabsf(zapremina) <= EPS)
                     return;
 
                 int znakZapremine = zapremina > 0 ? 1 : -1;
 
                 auto it = _tacke.begin();
                 for (; it != _tacke.end(); it++) {
-                    double zapremina = zapremina6(stranica, *it);
-                    if (zapremina * znakZapremine < -DBL_MIN)
+                    zapremina = zapremina6(stranica, *it);
+                    if (zapremina * znakZapremine < -EPS)
                         break;
                 }
 

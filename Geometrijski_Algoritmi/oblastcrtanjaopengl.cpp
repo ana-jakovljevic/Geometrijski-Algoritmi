@@ -11,7 +11,7 @@ OblastCrtanjaOpenGL::OblastCrtanjaOpenGL(QWidget *parent)
 
 void OblastCrtanjaOpenGL::initializeGL()
 {
-    glClearColor(0.2, 0.2, 0.2, 0);
+    glClearColor(0.2f, 0.2f, 0.2f, 0);
     glEnable(GL_DEPTH_TEST);
     glPointSize(5);
 }
@@ -43,7 +43,7 @@ void OblastCrtanjaOpenGL::resizeGL(int w, int h)
     glViewport(0,0,w,h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(45, (float)w/h, 0.01, 100.0);
+    gluPerspective(45, 1.*w/h, 0.01, 100.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(1, 2, 3,

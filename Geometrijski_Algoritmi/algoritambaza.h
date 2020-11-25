@@ -64,7 +64,7 @@ private:
     /// connect its timeout() signal to the appropriate slots, and call start(). From then on, it will emit
     /// the timeout() signal at constant intervals.
     ///
-    void timerEvent(QTimerEvent */* unused */);
+    void timerEvent(QTimerEvent *event);
 
 public:
     AlgoritamBaza(QWidget *pCrtanje, int pauzaKoraka);
