@@ -17,7 +17,7 @@ public:
 
 
     /* Ucitavanje podataka. */
-    std::vector<QLineF> generisiNasumicneDuzi(int brojDuzi);
+    std::vector<QLineF> generisiNasumicneDuzi(int brojDuzi) const;
     std::vector<QLineF> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
 
 private:

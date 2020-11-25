@@ -26,9 +26,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->brojNasumicniTacaka->setPlaceholderText("Uneti broj nasumicnih tacaka, podrazumevana vrednost je 20.");
 
     /* Add chart */
-    _optimalSeries = new QLineSeries();
-    _naiveSeries = new QLineSeries();
-
     QChart *chart = new QChart();
     _optimalSeries->append(0,0);
     _naiveSeries->append(0,0);

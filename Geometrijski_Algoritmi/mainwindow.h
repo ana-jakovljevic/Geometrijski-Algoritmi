@@ -84,8 +84,8 @@ private:
     int _broj_nasumicnih_tacaka;
 
     /* Chart deo */
-    QLineSeries *_naiveSeries;
-    QLineSeries *_optimalSeries;
+    QLineSeries *const _naiveSeries = new QLineSeries();
+    QLineSeries *const _optimalSeries = new QLineSeries();
 
     TimeMeasurementThread *_mThread;
 };

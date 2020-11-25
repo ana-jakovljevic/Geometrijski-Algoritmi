@@ -20,7 +20,7 @@ public:
     virtual void run();
 
 private:
-    AlgoritamBaza *_pAlgoritam;
+    AlgoritamBaza *const _pAlgoritam;
 };
 
 #endif // ANIMACIJANIT_H

@@ -24,7 +24,7 @@ void PreseciDuzi::crtajAlgoritam(QPainter *painter) const {
 
 void PreseciDuzi::pokreniNaivniAlgoritam() {}
 
-std::vector<QLineF> PreseciDuzi::generisiNasumicneDuzi(int brojDuzi) {
+std::vector<QLineF> PreseciDuzi::generisiNasumicneDuzi(int brojDuzi) const {
 
     srand(static_cast<unsigned>(time(nullptr)));
 

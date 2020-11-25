@@ -43,7 +43,7 @@ void Discrtavanje::pokreniNaivniAlgoritam()
 
 }
 
-std::vector<QVector3D> Discrtavanje::generisiNasumicneTacke(int broj_tacaka)
+std::vector<QVector3D> Discrtavanje::generisiNasumicneTacke(int broj_tacaka) const
 {
     std::vector<QVector3D> tacke;
     srand(static_cast<unsigned>(time(0)));

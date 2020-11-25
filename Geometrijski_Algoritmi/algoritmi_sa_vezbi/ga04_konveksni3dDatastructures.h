@@ -42,9 +42,9 @@ public:
 
     void postavi_stranicu(Stranica* s)
     {
-        if (_stranice[0] == nullptr)
+        if (!_stranice[0])
             _stranice[0] = s;
-        else if (_stranice[1] == nullptr)
+        else if (!_stranice[1])
             _stranice[1] = s;
     }
 
@@ -84,7 +84,7 @@ private:
 class Stranica{
 public:
     Stranica()
-        : _temena{nullptr,nullptr,nullptr},
+        : _temena{nullptr, nullptr, nullptr},
           _vidljiva(false)
     {}
 

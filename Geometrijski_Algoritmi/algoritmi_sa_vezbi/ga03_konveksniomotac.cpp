@@ -15,7 +15,7 @@ konveksniomotac::konveksniomotac(QWidget *pCrtanje,
 }
 
 void konveksniomotac::pokreniAlgoritam() {
-    /* Slozenost ovakvog algoritma: O(nlogn).
+    /* Slozenost ovakvog (Gremovog) algoritma: O(nlogn).
      * Dominira sortiranje, dok su ostali koraci linearni. */
     maks_tacka = _tacke[0];
 

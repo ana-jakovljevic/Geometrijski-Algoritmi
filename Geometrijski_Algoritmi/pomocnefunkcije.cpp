@@ -20,7 +20,7 @@ int pomocneFunkcije::distanceKvadrat(const QPoint& A, const QPoint& B)
 }
 
 
-bool pomocneFunkcije::kolinearne3D(QVector3D a, QVector3D b, QVector3D c)
+bool pomocneFunkcije::kolinearne3D(const QVector3D& a, const QVector3D& b, const QVector3D& c)
 {
     /* Proverava se povrsina trougla. Zaparvo da li su sva tri unakrsna proizvoda
      * vektora jednaki nuli.
@@ -40,10 +40,10 @@ bool pomocneFunkcije::kolinearne3D(QVector3D a, QVector3D b, QVector3D c)
 }
 
 
-double  pomocneFunkcije::zapremina(QVector3D a, QVector3D b, QVector3D c, QVector3D d)
+double  pomocneFunkcije::zapremina(const QVector3D& a, const QVector3D& b, const QVector3D& c, const QVector3D& d)
 {
-    double	vol;
-    double  bxdx, bydy, bzdz, cxdx, cydy, czdz;
+    double vol;
+    double bxdx, bydy, bzdz, cxdx, cydy, czdz;
 
     /* Zapremina se racuna kao determinanta
      * 6V(Tetraedar) = |ax ay az 1|

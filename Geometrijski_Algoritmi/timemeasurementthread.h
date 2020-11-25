@@ -27,10 +27,10 @@ signals:
     void finishChart();
 
 private:
-    TipAlgoritma _algorithmType;
-    int _minValue;
-    int _step;
-    int _maxValue;
+    const TipAlgoritma _algorithmType;
+    const int _minValue;
+    const int _step;
+    const int _maxValue;
 };
 
 #endif // TIMEMEASUREMENTTHREAD_H

@@ -127,7 +127,7 @@ protected:
     ///
     /// \brief _pCrtanje - oblast crtanja
     ///
-    QWidget *_pCrtanje;
+    QWidget *const _pCrtanje;
 
     ///
     /// \brief updateCanvasAndBlock - azuriranje crteza i blokiranje dok se semafor ne oslobodi
@@ -138,8 +138,8 @@ protected:
     ///
     bool updateCanvasAndBlock();
 
-    std::vector<QPoint> generisiNasumicneTacke(int broj_tacaka = BROJ_NASUMICNIH_TACAKA);
-    std::vector<QPoint> ucitajPodatkeIzDatoteke(std::string imeDatoteke);
+    std::vector<QPoint> generisiNasumicneTacke(int broj_tacaka = BROJ_NASUMICNIH_TACAKA) const;
+    std::vector<QPoint> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
 };
 
 #endif // ALGORITAMBAZA_H
