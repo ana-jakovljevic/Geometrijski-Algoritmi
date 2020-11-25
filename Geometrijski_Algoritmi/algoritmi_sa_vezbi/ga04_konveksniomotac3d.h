@@ -15,7 +15,7 @@ public:
                       std::string imeDatoteke = "",
                       int broj_tacaka = BROJ_NASUMICNIH_TACAKA);
 
-    ~KonveksniOmotac3D(){
+    virtual ~KonveksniOmotac3D(){
             for(auto tacka:_tacke)
                 delete tacka;
             for(auto ivica:_ivice)
