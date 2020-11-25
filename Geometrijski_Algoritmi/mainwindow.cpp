@@ -100,6 +100,7 @@ void MainWindow::on_Nasumicni_dugme_clicked()
 
     napraviNoviAlgoritam();
     ui->Zapocni_dugme->setEnabled(true);
+    ui->Ispocetka_dugme->setEnabled(false);
 }
 
 void MainWindow::on_Ponisti_dugme_clicked()
@@ -126,7 +127,7 @@ void MainWindow::on_Zapocni_dugme_clicked()
 {
     animacijaButtonAktivni(true);
     ui->Zapocni_dugme->setEnabled(false);
-    animacijaParametriButtonAktivni(false);
+    animacijaParametriButtonAktivni(true);
     ui->merenjeButton->setEnabled(false);
 
     if (_pAlgoritamBaza)
@@ -206,10 +207,10 @@ void MainWindow::on_chartFinished()
 
 void MainWindow::na_krajuAnimacije()
 {
-    ui->tipAlgoritma->setEnabled(true);
-    ui->Ponisti_dugme->setEnabled(true);
+    animacijaParametriButtonAktivni(true);
     animacijaButtonAktivni(false);
-    ui->Ispocetka_dugme->setEnabled(true);
+    ui->datoteka_dugme->setEnabled(true);
+    ui->Nasumicni_dugme->setEnabled(true);
     ui->merenjeButton->setEnabled(true);
 }
 
