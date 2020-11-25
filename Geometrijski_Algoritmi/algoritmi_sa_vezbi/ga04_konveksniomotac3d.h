@@ -1,8 +1,8 @@
 #ifndef KONVEKSNIOMOTAC3D_H
 #define KONVEKSNIOMOTAC3D_H
 
-#include<vector>
-#include<QList>
+#include <unordered_set>
+#include <experimental/unordered_set>
 
 #include "algoritambaza.h"
 #include "ga04_konveksni3dDatastructures.h"
@@ -15,9 +15,21 @@ public:
                       std::string imeDatoteke = "",
                       int broj_tacaka = BROJ_NASUMICNIH_TACAKA);
 
+    virtual ~KonveksniOmotac3D(){
+            for(auto tacka:_tacke)
+                delete tacka;
+            for(auto ivica:_ivice)
+                delete ivica;
+            for(auto nIvica:_naivneIvice)
+                delete nIvica;
+            for(auto stranica:_stranice)
+                delete stranica;
+        }
 
 public:
     void pokreniAlgoritam();
+    void crtajTeme(Teme* t) const;
+    void crtajStranicu(Stranica* s) const;
     void crtajAlgoritam(QPainter *painter) const;
     void pokreniNaivniAlgoritam();
 
@@ -28,21 +40,29 @@ public:
     void ObrisiVisak();
 
     /* Pomocne funkcije. */
-    double zapremina6(Stranica* s, Teme* t);
-    bool kolinearne(Teme*a, Teme*b, Teme*c);
-    Stranica* napraviDruguStranicu(Ivica*i, Teme*t);
-    Stranica* napraviPrvuStranicu(Ivica*iv, Teme*t);
+    float zapremina6(Stranica* s, Teme* t) const;
+    bool kolinearne(Teme* a, Teme* b, Teme* c) const;
+    Stranica* napraviStranicu(Teme *i1t1, Teme *i1t2,
+                              Teme *i2t1, Teme *i2t2,
+                              Teme *st1, Teme *st2, Teme *st3);
+    Stranica* napraviDruguStranicu(Ivica* iv, Teme* t);
+    Stranica* napraviPrvuStranicu(Ivica* iv, Teme* t);
 
     /* Ucitavanje podataka. */
-    std::vector<Teme*> generisiNasumicneTacke(int broj_tacaka);
-    std::vector<Teme*> ucitajPodatkeIzDatoteke(std::string imeDatoteke);
+    std::vector<Teme*> generisiNasumicneTacke(int broj_tacaka) const;
+    std::vector<Teme*> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
 
 private:
     std::vector<Teme*> _tacke;
-    QList<Ivica*> _ivice;
-    QList<Stranica*> _stranice;
 
-    int _znakZapremine;
+    /* Neuredjeni skup za cuvanje ivica; nije nam sustinski vazan redosled
+     * ivica u skupu, pa nema potrebe za nizovima kod kojih su pretraga i
+     * brisanje reda O(n) umesto jednostavnog O(1) u proseku */
+    std::unordered_set<Ivica*, HashIvica, EqIvica> _ivice;
+    std::unordered_set<Ivica*, HashIvica, EqIvica> _naivneIvice;
+
+    // ovaj vektor je potreban kako bi se memorija uredno oslobodila
+    std::vector<Stranica*> _stranice;
 };
 
 #endif // KONVEKSNIOMOTAC3D_H

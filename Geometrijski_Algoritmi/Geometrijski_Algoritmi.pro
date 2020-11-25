@@ -17,6 +17,7 @@ SOURCES += \
     algoritmi_sa_vezbi/ga02_3discrtavanje.cpp \
     algoritmi_sa_vezbi/ga03_konveksniomotac.cpp \
     algoritmi_sa_vezbi/ga04_konveksniomotac3d.cpp \
+    algoritmi_sa_vezbi/ga05_preseciduzi.cpp \
     animacijanit.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -34,6 +35,7 @@ HEADERS += \
     algoritmi_sa_vezbi/ga03_konveksniomotac.h \
     algoritmi_sa_vezbi/ga04_konveksni3dDatastructures.h \
     algoritmi_sa_vezbi/ga04_konveksniomotac3d.h \
+    algoritmi_sa_vezbi/ga05_preseciduzi.h \
     animacijanit.h \
     config.h \
     mainwindow.h \

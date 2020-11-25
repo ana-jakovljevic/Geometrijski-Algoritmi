@@ -74,9 +74,9 @@ bool AlgoritamBaza::updateCanvasAndBlock()
     return _unistiAnimaciju;
 }
 
-std::vector<QPoint> AlgoritamBaza::generisiNasumicneTacke(int broj_tacaka)
+std::vector<QPoint> AlgoritamBaza::generisiNasumicneTacke(int broj_tacaka) const
 {
-    srand(static_cast<unsigned>(time(0)));
+    srand(static_cast<unsigned>(time(nullptr)));
     int xMax;
     int yMax;
 
@@ -104,7 +104,7 @@ std::vector<QPoint> AlgoritamBaza::generisiNasumicneTacke(int broj_tacaka)
     return randomPoints;
 }
 
-std::vector<QPoint> AlgoritamBaza::ucitajPodatkeIzDatoteke(std::string imeDatoteke)
+std::vector<QPoint> AlgoritamBaza::ucitajPodatkeIzDatoteke(std::string imeDatoteke) const
 {
     std::ifstream inputFile(imeDatoteke);
     std::vector<QPoint> points;

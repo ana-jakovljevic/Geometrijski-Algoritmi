@@ -20,4 +20,7 @@
 #define BROJ_NASUMICNIH_TACAKA  (20)
 #define DUZINA_PAUZE (500)
 
+/* Ne prevelika tolerancija na numericku gresku */
+#define EPS 1e-6f
+
 #endif // CONFIG_H

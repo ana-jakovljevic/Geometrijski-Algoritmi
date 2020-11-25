@@ -14,6 +14,7 @@
 #include "ga02_3discrtavanje.h"
 #include "ga03_konveksniomotac.h"
 #include "ga04_konveksniomotac3d.h"
+#include "ga05_preseciduzi.h"
 
 #include "ga06_presekPravougaonika.h"
 
@@ -25,6 +26,7 @@ enum class TipAlgoritma {
     _3D_ISCRTAVANJE,
     KONVEKSNI_OMOTAC,
     KONVEKSNI_OMOTAC_3D,
+    PRESECI_DUZI,
     SEPARATOR,
     STUDENTSKI_PROJEKTI,
     PRESEK_PRAVOUGAONIKA
@@ -85,8 +87,8 @@ private:
     int _broj_nasumicnih_tacaka;
 
     /* Chart deo */
-    QLineSeries *_naiveSeries;
-    QLineSeries *_optimalSeries;
+    QLineSeries *const _naiveSeries = new QLineSeries();
+    QLineSeries *const _optimalSeries = new QLineSeries();
 
     TimeMeasurementThread *_mThread;
 };

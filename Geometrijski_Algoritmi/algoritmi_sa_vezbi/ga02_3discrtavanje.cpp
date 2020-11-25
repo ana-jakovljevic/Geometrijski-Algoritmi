@@ -15,7 +15,7 @@ void Discrtavanje::pokreniAlgoritam()
     while (_n != _tacke.size())
     {
         _n++;
-        AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock()
     }
 
     emit animacijaZavrsila();
@@ -33,7 +33,7 @@ void Discrtavanje::crtajAlgoritam(QPainter *) const
                 glColor3d(0, 1, 0);
             else
                 glColor3d(0, 0, 1);
-            glVertex3d(_tacke[i].x(), _tacke[i].y(), _tacke[i].z());
+            glVertex3f(_tacke[i].x(), _tacke[i].y(), _tacke[i].z());
         }
     glEnd();
 }
@@ -43,10 +43,10 @@ void Discrtavanje::pokreniNaivniAlgoritam()
 
 }
 
-std::vector<QVector3D> Discrtavanje::generisiNasumicneTacke(int broj_tacaka)
+std::vector<QVector3D> Discrtavanje::generisiNasumicneTacke(int broj_tacaka) const
 {
     std::vector<QVector3D> tacke;
-    srand(static_cast<unsigned>(time(0)));
+    srand(static_cast<unsigned>(time(nullptr)));
 
     for(int i=0; i < broj_tacaka; i++)
         tacke.emplace_back(-100.*rand()/RAND_MAX,

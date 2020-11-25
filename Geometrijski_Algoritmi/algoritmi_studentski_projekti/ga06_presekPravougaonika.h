@@ -242,7 +242,7 @@ private:
     unsigned int _n = 0;
 
     /* Pomocni metod za lepsu animaciju */
-    inline QRect uzmiPresek(unsigned int) const;
+    inline QRect uzmiPresek(unsigned long) const;
 
     /* Pomocni metodi za strategiju podeli pa vladaj */
     inline bool proveriIndeks(unsigned int, unsigned int) const;

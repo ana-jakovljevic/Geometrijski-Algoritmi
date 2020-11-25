@@ -17,7 +17,7 @@ void DemoIscrtavanja::pokreniAlgoritam()
     while (_n != _tacke.size())
     {
         _n++;
-        AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock()
     }
 
     emit animacijaZavrsila();
@@ -33,7 +33,7 @@ void DemoIscrtavanja::crtajAlgoritam(QPainter *painter) const
 
     painter->setPen(p);
 
-    painter->drawPolygon(_tacke.data(), _n);
+    painter->drawPolygon(_tacke.data(), static_cast<int>(_n));
 }
 
 void DemoIscrtavanja::pokreniNaivniAlgoritam()

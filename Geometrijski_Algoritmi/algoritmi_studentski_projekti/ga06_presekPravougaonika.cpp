@@ -301,7 +301,7 @@ void PresekPravougaonika::generisiNasumicnePravougaonike(int brojPravougaonika)
 {
     /* Alokacija potrebnog prostora */
     _n = 0;
-    _pravougaonici = new Pravougaonik *[brojPravougaonika];
+    _pravougaonici = new Pravougaonik *[static_cast<unsigned>(brojPravougaonika)];
 
     /* Generisanje duplo veceg broja tacaka */
     const auto tacke = generisiNasumicneTacke(2*brojPravougaonika);
@@ -351,7 +351,7 @@ void PresekPravougaonika::ucitajPodatkeIzDatoteke(std::string imeDatoteke)
 }
 
 /* Racunanje tacnog preseka dva pravougaonika */
-QRect PresekPravougaonika::uzmiPresek(unsigned int i) const
+QRect PresekPravougaonika::uzmiPresek(unsigned long i) const
 {
     return *_preseciGlavni[i].first & *_preseciGlavni[i].second;
 }
@@ -432,7 +432,7 @@ void PresekPravougaonika::detect(unsigned int l, unsigned int d)
     /* Ubacivanje podele u niz svih */
     _podele.push_back((uzmiIvicu(_V[s-1])+
                        uzmiIvicu(_V[s]))/2.);
-    PresekPravougaonika_updateCanvasAndBlock();
+    PresekPravougaonika_updateCanvasAndBlock()
 #endif
 
     /* Odredjivanje skupova S11 i S12 iz rada */
@@ -470,9 +470,9 @@ void PresekPravougaonika::detect(unsigned int l, unsigned int d)
 #ifndef GA06_BENCHMARK
     /* Osvezavanje crteza novim presecima */
     if (_pocetakNovih.value() < _preseciGlavni.size()) {
-        PresekPravougaonika_updateCanvasAndBlock();
+        PresekPravougaonika_updateCanvasAndBlock()
         _pocetakNovih = _preseciGlavni.size();
-        PresekPravougaonika_updateCanvasAndBlock();
+        PresekPravougaonika_updateCanvasAndBlock()
     }
 #endif
 
@@ -515,7 +515,7 @@ void PresekPravougaonika::detect(unsigned int l, unsigned int d)
 #ifndef GA06_BENCHMARK
     /* Izbacivanje podele iz niza */
     _podele.pop_back();
-    PresekPravougaonika_updateCanvasAndBlock();
+    PresekPravougaonika_updateCanvasAndBlock()
 #endif
 }
 

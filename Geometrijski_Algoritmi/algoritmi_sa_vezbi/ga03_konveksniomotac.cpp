@@ -15,13 +15,16 @@ konveksniomotac::konveksniomotac(QWidget *pCrtanje,
 }
 
 void konveksniomotac::pokreniAlgoritam() {
+    /* Slozenost ovakvog (Gremovog) algoritma: O(nlogn).
+     * Dominira sortiranje, dok su ostali koraci linearni. */
     maks_tacka = _tacke[0];
 
     for (auto i = 1ul; i < _tacke.size(); i++) {
         if (_tacke[i].x() > maks_tacka.x() || (_tacke[i].x() == maks_tacka.x() && _tacke[i].y() < maks_tacka.y()))
             maks_tacka = _tacke[i];
     }
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
+
     std::sort(_tacke.begin(), _tacke.end(), [&](const auto& lhs, const auto& rhs) {
         int P = pomocneFunkcije::povrsinaTrougla(maks_tacka, lhs, rhs);
         return  (P < 0) ||  (P == 0 && pomocneFunkcije::distanceKvadrat(maks_tacka, lhs) < pomocneFunkcije::distanceKvadrat(maks_tacka, rhs));
@@ -29,7 +32,7 @@ void konveksniomotac::pokreniAlgoritam() {
 
     konveksni_omotac.push_back(maks_tacka);
     konveksni_omotac.push_back(_tacke[1]);
-    int pom = 2;
+    unsigned pom = 2;
     unsigned j = 2;
 
     while(j < _tacke.size()) {
@@ -46,16 +49,15 @@ void konveksniomotac::pokreniAlgoritam() {
             --pom;
             // Ne smemo da povecamo j u ovom slucaju, jer nismo zavrsili sa ovom tackom
         }
-        AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock()
     }
 
     konveksni_omotac.push_back(maks_tacka);
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
     emit animacijaZavrsila();
 }
 
 void konveksniomotac::crtajAlgoritam(QPainter *painter) const {
-
     if (!painter) return;
 
     QPen pen = painter->pen();
@@ -70,11 +72,10 @@ void konveksniomotac::crtajAlgoritam(QPainter *painter) const {
     for(auto i = 1ul; i < konveksni_omotac.size(); i++) {
        painter->drawLine(konveksni_omotac.at(i-1), konveksni_omotac.at(i));
     }
-
-
 }
 
 void konveksniomotac::pokreniNaivniAlgoritam() {
+    /* Slozenost naivnog algoritma: O(n^3) */
     for (auto i = 0ul;i < _tacke.size(); i++) {
         for (auto j = 0ul; j < _tacke.size(); j++) {
             if (i == j){
@@ -99,7 +100,6 @@ void konveksniomotac::pokreniNaivniAlgoritam() {
                 }
             }
         }
-
     }
 
     std::sort(naivni_konveksni_omotac.begin(), naivni_konveksni_omotac.end(), [&](const auto& lhs, const auto& rhs) {

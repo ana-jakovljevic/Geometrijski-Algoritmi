@@ -10,6 +10,7 @@
 #include "ga02_3discrtavanje.h"
 #include "ga03_konveksniomotac.h"
 #include "ga04_konveksniomotac3d.h"
+#include "ga05_preseciduzi.h"
 
 #include "ga06_presekPravougaonika.h"
 
@@ -38,8 +39,20 @@ void TimeMeasurementThread::run()
         case TipAlgoritma::DEMO_ISCRTAVANJA:
             pAlgorithm = new DemoIscrtavanja(nullptr, 0, "", i);
             break;
+        case TipAlgoritma::BRISUCA_PRAVA:
+            pAlgorithm = new BrisucaPrava(nullptr, 0, "", i);
+            break;
+        case TipAlgoritma::_3D_ISCRTAVANJE:
+            pAlgorithm = new BrisucaPrava(nullptr, 0, "", i);
+            break;
         case TipAlgoritma::KONVEKSNI_OMOTAC:
             pAlgorithm = new konveksniomotac(nullptr, 0, "", i);
+            break;
+        case TipAlgoritma::KONVEKSNI_OMOTAC_3D:
+            pAlgorithm = new KonveksniOmotac3D(nullptr, 0, "", i);
+            break;
+        case TipAlgoritma::PRESECI_DUZI:
+            pAlgorithm = new PreseciDuzi(nullptr, 0, "", i);
             break;
         case TipAlgoritma::PRESEK_PRAVOUGAONIKA:
             pAlgorithm = new PresekPravougaonika(nullptr, 0, "", i);

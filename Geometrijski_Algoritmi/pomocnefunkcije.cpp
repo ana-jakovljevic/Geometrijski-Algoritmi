@@ -17,44 +17,45 @@ int pomocneFunkcije::distanceKvadrat(const QPoint& A, const QPoint& B)
 }
 
 
-bool pomocneFunkcije::kolinearne3D(QVector3D a, QVector3D b, QVector3D c)
+bool pomocneFunkcije::kolinearne3D(const QVector3D& a, const QVector3D& b, const QVector3D& c)
 {
     /* Proverava se povrsina trougla. Zaparvo da li su sva tri unakrsna proizvoda
      * vektora jednaki nuli.
      * Kako je u pitanju float vrednost, gledamo da li je apsultna vrednost manja od
      * nekog malog broja.
+     * Tj. proveravamo sledece
+     * |  i      j      k  |
+     * |ax-bx  ay-by  az-bz| = (0, 0, 0)
+     * |ax-cx  ay-cy  az-cz|
      */
-    return (fabs((c.z() - a.z()) * (b.y() - a.y()) -
-              (b.z() - a.z()) * (c.y() - a.y())) < 0.000001) &&
-           (fabs((b.z() - a.z()) * (c.x() - a.x()) -
-              (b.x() - a.x()) * (c.z() - a.z())) < 0.000001) &&
-           (fabs((b.x() - a.x()) * (c.y() - a.y()) -
-              (b.y() - a.y()) * (c.x() - a.x())) < 0.000001);
+    return (fabsf((c.z() - a.z()) * (b.y() - a.y()) -
+              (b.z() - a.z()) * (c.y() - a.y())) < EPS) &&
+           (fabsf((b.z() - a.z()) * (c.x() - a.x()) -
+              (b.x() - a.x()) * (c.z() - a.z())) < EPS) &&
+           (fabsf((b.x() - a.x()) * (c.y() - a.y()) -
+              (b.y() - a.y()) * (c.x() - a.x())) < EPS);
 }
 
 
-double  pomocneFunkcije::zapremina(QVector3D a, QVector3D b, QVector3D c, QVector3D d)
+float pomocneFunkcije::zapremina(const QVector3D& a, const QVector3D& b, const QVector3D& c, const QVector3D& d)
 {
-    double	vol;
-    double  bxdx, bydy, bzdz, cxdx, cydy, czdz;
-
     /* Zapremina se racuna kao determinanta
      * 6V(Tetraedar) = |ax ay az 1|
      *                 |bx by bz 1|
      *                 |cx cy cz 1|
      *                 |dx dy dz 1|
      */
-    bxdx=b.x()-d.x();
-    bydy=b.y()-d.y();
-    bzdz=b.z()-d.z();
-    cxdx=c.x()-d.x();
-    cydy=c.y()-d.y();
-    czdz=c.z()-d.z();
-    vol =    (a.z()-d.z())*(bxdx*cydy-bydy*cxdx)
-          +  (a.y()-d.y())*(bzdz*cxdx-bxdx*czdz)
-          +  (a.x()-d.x())*(bydy*czdz-bzdz*cydy);
+    float bxdx = b.x() - d.x();
+    float bydy = b.y() - d.y();
+    float bzdz = b.z() - d.z();
+    float cxdx = c.x() - d.x();
+    float cydy = c.y() - d.y();
+    float czdz = c.z() - d.z();
+    float vol =    (a.z() - d.z()) * (bxdx*cydy - bydy*cxdx)
+                +  (a.y() - d.y()) * (bzdz*cxdx - bxdx*czdz)
+                +  (a.x() - d.x()) * (bydy*czdz - bzdz*cydy);
 
-    if (fabs(vol) < 0.0001)
+    if (fabs(vol) < EPS)
         return 0;
     else
         return vol;
