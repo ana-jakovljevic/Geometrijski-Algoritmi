@@ -29,6 +29,13 @@ enum class TipAlgoritma {
     STUDENTSKI_PROJEKTI
 };
 
+/* Enumeracija tabova */
+enum TabIndex {
+    ALGORITAM_2D,
+    ALGORITAM_3D,
+    POREDJENJE
+};
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE

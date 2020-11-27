@@ -176,6 +176,14 @@ void MainWindow::on_tipAlgoritma_currentIndexChanged(int index)
         ui->Nasumicni_dugme->setEnabled(true);
         animacijaButtonAktivni(false);
         ui->merenjeButton->setEnabled(true);
+
+        if (tipAlgoritma == TipAlgoritma::_3D_ISCRTAVANJE ||
+            tipAlgoritma == TipAlgoritma::KONVEKSNI_OMOTAC_3D)
+        {
+            ui->tabWidget->setCurrentIndex(TabIndex::ALGORITAM_3D);
+        } else {
+            ui->tabWidget->setCurrentIndex(TabIndex::ALGORITAM_2D);
+        }
     }
 }
 
@@ -186,6 +194,7 @@ void MainWindow::on_merenjeButton_clicked()
     _optimalSeries->clear();
     _naiveSeries->clear();
 
+    ui->tabWidget->setCurrentIndex(TabIndex::POREDJENJE);
     TipAlgoritma tipAlgoritma = static_cast<TipAlgoritma>(ui->tipAlgoritma->currentIndex());
 
     _mThread = new TimeMeasurementThread(tipAlgoritma, MIN_DIM, STEP, MAX_DIM);

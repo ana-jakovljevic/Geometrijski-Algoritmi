@@ -14,7 +14,7 @@ BrisucaPrava::BrisucaPrava(QWidget *pCrtanje,
 
 void BrisucaPrava::pokreniAlgoritam()
 {
-    while (_yPoz < _pCrtanje->height())
+    while (_pCrtanje && _yPoz < _pCrtanje->height())
     {
         _yPoz += 5;
         AlgoritamBaza_updateCanvasAndBlock()
