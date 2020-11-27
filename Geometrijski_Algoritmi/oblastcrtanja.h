@@ -2,7 +2,6 @@
 #define OBLASTCRTANJA_H
 
 #include <QWidget>
-#include <QtGui>
 
 #include "algoritambaza.h"
 
@@ -22,10 +21,14 @@ protected:
     ///         iscrtavanje po nasoj oblasti za crtanje.
     ///
     void paintEvent(QPaintEvent *) override;
+    void mouseMoveEvent(QMouseEvent *) override;
 
 private:
     AlgoritamBaza *_pAlgoritamBaza;
     bool _obrisiSve;
+
+signals:
+    void polozajKursora(int x, int y);
 };
 
 #endif // OBLASTCRTANJA_H

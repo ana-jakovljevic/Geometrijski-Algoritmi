@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include <QFileDialog>
+#include <QTextStream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -24,6 +25,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tab->setLayout(oblastCrtanjaLayout);
 
     ui->brojNasumicniTacaka->setPlaceholderText("Uneti broj nasumicnih tacaka, podrazumevana vrednost je 20.");
+
+    connect(_pOblastCrtanja, &OblastCrtanja::polozajKursora,
+            this, &MainWindow::on_polozajKursora);
+    connect(ui->tabWidget, &QTabWidget::currentChanged,
+            this, [this](int) {ui->statusBar->showMessage("");});
 
     /* Add chart */
     QChart *chart = new QChart();
@@ -160,6 +166,13 @@ void MainWindow::on_Ispocetka_dugme_clicked()
     }
 }
 
+void MainWindow::on_polozajKursora(int x, int y)
+{
+    QString s;
+    QTextStream(&s) << "Trenutni polozaj misa: (" << x << ", " << y << ").";
+    ui->statusBar->showMessage(s);
+}
+
 void MainWindow::on_tipAlgoritma_currentIndexChanged(int index)
 {
     TipAlgoritma tipAlgoritma = static_cast<TipAlgoritma>(index);
@@ -176,6 +189,14 @@ void MainWindow::on_tipAlgoritma_currentIndexChanged(int index)
         ui->Nasumicni_dugme->setEnabled(true);
         animacijaButtonAktivni(false);
         ui->merenjeButton->setEnabled(true);
+
+        if (tipAlgoritma == TipAlgoritma::_3D_ISCRTAVANJE ||
+            tipAlgoritma == TipAlgoritma::KONVEKSNI_OMOTAC_3D)
+        {
+            ui->tabWidget->setCurrentIndex(TabIndex::ALGORITAM_3D);
+        } else {
+            ui->tabWidget->setCurrentIndex(TabIndex::ALGORITAM_2D);
+        }
     }
 }
 
@@ -186,6 +207,7 @@ void MainWindow::on_merenjeButton_clicked()
     _optimalSeries->clear();
     _naiveSeries->clear();
 
+    ui->tabWidget->setCurrentIndex(TabIndex::POREDJENJE);
     TipAlgoritma tipAlgoritma = static_cast<TipAlgoritma>(ui->tipAlgoritma->currentIndex());
 
     _mThread = new TimeMeasurementThread(tipAlgoritma, MIN_DIM, STEP, MAX_DIM);

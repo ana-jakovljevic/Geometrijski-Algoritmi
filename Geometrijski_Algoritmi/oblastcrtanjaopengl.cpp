@@ -25,6 +25,7 @@ void OblastCrtanjaOpenGL::paintGL()
               0, 0, 0,
               0, 1, 0);
 
+    glScaled(skala, skala, skala);
     glRotatef(xRot, 1.0, 0.0, 0.0);
     glRotatef(yRot, 0.0, 1.0, 0.0);
     glRotatef(zRot, 0.0, 0.0, 1.0);
@@ -104,4 +105,12 @@ void OblastCrtanjaOpenGL::mouseMoveEvent(QMouseEvent *event)
         setZRotation(zRot + dx);
     }
     lastPos = event->pos();
+}
+
+void OblastCrtanjaOpenGL::wheelEvent(QWheelEvent *event)
+{
+    QPoint pomeraj = event->angleDelta();
+    if (pomeraj.y() > 0)  skala *= 1.1;
+    if (pomeraj.y() < 0)  skala /= 1.1;
+    update();
 }

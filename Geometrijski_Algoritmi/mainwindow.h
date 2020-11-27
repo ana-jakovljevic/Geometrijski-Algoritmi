@@ -32,6 +32,13 @@ enum class TipAlgoritma {
     PRESEK_PRAVOUGAONIKA
 };
 
+/* Enumeracija tabova */
+enum TabIndex {
+    ALGORITAM_2D,
+    ALGORITAM_3D,
+    POREDJENJE
+};
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -58,6 +65,8 @@ private slots:
     void on_Sledeci_dugme_clicked();
 
     void on_Ispocetka_dugme_clicked();
+
+    void on_polozajKursora(int x, int y);
 
     /* za Chart */
     void on_merenjeButton_clicked();
