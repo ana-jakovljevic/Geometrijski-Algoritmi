@@ -63,6 +63,8 @@ private slots:
 
     void on_Ispocetka_dugme_clicked();
 
+    void on_polozajKursora(int x, int y);
+
     /* za Chart */
     void on_merenjeButton_clicked();
     void on_lineSeriesChange(double dim, double optimal, double naive);

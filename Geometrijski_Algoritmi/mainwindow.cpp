@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include <QFileDialog>
+#include <QTextStream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -24,6 +25,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tab->setLayout(oblastCrtanjaLayout);
 
     ui->brojNasumicniTacaka->setPlaceholderText("Uneti broj nasumicnih tacaka, podrazumevana vrednost je 20.");
+
+    connect(_pOblastCrtanja, &OblastCrtanja::polozajKursora,
+            this, &MainWindow::on_polozajKursora);
+    connect(ui->tabWidget, &QTabWidget::currentChanged,
+            this, [this](int) {ui->statusBar->showMessage("");});
 
     /* Add chart */
     QChart *chart = new QChart();
@@ -158,6 +164,13 @@ void MainWindow::on_Ispocetka_dugme_clicked()
         napraviNoviAlgoritam();
         _pAlgoritamBaza->pokreniAnimaciju();
     }
+}
+
+void MainWindow::on_polozajKursora(int x, int y)
+{
+    QString s;
+    QTextStream(&s) << "Trenutni polozaj misa: (" << x << ", " << y << ").";
+    ui->statusBar->showMessage(s);
 }
 
 void MainWindow::on_tipAlgoritma_currentIndexChanged(int index)
