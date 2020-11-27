@@ -20,7 +20,7 @@ public:
     void postaviAlgoritamKojiSeIzvrsava(AlgoritamBaza *pAlgoritamBaza);
     void set_obrisiSve(bool param);
 
-    /* rotation with mouse */
+    /* Rotacija prevlacenjem misa */
     QPoint lastPos;
     int xRot;
     int yRot;
@@ -32,6 +32,10 @@ public:
 
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
+
+    /* Uvecavanje i umanjivanje tockom misa */
+    double skala = 1;
+    void wheelEvent(QWheelEvent *event) override;
 
 private:
     AlgoritamBaza *_pAlgoritamBaza;
