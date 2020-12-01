@@ -7,12 +7,18 @@ PreseciDuzi::PreseciDuzi(QWidget *pCrtanje,
                           int pauzaKoraka,
                           std::string imeDatoteke,
                           int broj_tacaka)
-   :AlgoritamBaza(pCrtanje, pauzaKoraka)
+   :AlgoritamBaza(pCrtanje, pauzaKoraka), _redDogadjaja(),
+                                          _redDuzi(poredjenjeDuzi(&y_brisuce_prave))
 {
     if (imeDatoteke != "")
         _duzi = ucitajPodatkeIzDatoteke(imeDatoteke);
     else
         _duzi = generisiNasumicneDuzi(broj_tacaka);
+
+    for(auto duz : _duzi) {
+        _redDogadjaja.emplace(duz.p1(), tipDogadjaja::POCETAK_DUZI, &duz, nullptr);
+        _redDogadjaja.emplace(duz.p2(), tipDogadjaja::KRAJ_DUZI, &duz, nullptr);
+    }
 }
 
 void PreseciDuzi::pokreniAlgoritam() {}
