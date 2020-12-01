@@ -1,6 +1,5 @@
 #include "timemeasurementthread.h"
 
-
 #include "config.h"
 #include "mainwindow.h"
 #include "algoritambaza.h"
@@ -12,6 +11,8 @@
 #include "ga03_konveksniomotac.h"
 #include "ga04_konveksniomotac3d.h"
 #include "ga05_preseciduzi.h"
+
+#include "ga06_presekPravougaonika.h"
 
 TimeMeasurementThread::TimeMeasurementThread(TipAlgoritma tipAlgoritma, int minValue, int step, int maxValue)
     : QThread(), _algorithmType(tipAlgoritma), _minValue(minValue), _step(step), _maxValue(maxValue)
@@ -52,6 +53,9 @@ void TimeMeasurementThread::run()
             break;
         case TipAlgoritma::PRESECI_DUZI:
             pAlgorithm = new PreseciDuzi(nullptr, 0, "", i);
+            break;
+        case TipAlgoritma::PRESEK_PRAVOUGAONIKA:
+            pAlgorithm = new PresekPravougaonika(nullptr, 0, "", i);
             break;
         default:
             break;

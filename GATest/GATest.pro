@@ -18,6 +18,7 @@ HEADERS += \
     tst_ga00_KonveksniOmotac.h \
     tst_ga00_KonveksniOmotac3D.h \
     tst_ga00_PrimerTest.h \
+    tst_ga06_presekPravougaonika.h \
     ../Geometrijski_Algoritmi/pomocnefunkcije.h \
     ../Geometrijski_Algoritmi/algoritambaza.h \
     ../Geometrijski_Algoritmi/animacijanit.h \
@@ -33,7 +34,8 @@ HEADERS += \
 
 INCLUDEPATH += \
     ../Geometrijski_Algoritmi \
-    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/
 
 win32 {
 INCLUDEPATH += \
@@ -41,6 +43,7 @@ INCLUDEPATH += \
 }
 
 SOURCES += main.cpp \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.cpp \
     ../Geometrijski_Algoritmi/pomocnefunkcije.cpp \
     ../Geometrijski_Algoritmi/algoritambaza.cpp \
     ../Geometrijski_Algoritmi/animacijanit.cpp \

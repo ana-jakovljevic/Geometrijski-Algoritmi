@@ -16,6 +16,8 @@
 #include "ga04_konveksniomotac3d.h"
 #include "ga05_preseciduzi.h"
 
+#include "ga06_presekPravougaonika.h"
+
 /* Enumeracija algoritama */
 enum class TipAlgoritma {
     ALGORITMI_SA_VEZBI,
@@ -26,7 +28,8 @@ enum class TipAlgoritma {
     KONVEKSNI_OMOTAC_3D,
     PRESECI_DUZI,
     SEPARATOR,
-    STUDENTSKI_PROJEKTI
+    STUDENTSKI_PROJEKTI,
+    PRESEK_PRAVOUGAONIKA
 };
 
 /* Enumeracija tabova */
