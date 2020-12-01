@@ -10,6 +10,18 @@
 
 using namespace testing;
 
+static const auto input_file_1 = "../Geometrijski_Algoritmi/input_files/ga00_KonveksniOmotac3D/input1.txt";
+
+/*
+ * U slucaju vise od tri komplanarne tacke Naivni algoritam ce vratiti
+ * sve moguce ivice medju tim tackama, a optimalni samo jednu random
+ * triangulaciju.
+ * Prva grupa testova ("LERandom" testovi) proverava da li je broj ivica
+ * koje je vratio naivni veci ili jednak od broja ivica optimalnog
+ * algoritma.
+ * Druga grupa testova ("Advanced" testovi) proverava da li oba algoritma
+ * vracaju jednak broj temena, vracajuci ivice.
+ */
 
 TEST(ga04_konveksniomotac3d, firstLERandomTest)
 {
@@ -29,7 +41,7 @@ TEST(ga04_konveksniomotac3d, secondLERandomTest)
 
 TEST(ga04_konveksniomotac3d, firstAdvancedTestFromFile)
 {
-    KonveksniOmotac3D* ch1 = new KonveksniOmotac3D(nullptr, 0, "../input_KonveksniOmotac3D.txt", 0);
+    KonveksniOmotac3D* ch1 = new KonveksniOmotac3D(nullptr, 0, input_file_1, 0);
     ch1->pokreniAlgoritam();
     ch1->pokreniNaivniAlgoritam();
 
