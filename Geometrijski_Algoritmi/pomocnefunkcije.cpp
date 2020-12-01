@@ -77,3 +77,44 @@ float pomocneFunkcije::zapremina(const QVector3D& a, const QVector3D& b, const Q
     else
         return vol;
 }
+
+bool pomocneFunkcije::presekDuzi(QLineF l1, QLineF l2, QPointF &presek)
+{
+    double k1 = (l1.p1().y() - l1.p2().y())/(l1.p1().x() - l1.p2().x());
+    double k2 = (l2.p1().y() - l2.p2().y())/(l2.p1().x() - l2.p2().x());
+
+    double n1 = l1.p1().y() - k1*l1.p1().x();
+    double n2 = l2.p1().y() - k2*l2.p1().x();
+
+    double dx = (n2-n1)/(k1-k2);
+
+    //Ovim smo izracunali presek dve prave, koje su odredjene duzima l1 i l2.
+    //Treba proveriti da li presek pripada zaista duzima (moze biti na pravi, ali van duzi),
+    //u suprotnom se ovaj presek zanemaruje
+    //zato return na kraju
+    presek = QPointF(dx, k1*dx + n1);
+
+    return duzSadrziTacku(l1, presek) && duzSadrziTacku(l2, presek);
+}
+
+bool pomocneFunkcije::duzSadrziTacku(QLineF l, QPointF p)
+{
+    if(l.p1().x() < l.p2().x())
+    {
+        if(p.x() < l.p1().x() || p.x() > l.p2().x())
+            return false;
+    }else{
+        if(p.x() > l.p1().x() || p.x() < l.p2().x())
+            return false;
+    }
+
+    if(l.p1().y() < l.p2().y()){
+        if(p.y() < l.p1().y() || p.y() > l.p2().y())
+            return false;
+    }else{
+        if(p.y() > l.p1().y() || p.y() < l.p2().y())
+            return false;
+    }
+
+    return true;
+}
