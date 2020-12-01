@@ -1,8 +1,12 @@
 #ifndef GA05_PRESECIDUZI_H
 #define GA05_PRESECIDUZI_H
 
+#include <set>
+
 #include "algoritambaza.h"
 #include <pomocnefunkcije.h>
+
+#include "ga05_datastructures.h"
 
 class PreseciDuzi : public AlgoritamBaza
 {
@@ -27,6 +31,9 @@ private:
     std::vector<QPointF> _preseci;
 
     std::vector<QPointF> _naiviPreseci;
+    std::set<tackaDogadjaja, poredjenjeDogadjaja> _redDogadjaja;
+    std::set<QLineF*, poredjenjeDuzi> _redDuzi;
+
 
     // imacemo skup Event Points
     // imacemo skup posmatranih duzi
