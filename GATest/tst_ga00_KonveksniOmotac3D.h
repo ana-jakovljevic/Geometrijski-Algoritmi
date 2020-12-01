@@ -25,36 +25,36 @@ static const auto input_file_1 = "../Geometrijski_Algoritmi/input_files/ga00_Kon
 
 TEST(ga04_konveksniomotac3d, firstLERandomTest)
 {
-    KonveksniOmotac3D* ch1 = new KonveksniOmotac3D(nullptr, 0, "", 30);
-    ch1->pokreniAlgoritam();
-    ch1->pokreniNaivniAlgoritam();
-    EXPECT_LE(ch1->getIvice().size(), ch1->getNaivneIvice().size());
+    KonveksniOmotac3D ch1(nullptr, 0, "", 30);
+    ch1.pokreniAlgoritam();
+    ch1.pokreniNaivniAlgoritam();
+    EXPECT_LE(ch1.getIvice().size(), ch1.getNaivneIvice().size());
 }
 
 TEST(ga04_konveksniomotac3d, secondLERandomTest)
 {
-    KonveksniOmotac3D* ch1 = new KonveksniOmotac3D(nullptr, 0, "", 100);
-    ch1->pokreniAlgoritam();
-    ch1->pokreniNaivniAlgoritam();
-    EXPECT_LE(ch1->getIvice().size(), ch1->getNaivneIvice().size());
+    KonveksniOmotac3D ch1(nullptr, 0, "", 100);
+    ch1.pokreniAlgoritam();
+    ch1.pokreniNaivniAlgoritam();
+    EXPECT_LE(ch1.getIvice().size(), ch1.getNaivneIvice().size());
 }
 
 TEST(ga04_konveksniomotac3d, firstAdvancedTestFromFile)
 {
-    KonveksniOmotac3D* ch1 = new KonveksniOmotac3D(nullptr, 0, input_file_1, 0);
-    ch1->pokreniAlgoritam();
-    ch1->pokreniNaivniAlgoritam();
+    KonveksniOmotac3D ch1(nullptr, 0, input_file_1, 0);
+    ch1.pokreniAlgoritam();
+    ch1.pokreniNaivniAlgoritam();
 
     std::unordered_set<Teme*> temena;
     std::unordered_set<Teme*> naivnaTemena;
 
-    for(auto ivica : ch1->getIvice())
+    for(auto ivica : ch1.getIvice())
     {
         temena.insert(ivica->t1());
         temena.insert(ivica->t2());
     }
 
-    for(auto naivnaIvica : ch1->getNaivneIvice())
+    for(auto naivnaIvica : ch1.getNaivneIvice())
     {
         naivnaTemena.insert(naivnaIvica->t1());
         naivnaTemena.insert(naivnaIvica->t2());
@@ -65,20 +65,20 @@ TEST(ga04_konveksniomotac3d, firstAdvancedTestFromFile)
 
 TEST(ga04_konveksniomotac3d, firstAdvancedRandomTest)
 {
-    KonveksniOmotac3D* ch1 = new KonveksniOmotac3D(nullptr, 0, "", 100);
-    ch1->pokreniAlgoritam();
-    ch1->pokreniNaivniAlgoritam();
+    KonveksniOmotac3D ch1(nullptr, 0, "", 100);
+    ch1.pokreniAlgoritam();
+    ch1.pokreniNaivniAlgoritam();
 
     std::unordered_set<Teme*> temena;
     std::unordered_set<Teme*> naivnaTemena;
 
-    for(auto ivica : ch1->getIvice())
+    for(auto ivica : ch1.getIvice())
     {
         temena.insert(ivica->t1());
         temena.insert(ivica->t2());
     }
 
-    for(auto naivnaIvica : ch1->getNaivneIvice())
+    for(auto naivnaIvica : ch1.getNaivneIvice())
     {
         naivnaTemena.insert(naivnaIvica->t1());
         naivnaTemena.insert(naivnaIvica->t2());

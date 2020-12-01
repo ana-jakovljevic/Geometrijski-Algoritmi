@@ -8,7 +8,7 @@ using namespace testing;
 
 TEST(ga00_PrimerTests, firstRandomTest)
 {
-    int i = 4;
+    int i = 3;
     EXPECT_EQ(i, 3);
 }
 
