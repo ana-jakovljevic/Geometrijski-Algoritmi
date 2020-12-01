@@ -16,6 +16,7 @@ CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 HEADERS += \
     tst_ga00_KonveksniOmotac.h \
+    tst_ga00_KonveksniOmotac3D.h \
     tst_ga00_PrimerTest.h \
     ../Geometrijski_Algoritmi/pomocnefunkcije.h \
     ../Geometrijski_Algoritmi/algoritambaza.h \
