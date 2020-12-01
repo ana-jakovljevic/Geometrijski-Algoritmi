@@ -52,6 +52,9 @@ public:
     std::vector<Teme*> generisiNasumicneTacke(int broj_tacaka) const;
     std::vector<Teme*> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
 
+    std::unordered_set<Ivica *, HashIvica, EqIvica> getIvice() const;
+    std::unordered_set<Ivica *, HashIvica, EqIvica> getNaivneIvice() const;
+
 private:
     std::vector<Teme*> _tacke;
 
