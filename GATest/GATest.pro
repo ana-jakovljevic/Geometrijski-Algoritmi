@@ -16,6 +16,7 @@ CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 HEADERS += \
     tst_ga00_KonveksniOmotac.h \
+    tst_ga00_KonveksniOmotac3D.h \
     tst_ga00_PrimerTest.h \
     ../Geometrijski_Algoritmi/pomocnefunkcije.h \
     ../Geometrijski_Algoritmi/algoritambaza.h \
@@ -27,7 +28,8 @@ HEADERS += \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga01_brisucaprava.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga02_3discrtavanje.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga03_konveksniomotac.h \
-    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga04_konveksniomotac3d.h
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga04_konveksniomotac3d.h \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga05_preseciduzi.h
 
 INCLUDEPATH += \
     ../Geometrijski_Algoritmi \
@@ -48,4 +50,5 @@ SOURCES += main.cpp \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga01_brisucaprava.cpp \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga02_3discrtavanje.cpp \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga03_konveksniomotac.cpp \
-    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga04_konveksniomotac3d.cpp
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga04_konveksniomotac3d.cpp \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga05_preseciduzi.cpp

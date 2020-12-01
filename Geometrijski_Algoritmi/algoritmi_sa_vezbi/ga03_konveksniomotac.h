@@ -15,6 +15,9 @@ public:
     void crtajAlgoritam(QPainter *painter) const;
     void pokreniNaivniAlgoritam();
 
+    std::vector<QPoint> get_konveksni_omotac() const;
+    std::vector<QPoint> get_naivni_konveksni_omotac() const;
+
 private:
     std::vector<QPoint> _tacke;
     std::vector<QPoint> konveksni_omotac;

@@ -2,6 +2,7 @@
 
 #include "tst_ga00_PrimerTest.h"
 #include "tst_ga00_KonveksniOmotac.h"
+#include "tst_ga00_KonveksniOmotac3D.h"
 
 int main(int argc, char *argv[])
 {

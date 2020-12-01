@@ -107,3 +107,13 @@ void konveksniomotac::pokreniNaivniAlgoritam() {
         return  (P < 0) ||  (P == 0 && pomocneFunkcije::distanceKvadrat(maks_tacka, lhs) < pomocneFunkcije::distanceKvadrat(maks_tacka, rhs));
     });
 }
+
+std::vector<QPoint> konveksniomotac::get_naivni_konveksni_omotac() const
+{
+    return naivni_konveksni_omotac;
+}
+
+std::vector<QPoint> konveksniomotac::get_konveksni_omotac() const
+{
+    return konveksni_omotac;
+}

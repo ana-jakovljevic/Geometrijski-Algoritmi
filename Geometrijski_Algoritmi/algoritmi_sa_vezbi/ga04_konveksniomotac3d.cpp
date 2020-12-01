@@ -46,6 +46,16 @@ std::vector<Teme *> KonveksniOmotac3D::ucitajPodatkeIzDatoteke(std::string imeDa
     return points;
 }
 
+std::unordered_set<Ivica *, HashIvica, EqIvica> KonveksniOmotac3D::getIvice() const
+{
+    return _ivice;
+}
+
+std::unordered_set<Ivica *, HashIvica, EqIvica> KonveksniOmotac3D::getNaivneIvice() const
+{
+    return _naivneIvice;
+}
+
 
 /*--------------------------------------------------------------------------------------------------*/
 /*---------------------------------Implementacija---------------------------------------------------*/
