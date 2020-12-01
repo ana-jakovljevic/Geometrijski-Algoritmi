@@ -22,7 +22,23 @@ void PreseciDuzi::crtajAlgoritam(QPainter *painter) const {
         return;
 }
 
-void PreseciDuzi::pokreniNaivniAlgoritam() {}
+void PreseciDuzi::pokreniNaivniAlgoritam() {
+
+    for (auto duz1 = _duzi.begin(); duz1 != _duzi.end(); duz1++) {
+        for (auto duz2 = duz1+1; duz2 != _duzi.end(); duz2++) {
+            float povrsina1 = pomocneFunkcije::povrsinaTrouglaF(duz1->p1(), duz1->p2(), duz2->p1());
+            float povrsina2 = pomocneFunkcije::povrsinaTrouglaF(duz1->p1(), duz1->p2(), duz2->p2());
+
+            if (povrsina1 == 0 && povrsina2 == 0)
+                continue;
+
+            if ((povrsina1 <= 0 && povrsina2 >= 0) || (povrsina1 >= 0 && povrsina2 <= 0)) {
+                _naiviPreseci.push_back(pomocneFunkcije::presek_duzi(*duz1, *duz2));
+            }
+        }
+    }
+
+}
 
 std::vector<QLineF> PreseciDuzi::generisiNasumicneDuzi(int brojDuzi) const {
 

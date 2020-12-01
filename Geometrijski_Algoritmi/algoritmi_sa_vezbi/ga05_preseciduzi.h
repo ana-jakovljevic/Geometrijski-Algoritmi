@@ -2,6 +2,7 @@
 #define GA05_PRESECIDUZI_H
 
 #include "algoritambaza.h"
+#include <pomocnefunkcije.h>
 
 class PreseciDuzi : public AlgoritamBaza
 {
@@ -24,6 +25,8 @@ private:
     std::vector<QLineF> _duzi;
     double y_brisuce_prave;
     std::vector<QPointF> _preseci;
+
+    std::vector<QPointF> _naiviPreseci;
 
     // imacemo skup Event Points
     // imacemo skup posmatranih duzi
