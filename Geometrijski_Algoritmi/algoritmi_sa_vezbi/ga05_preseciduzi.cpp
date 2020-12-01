@@ -15,13 +15,32 @@ PreseciDuzi::PreseciDuzi(QWidget *pCrtanje,
     else
         _duzi = generisiNasumicneDuzi(broj_tacaka);
 
+
+}
+
+void PreseciDuzi::pokreniAlgoritam() {
     for(auto duz : _duzi) {
         _redDogadjaja.emplace(duz.p1(), tipDogadjaja::POCETAK_DUZI, &duz, nullptr);
         _redDogadjaja.emplace(duz.p2(), tipDogadjaja::KRAJ_DUZI, &duz, nullptr);
     }
-}
+    while(!_redDogadjaja.empty()){
 
-void PreseciDuzi::pokreniAlgoritam() {}
+         auto td = *_redDogadjaja.begin();
+         _redDogadjaja.erase(_redDogadjaja.begin());
+         if(td.tip==tipDogadjaja::POCETAK_DUZI){
+             y_brisuce_prave = td.tacka.y();
+             auto duz=_redDuzi.emplace(td.duz1).first;
+             if(duz!=_redDuzi.begin()){
+                 auto prethodnad= std::prev(duz);
+                 QPointF presek;
+                 auto rezultat = (*duz)->intersects(**prethodnad, &presek);
+                 if(rezultat==QLineF::BoundedIntersection)
+                    _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK,*duz,*prethodnad);
+              }
+          }
+    }
+
+}
 
 void PreseciDuzi::crtajAlgoritam(QPainter *painter) const {
     if (!painter)
