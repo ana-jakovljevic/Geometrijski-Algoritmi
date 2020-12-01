@@ -30,7 +30,7 @@ private:
     double y_brisuce_prave;
     std::vector<QPointF> _preseci;
 
-    std::vector<QPointF> _naiviPreseci;
+    std::vector<QPointF> _naivniPreseci;
     std::set<tackaDogadjaja, poredjenjeDogadjaja> _redDogadjaja;
     std::set<QLineF*, poredjenjeDuzi> _redDuzi;
 

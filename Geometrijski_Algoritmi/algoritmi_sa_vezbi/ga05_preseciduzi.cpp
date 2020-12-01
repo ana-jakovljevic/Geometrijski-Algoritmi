@@ -36,9 +36,45 @@ void PreseciDuzi::pokreniAlgoritam() {
                  auto rezultat = (*duz)->intersects(**prethodnad, &presek);
                  if(rezultat==QLineF::BoundedIntersection)
                     _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK,*duz,*prethodnad);
-              }
+             }
+             auto sledeca = std::next(duz);
+             if(sledeca != _redDuzi.end()) {
+                 QPointF presek;
+                 auto rezultat = (*duz)->intersects(**sledeca, &presek);
+                 if(rezultat==QLineF::BoundedIntersection)
+                    _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK,*duz,*sledeca);
+             }
           }
+         else if (td.tip==tipDogadjaja::KRAJ_DUZI) {
+            y_brisuce_prave = td.tacka.y();
+            auto tr_duz = _redDuzi.find(td.duz1);
+            auto sledeca = std::next(tr_duz);
+
+            if (tr_duz != _redDuzi.begin() && sledeca != _redDuzi.end()) {
+                auto predhodna = std::prev(tr_duz);
+                QPointF presek;
+                auto rezultat = (*predhodna)->intersects(**sledeca, &presek);
+                if(rezultat==QLineF::BoundedIntersection && presek.y() <= y_brisuce_prave)
+                   _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK,*predhodna,*sledeca);
+            }
+            _redDuzi.erase(tr_duz);
+         }
+         else if (td.tip==tipDogadjaja::PRESEK) {
+             _preseci.push_back(td.tacka);
+
+             y_brisuce_prave = td.tacka.y();
+             _redDuzi.erase(td.duz1);
+             _redDuzi.erase(td.duz2);
+
+             auto duz1 = _redDuzi.insert(td.duz1).first;
+             auto duz2 = _redDuzi.insert(td.duz2).first;
+
+
+         }
+
     }
+
+
 
 }
 
@@ -48,21 +84,14 @@ void PreseciDuzi::crtajAlgoritam(QPainter *painter) const {
 }
 
 void PreseciDuzi::pokreniNaivniAlgoritam() {
-
-    for (auto duz1 = _duzi.begin(); duz1 != _duzi.end(); duz1++) {
-        for (auto duz2 = duz1+1; duz2 != _duzi.end(); duz2++) {
-            float povrsina1 = pomocneFunkcije::povrsinaTrouglaF(duz1->p1(), duz1->p2(), duz2->p1());
-            float povrsina2 = pomocneFunkcije::povrsinaTrouglaF(duz1->p1(), duz1->p2(), duz2->p2());
-
-            if (povrsina1 == 0 && povrsina2 == 0)
-                continue;
-
-            if ((povrsina1 <= 0 && povrsina2 >= 0) || (povrsina1 >= 0 && povrsina2 <= 0)) {
-                _naiviPreseci.push_back(pomocneFunkcije::presek_duzi(*duz1, *duz2));
-            }
+    QPointF presek;
+    for (auto i = 0ul; i < _duzi.size(); i++) {
+        for (auto j = i+1; j < _duzi.size(); j++) {
+            auto rezultat = _duzi[i].intersects(_duzi[j], &presek);
+            if (rezultat == QLineF::BoundedIntersection)
+                _naivniPreseci.push_back(presek);
         }
     }
-
 }
 
 std::vector<QLineF> PreseciDuzi::generisiNasumicneDuzi(int brojDuzi) const {

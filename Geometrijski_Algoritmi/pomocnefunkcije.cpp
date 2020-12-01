@@ -11,28 +11,10 @@ int pomocneFunkcije::povrsinaTrougla(const QPoint& A, const QPoint& B, const QPo
     return (B.x() - A.x())*(C.y() - A.y()) - (C.x() - A.x())*(B.y() - A.y());
 }
 
-float pomocneFunkcije::povrsinaTrouglaF(const QPointF& A, const QPointF& B, const QPointF& C)
-{
-    return (B.x() - A.x())*(C.y() - A.y()) - (C.x() - A.x())*(B.y() - A.y());
-}
-
 int pomocneFunkcije::distanceKvadrat(const QPoint& A, const QPoint& B)
 {
     return (A.x() - B.x())*(A.x() - B.x()) + (A.y() - B.y())*(A.y() - B.y());
 }
-
-QPointF pomocneFunkcije::presek_duzi(const QLineF& duz1,const QLineF& duz2)
-{
-    float k1 = (duz1.y2()-duz1.y1()) / (duz1.x2()-duz1.x1());
-    float k2 = (duz2.y2()-duz2.y1()) / (duz2.x2()-duz2.x1());
-
-    float n1 = duz1.y1() - k1 * duz1.x1();
-    float n2 = duz2.y1() - k2 * duz2.x1();
-
-    float dx = (n2 - n1) / (k1 - k2);
-    return QPointF(dx, k1 * dx + n1);
-}
-
 
 bool pomocneFunkcije::kolinearne3D(const QVector3D& a, const QVector3D& b, const QVector3D& c)
 {
