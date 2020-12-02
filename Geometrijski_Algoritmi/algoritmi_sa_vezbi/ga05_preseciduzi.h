@@ -4,7 +4,7 @@
 #include <set>
 
 #include "algoritambaza.h"
-#include <pomocnefunkcije.h>
+#include "pomocnefunkcije.h"
 
 #include "ga05_datastructures.h"
 
@@ -20,7 +20,6 @@ public:
     void crtajAlgoritam(QPainter *painter) const;
     void pokreniNaivniAlgoritam();
 
-
     /* Ucitavanje podataka. */
     std::vector<QLineF> generisiNasumicneDuzi(int brojDuzi) const;
     std::vector<QLineF> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
@@ -33,10 +32,6 @@ private:
     std::vector<QPointF> _naivniPreseci;
     std::set<tackaDogadjaja, poredjenjeDogadjaja> _redDogadjaja;
     std::set<QLineF*, poredjenjeDuzi> _redDuzi;
-
-
-    // imacemo skup Event Points
-    // imacemo skup posmatranih duzi
 };
 
 #endif // GA05_PRESECIDUZI_H

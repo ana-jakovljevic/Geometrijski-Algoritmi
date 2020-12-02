@@ -13,6 +13,11 @@ enum class tipDogadjaja {
 };
 
 struct tackaDogadjaja {
+    tackaDogadjaja(const QPointF &p,
+                   const tipDogadjaja &t,
+                   QLineF *const d1,
+                   QLineF *const d2)
+        : tacka(p), tip(t), duz1(d1), duz2(d2) {}
 
     QPointF tacka;
     tipDogadjaja tip;
@@ -21,7 +26,6 @@ struct tackaDogadjaja {
 };
 
 struct poredjenjeDogadjaja {
-
     bool operator()(const tackaDogadjaja &prva, const tackaDogadjaja &druga) const {
 
         return (prva.tacka.y() > druga.tacka.y()) ||
@@ -30,7 +34,6 @@ struct poredjenjeDogadjaja {
 };
 
 struct poredjenjeDuzi {
-
     double *yBrisucaPrava;
 
     poredjenjeDuzi(double *y)
@@ -46,9 +49,7 @@ struct poredjenjeDuzi {
         pomocneFunkcije::presekDuzi(*duz2, brisucaPrava, &presek2);
 
         return presek1.x() < presek2.x();
-
     }
-
 };
 
 #endif // GA05_DATASTRUCTURES_H

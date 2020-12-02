@@ -55,7 +55,7 @@ float pomocneFunkcije::zapremina(const QVector3D& a, const QVector3D& b, const Q
                 +  (a.y() - d.y()) * (bzdz*cxdx - bxdx*czdz)
                 +  (a.x() - d.x()) * (bydy*czdz - bzdz*cydy);
 
-    if (fabs(vol) < EPS)
+    if (fabsf(vol) < EPS)
         return 0;
     else
         return vol;
