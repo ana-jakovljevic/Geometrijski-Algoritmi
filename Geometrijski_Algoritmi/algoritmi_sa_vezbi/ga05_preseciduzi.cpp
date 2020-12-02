@@ -14,8 +14,6 @@ PreseciDuzi::PreseciDuzi(QWidget *pCrtanje,
         _duzi = ucitajPodatkeIzDatoteke(imeDatoteke);
     else
         _duzi = generisiNasumicneDuzi(broj_tacaka);
-
-
 }
 
 void PreseciDuzi::pokreniAlgoritam() {
@@ -23,26 +21,24 @@ void PreseciDuzi::pokreniAlgoritam() {
         _redDogadjaja.emplace(duz.p1(), tipDogadjaja::POCETAK_DUZI, &duz, nullptr);
         _redDogadjaja.emplace(duz.p2(), tipDogadjaja::KRAJ_DUZI, &duz, nullptr);
     }
-    while(!_redDogadjaja.empty()){
 
+    while(!_redDogadjaja.empty()){
          auto td = *_redDogadjaja.begin();
          _redDogadjaja.erase(_redDogadjaja.begin());
          if(td.tip==tipDogadjaja::POCETAK_DUZI){
              y_brisuce_prave = td.tacka.y();
-             auto duz=_redDuzi.emplace(td.duz1).first;
-             if(duz!=_redDuzi.begin()){
-                 auto prethodnad= std::prev(duz);
+             auto trenutna=_redDuzi.emplace(td.duz1).first;
+             if(trenutna!=_redDuzi.begin()){
+                 auto prethodna= std::prev(trenutna);
                  QPointF presek;
-                 auto rezultat = (*duz)->intersects(**prethodnad, &presek);
-                 if(rezultat==QLineF::BoundedIntersection)
-                    _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK,*duz,*prethodnad);
+                 if(pomocneFunkcije::presekDuzi(**trenutna, **prethodna, &presek))
+                    _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK,*trenutna,*prethodna);
              }
-             auto sledeca = std::next(duz);
+             auto sledeca = std::next(trenutna);
              if(sledeca != _redDuzi.end()) {
                  QPointF presek;
-                 auto rezultat = (*duz)->intersects(**sledeca, &presek);
-                 if(rezultat==QLineF::BoundedIntersection)
-                    _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK,*duz,*sledeca);
+                 if(pomocneFunkcije::presekDuzi(**trenutna, **sledeca, &presek))
+                    _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK,*trenutna,*sledeca);
              }
           }
          else if (td.tip==tipDogadjaja::KRAJ_DUZI) {
@@ -51,11 +47,10 @@ void PreseciDuzi::pokreniAlgoritam() {
             auto sledeca = std::next(tr_duz);
 
             if (tr_duz != _redDuzi.begin() && sledeca != _redDuzi.end()) {
-                auto predhodna = std::prev(tr_duz);
+                auto prethodna = std::prev(tr_duz);
                 QPointF presek;
-                auto rezultat = (*predhodna)->intersects(**sledeca, &presek);
-                if(rezultat==QLineF::BoundedIntersection && presek.y() <= y_brisuce_prave)
-                   _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK,*predhodna,*sledeca);
+                if(pomocneFunkcije::presekDuzi(**prethodna, **sledeca, &presek) && presek.y() <= y_brisuce_prave)
+                   _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK,*prethodna,*sledeca);
             }
             _redDuzi.erase(tr_duz);
          }
@@ -68,14 +63,8 @@ void PreseciDuzi::pokreniAlgoritam() {
 
              auto duz1 = _redDuzi.insert(td.duz1).first;
              auto duz2 = _redDuzi.insert(td.duz2).first;
-
-
          }
-
     }
-
-
-
 }
 
 void PreseciDuzi::crtajAlgoritam(QPainter *painter) const {
@@ -87,8 +76,7 @@ void PreseciDuzi::pokreniNaivniAlgoritam() {
     QPointF presek;
     for (auto i = 0ul; i < _duzi.size(); i++) {
         for (auto j = i+1; j < _duzi.size(); j++) {
-            auto rezultat = _duzi[i].intersects(_duzi[j], &presek);
-            if (rezultat == QLineF::BoundedIntersection)
+            if (pomocneFunkcije::presekDuzi(_duzi[i], _duzi[j], &presek))
                 _naivniPreseci.push_back(presek);
         }
     }

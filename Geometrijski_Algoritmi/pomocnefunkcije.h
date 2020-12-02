@@ -10,8 +10,7 @@
 namespace pomocneFunkcije {
 int povrsinaTrougla(const QPoint& A, const QPoint& B, const QPoint& C);
 int distanceKvadrat(const QPoint& A, const QPoint& B);
-bool presekDuzi(QLineF l1, QLineF l2, QPointF& presek);
-bool duzSadrziTacku(QLineF l, QPointF p);
+inline bool presekDuzi(QLineF l1, QLineF l2, QPointF* presek);
 
 /* Pomocni metodi za 3D. */
 bool kolinearne3D(const QVector3D& a, const QVector3D& b, const QVector3D& c);

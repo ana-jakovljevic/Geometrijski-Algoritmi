@@ -4,7 +4,7 @@
 #include <QPointF>
 #include <QLineF>
 
-
+#include "pomocnefunkcije.h"
 
 enum class tipDogadjaja {
     POCETAK_DUZI,
@@ -43,8 +43,8 @@ struct poredjenjeDuzi {
 
         QPointF presek1;
         QPointF presek2;
-        duz1->intersects(brisucaPrava, &presek1);
-        duz2->intersects(brisucaPrava, &presek2);
+        pomocneFunkcije::presekDuzi(*duz1, brisucaPrava, &presek1);
+        pomocneFunkcije::presekDuzi(*duz2, brisucaPrava, &presek2);
 
         return presek1.x() < presek2.x();
 
