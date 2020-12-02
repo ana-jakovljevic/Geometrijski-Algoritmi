@@ -20,13 +20,12 @@ struct tackaDogadjaja {
     QLineF* duz2;
 };
 
-
 struct poredjenjeDogadjaja {
 
     bool operator()(const tackaDogadjaja &prva, const tackaDogadjaja &druga) const {
 
         return (prva.tacka.y() > druga.tacka.y()) ||
-               (prva.tacka.y() == druga.tacka.y() && prva.tacka.x() < druga.tacka.x());
+               (fabs(prva.tacka.y() - druga.tacka.y()) < EPSd && prva.tacka.x() < druga.tacka.x());
     }
 };
 

@@ -1,7 +1,6 @@
 #include "ga05_preseciduzi.h"
 
 #include <fstream>
-#include <math.h>
 
 PreseciDuzi::PreseciDuzi(QWidget *pCrtanje,
                           int pauzaKoraka,
@@ -96,7 +95,7 @@ std::vector<QLineF> PreseciDuzi::generisiNasumicneDuzi(int brojDuzi) const {
         auto y1 = tacke_za_duzi[i].y();
         auto y2 = tacke_za_duzi[i+1].y();
 
-        if (y1 < y2 || (fabs(y1-y2) < 0.000001 && x2 < x1)) {
+        if (y1 < y2 || (y1 == y2 && x2 < x1)) {
             auto tmp_y = y1;
             auto tmp_x = x1;
             y1 = y2;
@@ -119,7 +118,7 @@ std::vector<QLineF> PreseciDuzi::ucitajPodatkeIzDatoteke(std::string imeDatoteke
 
     while(inputFile >> x1 >> y1 >> x2 >> y2)
     {
-        if (y1 < y2 || (fabs(y1-y2) < 0.000001 && x2 < x1)) {
+        if (y1 < y2 || (fabs(y1-y2) < EPSd && x2 < x1)) {
             auto tmp_y = y1;
             auto tmp_x = x1;
             y1 = y2;

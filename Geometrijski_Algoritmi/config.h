@@ -22,5 +22,6 @@
 
 /* Ne prevelika tolerancija na numericku gresku */
 #define EPS 1e-6f
+#define EPSd 1e-6
 
 #endif // CONFIG_H
