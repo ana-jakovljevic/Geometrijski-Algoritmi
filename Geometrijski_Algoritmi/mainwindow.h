@@ -75,7 +75,8 @@ private slots:
 
     void on_tipAlgoritma_currentIndexChanged(int index);
 
-public slots:
+    void on_naivniCheck_stateChanged(int);
+
     void na_krajuAnimacije();
 
 private:

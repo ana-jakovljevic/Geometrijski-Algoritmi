@@ -291,3 +291,9 @@ void MainWindow::napraviNoviAlgoritam()
         connect(_pAlgoritamBaza, &AlgoritamBaza::animacijaZavrsila, this, &MainWindow::na_krajuAnimacije);
     }
 }
+
+void MainWindow::on_naivniCheck_stateChanged(int)
+{
+    _pOblastCrtanja->update();
+    _pOblastCrtanjaOpenGL->update();
+}
