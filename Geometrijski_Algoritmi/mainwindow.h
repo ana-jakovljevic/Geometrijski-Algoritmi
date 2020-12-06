@@ -92,8 +92,9 @@ private:
     OblastCrtanja *_pOblastCrtanja;
     OblastCrtanjaOpenGL *_pOblastCrtanjaOpenGL;
     std::string _imeDatoteke;
+    QCheckBox *_naivni;
     int _duzinaPauze;
-    int _broj_nasumicnih_tacaka;
+    int _brojSlucajnihObjekata;
 
     /* Chart deo */
     QLineSeries *const _naiveSeries = new QLineSeries();

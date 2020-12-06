@@ -144,7 +144,7 @@ protected:
     ///
     bool updateCanvasAndBlock();
 
-    std::vector<QPoint> generisiNasumicneTacke(int broj_tacaka = BROJ_NASUMICNIH_TACAKA) const;
+    std::vector<QPoint> generisiNasumicneTacke(int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA) const;
     std::vector<QPoint> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
 
     /* Parametar naivnosti */

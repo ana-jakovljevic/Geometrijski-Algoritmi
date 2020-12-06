@@ -6,17 +6,19 @@ PreseciDuzi::PreseciDuzi(QWidget *pCrtanje,
                          int pauzaKoraka,
                          QCheckBox *const naivni,
                          std::string imeDatoteke,
-                         int broj_tacaka)
+                         int brojDuzi)
    :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni), _redDuzi(poredjenjeDuzi(&y_brisuce_prave))
 {
     if (imeDatoteke != "")
         _duzi = ucitajPodatkeIzDatoteke(imeDatoteke);
     else
-        _duzi = generisiNasumicneDuzi(broj_tacaka);
+        _duzi = generisiNasumicneDuzi(brojDuzi);
 }
 
 void PreseciDuzi::pokreniAlgoritam()
 {
+    /* Slozenost ovakvog algoritma: O(nlogn + klogn).
+     * Izlazni parametar k je broj preseka. */
     for(auto duz : _duzi) {
         _redDogadjaja.emplace(duz.p1(), tipDogadjaja::POCETAK_DUZI, &duz, nullptr);
         _redDogadjaja.emplace(duz.p2(), tipDogadjaja::KRAJ_DUZI, &duz, nullptr);
@@ -77,6 +79,8 @@ void PreseciDuzi::crtajAlgoritam(QPainter *painter) const
 
 void PreseciDuzi::pokreniNaivniAlgoritam()
 {
+    /* Slozenost naivnog algoritma: O(n^2). Ona je
+     * asimptotski optimalna za najgori slucaj. */
     QPointF presek;
     for (auto i = 0ul; i < _duzi.size(); i++) {
         for (auto j = i+1; j < _duzi.size(); j++) {
@@ -94,7 +98,6 @@ void PreseciDuzi::crtajNaivniAlgoritam(QPainter *painter) const
 
 std::vector<QLineF> PreseciDuzi::generisiNasumicneDuzi(int brojDuzi) const
 {
-
     srand(static_cast<unsigned>(time(nullptr)));
 
     std::vector<QLineF> randomDuzi;
@@ -123,7 +126,6 @@ std::vector<QLineF> PreseciDuzi::generisiNasumicneDuzi(int brojDuzi) const
 
 std::vector<QLineF> PreseciDuzi::ucitajPodatkeIzDatoteke(std::string imeDatoteke) const
 {
-
     std::ifstream inputFile(imeDatoteke);
     std::vector<QLineF> duzi;
 

@@ -4,11 +4,11 @@ BrisucaPrava::BrisucaPrava(QWidget *pCrtanje,
                            int pauzaKoraka,
                            QCheckBox *const naivni,
                            std::string imeDatoteke,
-                           int broj_tacaka)
+                           int brojTacaka)
     :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni), _yPoz(0)
 {
     if (imeDatoteke == "")
-      _tacke = generisiNasumicneTacke(broj_tacaka);
+      _tacke = generisiNasumicneTacke(brojTacaka);
     else
       _tacke = ucitajPodatkeIzDatoteke(imeDatoteke);
 }

@@ -6,10 +6,10 @@ Discrtavanje::Discrtavanje(QWidget *pCrtanje,
                            int pauzaKoraka,
                            QCheckBox *const naivni,
                            std::string,
-                           int broj_tacaka)
+                           int brojTacaka)
     :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni), _n(0)
 {
-    _tacke = generisiNasumicneTacke(broj_tacaka);
+    _tacke = generisiNasumicneTacke(brojTacaka);
 }
 
 void Discrtavanje::pokreniAlgoritam()
@@ -50,12 +50,12 @@ void Discrtavanje::crtajNaivniAlgoritam(QPainter *) const
 
 }
 
-std::vector<QVector3D> Discrtavanje::generisiNasumicneTacke(int broj_tacaka) const
+std::vector<QVector3D> Discrtavanje::generisiNasumicneTacke(int brojTacaka) const
 {
     std::vector<QVector3D> tacke;
     srand(static_cast<unsigned>(time(nullptr)));
 
-    for(int i=0; i < broj_tacaka; i++)
+    for(int i=0; i < brojTacaka; i++)
         tacke.emplace_back(-100.*rand()/RAND_MAX,
                            -100.*rand()/RAND_MAX,
                            -120.*rand()/RAND_MAX);

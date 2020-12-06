@@ -17,7 +17,7 @@
 #define CANVAS_WIDTH    (MAX_DIM)
 #define CANVAS_HEIGHT   (MAX_DIM)
 
-#define BROJ_NASUMICNIH_TACAKA  (20)
+#define BROJ_SLUCAJNIH_OBJEKATA  (20)
 #define DUZINA_PAUZE (500)
 
 /* Ne prevelika tolerancija na numericku gresku */

@@ -90,7 +90,7 @@ bool AlgoritamBaza::updateCanvasAndBlock()
     return _unistiAnimaciju;
 }
 
-std::vector<QPoint> AlgoritamBaza::generisiNasumicneTacke(int broj_tacaka) const
+std::vector<QPoint> AlgoritamBaza::generisiNasumicneTacke(int brojTacaka) const
 {
     srand(static_cast<unsigned>(time(nullptr)));
     int xMax;
@@ -114,7 +114,7 @@ std::vector<QPoint> AlgoritamBaza::generisiNasumicneTacke(int broj_tacaka) const
 
     int xDiff = xMax-xMin;
     int yDiff = yMax-yMin;
-    for(int i=0; i < broj_tacaka; i++)
+    for(int i=0; i < brojTacaka; i++)
         randomPoints.emplace_back(xMin + rand()%xDiff, yMin + rand()%yDiff);
 
     return randomPoints;

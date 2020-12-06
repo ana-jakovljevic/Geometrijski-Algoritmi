@@ -10,12 +10,13 @@ MainWindow::MainWindow(QWidget *parent)
       _pAlgoritamBaza(nullptr),
       _imeDatoteke(""),
       _duzinaPauze(DUZINA_PAUZE),
-      _broj_nasumicnih_tacaka(BROJ_NASUMICNIH_TACAKA)
+      _brojSlucajnihObjekata(BROJ_SLUCAJNIH_OBJEKATA)
 {
     ui->setupUi(this);
     ui->tipAlgoritma->insertSeparator(static_cast<int>(TipAlgoritma::SEPARATOR));
     animacijaButtonAktivni(false);
     animacijaParametriButtonAktivni(true);
+    _naivni = ui->naivniCheck;
 
     _pOblastCrtanjaOpenGL = ui->openGLWidget;
 
@@ -102,7 +103,7 @@ void MainWindow::on_Nasumicni_dugme_clicked()
 {
     _imeDatoteke = "";
     if (ui->brojNasumicniTacaka->text() != "" )
-        _broj_nasumicnih_tacaka = ui->brojNasumicniTacaka->text().toInt();
+        _brojSlucajnihObjekata = ui->brojNasumicniTacaka->text().toInt();
 
     napraviNoviAlgoritam();
     ui->Zapocni_dugme->setEnabled(true);
@@ -243,39 +244,37 @@ void MainWindow::napraviNoviAlgoritam()
     delete _pAlgoritamBaza;
     _pAlgoritamBaza = nullptr;
 
-    const auto naivni = ui->naivniCheck;
-
     /* Ovde se kreiraju instance algoritama pozivom njihovih konstruktora. Svi
        2D algoritmi crtaju po _pOblastCrtanja, a 3D po _pOblastCrtanjaOpenGL. */
     TipAlgoritma tipAlgoritma = static_cast<TipAlgoritma>(ui->tipAlgoritma->currentIndex());
     switch (tipAlgoritma) {
     case TipAlgoritma::DEMO_ISCRTAVANJA:
-        _pAlgoritamBaza = new DemoIscrtavanja(_pOblastCrtanja, _duzinaPauze, naivni,
-                                              _imeDatoteke, _broj_nasumicnih_tacaka);
+        _pAlgoritamBaza = new DemoIscrtavanja(_pOblastCrtanja, _duzinaPauze, _naivni,
+                                              _imeDatoteke, _brojSlucajnihObjekata);
         break;
     case TipAlgoritma::BRISUCA_PRAVA:
-        _pAlgoritamBaza = new BrisucaPrava(_pOblastCrtanja, _duzinaPauze, naivni,
-                                           _imeDatoteke, _broj_nasumicnih_tacaka);
+        _pAlgoritamBaza = new BrisucaPrava(_pOblastCrtanja, _duzinaPauze, _naivni,
+                                           _imeDatoteke, _brojSlucajnihObjekata);
         break;
     case TipAlgoritma::_3D_ISCRTAVANJE:
-        _pAlgoritamBaza = new Discrtavanje(_pOblastCrtanjaOpenGL, _duzinaPauze, naivni,
-                                           _imeDatoteke, _broj_nasumicnih_tacaka);
+        _pAlgoritamBaza = new Discrtavanje(_pOblastCrtanjaOpenGL, _duzinaPauze, _naivni,
+                                           _imeDatoteke, _brojSlucajnihObjekata);
         break;
     case TipAlgoritma::KONVEKSNI_OMOTAC:
-        _pAlgoritamBaza = new konveksniomotac(_pOblastCrtanja, _duzinaPauze, naivni,
-                                              _imeDatoteke, _broj_nasumicnih_tacaka);
+        _pAlgoritamBaza = new konveksniomotac(_pOblastCrtanja, _duzinaPauze, _naivni,
+                                              _imeDatoteke, _brojSlucajnihObjekata);
         break;
     case TipAlgoritma::KONVEKSNI_OMOTAC_3D:
-        _pAlgoritamBaza = new KonveksniOmotac3D(_pOblastCrtanjaOpenGL, _duzinaPauze, naivni,
-                                                _imeDatoteke, _broj_nasumicnih_tacaka);
+        _pAlgoritamBaza = new KonveksniOmotac3D(_pOblastCrtanjaOpenGL, _duzinaPauze, _naivni,
+                                                _imeDatoteke, _brojSlucajnihObjekata);
         break;
     case TipAlgoritma::PRESECI_DUZI:
-        _pAlgoritamBaza = new PreseciDuzi(_pOblastCrtanja, _duzinaPauze, naivni,
-                                          _imeDatoteke, _broj_nasumicnih_tacaka);
+        _pAlgoritamBaza = new PreseciDuzi(_pOblastCrtanja, _duzinaPauze, _naivni,
+                                          _imeDatoteke, _brojSlucajnihObjekata);
         break;
     case TipAlgoritma::PRESEK_PRAVOUGAONIKA:
-        _pAlgoritamBaza = new PresekPravougaonika(_pOblastCrtanja, _duzinaPauze, naivni,
-                                                  _imeDatoteke, _broj_nasumicnih_tacaka);
+        _pAlgoritamBaza = new PresekPravougaonika(_pOblastCrtanja, _duzinaPauze, _naivni,
+                                                  _imeDatoteke, _brojSlucajnihObjekata);
         break;
     default: /* ako nije algoritam uopste */
         break;

@@ -14,7 +14,7 @@ public:
                       int pauzaKoraka,
                       QCheckBox *const naivni = nullptr,
                       std::string imeDatoteke = "",
-                      int broj_tacaka = BROJ_NASUMICNIH_TACAKA);
+                      int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA);
 
     virtual ~KonveksniOmotac3D(){
             for(auto tacka:_tacke)
@@ -51,7 +51,7 @@ public:
     Stranica* napraviPrvuStranicu(Ivica* iv, Teme* t);
 
     /* Ucitavanje podataka. */
-    std::vector<Teme*> generisiNasumicneTacke(int broj_tacaka) const;
+    std::vector<Teme*> generisiNasumicneTacke(int brojTacaka) const;
     std::vector<Teme*> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
 
     std::unordered_set<Ivica *, HashIvica, EqIvica> getIvice() const;

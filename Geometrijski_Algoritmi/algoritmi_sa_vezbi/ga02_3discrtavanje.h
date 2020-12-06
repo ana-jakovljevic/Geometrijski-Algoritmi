@@ -10,7 +10,7 @@ public:
                  int pauzaKoraka,
                  QCheckBox *const naivni = nullptr,
                  std::string imeDatoteke = "",
-                 int broj_tacaka = BROJ_NASUMICNIH_TACAKA);
+                 int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA);
 
     void pokreniAlgoritam() final;
     void crtajAlgoritam(QPainter *painter) const final;
@@ -18,7 +18,7 @@ public:
     void crtajNaivniAlgoritam(QPainter *painter) const final;
 
 private:
-    std::vector<QVector3D> generisiNasumicneTacke(int broj_tacaka = BROJ_NASUMICNIH_TACAKA) const;
+    std::vector<QVector3D> generisiNasumicneTacke(int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA) const;
 
     std::vector<QVector3D> _tacke;
     unsigned int _n;

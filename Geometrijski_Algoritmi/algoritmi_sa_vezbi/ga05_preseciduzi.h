@@ -15,7 +15,7 @@ public:
                 int pauzaKoraka,
                 QCheckBox *const naivni = nullptr,
                 std::string imeDatoteke = "",
-                int broj_tacaka = BROJ_NASUMICNIH_TACAKA);
+                int brojDuzi = BROJ_SLUCAJNIH_OBJEKATA);
 
     void pokreniAlgoritam() final;
     void crtajAlgoritam(QPainter *painter) const final;

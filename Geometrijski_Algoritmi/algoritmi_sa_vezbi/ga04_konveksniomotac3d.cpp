@@ -9,25 +9,25 @@ KonveksniOmotac3D::KonveksniOmotac3D(QWidget *pCrtanje,
                                      int pauzaKoraka,
                                      QCheckBox *const naivni,
                                      std::string imeDatoteke,
-                                     int broj_tacaka)
+                                     int brojTacaka)
         :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni)
 {
     if (imeDatoteke != "")
         _tacke = ucitajPodatkeIzDatoteke(imeDatoteke);
     else
-        _tacke = generisiNasumicneTacke(broj_tacaka);
+        _tacke = generisiNasumicneTacke(brojTacaka);
 }
 
 /*--------------------------------------------------------------------------------------------------*/
 /*---------------------------------Ucitavanje podataka----------------------------------------------*/
 /*--------------------------------------------------------------------------------------------------*/
-std::vector<Teme *> KonveksniOmotac3D::generisiNasumicneTacke(int broj_tacaka) const
+std::vector<Teme *> KonveksniOmotac3D::generisiNasumicneTacke(int brojTacaka) const
 {
     srand(static_cast<unsigned>(time(nullptr)));
 
     std::vector<Teme*> randomPoints;
 
-    for(int i=0; i < broj_tacaka; i++)
+    for(int i=0; i < brojTacaka; i++)
         randomPoints.emplace_back(new Teme(
            1.f*rand()/RAND_MAX,
            1.f*rand()/RAND_MAX,
