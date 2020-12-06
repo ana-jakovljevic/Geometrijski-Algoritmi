@@ -29,11 +29,11 @@ bool pomocneFunkcije::kolinearne3D(const QVector3D& a, const QVector3D& b, const
      * |ax-cx  ay-cy  az-cz|
      */
     return (fabsf((c.z() - a.z()) * (b.y() - a.y()) -
-              (b.z() - a.z()) * (c.y() - a.y())) < EPS) &&
+              (b.z() - a.z()) * (c.y() - a.y())) < EPSf) &&
            (fabsf((b.z() - a.z()) * (c.x() - a.x()) -
-              (b.x() - a.x()) * (c.z() - a.z())) < EPS) &&
+              (b.x() - a.x()) * (c.z() - a.z())) < EPSf) &&
            (fabsf((b.x() - a.x()) * (c.y() - a.y()) -
-              (b.y() - a.y()) * (c.x() - a.x())) < EPS);
+              (b.y() - a.y()) * (c.x() - a.x())) < EPSf);
 }
 
 
@@ -55,7 +55,7 @@ float pomocneFunkcije::zapremina(const QVector3D& a, const QVector3D& b, const Q
                 +  (a.y() - d.y()) * (bzdz*cxdx - bxdx*czdz)
                 +  (a.x() - d.x()) * (bydy*czdz - bzdz*cydy);
 
-    if (fabsf(vol) < EPS)
+    if (fabsf(vol) < EPSf)
         return 0;
     else
         return vol;

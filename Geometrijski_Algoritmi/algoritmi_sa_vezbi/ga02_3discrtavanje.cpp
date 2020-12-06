@@ -1,4 +1,5 @@
 #include "ga02_3discrtavanje.h"
+
 #include <QVector3D>
 
 Discrtavanje::Discrtavanje(QWidget *pCrtanje,

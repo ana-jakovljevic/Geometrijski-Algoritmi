@@ -1,5 +1,6 @@
 #include "ga04_konveksniomotac3d.h"
 #include "pomocnefunkcije.h"
+
 #include <fstream>
 #include <cfloat>
 #include <cmath>
@@ -314,7 +315,6 @@ void KonveksniOmotac3D::pokreniNaivniAlgoritam()
     for (auto teme1 : _tacke) {
         for (auto teme2 : _tacke) {
             for (auto teme3 : _tacke) {
-
                 if (teme1 == teme2)
                     break;
                 if (kolinearne(teme1, teme2, teme3))
@@ -326,12 +326,12 @@ void KonveksniOmotac3D::pokreniNaivniAlgoritam()
                 float zapremina = 0;
                 for (auto tacka : _tacke) {
                     zapremina = zapremina6(stranica, tacka);
-                    if (fabsf(zapremina) > EPS)
+                    if (fabsf(zapremina) > EPSf)
                         break;
                 }
 
                 // Ako ne postoje 4 nekomplanarne tacke zavrsava se algoritam
-                if (fabsf(zapremina) <= EPS)
+                if (fabsf(zapremina) <= EPSf)
                     return;
 
                 int znakZapremine = zapremina > 0 ? 1 : -1;
@@ -339,7 +339,7 @@ void KonveksniOmotac3D::pokreniNaivniAlgoritam()
                 auto it = _tacke.begin();
                 for (; it != _tacke.end(); it++) {
                     zapremina = zapremina6(stranica, *it);
-                    if (zapremina * znakZapremine < -EPS)
+                    if (zapremina * znakZapremine < -EPSf)
                         break;
                 }
 
@@ -355,7 +355,6 @@ void KonveksniOmotac3D::pokreniNaivniAlgoritam()
                     _naivneIvice.insert(ivica2);
                     _naivneIvice.insert(ivica3);
                 }
-
             }
         }
     }

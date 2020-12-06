@@ -1,5 +1,6 @@
 #include "ga03_konveksniomotac.h"
 #include "pomocnefunkcije.h"
+
 #include <algorithm>
 
 konveksniomotac::konveksniomotac(QWidget *pCrtanje,
