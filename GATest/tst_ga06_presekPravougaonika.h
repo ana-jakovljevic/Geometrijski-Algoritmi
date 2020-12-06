@@ -11,6 +11,7 @@ using namespace testing;
 /* Staticki podrazumevani parametri algoritma */
 static const auto bezCrtanja = nullptr;
 static const auto bezPauze = 0;
+static const auto naivnostNebitna = nullptr;
 
 /* Staticki nazivi datoteka sa test primerima */
 static const auto datoteka1 = "../Geometrijski_Algoritmi/input_files/ga06_presekPravougaonika/input1.txt";
@@ -21,7 +22,8 @@ static const auto datoteka3 = "../Geometrijski_Algoritmi/input_files/ga06_presek
 TEST(ga06_presekPravougaonikaTests, datotekaTest1)
 {
     /* ARRANGE: instanciranje i izvrsavanje algoritma */
-    PresekPravougaonika algoritam(bezCrtanja, bezPauze, datoteka1);
+    PresekPravougaonika algoritam(bezCrtanja, bezPauze,
+                                  naivnostNebitna, datoteka1);
     algoritam.pokreniAlgoritam();
     algoritam.pokreniNaivniAlgoritam();
     algoritam.pokreniAlgoritamGrubeSile();
@@ -43,7 +45,8 @@ TEST(ga06_presekPravougaonikaTests, datotekaTest1)
 TEST(ga06_presekPravougaonikaTests, datotekaTest2)
 {
     /* ARRANGE: instanciranje i izvrsavanje algoritma */
-    PresekPravougaonika algoritam(bezCrtanja, bezPauze, datoteka2);
+    PresekPravougaonika algoritam(bezCrtanja, bezPauze,
+                                  naivnostNebitna, datoteka2);
     algoritam.pokreniAlgoritam();
     algoritam.pokreniNaivniAlgoritam();
     algoritam.pokreniAlgoritamGrubeSile();
@@ -65,7 +68,8 @@ TEST(ga06_presekPravougaonikaTests, datotekaTest2)
 TEST(ga06_presekPravougaonikaTests, datotekaTest3)
 {
     /* ARRANGE: instanciranje i izvrsavanje algoritma */
-    PresekPravougaonika algoritam(bezCrtanja, bezPauze, datoteka3);
+    PresekPravougaonika algoritam(bezCrtanja, bezPauze,
+                                  naivnostNebitna, datoteka3);
     algoritam.pokreniAlgoritam();
     algoritam.pokreniNaivniAlgoritam();
     algoritam.pokreniAlgoritamGrubeSile();
@@ -94,6 +98,7 @@ TEST(ga06_presekPravougaonikaTests, randomTest1)
 {
     /* ARRANGE: instanciranje i izvrsavanje algoritma */
     PresekPravougaonika algoritam(bezCrtanja, bezPauze,
+                                  naivnostNebitna,
                                   randomPravougaonici,
                                   brojPravougaonika1);
     algoritam.pokreniAlgoritam();
@@ -115,6 +120,7 @@ TEST(ga06_presekPravougaonikaTests, randomTest2)
 {
     /* ARRANGE: instanciranje i izvrsavanje algoritma */
     PresekPravougaonika algoritam(bezCrtanja, bezPauze,
+                                  naivnostNebitna,
                                   randomPravougaonici,
                                   brojPravougaonika2);
     algoritam.pokreniAlgoritam();
@@ -136,6 +142,7 @@ TEST(ga06_presekPravougaonikaTests, randomTest3)
 {
     /* ARRANGE: instanciranje i izvrsavanje algoritma */
     PresekPravougaonika algoritam(bezCrtanja, bezPauze,
+                                  naivnostNebitna,
                                   randomPravougaonici,
                                   brojPravougaonika3);
     algoritam.pokreniAlgoritam();
@@ -161,6 +168,7 @@ TEST(ga06_presekPravougaonikaTests, nemaPravougaonika)
 {
     /* ARRANGE: instanciranje i izvrsavanje algoritma */
     PresekPravougaonika algoritam(bezCrtanja, bezPauze,
+                                  naivnostNebitna,
                                   randomPravougaonici,
                                   nemaPravougaonika);
     algoritam.pokreniAlgoritam();
@@ -183,6 +191,7 @@ TEST(ga06_presekPravougaonikaTests, jedanPravougaonik)
 {
     /* ARRANGE: instanciranje i izvrsavanje algoritma */
     PresekPravougaonika algoritam(bezCrtanja, bezPauze,
+                                  naivnostNebitna,
                                   randomPravougaonici,
                                   jedanPravougaonik);
     algoritam.pokreniAlgoritam();

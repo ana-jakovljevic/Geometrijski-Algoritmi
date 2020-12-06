@@ -10,7 +10,7 @@ using namespace testing;
 
 TEST(ga02_konveksniomotac, firstRandomTest)
 {
-    konveksniomotac ch1(nullptr, 0, "", 30);
+    konveksniomotac ch1(nullptr, 0, nullptr, "", 30);
     ch1.pokreniAlgoritam();
     ch1.pokreniNaivniAlgoritam();
     EXPECT_EQ(ch1.get_konveksni_omotac().size() - 1, ch1.get_naivni_konveksni_omotac().size());
@@ -19,7 +19,7 @@ TEST(ga02_konveksniomotac, firstRandomTest)
 
 TEST(ga02_konveksniomotac, secondRandomTest)
 {
-    konveksniomotac ch1(nullptr, 0, "", 100);
+    konveksniomotac ch1(nullptr, 0, nullptr, "", 100);
     ch1.pokreniAlgoritam();
     ch1.pokreniNaivniAlgoritam();
     EXPECT_EQ(ch1.get_konveksni_omotac().size() - 1, ch1.get_naivni_konveksni_omotac().size());
@@ -27,7 +27,7 @@ TEST(ga02_konveksniomotac, secondRandomTest)
 
 TEST(ga02_konveksniomotac, thirdRandomTest)
 {
-    konveksniomotac ch1(nullptr, 0, "", 200);
+    konveksniomotac ch1(nullptr, 0, nullptr, "", 200);
     ch1.pokreniAlgoritam();
     ch1.pokreniNaivniAlgoritam();
     EXPECT_EQ(ch1.get_konveksni_omotac().size() - 1, ch1.get_naivni_konveksni_omotac().size());
