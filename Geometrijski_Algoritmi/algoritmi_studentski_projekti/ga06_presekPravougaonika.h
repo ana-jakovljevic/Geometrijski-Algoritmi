@@ -213,8 +213,8 @@ using VertIvica = std::pair<TipIvice, Pravougaonik *>;
 class PresekPravougaonika : public AlgoritamBaza {
 public:
     /* Konstruktor i destruktor klase */
-    PresekPravougaonika(QWidget *, int, std::string = "",
-                        int = BROJ_NASUMICNIH_TACAKA);
+    PresekPravougaonika(QWidget *, int, QCheckBox *const = nullptr,
+                        std::string = "", int = BROJ_NASUMICNIH_TACAKA);
     virtual ~PresekPravougaonika();
 
     /* Dohvataci rezultata algoritama */
@@ -226,6 +226,7 @@ public:
     void pokreniAlgoritam() final;
     void crtajAlgoritam(QPainter *) const final;
     void pokreniNaivniAlgoritam() final;
+    void crtajNaivniAlgoritam(QPainter *) const final;
 
     /* Dodatni metod za grubu silu */
     void pokreniAlgoritamGrubeSile();

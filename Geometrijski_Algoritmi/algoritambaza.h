@@ -4,6 +4,7 @@
 /// 2. Implementira metod "pokreniAlgoritam()" u kom ce biti implementacija algoritma.
 /// 3. Implementira metod "crtajAlgoritam()" u kom ce biti implementirano iscrtavanje.
 /// 4. Implementira metod "pokreniNaivniAlgoritam()" za potrebe poredjenja performansi.
+/// 5. Implementira metod "crtajNaivniAlgoritam()" za ilustrovanje naivnog algoritma.
 ///
 /// Svaki put kada se promeni stanje algoritma (kada je potrebno promeniti crtez),
 /// potrebno je pozvati metod AlgoritamBaza_updateCanvasAndBlock();
@@ -27,6 +28,7 @@
 #include <QSemaphore>
 #include <QWidget>
 #include <QOpenGLWidget>
+#include <QCheckBox>
 
 #include "animacijanit.h"
 #include "config.h"
@@ -67,7 +69,7 @@ private:
     void timerEvent(QTimerEvent *event);
 
 public:
-    AlgoritamBaza(QWidget *pCrtanje, int pauzaKoraka);
+    AlgoritamBaza(QWidget *pCrtanje, int pauzaKoraka, QCheckBox *const naivni);
 
     /* Algoritme ne treba da bude moguce kopirati */
     virtual ~AlgoritamBaza() = default;
@@ -81,8 +83,12 @@ public:
     ///         a koja predstavlja izvrsavanje konkretnog algoritma
     ///
     virtual void pokreniAlgoritam() = 0;
-    virtual void crtajAlgoritam(QPainter *painter = nullptr) const = 0;
+    virtual void crtajAlgoritam(QPainter *painter) const = 0;
     virtual void pokreniNaivniAlgoritam() = 0;
+    virtual void crtajNaivniAlgoritam(QPainter *painter) const = 0;
+
+    bool naivni() const;
+    void crtaj(QPainter *painter = nullptr) const;
 
     ///
     /// \brief pokreniAnimaciju - funkcija za pokretanje animacije
@@ -140,6 +146,9 @@ protected:
 
     std::vector<QPoint> generisiNasumicneTacke(int broj_tacaka = BROJ_NASUMICNIH_TACAKA) const;
     std::vector<QPoint> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
+
+    /* Parametar naivnosti */
+    QCheckBox *const _naivni;
 };
 
 #endif // ALGORITAMBAZA_H

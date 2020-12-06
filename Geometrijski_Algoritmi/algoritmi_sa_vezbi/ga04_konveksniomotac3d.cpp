@@ -7,9 +7,10 @@
 
 KonveksniOmotac3D::KonveksniOmotac3D(QWidget *pCrtanje,
                                      int pauzaKoraka,
+                                     QCheckBox *const naivni,
                                      std::string imeDatoteke,
                                      int broj_tacaka)
-        :AlgoritamBaza(pCrtanje, pauzaKoraka)
+        :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni)
 {
     if (imeDatoteke != "")
         _tacke = ucitajPodatkeIzDatoteke(imeDatoteke);
@@ -358,4 +359,11 @@ void KonveksniOmotac3D::pokreniNaivniAlgoritam()
             }
         }
     }
+
+    emit animacijaZavrsila();
+}
+
+void KonveksniOmotac3D::crtajNaivniAlgoritam(QPainter *) const
+{
+
 }

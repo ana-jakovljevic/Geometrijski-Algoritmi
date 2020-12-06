@@ -12,6 +12,7 @@ class KonveksniOmotac3D : public AlgoritamBaza
 public:
     KonveksniOmotac3D(QWidget *pCrtanje,
                       int pauzaKoraka,
+                      QCheckBox *const naivni = nullptr,
                       std::string imeDatoteke = "",
                       int broj_tacaka = BROJ_NASUMICNIH_TACAKA);
 
@@ -27,11 +28,12 @@ public:
         }
 
 public:
-    void pokreniAlgoritam();
+    void pokreniAlgoritam() final;
     void crtajTeme(Teme* t) const;
     void crtajStranicu(Stranica* s) const;
-    void crtajAlgoritam(QPainter *painter) const;
-    void pokreniNaivniAlgoritam();
+    void crtajAlgoritam(QPainter *painter) const final;
+    void pokreniNaivniAlgoritam() final;
+    void crtajNaivniAlgoritam(QPainter *painter) const final;
 
     /* Pomocne funkcije za generisanje konveksnog omotaca. */
     /* Glavne funkcije. */

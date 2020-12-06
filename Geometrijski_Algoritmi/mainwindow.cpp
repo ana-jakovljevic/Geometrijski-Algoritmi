@@ -135,6 +135,7 @@ void MainWindow::on_Zapocni_dugme_clicked()
     ui->Zapocni_dugme->setEnabled(false);
     animacijaParametriButtonAktivni(true);
     ui->merenjeButton->setEnabled(false);
+    ui->naivniCheck->setEnabled(false);
 
     if (_pAlgoritamBaza)
         _pAlgoritamBaza->pokreniAnimaciju();
@@ -154,15 +155,11 @@ void MainWindow::on_Sledeci_dugme_clicked()
 
 void MainWindow::on_Ispocetka_dugme_clicked()
 {
-    ui->Zapocni_dugme->setEnabled(false);
-    ui->Zaustavi_dugme->setEnabled(true);
-    ui->Sledeci_dugme->setEnabled(true);
-
     if (_pAlgoritamBaza)
     {
         _pAlgoritamBaza->zaustaviAnimaciju();
         napraviNoviAlgoritam();
-        _pAlgoritamBaza->pokreniAnimaciju();
+        on_Zapocni_dugme_clicked();
     }
 }
 
@@ -234,6 +231,8 @@ void MainWindow::na_krajuAnimacije()
     ui->datoteka_dugme->setEnabled(true);
     ui->Nasumicni_dugme->setEnabled(true);
     ui->merenjeButton->setEnabled(true);
+    ui->naivniCheck->setEnabled(true);
+    ui->Ispocetka_dugme->setEnabled(true);
 }
 
 void MainWindow::napraviNoviAlgoritam()
@@ -244,36 +243,38 @@ void MainWindow::napraviNoviAlgoritam()
     delete _pAlgoritamBaza;
     _pAlgoritamBaza = nullptr;
 
+    const auto naivni = ui->naivniCheck;
+
     /* Ovde se kreiraju instance algoritama pozivom njihovih konstruktora. Svi
        2D algoritmi crtaju po _pOblastCrtanja, a 3D po _pOblastCrtanjaOpenGL. */
     TipAlgoritma tipAlgoritma = static_cast<TipAlgoritma>(ui->tipAlgoritma->currentIndex());
     switch (tipAlgoritma) {
     case TipAlgoritma::DEMO_ISCRTAVANJA:
-        _pAlgoritamBaza = new DemoIscrtavanja(_pOblastCrtanja, _duzinaPauze,
+        _pAlgoritamBaza = new DemoIscrtavanja(_pOblastCrtanja, _duzinaPauze, naivni,
                                               _imeDatoteke, _broj_nasumicnih_tacaka);
         break;
     case TipAlgoritma::BRISUCA_PRAVA:
-        _pAlgoritamBaza = new BrisucaPrava(_pOblastCrtanja, _duzinaPauze,
+        _pAlgoritamBaza = new BrisucaPrava(_pOblastCrtanja, _duzinaPauze, naivni,
                                            _imeDatoteke, _broj_nasumicnih_tacaka);
         break;
     case TipAlgoritma::_3D_ISCRTAVANJE:
-        _pAlgoritamBaza = new Discrtavanje(_pOblastCrtanjaOpenGL, _duzinaPauze,
+        _pAlgoritamBaza = new Discrtavanje(_pOblastCrtanjaOpenGL, _duzinaPauze, naivni,
                                            _imeDatoteke, _broj_nasumicnih_tacaka);
         break;
     case TipAlgoritma::KONVEKSNI_OMOTAC:
-        _pAlgoritamBaza = new konveksniomotac(_pOblastCrtanja, _duzinaPauze,
+        _pAlgoritamBaza = new konveksniomotac(_pOblastCrtanja, _duzinaPauze, naivni,
                                               _imeDatoteke, _broj_nasumicnih_tacaka);
         break;
     case TipAlgoritma::KONVEKSNI_OMOTAC_3D:
-        _pAlgoritamBaza = new KonveksniOmotac3D(_pOblastCrtanjaOpenGL, _duzinaPauze,
+        _pAlgoritamBaza = new KonveksniOmotac3D(_pOblastCrtanjaOpenGL, _duzinaPauze, naivni,
                                                 _imeDatoteke, _broj_nasumicnih_tacaka);
         break;
     case TipAlgoritma::PRESECI_DUZI:
-        _pAlgoritamBaza = new PreseciDuzi(_pOblastCrtanja, _duzinaPauze,
-                                              _imeDatoteke, _broj_nasumicnih_tacaka);
+        _pAlgoritamBaza = new PreseciDuzi(_pOblastCrtanja, _duzinaPauze, naivni,
+                                          _imeDatoteke, _broj_nasumicnih_tacaka);
         break;
     case TipAlgoritma::PRESEK_PRAVOUGAONIKA:
-        _pAlgoritamBaza = new PresekPravougaonika(_pOblastCrtanja, _duzinaPauze,
+        _pAlgoritamBaza = new PresekPravougaonika(_pOblastCrtanja, _duzinaPauze, naivni,
                                                   _imeDatoteke, _broj_nasumicnih_tacaka);
         break;
     default: /* ako nije algoritam uopste */

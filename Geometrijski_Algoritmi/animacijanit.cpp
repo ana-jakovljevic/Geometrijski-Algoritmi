@@ -7,6 +7,10 @@ AnimacijaNit::AnimacijaNit(AlgoritamBaza *pAlgoritam)
 
 void AnimacijaNit::run()
 {
-    if (_pAlgoritam)
+    if (!_pAlgoritam) return;
+
+    if (_pAlgoritam->naivni())
+        _pAlgoritam->pokreniNaivniAlgoritam();
+    else
         _pAlgoritam->pokreniAlgoritam();
 }

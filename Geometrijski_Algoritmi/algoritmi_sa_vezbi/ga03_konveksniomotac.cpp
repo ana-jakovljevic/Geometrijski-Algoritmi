@@ -5,9 +5,10 @@
 
 konveksniomotac::konveksniomotac(QWidget *pCrtanje,
                                  int pauzaKoraka,
+                                 QCheckBox *const naivni,
                                  std::string imeDatoteke,
                                  int broj_tacaka)
-    :AlgoritamBaza(pCrtanje, pauzaKoraka)
+    :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni)
 {
     if (imeDatoteke == "")
         _tacke = generisiNasumicneTacke(broj_tacaka);
@@ -107,6 +108,13 @@ void konveksniomotac::pokreniNaivniAlgoritam() {
         int P = pomocneFunkcije::povrsinaTrougla(maks_tacka, lhs, rhs);
         return  (P < 0) ||  (P == 0 && pomocneFunkcije::distanceKvadrat(maks_tacka, lhs) < pomocneFunkcije::distanceKvadrat(maks_tacka, rhs));
     });
+
+    emit animacijaZavrsila();
+}
+
+void konveksniomotac::crtajNaivniAlgoritam(QPainter *painter) const
+{
+    if (!painter) return;
 }
 
 std::vector<QPoint> konveksniomotac::get_naivni_konveksni_omotac() const

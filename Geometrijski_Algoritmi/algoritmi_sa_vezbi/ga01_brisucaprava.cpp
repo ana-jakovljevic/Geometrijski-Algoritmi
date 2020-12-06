@@ -2,9 +2,10 @@
 
 BrisucaPrava::BrisucaPrava(QWidget *pCrtanje,
                            int pauzaKoraka,
+                           QCheckBox *const naivni,
                            std::string imeDatoteke,
                            int broj_tacaka)
-    :AlgoritamBaza(pCrtanje, pauzaKoraka), _yPoz(0)
+    :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni), _yPoz(0)
 {
     if (imeDatoteke == "")
       _tacke = generisiNasumicneTacke(broj_tacaka);
@@ -50,5 +51,10 @@ void BrisucaPrava::crtajAlgoritam(QPainter *painter) const
 
 void BrisucaPrava::pokreniNaivniAlgoritam()
 {
+    emit animacijaZavrsila();
+}
 
+void BrisucaPrava::crtajNaivniAlgoritam(QPainter *painter) const
+{
+    if (!painter) return;
 }

@@ -7,12 +7,28 @@ void AlgoritamBaza::timerEvent(QTimerEvent */* unused */)
      _semafor.release();
 }
 
-AlgoritamBaza::AlgoritamBaza(QWidget *pCrtanje, int pauzaKoraka)
+AlgoritamBaza::AlgoritamBaza(QWidget *pCrtanje, int pauzaKoraka, QCheckBox *const naivni)
     : QObject{}, _pauzaKoraka{pauzaKoraka},
       _timerId{INVALID_TIMER_ID}, _semafor(0),
       _unistiAnimaciju(false), _pNit(nullptr),
-      _pCrtanje{pCrtanje}
+      _pCrtanje{pCrtanje}, _naivni(naivni)
 {}
+
+bool AlgoritamBaza::naivni() const
+{
+    return _naivni && _naivni->isChecked();
+}
+
+void AlgoritamBaza::crtaj(QPainter *painter) const
+{
+    if (naivni())
+    {
+        crtajNaivniAlgoritam(painter);
+    } else
+    {
+        crtajAlgoritam(painter);
+    }
+}
 
 void AlgoritamBaza::pokreniAnimaciju()
 {

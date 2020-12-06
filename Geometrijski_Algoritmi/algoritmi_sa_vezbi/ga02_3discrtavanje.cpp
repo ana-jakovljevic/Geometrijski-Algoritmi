@@ -4,9 +4,10 @@
 
 Discrtavanje::Discrtavanje(QWidget *pCrtanje,
                            int pauzaKoraka,
+                           QCheckBox *const naivni,
                            std::string,
                            int broj_tacaka)
-    :AlgoritamBaza(pCrtanje, pauzaKoraka), _n(0)
+    :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni), _n(0)
 {
     _tacke = generisiNasumicneTacke(broj_tacaka);
 }
@@ -40,6 +41,11 @@ void Discrtavanje::crtajAlgoritam(QPainter *) const
 }
 
 void Discrtavanje::pokreniNaivniAlgoritam()
+{
+    emit animacijaZavrsila();
+}
+
+void Discrtavanje::crtajNaivniAlgoritam(QPainter *) const
 {
 
 }

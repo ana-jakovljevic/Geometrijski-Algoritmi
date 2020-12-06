@@ -98,9 +98,10 @@ bool DogadjajComp::operator()(const Dogadjaj &l,
 /* Konstrukcija algoritma */
 PresekPravougaonika::PresekPravougaonika(QWidget *pCrtanje,
                                          int pauzaKoraka,
+                                         QCheckBox *const naivni,
                                          std::string imeDatoteke,
                                          int brojPravougaonika)
-    :AlgoritamBaza(pCrtanje, pauzaKoraka)
+    :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni)
 {
     /* Inicijalizacija niza pravougaonika */
     if (imeDatoteke == "")
@@ -245,6 +246,15 @@ void PresekPravougaonika::pokreniNaivniAlgoritam()
 
     /* Ciscenje reda dogadjaja */
     _dogadjaji.clear();
+
+    /* Obavestavanje pozivaoca o gotovoj animaciji */
+    emit animacijaZavrsila();
+}
+
+void PresekPravougaonika::crtajNaivniAlgoritam(QPainter *painter) const
+{
+    /* Odustajanje u slucaju greske */
+    if (!painter) return;
 }
 
 /* Provera da li postoji presek para pravougaonika */

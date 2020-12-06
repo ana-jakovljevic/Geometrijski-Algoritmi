@@ -3,10 +3,11 @@
 #include <fstream>
 
 PreseciDuzi::PreseciDuzi(QWidget *pCrtanje,
-                          int pauzaKoraka,
-                          std::string imeDatoteke,
-                          int broj_tacaka)
-   :AlgoritamBaza(pCrtanje, pauzaKoraka), _redDuzi(poredjenjeDuzi(&y_brisuce_prave))
+                         int pauzaKoraka,
+                         QCheckBox *const naivni,
+                         std::string imeDatoteke,
+                         int broj_tacaka)
+   :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni), _redDuzi(poredjenjeDuzi(&y_brisuce_prave))
 {
     if (imeDatoteke != "")
         _duzi = ucitajPodatkeIzDatoteke(imeDatoteke);
@@ -14,7 +15,8 @@ PreseciDuzi::PreseciDuzi(QWidget *pCrtanje,
         _duzi = generisiNasumicneDuzi(broj_tacaka);
 }
 
-void PreseciDuzi::pokreniAlgoritam() {
+void PreseciDuzi::pokreniAlgoritam()
+{
     for(auto duz : _duzi) {
         _redDogadjaja.emplace(duz.p1(), tipDogadjaja::POCETAK_DUZI, &duz, nullptr);
         _redDogadjaja.emplace(duz.p2(), tipDogadjaja::KRAJ_DUZI, &duz, nullptr);
@@ -68,12 +70,13 @@ void PreseciDuzi::pokreniAlgoritam() {
     }
 }
 
-void PreseciDuzi::crtajAlgoritam(QPainter *painter) const {
-    if (!painter)
-        return;
+void PreseciDuzi::crtajAlgoritam(QPainter *painter) const
+{
+    if (!painter) return;
 }
 
-void PreseciDuzi::pokreniNaivniAlgoritam() {
+void PreseciDuzi::pokreniNaivniAlgoritam()
+{
     QPointF presek;
     for (auto i = 0ul; i < _duzi.size(); i++) {
         for (auto j = i+1; j < _duzi.size(); j++) {
@@ -81,9 +84,16 @@ void PreseciDuzi::pokreniNaivniAlgoritam() {
                 _naivniPreseci.push_back(presek);
         }
     }
+    emit animacijaZavrsila();
 }
 
-std::vector<QLineF> PreseciDuzi::generisiNasumicneDuzi(int brojDuzi) const {
+void PreseciDuzi::crtajNaivniAlgoritam(QPainter *painter) const
+{
+    if (!painter) return;
+}
+
+std::vector<QLineF> PreseciDuzi::generisiNasumicneDuzi(int brojDuzi) const
+{
 
     srand(static_cast<unsigned>(time(nullptr)));
 
@@ -111,7 +121,8 @@ std::vector<QLineF> PreseciDuzi::generisiNasumicneDuzi(int brojDuzi) const {
     return randomDuzi;
 }
 
-std::vector<QLineF> PreseciDuzi::ucitajPodatkeIzDatoteke(std::string imeDatoteke) const {
+std::vector<QLineF> PreseciDuzi::ucitajPodatkeIzDatoteke(std::string imeDatoteke) const
+{
 
     std::ifstream inputFile(imeDatoteke);
     std::vector<QLineF> duzi;
