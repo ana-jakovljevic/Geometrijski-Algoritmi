@@ -37,25 +37,25 @@ void TimeMeasurementThread::run()
         /* Ovde kreirati instancu klase algoritma. */
         switch (_algorithmType) {
         case TipAlgoritma::DEMO_ISCRTAVANJA:
-            pAlgorithm = new DemoIscrtavanja(nullptr, 0, nullptr, "", i);
+            pAlgorithm = new DemoIscrtavanja(nullptr, 0, false, "", i);
             break;
         case TipAlgoritma::BRISUCA_PRAVA:
-            pAlgorithm = new BrisucaPrava(nullptr, 0, nullptr, "", i);
+            pAlgorithm = new BrisucaPrava(nullptr, 0, false, "", i);
             break;
         case TipAlgoritma::_3D_ISCRTAVANJE:
-            pAlgorithm = new BrisucaPrava(nullptr, 0, nullptr, "", i);
+            pAlgorithm = new BrisucaPrava(nullptr, 0, false, "", i);
             break;
         case TipAlgoritma::KONVEKSNI_OMOTAC:
-            pAlgorithm = new konveksniomotac(nullptr, 0, nullptr, "", i);
+            pAlgorithm = new konveksniomotac(nullptr, 0, false, "", i);
             break;
         case TipAlgoritma::KONVEKSNI_OMOTAC_3D:
-            pAlgorithm = new KonveksniOmotac3D(nullptr, 0, nullptr, "", i);
+            pAlgorithm = new KonveksniOmotac3D(nullptr, 0, false, "", i);
             break;
         case TipAlgoritma::PRESECI_DUZI:
-            pAlgorithm = new PreseciDuzi(nullptr, 0, nullptr, "", i);
+            pAlgorithm = new PreseciDuzi(nullptr, 0, false, "", i);
             break;
         case TipAlgoritma::PRESEK_PRAVOUGAONIKA:
-            pAlgorithm = new PresekPravougaonika(nullptr, 0, nullptr, "", i);
+            pAlgorithm = new PresekPravougaonika(nullptr, 0, false, "", i);
             break;
         default:
             break;

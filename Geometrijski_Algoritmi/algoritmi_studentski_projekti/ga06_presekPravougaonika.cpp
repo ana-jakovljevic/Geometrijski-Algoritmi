@@ -98,7 +98,7 @@ bool DogadjajComp::operator()(const Dogadjaj &l,
 /* Konstrukcija algoritma */
 PresekPravougaonika::PresekPravougaonika(QWidget *pCrtanje,
                                          int pauzaKoraka,
-                                         QCheckBox *const naivni,
+                                         const bool &naivni,
                                          std::string imeDatoteke,
                                          int brojPravougaonika)
     :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni)

@@ -25,7 +25,7 @@ static const auto input_file_1 = "../Geometrijski_Algoritmi/input_files/ga00_Kon
 
 TEST(ga04_konveksniomotac3d, firstLERandomTest)
 {
-    KonveksniOmotac3D ch1(nullptr, 0, nullptr, "", 30);
+    KonveksniOmotac3D ch1(nullptr, 0, false, "", 30);
     ch1.pokreniAlgoritam();
     ch1.pokreniNaivniAlgoritam();
     EXPECT_LE(ch1.getIvice().size(), ch1.getNaivneIvice().size());
@@ -33,7 +33,7 @@ TEST(ga04_konveksniomotac3d, firstLERandomTest)
 
 TEST(ga04_konveksniomotac3d, secondLERandomTest)
 {
-    KonveksniOmotac3D ch1(nullptr, 0, nullptr, "", 100);
+    KonveksniOmotac3D ch1(nullptr, 0, false, "", 100);
     ch1.pokreniAlgoritam();
     ch1.pokreniNaivniAlgoritam();
     EXPECT_LE(ch1.getIvice().size(), ch1.getNaivneIvice().size());
@@ -41,7 +41,7 @@ TEST(ga04_konveksniomotac3d, secondLERandomTest)
 
 TEST(ga04_konveksniomotac3d, firstAdvancedTestFromFile)
 {
-    KonveksniOmotac3D ch1(nullptr, 0, nullptr, input_file_1, 0);
+    KonveksniOmotac3D ch1(nullptr, 0, false, input_file_1, 0);
     ch1.pokreniAlgoritam();
     ch1.pokreniNaivniAlgoritam();
 
@@ -65,7 +65,7 @@ TEST(ga04_konveksniomotac3d, firstAdvancedTestFromFile)
 
 TEST(ga04_konveksniomotac3d, firstAdvancedRandomTest)
 {
-    KonveksniOmotac3D ch1(nullptr, 0, nullptr, "", 100);
+    KonveksniOmotac3D ch1(nullptr, 0, false, "", 100);
     ch1.pokreniAlgoritam();
     ch1.pokreniNaivniAlgoritam();
 

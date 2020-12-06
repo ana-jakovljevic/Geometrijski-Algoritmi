@@ -7,7 +7,7 @@
 
 KonveksniOmotac3D::KonveksniOmotac3D(QWidget *pCrtanje,
                                      int pauzaKoraka,
-                                     QCheckBox *const naivni,
+                                     const bool &naivni,
                                      std::string imeDatoteke,
                                      int brojTacaka)
         :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni)

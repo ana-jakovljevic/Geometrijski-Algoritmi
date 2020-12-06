@@ -8,7 +8,7 @@ class DemoIscrtavanja : public AlgoritamBaza
 public:
     DemoIscrtavanja(QWidget *pCrtanje,
                     int pauzaKoraka,
-                    QCheckBox *const naivni = nullptr,
+                    const bool &naivni = false,
                     std::string imeDatoteke = "",
                     int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA);
 

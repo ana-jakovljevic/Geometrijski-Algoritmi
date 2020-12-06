@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tipAlgoritma->insertSeparator(static_cast<int>(TipAlgoritma::SEPARATOR));
     animacijaButtonAktivni(false);
     animacijaParametriButtonAktivni(true);
-    _naivni = ui->naivniCheck;
+    _naivni = ui->naivniCheck->isChecked();
 
     _pOblastCrtanjaOpenGL = ui->openGLWidget;
 
@@ -294,6 +294,7 @@ void MainWindow::napraviNoviAlgoritam()
 
 void MainWindow::on_naivniCheck_stateChanged(int)
 {
+    _naivni = ui->naivniCheck->isChecked();
     _pOblastCrtanja->update();
     _pOblastCrtanjaOpenGL->update();
 }

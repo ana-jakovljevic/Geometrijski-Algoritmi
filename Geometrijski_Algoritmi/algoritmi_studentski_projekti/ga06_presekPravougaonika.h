@@ -213,8 +213,10 @@ using VertIvica = std::pair<TipIvice, Pravougaonik *>;
 class PresekPravougaonika : public AlgoritamBaza {
 public:
     /* Konstruktor i destruktor klase */
-    PresekPravougaonika(QWidget *, int, QCheckBox *const = nullptr,
-                        std::string = "", int = BROJ_SLUCAJNIH_OBJEKATA);
+    PresekPravougaonika(QWidget *, int,
+                        const bool & = false,
+                        std::string = "",
+                        int = BROJ_SLUCAJNIH_OBJEKATA);
     virtual ~PresekPravougaonika();
 
     /* Dohvataci rezultata algoritama */

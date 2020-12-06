@@ -93,7 +93,7 @@ private:
     OblastCrtanja *_pOblastCrtanja;
     OblastCrtanjaOpenGL *_pOblastCrtanjaOpenGL;
     std::string _imeDatoteke;
-    QCheckBox *_naivni;
+    bool _naivni;
     int _duzinaPauze;
     int _brojSlucajnihObjekata;
 

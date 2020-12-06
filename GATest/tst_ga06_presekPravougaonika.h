@@ -11,7 +11,7 @@ using namespace testing;
 /* Staticki podrazumevani parametri algoritma */
 static const auto bezCrtanja = nullptr;
 static const auto bezPauze = 0;
-static const auto naivnostNebitna = nullptr;
+static const auto naivnostNebitna = false;
 
 /* Staticki nazivi datoteka sa test primerima */
 static const auto datoteka1 = "../Geometrijski_Algoritmi/input_files/ga06_presekPravougaonika/input1.txt";

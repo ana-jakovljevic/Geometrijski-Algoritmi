@@ -69,7 +69,7 @@ private:
     void timerEvent(QTimerEvent *event);
 
 public:
-    AlgoritamBaza(QWidget *pCrtanje, int pauzaKoraka, QCheckBox *const naivni);
+    AlgoritamBaza(QWidget *pCrtanje, int pauzaKoraka, const bool &naivni);
 
     /* Algoritme ne treba da bude moguce kopirati */
     virtual ~AlgoritamBaza() = default;
@@ -148,7 +148,7 @@ protected:
     std::vector<QPoint> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
 
     /* Parametar naivnosti */
-    QCheckBox *const _naivni;
+    const bool &_naivni;
 };
 
 #endif // ALGORITAMBAZA_H

@@ -4,7 +4,7 @@
 
 PreseciDuzi::PreseciDuzi(QWidget *pCrtanje,
                          int pauzaKoraka,
-                         QCheckBox *const naivni,
+                         const bool &naivni,
                          std::string imeDatoteke,
                          int brojDuzi)
    :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni), _redDuzi(poredjenjeDuzi(&y_brisuce_prave))

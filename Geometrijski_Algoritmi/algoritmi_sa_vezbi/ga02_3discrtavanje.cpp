@@ -4,7 +4,7 @@
 
 Discrtavanje::Discrtavanje(QWidget *pCrtanje,
                            int pauzaKoraka,
-                           QCheckBox *const naivni,
+                           const bool &naivni,
                            std::string,
                            int brojTacaka)
     :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni), _n(0)

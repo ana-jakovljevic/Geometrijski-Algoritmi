@@ -12,7 +12,7 @@ class KonveksniOmotac3D : public AlgoritamBaza
 public:
     KonveksniOmotac3D(QWidget *pCrtanje,
                       int pauzaKoraka,
-                      QCheckBox *const naivni = nullptr,
+                      const bool &naivni = false,
                       std::string imeDatoteke = "",
                       int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA);
 

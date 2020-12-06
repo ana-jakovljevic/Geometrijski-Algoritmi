@@ -13,7 +13,7 @@ class PreseciDuzi : public AlgoritamBaza
 public:
     PreseciDuzi(QWidget *pCrtanje,
                 int pauzaKoraka,
-                QCheckBox *const naivni = nullptr,
+                const bool &naivni = false,
                 std::string imeDatoteke = "",
                 int brojDuzi = BROJ_SLUCAJNIH_OBJEKATA);
 
