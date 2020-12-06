@@ -232,7 +232,7 @@ public:
 
 private:
     /* Rad sa podacima, inicijalizacija */
-    inline bool sekuSe(const Pravougaonik *, const Pravougaonik *) const;
+    bool sekuSe(const Pravougaonik *, const Pravougaonik *) const;
     void ubaciPresek(const Pravougaonik *, const Pravougaonik *, IntersecVec &);
     void generisiNasumicnePravougaonike(int);
     void ucitajPodatkeIzDatoteke(std::string);
@@ -242,14 +242,14 @@ private:
     unsigned int _n = 0;
 
     /* Pomocni metod za lepsu animaciju */
-    inline QRect uzmiPresek(unsigned long) const;
+    QRect uzmiPresek(unsigned long) const;
 
     /* Pomocni metodi za strategiju podeli pa vladaj */
-    inline bool proveriIndeks(unsigned int, unsigned int) const;
-    inline void azurirajIndeks(unsigned int &,
-                               unsigned int,
-                               KandidatS) const;
-    inline int uzmiIvicu(const VertIvica &) const;
+    bool proveriIndeks(unsigned int, unsigned int) const;
+    void azurirajIndeks(unsigned int &,
+                        unsigned int,
+                        KandidatS) const;
+    int uzmiIvicu(const VertIvica &) const;
 
     /* Glavni metodi za strategiju podeli pa vladaj */
     void stab(unsigned int, unsigned int,

@@ -19,10 +19,10 @@ struct tackaDogadjaja {
                    QLineF *const d2)
         : tacka(p), tip(t), duz1(d1), duz2(d2) {}
 
-    QPointF tacka;
-    tipDogadjaja tip;
-    QLineF* duz1;
-    QLineF* duz2;
+    const QPointF tacka;
+    const tipDogadjaja tip;
+    QLineF *const duz1;
+    QLineF *const duz2;
 };
 
 struct poredjenjeDogadjaja {
