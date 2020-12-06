@@ -13,6 +13,7 @@ PreseciDuzi::PreseciDuzi(QWidget *pCrtanje,
         _duzi = ucitajPodatkeIzDatoteke(imeDatoteke);
     else
         _duzi = generisiNasumicneDuzi(brojDuzi);
+    _iNaivno = _jNaivno = _duzi.size();
 }
 
 void PreseciDuzi::pokreniAlgoritam()
@@ -82,18 +83,78 @@ void PreseciDuzi::pokreniNaivniAlgoritam()
     /* Slozenost naivnog algoritma: O(n^2). Ona je
      * asimptotski optimalna za najgori slucaj. */
     QPointF presek;
-    for (auto i = 0ul; i < _duzi.size(); i++) {
-        for (auto j = i+1; j < _duzi.size(); j++) {
-            if (pomocneFunkcije::presekDuzi(_duzi[i], _duzi[j], &presek))
+    for (_iNaivno = 0; _iNaivno < _duzi.size(); _iNaivno++) {
+        for (_jNaivno = _iNaivno+1; _jNaivno < _duzi.size(); _jNaivno++) {
+            if (pomocneFunkcije::presekDuzi(_duzi[_iNaivno],
+                                            _duzi[_jNaivno],
+                                            &presek))
                 _naivniPreseci.push_back(presek);
+            AlgoritamBaza_updateCanvasAndBlock()
         }
     }
+    AlgoritamBaza_updateCanvasAndBlock()
     emit animacijaZavrsila();
+}
+
+void PreseciDuzi::naglasiTrenutnu(QPainter *painter, unsigned long i) const
+{
+    /* Ako je trenutna duz u redu */
+    if (i < _duzi.size()) {
+        /* Transformacija cetkice */
+        painter->save();
+        painter->scale(1, -1);
+        painter->translate(0, -2*_duzi[i].center().y()+5);
+
+        /* Podesavanje stila olovke */
+        auto olovka = painter->pen();
+        olovka.setColor(Qt::darkGreen);
+        painter->setPen(olovka);
+
+        /* Oznacavanje trenutne duzi */
+        painter->drawText(_duzi[i].center(), "_duzi[" + QString::number(i) + "]");
+
+        /* Ponistavanje transformacija */
+        painter->restore();
+
+        /* Podesavanje stila olovke */
+        olovka.setColor(Qt::red);
+        painter->setPen(olovka);
+
+        /* Iscrtavanje duzi */
+        painter->drawLine(_duzi[i]);
+    }
 }
 
 void PreseciDuzi::crtajNaivniAlgoritam(QPainter *painter) const
 {
+    /* Odustajanje u slucaju greske */
     if (!painter) return;
+
+    /* Iscrtavanje svih duzi */
+    for (const auto &duz : _duzi) {
+        painter->drawLine(duz);
+    }
+
+    /* Podesavanje stila fonta */
+    auto font = painter->font();
+    font.setWeight(font.Bold);
+    font.setPointSizeF(1.3*font.pointSizeF());
+    painter->setFont(font);
+
+    /* Naglasavanje trenutnih duzi */
+    naglasiTrenutnu(painter, _iNaivno);
+    naglasiTrenutnu(painter, _jNaivno);
+
+    /* Podesavanje stila olovke */
+    auto olovka = painter->pen();
+    olovka.setColor(Qt::yellow);
+    olovka.setWidth(2*olovka.width());
+    painter->setPen(olovka);
+
+    /* Iscrtavanje svih preseka */
+    for (const auto &presek: _naivniPreseci) {
+        painter->drawPoint(presek);
+    }
 }
 
 std::vector<QLineF> PreseciDuzi::generisiNasumicneDuzi(int brojDuzi) const

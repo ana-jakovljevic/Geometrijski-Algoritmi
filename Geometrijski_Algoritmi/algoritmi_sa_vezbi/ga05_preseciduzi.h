@@ -20,6 +20,7 @@ public:
     void pokreniAlgoritam() final;
     void crtajAlgoritam(QPainter *painter) const final;
     void pokreniNaivniAlgoritam() final;
+    void naglasiTrenutnu(QPainter *painter, unsigned long i) const;
     void crtajNaivniAlgoritam(QPainter *painter) const final;
 
     /* Ucitavanje podataka. */
@@ -31,9 +32,13 @@ private:
     double y_brisuce_prave;
     std::vector<QPointF> _preseci;
 
-    std::vector<QPointF> _naivniPreseci;
     std::set<tackaDogadjaja, poredjenjeDogadjaja> _redDogadjaja;
     std::set<QLineF*, poredjenjeDuzi> _redDuzi;
+
+    /* Polja za naivni algoritam */
+    std::vector<QPointF> _naivniPreseci;
+    unsigned long _iNaivno;
+    unsigned long _jNaivno;
 };
 
 #endif // GA05_PRESECIDUZI_H
