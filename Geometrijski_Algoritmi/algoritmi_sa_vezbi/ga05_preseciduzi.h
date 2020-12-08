@@ -29,7 +29,7 @@ public:
 
 private:
     std::vector<QLineF> _duzi;
-    double y_brisuce_prave;
+    double _brisucaPravaY;
     std::vector<QPointF> _preseci;
 
     std::set<tackaDogadjaja, poredjenjeDogadjaja> _redDogadjaja;

@@ -7,7 +7,7 @@ PreseciDuzi::PreseciDuzi(QWidget *pCrtanje,
                          const bool &naivni,
                          std::string imeDatoteke,
                          int brojDuzi)
-   :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni), _redDuzi(poredjenjeDuzi(&y_brisuce_prave))
+   :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni), _redDuzi(poredjenjeDuzi(&_brisucaPravaY))
 {
     if (imeDatoteke != "")
         _duzi = ucitajPodatkeIzDatoteke(imeDatoteke);
@@ -30,7 +30,7 @@ void PreseciDuzi::pokreniAlgoritam()
          _redDogadjaja.erase(_redDogadjaja.begin());
 
          if(td.tip == tipDogadjaja::POCETAK_DUZI){
-             y_brisuce_prave = td.tacka.y();
+             _brisucaPravaY = td.tacka.y();
 
              auto trenutna=_redDuzi.emplace(td.duz1).first;
              if(trenutna!=_redDuzi.begin()){
@@ -48,21 +48,21 @@ void PreseciDuzi::pokreniAlgoritam()
              }
           }
          else if (td.tip == tipDogadjaja::KRAJ_DUZI) {
-            y_brisuce_prave = td.tacka.y();
+            _brisucaPravaY = td.tacka.y();
             auto tr_duz = _redDuzi.find(td.duz1);
             auto sledeca = std::next(tr_duz);
 
             if (tr_duz != _redDuzi.begin() && sledeca != _redDuzi.end()) {
                 auto prethodna = std::prev(tr_duz);
                 QPointF presek;
-                if (pomocneFunkcije::presekDuzi(**prethodna, **sledeca, &presek) && presek.y() <= y_brisuce_prave)
+                if (pomocneFunkcije::presekDuzi(**prethodna, **sledeca, &presek) && presek.y() <= _brisucaPravaY)
                    _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK, *prethodna, *sledeca);
             }
             _redDuzi.erase(tr_duz);
          }
          else /*if (td.tip == tipDogadjaja::PRESEK)*/ {
              _preseci.push_back(td.tacka);
-             y_brisuce_prave = td.tacka.y();
+             _brisucaPravaY = td.tacka.y();
 
              _redDuzi.erase(td.duz1);
              _redDuzi.erase(td.duz2);
@@ -71,11 +71,61 @@ void PreseciDuzi::pokreniAlgoritam()
              auto duz2 = _redDuzi.insert(td.duz2).first;
          }
     }
+
+    _redDuzi.clear();
+    AlgoritamBaza_updateCanvasAndBlock();
+
+    emit animacijaZavrsila();
 }
 
 void PreseciDuzi::crtajAlgoritam(QPainter *painter) const
 {
     if (!painter) return;
+
+    QPen magneta = painter->pen();
+    magneta.setColor(Qt::magenta);
+    magneta.setWidth(3);
+
+    QPen blue = painter->pen();
+    blue.setColor(Qt::blue);
+    magneta.setWidth(3);
+
+    QPen yellow = painter->pen();
+    yellow.setColor(Qt::yellow);
+    yellow.setWidth(10);
+
+    QPen green = painter->pen();
+    green.setColor(Qt::darkGreen);
+    green.setWidth(10);
+
+    QPen default_pen = painter->pen();
+
+    //Iscrtavamo sve duzi
+    for(const QLineF& d : _duzi) {
+        painter->setPen(default_pen);
+        painter->drawLine(d);
+        painter->setPen(green);
+        painter->drawPoint(d.p1());
+        painter->drawPoint(d.p2());
+    }
+
+    //Iscrtavamo trenutnu poziciju brisuce prave
+    painter->setPen(blue);
+    painter->drawLine(0, _brisucaPravaY, _pCrtanje->width(), _brisucaPravaY);
+
+    //Iscrtavamo trenutno stanje statusa
+    painter->setPen(magneta);
+    //int i = 1; //brojac za ispis redosleda duzi u statusu
+    for(const QLineF* l : _redDuzi)
+    {
+        painter->drawLine(*l);
+        //painter.drawText(l->center(), QString::number(i++));
+    }
+
+    //Isrtavamo sve presecne tacke koje smo nasli
+    painter->setPen(yellow);
+    for(const QPointF& t : _preseci)
+        painter->drawPoint(t);
 }
 
 void PreseciDuzi::pokreniNaivniAlgoritam()
