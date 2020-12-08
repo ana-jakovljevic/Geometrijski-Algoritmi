@@ -1,10 +1,10 @@
 #include "ga06_dceldemo.h"
 
 DCELDemo::DCELDemo(QWidget *pCrtanje,
-                                 int pauzaKoraka,
-                                 const bool &naivni,
-                                 std::string imeDatoteke,
-                                 int /*brojTacaka */) /* brojTacaka, odnosno nasumicno ne koristimo u ovom primeru */
+                   int pauzaKoraka,
+                   const bool &naivni,
+                   std::string imeDatoteke,
+                   int) /* brojTacaka, odnosno nasumicno ne koristimo u ovom primeru */
     :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni)/*,
      _polygon(imeDatoteke, pCrtanje->height(), pCrtanje->width())*/
 {

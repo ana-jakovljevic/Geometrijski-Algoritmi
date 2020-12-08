@@ -31,6 +31,7 @@ void PreseciDuzi::pokreniAlgoritam()
 
          if(td.tip == tipDogadjaja::POCETAK_DUZI){
              _brisucaPravaY = td.tacka.y();
+             AlgoritamBaza_updateCanvasAndBlock()
 
              auto trenutna=_redDuzi.emplace(td.duz1).first;
              if(trenutna!=_redDuzi.begin()){
@@ -49,6 +50,8 @@ void PreseciDuzi::pokreniAlgoritam()
           }
          else if (td.tip == tipDogadjaja::KRAJ_DUZI) {
             _brisucaPravaY = td.tacka.y();
+            AlgoritamBaza_updateCanvasAndBlock()
+
             auto tr_duz = _redDuzi.find(td.duz1);
             auto sledeca = std::next(tr_duz);
 
@@ -63,6 +66,7 @@ void PreseciDuzi::pokreniAlgoritam()
          else /*if (td.tip == tipDogadjaja::PRESEK)*/ {
              _preseci.push_back(td.tacka);
              _brisucaPravaY = td.tacka.y();
+             AlgoritamBaza_updateCanvasAndBlock()
 
              _redDuzi.erase(td.duz1);
              _redDuzi.erase(td.duz2);
@@ -73,7 +77,7 @@ void PreseciDuzi::pokreniAlgoritam()
     }
 
     _redDuzi.clear();
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
 
     emit animacijaZavrsila();
 }
@@ -111,7 +115,8 @@ void PreseciDuzi::crtajAlgoritam(QPainter *painter) const
 
     //Iscrtavamo trenutnu poziciju brisuce prave
     painter->setPen(blue);
-    painter->drawLine(0, _brisucaPravaY, _pCrtanje->width(), _brisucaPravaY);
+    painter->drawLine(QPointF(0, _brisucaPravaY),
+                      QPointF(_pCrtanje->width(), _brisucaPravaY));
 
     //Iscrtavamo trenutno stanje statusa
     painter->setPen(magneta);
