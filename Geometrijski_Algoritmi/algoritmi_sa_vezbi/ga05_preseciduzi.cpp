@@ -20,7 +20,7 @@ void PreseciDuzi::pokreniAlgoritam()
 {
     /* Slozenost ovakvog algoritma: O(nlogn + klogn).
      * Izlazni parametar k je broj preseka. */
-    for(auto duz : _duzi) {
+    for(auto &duz : _duzi) {
         _redDogadjaja.emplace(duz.p1(), tipDogadjaja::POCETAK_DUZI, &duz, nullptr);
         _redDogadjaja.emplace(duz.p2(), tipDogadjaja::KRAJ_DUZI, &duz, nullptr);
     }
