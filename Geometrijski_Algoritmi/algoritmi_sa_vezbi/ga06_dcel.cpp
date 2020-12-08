@@ -8,7 +8,7 @@
 /*                               DCEL                                  */
 /***********************************************************************/
 
-/*
+
 DCEL::DCEL(std::string imeDatoteke, int h, int w)
     :_vertices{}, _edges{}, _fields{}
 {
@@ -16,8 +16,7 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
     std::string tmp;
 
     in >> tmp;
-    if (tmp.compare("OFF") != 0)
-    {
+    if (tmp.compare("OFF") != 0) {
         std::cout << "Wrong file format: " << imeDatoteke << std::endl;
         exit(EXIT_FAILURE);
     }
@@ -25,33 +24,54 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
     int vertexNum, edgeNum, fieldNum;
     in >> vertexNum >> edgeNum >> fieldNum;
 
-    * Kreiranje temena. */
-    /* Za ozbiljnije testranje:
-     * Proveriti dokumentaciju za off format.
-     * Ovde je prilagodjeno za 2d. I za velicinu naseg kanvasa.
-     * Odnosno, podrazumeva se ispravan ulaz.
-
     float tmpx, tmpy, tmpz;
-    int x, y;
+    float x, y;
     Vertex* v;
-    for(int i=0; i<vertexNum; i++)
-    {
-        * Koordinate u off foramatu su realne, i najcesce [-1, 1]
-         * (pp da je uvek tako, da ne ulazimo u detalje)
-         * Ovde ih namestam da slika bude na sredini kanvasa.
-         *
+    for(int i=0; i<vertexNum; i++) {
         in >> tmpx >> tmpy >> tmpz;
-        x = static_cast<int>((tmpx + 1)/2.0f*w);
-        y = static_cast<int>((tmpy + 1)/2.0f*h);
-        v = new Vertex({{x, y}, NULL});
+        x = (tmpx + 1) / 2.0f * w;
+        y = (tmpy + 1) / 2.0f * h;
+        v = new Vertex({{x, y}, nullptr});
         _vertices.push_back(v);
     }
-    * Pravljenje polja i poluivica. *
-    int firstIdx;
-    for(int i=0; i<fieldNum; i++)
-    {
+    for(int i=0; i<fieldNum; i++) {
+        Field* f = new Field();
+        int broj_temena;
+        in >> broj_temena;
+        std::vector<HalfEdge*> edges;
+        for(int j = 0; j < broj_temena; ++j){
+            int indeksTemena;
+            in >> indeksTemena;
+            edges.push_back(new HalfEdge(_vertices[indeksTemena], nullptr, nullptr, nullptr, nullptr));
+            _edges.push_back(edges[j]);
+            _vertices[indeksTemena]->setIncidentEdge(edges[j]);
+        }
+        for(int j = 0; j < broj_temena; j++){
+            edges[j]->setNext(edges[(j + 1) % broj_temena]);
+            edges[j]->setPrev(edges[(j - 1 + broj_temena) % broj_temena]);
+            edges[j]->setIncidentFace(f);
+        }
+        f->setOuterComponent(edges[0]);
+    }
+    for(auto edge : _edges){
+        auto uslov = [=](HalfEdge* e){
+            return e->origin() == edge->next()->origin()
+                   && e->next()->origin() == edge->origin();
+        };
+        auto twin = std::find_if(std::begin(_edges), std::end(_edges), uslov);
+        if(twin == std::end(_edges)){
+            // TODO
+            // ovo je edge neogranicene oblasti ili rupe
+            std::cout << "FIX ME ga06_dcel.cpp line 65" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        else{
+            edge->setTwin(*twin);
+        }
+    }
+
 }
-*/
+
 DCEL::DCEL(const std::vector<QPointF> &tacke)
     :_vertices{}, _edges{}, _fields{}
 {
