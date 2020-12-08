@@ -23,12 +23,15 @@ public:
     /// Poligon zadatak tackama u pozitivnom matematickom smeru
     /// bez rupa
     ///
-    DCEL(const std::vector<QPoint> &tacke);
+    DCEL(const std::vector<QPointF> &tacke);
 
-    DCEL() = default;
+    DCEL();
     //....
 private:
-    //...
+    std::vector<Vertex*> _vertices;
+    std::vector<HalfEdge*> _edges;
+    std::vector<Field*> _fields;
+
 };
 
 ///
@@ -38,10 +41,17 @@ private:
 /// i jednu incident (proizvoljnu) HalfEdge
 class Vertex{
 public:
+    Vertex();
 
+    Vertex(QPoint coordinates, HalfEdge *incidentEdge);
 
+    QPointF coordinates() const;
+    void setCoordinates(const QPoint &coordinates);
+    HalfEdge* incidentEdge() const;
+    void setIncidentEdge(HalfEdge *incidentEdge);
 private:
-
+    QPointF _coordinates;
+    HalfEdge* _incidentEdge;
 };
 
 
@@ -56,9 +66,25 @@ private:
 ///
 class HalfEdge{
 public:
+    HalfEdge();
+    HalfEdge(Vertex *origin, HalfEdge *twin, HalfEdge *next, HalfEdge *prev, Field *incidentFace);
 
-
+    Vertex *origin() const;
+    void setOrigin(Vertex *origin);
+    HalfEdge *twin() const;
+    void setTwin(HalfEdge *twin);
+    HalfEdge *next() const;
+    void setNext(HalfEdge *next);
+    HalfEdge *prev() const;
+    void setPrev(HalfEdge *prev);
+    Field *incidentFace() const;
+    void setIncidentFace(Field *incidentFace);
 private:
+    Vertex* _origin;
+    HalfEdge* _twin;
+    HalfEdge* _next;
+    HalfEdge* _prev;
+    Field* _incidentFace;
 };
 
 ///
@@ -72,9 +98,19 @@ private:
 ///
 class Field{
 public:
+    Field();
 
 
+    Field(HalfEdge *outerComponent, std::vector<HalfEdge *> inerComponent);
+    HalfEdge *outerComponent() const;
+    void setOuterComponent(HalfEdge *outerComponent);
+    std::vector<HalfEdge *> innerComponents() const;
+    HalfEdge *innerComponent() const;
+    void setInnerComponents(std::vector<HalfEdge *> inerComponents);
+    void setInnerComponent(HalfEdge *innerComponent);
 private:
+    HalfEdge* _outerComponent;
+    std::vector<HalfEdge*> _innerComponents;
 };
 
 #endif // DCEL_H

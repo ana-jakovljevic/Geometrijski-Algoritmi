@@ -51,8 +51,8 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
     for(int i=0; i<fieldNum; i++)
     {
 }
-
-DCEL::DCEL(const std::vector<QPoint> &tacke)
+*/
+DCEL::DCEL(const std::vector<QPointF> &tacke)
     :_vertices{}, _edges{}, _fields{}
 {
     loadData(tacke);
@@ -67,54 +67,27 @@ std::vector<Vertex *> DCEL::vertices() const
     return _vertices;
 }
 
-std::vector<Vertex*> &DCEL::v()
-{
-    return _vertices;
-}
-
-const std::vector<Vertex*> *DCEL::cv() const
-{
-    return &_vertices;
-}
 
 std::vector<HalfEdge *> DCEL::edges() const
 {
     return _edges;
 }
 
-std::vector<HalfEdge *> &DCEL::e()
-{
-    return _edges;
-}
-
-const std::vector<HalfEdge *> *DCEL::ce() const
-{
-    return &_edges;
-}
 
 std::vector<Field *> DCEL::fields() const
 {
     return _fields;
 }
 
-std::vector<Field*> &DCEL::f()
-{
-    return _fields;
-}
-
-const std::vector<Field*> *DCEL::cf() const
-{
-    return &_fields;
-}
 
 void DCEL::setFields(std::vector<Field *> &fileds)
 {
     _fields = fileds;
 }
 
-void DCEL::loadData(const std::vector<QPoint> &tacke)
+void DCEL::loadData(const std::vector<QPointF> &tacke)
 {
-    ...............
+
 }
 
 void DCEL::insertEdge(HalfEdge *e)
@@ -137,20 +110,20 @@ HalfEdge *DCEL::findEdge(Vertex *start, Vertex *end)
 
     return nullptr;
 }
-
+/*
 ***********************************************************************
 *                             VERTEX                                  *
 ***********************************************************************
-
+*/
 Vertex::Vertex()
-    :_coordinates{}, _incidentEdge{nullptr}, _obradjen{false}
+    :_coordinates{}, _incidentEdge{nullptr}
 {}
 
 Vertex::Vertex(QPoint coordinates, HalfEdge *incidentEdge)
     :_coordinates{coordinates}, _incidentEdge{incidentEdge}
 {}
 
-QPoint Vertex::coordinates() const
+QPointF Vertex::coordinates() const
 {
     return _coordinates;
 }
@@ -169,13 +142,14 @@ void Vertex::setIncidentEdge(HalfEdge *incidentEdge)
 {
     _incidentEdge = incidentEdge;
 }
-
+/*
 ***********************************************************************
 *                           HALFEDGE                                 *
 ***********************************************************************
+*/
 
 HalfEdge::HalfEdge()
-    :_origin{nullptr}, _twin{nullptr}, _next{nullptr}, _prev{nullptr}, _incidentFace{nullptr}, _helper{nullptr}
+    :_origin{nullptr}, _twin{nullptr}, _next{nullptr}, _prev{nullptr}, _incidentFace{nullptr}
 {}
 
 HalfEdge::HalfEdge(Vertex *origin, HalfEdge *twin, HalfEdge *next, HalfEdge *prev, Field *incidentFace)
@@ -232,16 +206,17 @@ void HalfEdge::setIncidentFace(Field *incidentFace)
     _incidentFace = incidentFace;
 }
 
+/*
 ***********************************************************************
 *                             FIELD                                   *
 ***********************************************************************
-
+*/
 Field::Field()
-    :_outerComponent{nullptr}, _inerComponents{}
+    :_outerComponent{nullptr}, _innerComponents{}
 {}
 
 Field::Field(HalfEdge *outerComponent, std::vector<HalfEdge *> inerComponent)
-    :_outerComponent{outerComponent}, _inerComponents{inerComponent}
+    :_outerComponent{outerComponent}, _innerComponents{inerComponent}
 {}
 
 HalfEdge *Field::outerComponent() const
@@ -254,31 +229,31 @@ void Field::setOuterComponent(HalfEdge *outerComponent)
     _outerComponent = outerComponent;
 }
 
-std::vector<HalfEdge *> Field::inerComponents() const
+std::vector<HalfEdge *> Field::innerComponents() const
 {
-    return _inerComponents;
+    return _innerComponents;
 }
 
 HalfEdge *Field::innerComponent() const
 {
-    if(inerComponents().empty())
+    if(innerComponents().empty())
     {
         return nullptr;
     }
 
-    return _inerComponents[0];
+    return _innerComponents[0];
 }
 
-void Field::setInerComponents(std::vector<HalfEdge *> inerComponents)
+void Field::setInnerComponents(std::vector<HalfEdge *> inerComponents)
 {
-    _inerComponents = inerComponents;
+    _innerComponents = inerComponents;
 }
 
 void Field::setInnerComponent(HalfEdge* innerComponent)
 {
-    _inerComponents.push_back(innerComponent);
+    _innerComponents.push_back(innerComponent);
 }
 
 
 
-*/
+
