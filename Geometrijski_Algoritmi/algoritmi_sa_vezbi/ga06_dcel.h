@@ -51,10 +51,10 @@ class Vertex{
 public:
     Vertex();
 
-    Vertex(QPoint coordinates, HalfEdge *incidentEdge);
+    Vertex(QPointF coordinates, HalfEdge *incidentEdge);
 
     QPointF coordinates() const;
-    void setCoordinates(const QPoint &coordinates);
+    void setCoordinates(const QPointF &coordinates);
     HalfEdge* incidentEdge() const;
     void setIncidentEdge(HalfEdge *incidentEdge);
 private:
