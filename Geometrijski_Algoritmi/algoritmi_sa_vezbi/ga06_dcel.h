@@ -27,6 +27,14 @@ public:
 
     DCEL();
     //....
+    std::vector<Vertex *> vertices() const;
+    std::vector<HalfEdge *> edges() const;
+    std::vector<Field *> fields() const;
+    void setFields(std::vector<Field *> &fileds);
+    void loadData(const std::vector<QPointF> &tacke);
+    void insertEdge(HalfEdge *e);
+    void insertFiled(Field *f);
+    HalfEdge *findEdge(Vertex *start, Vertex *end);
 private:
     std::vector<Vertex*> _vertices;
     std::vector<HalfEdge*> _edges;
