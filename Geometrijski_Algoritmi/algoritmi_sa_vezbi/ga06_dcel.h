@@ -25,7 +25,7 @@ public:
     ///
     DCEL(const std::vector<QPoint> &tacke);
 
-    DCEL();
+    DCEL() = default;
     //....
 private:
     //...
