@@ -724,6 +724,11 @@
            </item>
            <item>
             <property name="text">
+             <string>DCEL Demo</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
              <string>STUDENTSKI PROJEKTI</string>
             </property>
            </item>

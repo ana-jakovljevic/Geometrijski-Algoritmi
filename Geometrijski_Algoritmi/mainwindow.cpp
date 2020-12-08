@@ -183,10 +183,16 @@ void MainWindow::on_tipAlgoritma_currentIndexChanged(int index)
     }
     else
     {
-        ui->datoteka_dugme->setEnabled(true);
-        ui->Nasumicni_dugme->setEnabled(true);
-        animacijaButtonAktivni(false);
-        ui->merenjeButton->setEnabled(true);
+        if (tipAlgoritma == TipAlgoritma::DCEL_DEMO) {
+            ui->Nasumicni_dugme->setEnabled(false);
+            ui->datoteka_dugme->setEnabled(true);
+            animacijaButtonAktivni(false);
+        } else {
+            ui->datoteka_dugme->setEnabled(true);
+            ui->Nasumicni_dugme->setEnabled(true);
+            animacijaButtonAktivni(false);
+            ui->merenjeButton->setEnabled(true);
+        }
 
         if (tipAlgoritma == TipAlgoritma::_3D_ISCRTAVANJE ||
             tipAlgoritma == TipAlgoritma::KONVEKSNI_OMOTAC_3D)
@@ -270,6 +276,10 @@ void MainWindow::napraviNoviAlgoritam()
         break;
     case TipAlgoritma::PRESECI_DUZI:
         _pAlgoritamBaza = new PreseciDuzi(_pOblastCrtanja, _duzinaPauze, _naivni,
+                                          _imeDatoteke, _brojSlucajnihObjekata);
+        break;
+    case TipAlgoritma::DCEL_DEMO:
+        _pAlgoritamBaza = new DCELDemo(_pOblastCrtanja, _duzinaPauze, _naivni,
                                           _imeDatoteke, _brojSlucajnihObjekata);
         break;
     case TipAlgoritma::PRESEK_PRAVOUGAONIKA:

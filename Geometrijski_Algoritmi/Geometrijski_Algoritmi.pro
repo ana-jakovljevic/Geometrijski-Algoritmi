@@ -18,6 +18,8 @@ SOURCES += \
     algoritmi_sa_vezbi/ga03_konveksniomotac.cpp \
     algoritmi_sa_vezbi/ga04_konveksniomotac3d.cpp \
     algoritmi_sa_vezbi/ga05_preseciduzi.cpp \
+    algoritmi_sa_vezbi/ga06_dcel.cpp \
+    algoritmi_sa_vezbi/ga06_dceldemo.cpp \
     animacijanit.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -37,6 +39,8 @@ HEADERS += \
     algoritmi_sa_vezbi/ga04_konveksniomotac3d.h \
     algoritmi_sa_vezbi/ga05_datastructures.h \
     algoritmi_sa_vezbi/ga05_preseciduzi.h \
+    algoritmi_sa_vezbi/ga06_dcel.h \
+    algoritmi_sa_vezbi/ga06_dceldemo.h \
     animacijanit.h \
     config.h \
     mainwindow.h \
