@@ -37,12 +37,12 @@ struct poredjenjeDuzi {
     const double *const yBrisucaPrava;
 
     poredjenjeDuzi(double *y)
-        :yBrisucaPrava(y)
+        : yBrisucaPrava(y)
     {}
 
     bool operator()(const QLineF *duz1, const QLineF *duz2) const {
-        QLineF brisucaPrava = QLineF( 0, *yBrisucaPrava-0.5,
-                                     10, *yBrisucaPrava-0.5);
+        QLineF brisucaPrava( 0, *yBrisucaPrava-0.5,
+                            10, *yBrisucaPrava-0.5);
 
         QPointF presek1;
         QPointF presek2;
