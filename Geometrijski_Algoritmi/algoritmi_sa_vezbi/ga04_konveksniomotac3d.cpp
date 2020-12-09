@@ -328,18 +328,16 @@ void KonveksniOmotac3D::pokreniNaivniAlgoritam()
      * Ako se sve ostale tacke nalaze sa iste strane stranice, stranica pripada
      * konveksnom omotacu, u suprotnom ne pripada.
      * Slozenost naivnog algoritma je O(n^4). */
-    for (auto teme1 : _tacke) {
-        for (auto teme2 : _tacke) {
-            for (auto teme3 : _tacke) {
-                if (teme1 == teme2)
-                    break;
-                if (kolinearne(teme1, teme2, teme3))
+    for (auto i = 0ul; i < _tacke.size(); i++) {
+        for (auto j = i+1; j < _tacke.size(); j++) {
+            for (auto k = j+1; k < _tacke.size(); k++) {
+                if (kolinearne(_tacke[i], _tacke[j], _tacke[k]))
                     continue;
 
-                Stranica *stranica = new Stranica(teme1, teme2, teme3);
+                auto *stranica = new Stranica(_tacke[i], _tacke[j], _tacke[k]);
 
                 // Pronalazenje jedne nenula zapremine
-                float zapremina = 0;
+                auto zapremina = 0.f;
                 for (auto tacka : _tacke) {
                     zapremina = zapremina6(stranica, tacka);
                     if (fabsf(zapremina) > EPSf)
@@ -364,9 +362,9 @@ void KonveksniOmotac3D::pokreniNaivniAlgoritam()
                 if (it == _tacke.end()) {
                     /* Sve zapremine su istog znaka (dozvoljavamo da su neke i nula),
                      * pa stranica pripada konveksnom omotacu */
-                    Ivica *ivica1 = new Ivica(teme1, teme2);
-                    Ivica *ivica2 = new Ivica(teme1, teme3);
-                    Ivica *ivica3 = new Ivica(teme2, teme3);
+                    auto *ivica1 = new Ivica(_tacke[i], _tacke[j]);
+                    auto *ivica2 = new Ivica(_tacke[i], _tacke[k]);
+                    auto *ivica3 = new Ivica(_tacke[j], _tacke[k]);
                     _naivneIvice.insert(ivica1);
                     _naivneIvice.insert(ivica2);
                     _naivneIvice.insert(ivica3);
