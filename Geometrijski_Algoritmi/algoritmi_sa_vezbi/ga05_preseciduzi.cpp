@@ -7,7 +7,9 @@ PreseciDuzi::PreseciDuzi(QWidget *pCrtanje,
                          const bool &naivni,
                          std::string imeDatoteke,
                          int brojDuzi)
-   :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni), _redDuzi(poredjenjeDuzi(&_brisucaPravaY))
+   :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni),
+     _brisucaPravaY(_pCrtanje ? _pCrtanje->height()-3 : 0),
+     _redDuzi(poredjenjeDuzi(&_brisucaPravaY))
 {
     if (imeDatoteke != "")
         _duzi = ucitajPodatkeIzDatoteke(imeDatoteke);
@@ -104,6 +106,7 @@ void PreseciDuzi::pokreniAlgoritam()
     }
 
     _redDuzi.clear();
+    _brisucaPravaY = 3;
     AlgoritamBaza_updateCanvasAndBlock()
 
     emit animacijaZavrsila();
