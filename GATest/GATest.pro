@@ -19,6 +19,7 @@ HEADERS += \
     tst_ga00_KonveksniOmotac3D.h \
     tst_ga00_PrimerTest.h \
     tst_ga06_presekPravougaonika.h \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.h \
     ../Geometrijski_Algoritmi/pomocnefunkcije.h \
     ../Geometrijski_Algoritmi/algoritambaza.h \
     ../Geometrijski_Algoritmi/animacijanit.h \
