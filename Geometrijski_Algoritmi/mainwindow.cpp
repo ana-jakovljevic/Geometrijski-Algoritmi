@@ -280,7 +280,7 @@ void MainWindow::napraviNoviAlgoritam()
         break;
     case TipAlgoritma::DCEL_DEMO:
         _pAlgoritamBaza = new DCELDemo(_pOblastCrtanja, _duzinaPauze, _naivni,
-                                          _imeDatoteke, _brojSlucajnihObjekata);
+                                       _imeDatoteke, _brojSlucajnihObjekata);
         break;
     case TipAlgoritma::PRESEK_PRAVOUGAONIKA:
         _pAlgoritamBaza = new PresekPravougaonika(_pOblastCrtanja, _duzinaPauze, _naivni,

@@ -80,7 +80,7 @@ std::vector<Field *> DCEL::fields() const
 }
 
 
-void DCEL::setFields(std::vector<Field *> &fileds)
+void DCEL::setFields(const std::vector<Field *> &fileds)
 {
     _fields = fileds;
 }
@@ -105,7 +105,7 @@ void DCEL::loadData(const std::vector<QPointF> &tacke)
 
     }
 
-    for(unsigned j = 0; j < _vertices.size(); ++j) {
+    for(auto j = 0ul; j < _vertices.size(); ++j) {
         // Postavljanje odgovarajuce ivice za Vertex
         _vertices[j]->setIncidentEdge(_edges[j]);
 
@@ -127,7 +127,7 @@ void DCEL::loadData(const std::vector<QPointF> &tacke)
         _edges.push_back(_twinEdge);    // Sada smo poceli da stavljamo twin ivice, one pocinju od pozicije n+j u vektoru
     }
 
-    for(unsigned k = _vertices.size(); k < _edges.size(); ++k) {
+    for(auto k = _vertices.size(); k < _edges.size(); ++k) {
         // Postavljanje next ivice za twin
         if(k != _edges.size()-1)
             _edges[k]->setNext(_edges[k+1]);
@@ -179,7 +179,7 @@ Vertex::Vertex()
     :_coordinates{}, _incidentEdge{nullptr}
 {}
 
-Vertex::Vertex(QPointF coordinates, HalfEdge *incidentEdge)
+Vertex::Vertex(const QPointF &coordinates, HalfEdge *incidentEdge)
     :_coordinates{coordinates}, _incidentEdge{incidentEdge}
 {}
 
@@ -275,8 +275,8 @@ Field::Field()
     :_outerComponent{nullptr}, _innerComponents{}
 {}
 
-Field::Field(HalfEdge *outerComponent, std::vector<HalfEdge *> inerComponent)
-    :_outerComponent{outerComponent}, _innerComponents{inerComponent}
+Field::Field(HalfEdge *outerComponent, const std::vector<HalfEdge *> &innerComponent)
+    :_outerComponent{outerComponent}, _innerComponents{innerComponent}
 {}
 
 HalfEdge *Field::outerComponent() const
@@ -304,16 +304,12 @@ HalfEdge *Field::innerComponent() const
     return _innerComponents[0];
 }
 
-void Field::setInnerComponents(std::vector<HalfEdge *> inerComponents)
+void Field::setInnerComponents(const std::vector<HalfEdge *> &innerComponents)
 {
-    _innerComponents = inerComponents;
+    _innerComponents = innerComponents;
 }
 
 void Field::setInnerComponent(HalfEdge* innerComponent)
 {
     _innerComponents.push_back(innerComponent);
 }
-
-
-
-

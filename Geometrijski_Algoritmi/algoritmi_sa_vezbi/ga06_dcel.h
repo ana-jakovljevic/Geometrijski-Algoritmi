@@ -24,22 +24,21 @@ public:
     /// bez rupa
     ///
     DCEL(const std::vector<QPointF> &tacke);
-
     DCEL();
-    //....
+
     std::vector<Vertex *> vertices() const;
     std::vector<HalfEdge *> edges() const;
     std::vector<Field *> fields() const;
-    void setFields(std::vector<Field *> &fileds);
+    void setFields(const std::vector<Field *> &fileds);
     void loadData(const std::vector<QPointF> &tacke);
     void insertEdge(HalfEdge *e);
     void insertFiled(Field *f);
     HalfEdge *findEdge(Vertex *start, Vertex *end);
+
 private:
     std::vector<Vertex*> _vertices;
     std::vector<HalfEdge*> _edges;
     std::vector<Field*> _fields;
-
 };
 
 ///
@@ -50,13 +49,13 @@ private:
 class Vertex{
 public:
     Vertex();
-
-    Vertex(QPointF coordinates, HalfEdge *incidentEdge);
+    Vertex(const QPointF &coordinates, HalfEdge *incidentEdge);
 
     QPointF coordinates() const;
     void setCoordinates(const QPointF &coordinates);
     HalfEdge* incidentEdge() const;
     void setIncidentEdge(HalfEdge *incidentEdge);
+
 private:
     QPointF _coordinates;
     HalfEdge* _incidentEdge;
@@ -87,6 +86,7 @@ public:
     void setPrev(HalfEdge *prev);
     Field *incidentFace() const;
     void setIncidentFace(Field *incidentFace);
+
 private:
     Vertex* _origin;
     HalfEdge* _twin;
@@ -107,15 +107,15 @@ private:
 class Field{
 public:
     Field();
+    Field(HalfEdge *outerComponent, const std::vector<HalfEdge *> &innerComponent);
 
-
-    Field(HalfEdge *outerComponent, std::vector<HalfEdge *> inerComponent);
     HalfEdge *outerComponent() const;
     void setOuterComponent(HalfEdge *outerComponent);
     std::vector<HalfEdge *> innerComponents() const;
     HalfEdge *innerComponent() const;
-    void setInnerComponents(std::vector<HalfEdge *> inerComponents);
+    void setInnerComponents(const std::vector<HalfEdge *> &innerComponents);
     void setInnerComponent(HalfEdge *innerComponent);
+
 private:
     HalfEdge* _outerComponent;
     std::vector<HalfEdge*> _innerComponents;
