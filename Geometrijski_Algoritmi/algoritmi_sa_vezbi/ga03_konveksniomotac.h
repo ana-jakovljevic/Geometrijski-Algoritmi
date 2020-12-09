@@ -18,13 +18,18 @@ public:
     void crtajNaivniAlgoritam(QPainter *painter) const final;
 
     std::vector<QPoint> getKonveksniOmotac() const;
-    std::vector<QPoint> getNaivniOmotac() const;
+    std::vector<QLine> getNaivniOmotac() const;
 
 private:
     std::vector<QPoint> _tacke;
     std::vector<QPoint> _konveksniOmotac;
-    std::vector<QPoint> _naivniOmotac;
     QPoint _maxTacka;
+
+    unsigned long _i;
+    unsigned long _j;
+    unsigned long _k;
+    int _povrsina;
+    std::vector<QLine> _naivniOmotac;
 };
 
 #endif // GA03_KONVEKSNIOMOTAC_H

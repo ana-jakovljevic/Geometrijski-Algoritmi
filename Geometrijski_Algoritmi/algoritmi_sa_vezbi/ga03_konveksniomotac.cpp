@@ -14,6 +14,7 @@ konveksniomotac::konveksniomotac(QWidget *pCrtanje,
         _tacke = generisiNasumicneTacke(brojTacaka);
     else
         _tacke = ucitajPodatkeIzDatoteke(imeDatoteke);
+    _k = _tacke.size();
 }
 
 void konveksniomotac::pokreniAlgoritam() {
@@ -63,10 +64,10 @@ void konveksniomotac::pokreniAlgoritam() {
 void konveksniomotac::crtajAlgoritam(QPainter *painter) const {
     if (!painter) return;
 
-    QPen pen = painter->pen();
+    auto pen = painter->pen();
     pen.setColor(Qt::red);
     painter->setPen(pen);
-    for(auto tacka: _tacke) {
+    for(auto &tacka: _tacke) {
         painter->drawPoint(tacka);
     }
 
@@ -78,51 +79,93 @@ void konveksniomotac::crtajAlgoritam(QPainter *painter) const {
 }
 
 void konveksniomotac::pokreniNaivniAlgoritam() {
-    /* Slozenost naivnog algoritma: O(n^3) */
-    for (auto i = 0ul;i < _tacke.size(); i++) {
-        for (auto j = 0ul; j < _tacke.size(); j++) {
-            if (i == j){
-                continue;
-            }
-            bool a = true;
-            for (auto k = 0ul; k < _tacke.size(); k++){
-                if (k == i || k == j){
-                    continue;
-                }
-                if (pomocneFunkcije::povrsinaTrougla(_tacke[i], _tacke[j], _tacke[k]) > 0){
-                    a = false;
+    /* Slozenost naivnog algoritma: O(n^2).
+     * Prolazi se kroz svaki par tacaka. */
+    for (_i = 0; _i < _tacke.size(); _i++) {
+        for (_j = 0; _j < _tacke.size(); _j++) {
+            if (_i == _j) continue;
+
+            /* Proverava se da li su sve povrsine
+             * sa trecom tackom negativne */
+            bool svePovrsineNegativne = true;
+            for (_k = 0; _k < _tacke.size(); _k++) {
+                if (_k == _i || _k == _j) continue;
+
+                _povrsina = pomocneFunkcije::povrsinaTrougla(_tacke[_i],
+                                                             _tacke[_j],
+                                                             _tacke[_k]);
+                AlgoritamBaza_updateCanvasAndBlock()
+                if (_povrsina > 0) {
+                    svePovrsineNegativne = false;
                     break;
                 }
             }
-            if (a){
-                if(std::find(_naivniOmotac.begin(), _naivniOmotac.end(),
-                             _tacke[i]) == _naivniOmotac.end()){
-                   _naivniOmotac.push_back(_tacke[i]);
-                }
-                if(std::find(_naivniOmotac.begin(), _naivniOmotac.end(),
-                             _tacke[j]) == _naivniOmotac.end()){
-                   _naivniOmotac.push_back(_tacke[j]);
-                }
+
+            /* Ako jesu, dodaje se usmerena duz */
+            _k = _tacke.size();
+            if (svePovrsineNegativne) {
+                _naivniOmotac.emplace_back(_tacke[_i], _tacke[_j]);
+                AlgoritamBaza_updateCanvasAndBlock()
             }
         }
     }
 
-    std::sort(_naivniOmotac.begin(), _naivniOmotac.end(),
-              [&](const auto& lhs, const auto& rhs) {
-        int P = pomocneFunkcije::povrsinaTrougla(_maxTacka, lhs, rhs);
-        return  (P < 0) ||  (P == 0 && pomocneFunkcije::distanceKvadrat(_maxTacka, lhs)
-                             < pomocneFunkcije::distanceKvadrat(_maxTacka, rhs));
-    });
-
+    /* Obavestavanje pozivaoca o gotovoj animaciji */
+    AlgoritamBaza_updateCanvasAndBlock()
     emit animacijaZavrsila();
 }
 
 void konveksniomotac::crtajNaivniAlgoritam(QPainter *painter) const
 {
+    /* Odustajanje u slucaju greske */
     if (!painter) return;
+
+    /* Dohvatanje olovke */
+    auto pen = painter->pen();
+
+    /* Ako je algoritam u toku */
+    if (_k < _tacke.size()) {
+        /* Podesavanje stila olovke */
+        if (_povrsina < 0) {
+            pen.setColor(Qt::green);
+        } else {
+            pen.setColor(Qt::yellow);
+        }
+        painter->setPen(pen);
+
+        /* Crtanje tekuceg trougla */
+        QPainterPath put(_tacke[_i]);
+        put.lineTo(_tacke[_j]);
+        put.lineTo(_tacke[_k]);
+        put.lineTo(_tacke[_i]);
+        painter->fillPath(put, pen.color());
+
+        /* Crtanje tekuce stranice */
+        pen.setColor(Qt::red);
+        painter->setPen(pen);
+        painter->drawLine(_tacke[_i], _tacke[_j]);
+    }
+
+    /* Podesavanje stila olovke */
+    pen.setColor(Qt::red);
+    painter->setPen(pen);
+
+    /* Crtanje svih tacaka */
+    for(auto &tacka: _tacke) {
+        painter->drawPoint(tacka);
+    }
+
+    /* Podesavanje stila olovke */
+    pen.setColor(Qt::blue);
+    painter->setPen(pen);
+
+    /* Crtanje konveksnog omotaca */
+    for(auto &duz : _naivniOmotac) {
+       painter->drawLine(duz);
+    }
 }
 
-std::vector<QPoint> konveksniomotac::getNaivniOmotac() const
+std::vector<QLine> konveksniomotac::getNaivniOmotac() const
 {
     return _naivniOmotac;
 }
