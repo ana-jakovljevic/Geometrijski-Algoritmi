@@ -62,6 +62,17 @@ DCEL::DCEL()
     :_vertices{}, _edges{}, _fields{}
 {}
 
+DCEL::~DCEL() {
+    for (auto v: _vertices)
+        delete v;
+
+    for (auto e: _edges)
+        delete e;
+
+    for (auto f: _fields)
+        delete f;
+}
+
 std::vector<Vertex *> DCEL::vertices() const
 {
     return _vertices;

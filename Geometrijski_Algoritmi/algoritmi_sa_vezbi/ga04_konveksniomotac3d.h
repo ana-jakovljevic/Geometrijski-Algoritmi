@@ -15,17 +15,7 @@ public:
                       const bool &naivni = false,
                       std::string imeDatoteke = "",
                       int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA);
-
-    virtual ~KonveksniOmotac3D(){
-            for(auto tacka:_tacke)
-                delete tacka;
-            for(auto ivica:_ivice)
-                delete ivica;
-            for(auto nIvica:_naivneIvice)
-                delete nIvica;
-            for(auto stranica:_stranice)
-                delete stranica;
-        }
+    virtual ~KonveksniOmotac3D();
 
 public:
     void pokreniAlgoritam() final;

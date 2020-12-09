@@ -25,6 +25,7 @@ public:
     ///
     DCEL(const std::vector<QPointF> &tacke);
     DCEL();
+    virtual ~DCEL();
 
     std::vector<Vertex *> vertices() const;
     std::vector<HalfEdge *> edges() const;

@@ -18,6 +18,21 @@ KonveksniOmotac3D::KonveksniOmotac3D(QWidget *pCrtanje,
         _tacke = generisiNasumicneTacke(brojTacaka);
 }
 
+KonveksniOmotac3D::~KonveksniOmotac3D()
+{
+    for (auto t: _tacke)
+        delete t;
+
+    for (auto i: _ivice)
+        delete i;
+
+    for (auto ni: _naivneIvice)
+        delete ni;
+
+    for (auto s: _stranice)
+        delete s;
+}
+
 /*--------------------------------------------------------------------------------------------------*/
 /*---------------------------------Ucitavanje podataka----------------------------------------------*/
 /*--------------------------------------------------------------------------------------------------*/
