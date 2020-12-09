@@ -245,7 +245,7 @@ private:
     unsigned int _n = 0;
 
     /* Pomocni metod za lepsu animaciju */
-    QRect uzmiPresek(unsigned long) const;
+    QRect uzmiPresek(IntersecVec, unsigned long) const;
 
     /* Pomocni metodi za strategiju podeli pa vladaj */
     bool proveriIndeks(unsigned int, unsigned int) const;
@@ -275,6 +275,7 @@ private:
     IntersecVec _preseciGlavni;
 
     /* Pomocna polja za lepsu animaciju */
+    int _brisucaPravaY;
     std::vector<double> _podele;
     std::experimental::optional<unsigned int> _pocetakNovih;
 

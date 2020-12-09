@@ -5,7 +5,7 @@ DCELDemo::DCELDemo(QWidget *pCrtanje,
                    const bool &naivni,
                    std::string imeDatoteke,
                    int) /* brojTacaka, odnosno nasumicno ne koristimo u ovom primeru */
-    :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni)/*,
+    : AlgoritamBaza(pCrtanje, pauzaKoraka, naivni)/*,
      _polygon(imeDatoteke, pCrtanje->height(), pCrtanje->width())*/
 {
 }

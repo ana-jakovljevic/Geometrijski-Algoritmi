@@ -8,7 +8,7 @@ konveksniomotac::konveksniomotac(QWidget *pCrtanje,
                                  const bool &naivni,
                                  std::string imeDatoteke,
                                  int brojTacaka)
-    :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni)
+    : AlgoritamBaza(pCrtanje, pauzaKoraka, naivni)
 {
     if (imeDatoteke == "")
         _tacke = generisiNasumicneTacke(brojTacaka);

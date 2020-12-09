@@ -5,7 +5,7 @@ DemoIscrtavanja::DemoIscrtavanja(QWidget *pCrtanje,
                                  const bool &naivni,
                                  std::string imeDatoteke,
                                  int brojTacaka)
-    :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni), _n(0)
+    : AlgoritamBaza(pCrtanje, pauzaKoraka, naivni), _n(0)
 {
     if (imeDatoteke == "")
         _tacke = generisiNasumicneTacke(brojTacaka);

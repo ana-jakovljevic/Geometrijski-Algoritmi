@@ -7,7 +7,7 @@ Discrtavanje::Discrtavanje(QWidget *pCrtanje,
                            const bool &naivni,
                            std::string,
                            int brojTacaka)
-    :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni), _n(0)
+    : AlgoritamBaza(pCrtanje, pauzaKoraka, naivni), _n(0)
 {
     _tacke = generisiNasumicneTacke(brojTacaka);
 }

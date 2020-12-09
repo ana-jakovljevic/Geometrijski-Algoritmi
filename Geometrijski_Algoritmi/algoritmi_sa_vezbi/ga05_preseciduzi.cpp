@@ -7,7 +7,7 @@ PreseciDuzi::PreseciDuzi(QWidget *pCrtanje,
                          const bool &naivni,
                          std::string imeDatoteke,
                          int brojDuzi)
-   :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni),
+   : AlgoritamBaza(pCrtanje, pauzaKoraka, naivni),
      _brisucaPravaY(_pCrtanje ? _pCrtanje->height()-3 : 0),
      _redDuzi(poredjenjeDuzi(&_brisucaPravaY))
 {

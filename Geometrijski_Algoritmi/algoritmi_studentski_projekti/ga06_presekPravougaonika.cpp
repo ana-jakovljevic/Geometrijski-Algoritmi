@@ -80,15 +80,15 @@ bool DogadjajComp::operator()(const Dogadjaj &l,
     /* Odustajanje u slucaju greske */
     } else if (!l.pravougaonik || !d.pravougaonik) {
         return false;
+    /* Manji je dogadjaj dodavanja od izbacivanja */
+    } else if (l.tipDogadjaja != d.tipDogadjaja) {
+        return l.tipDogadjaja < d.tipDogadjaja;
     /* Manji je dogadjaj na levljoj poziciji */
     } else if (l.getXLevo() != d.getXLevo()) {
         return l.getXLevo() < d.getXLevo();
     /* Manji je dogadjaj na levljoj poziciji */
     } else if (l.getXDesno() != d.getXDesno()) {
         return l.getXDesno() < d.getXDesno();
-    /* Manji je dogadjaj dodavanja od izbacivanja */
-    } else if (l.tipDogadjaja != d.tipDogadjaja) {
-        return l.tipDogadjaja < d.tipDogadjaja;
     /* Inace se porede pokazivaci */
     } else {
         return l.pravougaonik < d.pravougaonik;
@@ -101,7 +101,8 @@ PresekPravougaonika::PresekPravougaonika(QWidget *pCrtanje,
                                          const bool &naivni,
                                          std::string imeDatoteke,
                                          int brojPravougaonika)
-    :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni)
+    : AlgoritamBaza(pCrtanje, pauzaKoraka, naivni),
+      _brisucaPravaY(_pCrtanje ? _pCrtanje->height()-3 : 0)
 {
     /* Inicijalizacija niza pravougaonika */
     if (imeDatoteke == "")
@@ -183,14 +184,14 @@ void PresekPravougaonika::crtajAlgoritam(QPainter *painter) const
 
     /* Iscrtavanje svih preseka */
     for (auto i = 0ul; i < _preseciGlavni.size(); i++) {
-        painter->fillRect(uzmiPresek(i), Qt::yellow);
+        painter->fillRect(uzmiPresek(_preseciGlavni, i), Qt::yellow);
     }
 
     /* Iscrtavanje novih preseka */
     if (_pocetakNovih) {
         for (auto i = _pocetakNovih.value();
              i < _preseciGlavni.size(); i++) {
-            painter->fillRect(uzmiPresek(i), Qt::red);
+            painter->fillRect(uzmiPresek(_preseciGlavni, i), Qt::red);
         }
     }
 
@@ -230,22 +231,62 @@ void PresekPravougaonika::pokreniNaivniAlgoritam()
 
         /* Obrada nailaska na gornju stranicu */
         if (dogadjaj.tipDogadjaja == TipDogadjaja::GORNJA) {
+#ifndef GA06_BENCHMARK
+            /* Azuriranje polozaja brisuce prave po potrebi */
+            if (_brisucaPravaY != pravougaonik->yGore) {
+                _brisucaPravaY = pravougaonik->yGore;
+                PresekPravougaonika_updateCanvasAndBlock()
+            }
+#endif
+
             /* Nalazenje svih trenutnih preseka */
             const auto preseci = _status.nadjiPreseke(pravougaonik);
-            _preseciNaivni.insert(std::cend(_preseciNaivni),
-                                  std::cbegin(preseci), std::cend(preseci));
 
             /* Ubacivanje novog pravougaonika u status */
             _status.insert(pravougaonik);
+
+#ifndef GA06_BENCHMARK
+            /* Osvezavanje crteza novim pravougaonikom */
+            PresekPravougaonika_updateCanvasAndBlock()
+#endif
+
+            _preseciNaivni.insert(std::cend(_preseciNaivni),
+                                  std::cbegin(preseci), std::cend(preseci));
+
+#ifndef GA06_BENCHMARK
+            /* Osvezavanje crteza ako ima novih preseka */
+            if (!preseci.empty()) {
+                PresekPravougaonika_updateCanvasAndBlock()
+            }
+#endif
         /* Obrada nailaska na donju stranicu */
-        } else {
+        } else /*if (dogadjaj.tipDogadjaja == TipDogadjaja::DONJA)*/ {
+#ifndef GA06_BENCHMARK
+            /* Azuriranje polozaja brisuce prave po potrebi */
+            if (_brisucaPravaY != pravougaonik->yDole) {
+                _brisucaPravaY = pravougaonik->yDole;
+                PresekPravougaonika_updateCanvasAndBlock()
+            }
+#endif
+
             /* Izbacivanje starog pravougaonika iz statusa */
             _status.erase(pravougaonik);
+
+#ifndef GA06_BENCHMARK
+            /* Osvezavanje crteza jednim pravougaonikom manje */
+            PresekPravougaonika_updateCanvasAndBlock()
+#endif
         }
     }
 
     /* Ciscenje reda dogadjaja */
     _dogadjaji.clear();
+
+    /* Zavrsni frejm sa skroz spustenom pravom */
+#ifndef GA06_BENCHMARK
+    _brisucaPravaY = 3;
+    PresekPravougaonika_updateCanvasAndBlock()
+#endif
 
     /* Obavestavanje pozivaoca o gotovoj animaciji */
     emit animacijaZavrsila();
@@ -255,6 +296,37 @@ void PresekPravougaonika::crtajNaivniAlgoritam(QPainter *painter) const
 {
     /* Odustajanje u slucaju greske */
     if (!painter) return;
+
+    /* Iscrtavanje svih preseka */
+    for (auto i = 0ul; i < _preseciNaivni.size(); i++) {
+        painter->fillRect(uzmiPresek(_preseciNaivni, i), Qt::yellow);
+    }
+
+    /* Iscrtavanje svakog pravougaonika */
+    for (auto i = 0ul; i < _n; i++) {
+        painter->drawRect(*_pravougaonici[i]);
+    }
+
+    /* Podesavanje stila crtanja */
+    auto olovka = painter->pen();
+    olovka.setColor(Qt::red);
+    painter->setPen(olovka);
+
+    /* Crtanje pravougaonika iz statusa */
+    for(const auto p : _status)
+    {
+        painter->drawRect(*p);
+    }
+
+    /* Podesavanje stila crtanja */
+    olovka.setColor(Qt::darkGreen);
+    olovka.setWidth(2*olovka.width());
+    painter->setPen(olovka);
+
+    /* Crtanje brisuce prave */
+    painter->drawLine(0, _brisucaPravaY,
+                      _pCrtanje->width(),
+                      _brisucaPravaY);
 }
 
 /* Provera da li postoji presek para pravougaonika */
@@ -361,9 +433,9 @@ void PresekPravougaonika::ucitajPodatkeIzDatoteke(std::string imeDatoteke)
 }
 
 /* Racunanje tacnog preseka dva pravougaonika */
-QRect PresekPravougaonika::uzmiPresek(unsigned long i) const
+QRect PresekPravougaonika::uzmiPresek(IntersecVec preseci, unsigned long i) const
 {
-    return *_preseciGlavni[i].first & *_preseciGlavni[i].second;
+    return *preseci[i].first & *preseci[i].second;
 }
 
 /* Pomocna funkcija za proveru indeksa */

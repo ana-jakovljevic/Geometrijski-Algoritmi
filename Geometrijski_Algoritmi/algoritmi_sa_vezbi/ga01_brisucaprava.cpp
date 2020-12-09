@@ -5,7 +5,7 @@ BrisucaPrava::BrisucaPrava(QWidget *pCrtanje,
                            const bool &naivni,
                            std::string imeDatoteke,
                            int brojTacaka)
-    :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni), _yPoz(0)
+    : AlgoritamBaza(pCrtanje, pauzaKoraka, naivni), _yPoz(0)
 {
     if (imeDatoteke == "")
       _tacke = generisiNasumicneTacke(brojTacaka);
