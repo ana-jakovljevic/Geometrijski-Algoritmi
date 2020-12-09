@@ -313,7 +313,7 @@ void PresekPravougaonika::crtajNaivniAlgoritam(QPainter *painter) const
     painter->setPen(olovka);
 
     /* Crtanje pravougaonika iz statusa */
-    for(const auto p : _status)
+    for (const auto p : _status)
     {
         painter->drawRect(*p);
     }
