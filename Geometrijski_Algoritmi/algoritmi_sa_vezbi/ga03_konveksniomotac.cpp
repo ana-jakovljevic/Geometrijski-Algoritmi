@@ -79,14 +79,15 @@ void konveksniomotac::crtajAlgoritam(QPainter *painter) const {
 }
 
 void konveksniomotac::pokreniNaivniAlgoritam() {
-    /* Slozenost naivnog algoritma: O(n^2).
+    /* Slozenost naivnog algoritma: O(n^3).
      * Prolazi se kroz svaki par tacaka. */
     for (_i = 0; _i < _tacke.size(); _i++) {
         for (_j = 0; _j < _tacke.size(); _j++) {
             if (_i == _j) continue;
 
-            /* Proverava se da li su sve povrsine
-             * sa trecom tackom negativne */
+            /* Proverava se da li su sve povrsine sa
+             * trecom tackom negativne, sto znaci da
+             * je trojka negativne orijentacije */
             bool svePovrsineNegativne = true;
             for (_k = 0; _k < _tacke.size(); _k++) {
                 if (_k == _i || _k == _j) continue;
@@ -113,6 +114,20 @@ void konveksniomotac::pokreniNaivniAlgoritam() {
     /* Obavestavanje pozivaoca o gotovoj animaciji */
     AlgoritamBaza_updateCanvasAndBlock()
     emit animacijaZavrsila();
+}
+
+void konveksniomotac::naglasiTrenutno(QPainter *painter, unsigned long i, const char *s) const
+{
+    /* Transformacija cetkice */
+    painter->save();
+    painter->scale(1, -1);
+    painter->translate(0, -2*_tacke[i].y()-10);
+
+    /* Oznacavanje prvog temena */
+    painter->drawText(_tacke[i], s);
+
+    /* Ponistavanje transformacija */
+    painter->restore();
 }
 
 void konveksniomotac::crtajNaivniAlgoritam(QPainter *painter) const
@@ -144,6 +159,22 @@ void konveksniomotac::crtajNaivniAlgoritam(QPainter *painter) const
         pen.setColor(Qt::red);
         painter->setPen(pen);
         painter->drawLine(_tacke[_i], _tacke[_j]);
+
+        /* Podesavanje stila fonta */
+        auto font = painter->font();
+        font.setWeight(font.Bold);
+        font.setPointSizeF(1.3*font.pointSizeF());
+        painter->setFont(font);
+
+        /* Podesavanje stila olovke */
+        auto olovka = painter->pen();
+        olovka.setColor(Qt::darkGreen);
+        painter->setPen(olovka);
+
+        /* Naglasavanje tekucih temena */
+        naglasiTrenutno(painter, _i, "i");
+        naglasiTrenutno(painter, _j, "j");
+        naglasiTrenutno(painter, _k, "k");
     }
 
     /* Podesavanje stila olovke */

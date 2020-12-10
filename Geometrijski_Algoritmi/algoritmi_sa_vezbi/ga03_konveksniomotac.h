@@ -21,14 +21,14 @@ public:
     std::vector<QLine> getNaivniOmotac() const;
 
 private:
+    void naglasiTrenutno(QPainter *painter, unsigned long i, const char *s) const;
+
     std::vector<QPoint> _tacke;
     std::vector<QPoint> _konveksniOmotac;
     QPoint _maxTacka;
 
-    unsigned long _i;
-    unsigned long _j;
-    unsigned long _k;
     int _povrsina;
+    unsigned long _i, _j, _k;
     std::vector<QLine> _naivniOmotac;
 };
 

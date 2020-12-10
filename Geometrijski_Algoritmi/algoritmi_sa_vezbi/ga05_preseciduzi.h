@@ -20,14 +20,14 @@ public:
     void pokreniAlgoritam() final;
     void crtajAlgoritam(QPainter *painter) const final;
     void pokreniNaivniAlgoritam() final;
-    void naglasiTrenutnu(QPainter *painter, unsigned long i) const;
     void crtajNaivniAlgoritam(QPainter *painter) const final;
 
-    /* Ucitavanje podataka. */
+private:
+    void naglasiTrenutnu(QPainter *painter, unsigned long i) const;
+
     std::vector<QLineF> generisiNasumicneDuzi(int brojDuzi) const;
     std::vector<QLineF> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
 
-private:
     std::vector<QLineF> _duzi;
     double _brisucaPravaY;
     std::vector<QPointF> _preseci;
