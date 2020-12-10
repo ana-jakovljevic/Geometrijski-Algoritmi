@@ -19,11 +19,16 @@ public:
 
 public:
     void pokreniAlgoritam() final;
-    void crtajTeme(Teme* t) const;
-    void crtajStranicu(Stranica* s) const;
     void crtajAlgoritam(QPainter *painter) const final;
     void pokreniNaivniAlgoritam() final;
     void crtajNaivniAlgoritam(QPainter *painter) const final;
+
+    std::unordered_set<Ivica *, HashIvica, EqIvica> getIvice() const;
+    std::unordered_set<Ivica *, HashIvica, EqIvica> getNaivneIvice() const;
+
+private:
+    void crtajTeme(Teme* t) const;
+    void crtajStranicu(Stranica* s) const;
 
     /* Pomocne funkcije za generisanje konveksnog omotaca. */
     /* Glavne funkcije. */
@@ -44,10 +49,6 @@ public:
     std::vector<Teme*> generisiNasumicneTacke(int brojTacaka) const;
     std::vector<Teme*> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
 
-    std::unordered_set<Ivica *, HashIvica, EqIvica> getIvice() const;
-    std::unordered_set<Ivica *, HashIvica, EqIvica> getNaivneIvice() const;
-
-private:
     std::vector<Teme*> _tacke;
 
     /* Neuredjeni skup za cuvanje ivica; nije nam sustinski vazan redosled
