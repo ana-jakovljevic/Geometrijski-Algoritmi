@@ -46,8 +46,8 @@ struct poredjenjeDuzi {
 
         QPointF presek1;
         QPointF presek2;
-        pomocneFunkcije::presekDuzi(*duz1, brisucaPrava, &presek1);
-        pomocneFunkcije::presekDuzi(*duz2, brisucaPrava, &presek2);
+        pomocneFunkcije::presekDuzi(*duz1, brisucaPrava, presek1);
+        pomocneFunkcije::presekDuzi(*duz2, brisucaPrava, presek2);
 
         return presek1.x() < presek2.x();
     }

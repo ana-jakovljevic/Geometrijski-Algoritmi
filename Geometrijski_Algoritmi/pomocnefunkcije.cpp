@@ -61,11 +61,11 @@ float pomocneFunkcije::zapremina(const QVector3D& a, const QVector3D& b, const Q
         return vol;
 }
 
-bool pomocneFunkcije::presekDuzi(const QLineF& l1, const QLineF& l2, QPointF *const presek)
+bool pomocneFunkcije::presekDuzi(const QLineF& l1, const QLineF& l2, QPointF& presek)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-    return l1.intersects(l2, presek) == QLineF::BoundedIntersection;
+    return l1.intersects(l2, &presek) == QLineF::BoundedIntersection;
 #else
-    return l1.intersect(l2, presek) == QLineF::BoundedIntersection;
+    return l1.intersect(l2, &presek) == QLineF::BoundedIntersection;
 #endif
 }

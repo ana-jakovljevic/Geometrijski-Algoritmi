@@ -15,7 +15,7 @@ PreseciDuzi::PreseciDuzi(QWidget *pCrtanje,
         _duzi = ucitajPodatkeIzDatoteke(imeDatoteke);
     else
         _duzi = generisiNasumicneDuzi(brojDuzi);
-    _iNaivno = _jNaivno = _duzi.size();
+    _i = _j = _duzi.size();
 }
 
 void PreseciDuzi::pokreniAlgoritam()
@@ -39,14 +39,14 @@ void PreseciDuzi::pokreniAlgoritam()
              if(trenutna!=_redDuzi.begin()){
                  auto prethodna= std::prev(trenutna);
                  QPointF presek;
-                 if(pomocneFunkcije::presekDuzi(**trenutna, **prethodna, &presek))
+                 if(pomocneFunkcije::presekDuzi(**trenutna, **prethodna, presek))
                     _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK,*trenutna,*prethodna);
              }
 
              auto sledeca = std::next(trenutna);
              if(sledeca != _redDuzi.end()) {
                  QPointF presek;
-                 if(pomocneFunkcije::presekDuzi(**trenutna, **sledeca, &presek))
+                 if(pomocneFunkcije::presekDuzi(**trenutna, **sledeca, presek))
                     _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK, *trenutna, *sledeca);
              }
           }
@@ -59,7 +59,7 @@ void PreseciDuzi::pokreniAlgoritam()
             if (tr_duz != _redDuzi.begin() && sledeca != _redDuzi.end()) {
                 auto prethodna = std::prev(tr_duz);
                 QPointF presek;
-                if (pomocneFunkcije::presekDuzi(**prethodna, **sledeca, &presek)
+                if (pomocneFunkcije::presekDuzi(**prethodna, **sledeca, presek)
                         && presek.y() <= _brisucaPravaY)
                    _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK, *prethodna, *sledeca);
             }
@@ -79,7 +79,7 @@ void PreseciDuzi::pokreniAlgoritam()
              if(duz1!=_redDuzi.begin()){
                  auto prethodna= std::prev(duz1);
                  QPointF presek;
-                 if(pomocneFunkcije::presekDuzi(**duz1, **prethodna, &presek)
+                 if(pomocneFunkcije::presekDuzi(**duz1, **prethodna, presek)
                          && presek != td.tacka && presek.y() <= _brisucaPravaY)
                     _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK,*duz1,*prethodna);
              }
@@ -87,7 +87,7 @@ void PreseciDuzi::pokreniAlgoritam()
              auto sledeca = std::next(duz1);
              if(sledeca != _redDuzi.end()) {
                  QPointF presek;
-                 if(pomocneFunkcije::presekDuzi(**duz1, **sledeca, &presek)
+                 if(pomocneFunkcije::presekDuzi(**duz1, **sledeca, presek)
                          && presek != td.tacka && presek.y() <= _brisucaPravaY)
                     _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK, *duz1, *sledeca);
              }
@@ -95,7 +95,7 @@ void PreseciDuzi::pokreniAlgoritam()
              if(duz2!=_redDuzi.begin()){
                  auto prethodna= std::prev(duz2);
                  QPointF presek;
-                 if(pomocneFunkcije::presekDuzi(**duz2, **prethodna, &presek)
+                 if(pomocneFunkcije::presekDuzi(**duz2, **prethodna, presek)
                          && presek != td.tacka && presek.y() <= _brisucaPravaY)
                     _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK,*duz2,*prethodna);
              }
@@ -103,7 +103,7 @@ void PreseciDuzi::pokreniAlgoritam()
              sledeca = std::next(duz2);
              if(sledeca != _redDuzi.end()) {
                  QPointF presek;
-                 if(pomocneFunkcije::presekDuzi(**duz2, **sledeca, &presek)
+                 if(pomocneFunkcije::presekDuzi(**duz2, **sledeca, presek)
                          && presek != td.tacka && presek.y() <= _brisucaPravaY)
                     _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK, *duz2, *sledeca);
              }
@@ -173,11 +173,11 @@ void PreseciDuzi::pokreniNaivniAlgoritam()
     /* Slozenost naivnog algoritma: O(n^2). Ona je
      * asimptotski optimalna za najgori slucaj. */
     QPointF presek;
-    for (_iNaivno = 0; _iNaivno < _duzi.size(); _iNaivno++) {
-        for (_jNaivno = _iNaivno+1; _jNaivno < _duzi.size(); _jNaivno++) {
-            if (pomocneFunkcije::presekDuzi(_duzi[_iNaivno],
-                                            _duzi[_jNaivno],
-                                            &presek))
+    for (_i = 0; _i < _duzi.size(); _i++) {
+        for (_j = _i+1; _j < _duzi.size(); _j++) {
+            if (pomocneFunkcije::presekDuzi(_duzi[_i],
+                                            _duzi[_j],
+                                            presek))
                 _naivniPreseci.push_back(presek);
             AlgoritamBaza_updateCanvasAndBlock()
         }
@@ -232,8 +232,8 @@ void PreseciDuzi::crtajNaivniAlgoritam(QPainter *painter) const
     painter->setFont(font);
 
     /* Naglasavanje trenutnih duzi */
-    naglasiTrenutnu(painter, _iNaivno);
-    naglasiTrenutnu(painter, _jNaivno);
+    naglasiTrenutnu(painter, _i);
+    naglasiTrenutnu(painter, _j);
 
     /* Podesavanje stila olovke */
     auto olovka = painter->pen();

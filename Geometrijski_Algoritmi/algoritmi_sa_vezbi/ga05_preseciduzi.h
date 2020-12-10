@@ -33,12 +33,11 @@ private:
     std::vector<QPointF> _preseci;
 
     std::set<tackaDogadjaja, poredjenjeDogadjaja> _redDogadjaja;
-    std::set<QLineF*, poredjenjeDuzi> _redDuzi;
+    std::set<QLineF*, poredjenjeDuzi> _redDuzi; /* status */
 
     /* Polja za naivni algoritam */
+    unsigned long _i, _j;
     std::vector<QPointF> _naivniPreseci;
-    unsigned long _iNaivno;
-    unsigned long _jNaivno;
 };
 
 #endif // GA05_PRESECIDUZI_H
