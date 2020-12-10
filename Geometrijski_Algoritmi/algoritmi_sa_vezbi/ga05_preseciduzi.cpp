@@ -22,92 +22,92 @@ void PreseciDuzi::pokreniAlgoritam()
 {
     /* Slozenost ovakvog algoritma: O(nlogn + klogn).
      * Izlazni parametar k je broj preseka. */
-    for(auto &duz : _duzi) {
+    for (auto &duz : _duzi) {
         _redDogadjaja.emplace(duz.p1(), tipDogadjaja::POCETAK_DUZI, &duz, nullptr);
         _redDogadjaja.emplace(duz.p2(), tipDogadjaja::KRAJ_DUZI, &duz, nullptr);
     }
 
-    while(!_redDogadjaja.empty()){
-         auto td = *_redDogadjaja.begin();
-         _redDogadjaja.erase(_redDogadjaja.begin());
+    while (!_redDogadjaja.empty()) {
+        auto td = *_redDogadjaja.begin();
+        _redDogadjaja.erase(_redDogadjaja.begin());
 
-         _brisucaPravaY = td.tacka.y();
-         if(td.tip == tipDogadjaja::POCETAK_DUZI){
-             AlgoritamBaza_updateCanvasAndBlock()
+        _brisucaPravaY = td.tacka.y();
+        if (td.tip == tipDogadjaja::POCETAK_DUZI) {
+            AlgoritamBaza_updateCanvasAndBlock()
 
-             auto trenutna=_redDuzi.emplace(td.duz1).first;
-             if(trenutna!=_redDuzi.begin()){
-                 auto prethodna= std::prev(trenutna);
-                 QPointF presek;
-                 if(pomocneFunkcije::presekDuzi(**trenutna, **prethodna, presek))
-                    _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK,*trenutna,*prethodna);
-             }
+            auto trenutna = _redDuzi.emplace(td.duz1).first;
+            if (trenutna != _redDuzi.begin()) {
+                auto prethodna= std::prev(trenutna);
 
-             auto sledeca = std::next(trenutna);
-             if(sledeca != _redDuzi.end()) {
-                 QPointF presek;
-                 if(pomocneFunkcije::presekDuzi(**trenutna, **sledeca, presek))
+                QPointF presek;
+                if (pomocneFunkcije::presekDuzi(**trenutna, **prethodna, presek))
+                    _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK, *trenutna, *prethodna);
+            }
+
+            auto sledeca = std::next(trenutna);
+            if (sledeca != _redDuzi.end()) {
+                QPointF presek;
+                if (pomocneFunkcije::presekDuzi(**trenutna, **sledeca, presek))
                     _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK, *trenutna, *sledeca);
-             }
-          }
-         else if (td.tip == tipDogadjaja::KRAJ_DUZI) {
+            }
+        }
+        else if (td.tip == tipDogadjaja::KRAJ_DUZI) {
             AlgoritamBaza_updateCanvasAndBlock()
 
             auto tr_duz = _redDuzi.find(td.duz1);
-            auto sledeca = std::next(tr_duz);
+            if (tr_duz == _redDuzi.end()) continue;
 
+            auto sledeca = std::next(tr_duz);
             if (tr_duz != _redDuzi.begin() && sledeca != _redDuzi.end()) {
                 auto prethodna = std::prev(tr_duz);
                 QPointF presek;
                 if (pomocneFunkcije::presekDuzi(**prethodna, **sledeca, presek)
                         && presek.y() <= _brisucaPravaY)
-                   _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK, *prethodna, *sledeca);
+                    _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK, *prethodna, *sledeca);
             }
-            if (tr_duz != _redDuzi.end())
-                _redDuzi.erase(tr_duz);
+
+            _redDuzi.erase(tr_duz);
          }
          else /*if (td.tip == tipDogadjaja::PRESEK)*/ {
-             _preseci.push_back(td.tacka);
-             AlgoritamBaza_updateCanvasAndBlock()
+            _preseci.push_back(td.tacka);
+            AlgoritamBaza_updateCanvasAndBlock()
 
-             _redDuzi.erase(td.duz1);
-             _redDuzi.erase(td.duz2);
+            _redDuzi.erase(td.duz1);
+            _redDuzi.erase(td.duz2);
 
-             auto duz1 = _redDuzi.insert(td.duz1).first;
-             auto duz2 = _redDuzi.insert(td.duz2).first;
+            auto duz1 = _redDuzi.insert(td.duz1).first;
+            auto duz2 = _redDuzi.insert(td.duz2).first;
 
-             if(duz1!=_redDuzi.begin()){
-                 auto prethodna= std::prev(duz1);
-                 QPointF presek;
-                 if(pomocneFunkcije::presekDuzi(**duz1, **prethodna, presek)
-                         && presek != td.tacka && presek.y() <= _brisucaPravaY)
+            QPointF presek;
+
+            if (duz1 != _redDuzi.begin()) {
+                auto prethodna = std::prev(duz1);
+                if (pomocneFunkcije::presekDuzi(**duz1, **prethodna, presek)
+                        && presek != td.tacka && presek.y() <= _brisucaPravaY)
                     _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK,*duz1,*prethodna);
-             }
+            }
 
-             auto sledeca = std::next(duz1);
-             if(sledeca != _redDuzi.end()) {
-                 QPointF presek;
-                 if(pomocneFunkcije::presekDuzi(**duz1, **sledeca, presek)
-                         && presek != td.tacka && presek.y() <= _brisucaPravaY)
+            auto sledeca = std::next(duz1);
+            if (sledeca != _redDuzi.end()) {
+                if(pomocneFunkcije::presekDuzi(**duz1, **sledeca, presek)
+                        && presek != td.tacka && presek.y() <= _brisucaPravaY)
                     _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK, *duz1, *sledeca);
-             }
+            }
 
-             if(duz2!=_redDuzi.begin()){
-                 auto prethodna= std::prev(duz2);
-                 QPointF presek;
-                 if(pomocneFunkcije::presekDuzi(**duz2, **prethodna, presek)
-                         && presek != td.tacka && presek.y() <= _brisucaPravaY)
+            if (duz2 != _redDuzi.begin()) {
+                auto prethodna= std::prev(duz2);
+                if (pomocneFunkcije::presekDuzi(**duz2, **prethodna, presek)
+                        && presek != td.tacka && presek.y() <= _brisucaPravaY)
                     _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK,*duz2,*prethodna);
-             }
+            }
 
-             sledeca = std::next(duz2);
-             if(sledeca != _redDuzi.end()) {
-                 QPointF presek;
-                 if(pomocneFunkcije::presekDuzi(**duz2, **sledeca, presek)
-                         && presek != td.tacka && presek.y() <= _brisucaPravaY)
+            sledeca = std::next(duz2);
+            if (sledeca != _redDuzi.end()) {
+                if (pomocneFunkcije::presekDuzi(**duz2, **sledeca, presek)
+                        && presek != td.tacka && presek.y() <= _brisucaPravaY)
                     _redDogadjaja.emplace(presek, tipDogadjaja::PRESEK, *duz2, *sledeca);
-             }
-         }
+            }
+        }
     }
 
     _redDuzi.clear();
