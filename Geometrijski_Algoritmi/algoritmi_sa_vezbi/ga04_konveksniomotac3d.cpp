@@ -41,12 +41,13 @@ std::vector<Teme *> KonveksniOmotac3D::generisiNasumicneTacke(int brojTacaka) co
     srand(static_cast<unsigned>(time(nullptr)));
 
     std::vector<Teme*> randomPoints;
+    auto randMaxf = static_cast<float>(RAND_MAX);
 
     for(int i=0; i < brojTacaka; i++)
         randomPoints.emplace_back(new Teme(
-           1.f*rand()/RAND_MAX,
-           1.f*rand()/RAND_MAX,
-           1.f*rand()/RAND_MAX));
+           rand()/randMaxf,
+           rand()/randMaxf,
+           rand()/randMaxf));
 
     return randomPoints;
 }
