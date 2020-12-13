@@ -20,6 +20,7 @@ SOURCES += \
     algoritmi_sa_vezbi/ga05_preseciduzi.cpp \
     algoritmi_sa_vezbi/ga06_dcel.cpp \
     algoritmi_sa_vezbi/ga06_dceldemo.cpp \
+    algoritmi_studentski_projekti/ga14_coinsOnShelf.cpp \
     animacijanit.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -41,6 +42,7 @@ HEADERS += \
     algoritmi_sa_vezbi/ga05_preseciduzi.h \
     algoritmi_sa_vezbi/ga06_dcel.h \
     algoritmi_sa_vezbi/ga06_dceldemo.h \
+    algoritmi_studentski_projekti/ga14_coinsOnShelf.h \
     animacijanit.h \
     config.h \
     mainwindow.h \
