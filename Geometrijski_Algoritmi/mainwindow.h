@@ -18,6 +18,7 @@
 #include "ga06_dceldemo.h"
 
 #include "ga06_presekPravougaonika.h"
+#include "ga14_coinsOnShelf.h"
 
 /* Enumeracija algoritama */
 enum class TipAlgoritma {
@@ -31,7 +32,8 @@ enum class TipAlgoritma {
     DCEL_DEMO,
     SEPARATOR,
     STUDENTSKI_PROJEKTI,
-    PRESEK_PRAVOUGAONIKA
+    PRESEK_PRAVOUGAONIKA,
+    COINS_ON_SHELF
 };
 
 /* Enumeracija tabova */

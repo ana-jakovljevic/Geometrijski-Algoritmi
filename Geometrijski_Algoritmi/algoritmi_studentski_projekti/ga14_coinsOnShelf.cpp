@@ -6,7 +6,7 @@ CoinsOnShelf::CoinsOnShelf(QWidget *pCrtanje, int pauzaKoraka, const bool &naivn
     if(imeDatoteke == "") {
         for(int j = 0; j < brojDiskova; ++j) {
             Disk* noviDisk = new Disk();
-            _diskovi.push_back(noviDisk);
+            _diskoviSort.insert(noviDisk);
         }
     }
     else {
@@ -23,6 +23,7 @@ CoinsOnShelf::~CoinsOnShelf()
 
 void CoinsOnShelf::pokreniAlgoritam()
 {
+
     // TODO
 }
 
@@ -45,5 +46,10 @@ void CoinsOnShelf::crtajNaivniAlgoritam(QPainter *painter) const
 
 Disk::Disk()
 {
-    _size = randomGen.bounded(5);
+    _size = _randomGen.bounded(5.0);
+}
+
+double Disk::size()
+{
+    return _size;
 }
