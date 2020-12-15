@@ -22,6 +22,7 @@
 #include "ga09_klasterovanje.h"
 #include "ga15_collisiondetection.h"
 #include "ga17_convexhulllineintersections.h"
+#include "./ga20_largest_empty_circle/lec.h"
 
 /* Enumeracija algoritama */
 enum class TipAlgoritma {
@@ -39,7 +40,8 @@ enum class TipAlgoritma {
     PRESEK_PRAVOUGAONIKA,
     KLASTEROVANJE,
     COLLISION_DETECTION,
-    CONVEX_HULL_LINE_INTERSECTIONS
+    CONVEX_HULL_LINE_INTERSECTIONS,
+    NAJVECI_PRAZAN_KRUG
 };
 
 /* Enumeracija tabova */

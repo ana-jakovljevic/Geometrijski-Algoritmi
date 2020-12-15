@@ -72,6 +72,9 @@ void TimeMeasurementThread::run()
         case TipAlgoritma::CONVEX_HULL_LINE_INTERSECTIONS:
             pAlgorithm = new ConvexHullLineIntersections(nullptr, 0, false, "", i);
             break;
+        case TipAlgoritma::NAJVECI_PRAZAN_KRUG:
+            pAlgorithm = new lec(nullptr, 0, false, "", i);
+            break;
         default:
             break;
         }
