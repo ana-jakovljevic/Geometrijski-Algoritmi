@@ -16,6 +16,7 @@
 #include "ga09_klasterovanje.h"
 #include "ga15_collisiondetection.h"
 #include "ga17_convexhulllineintersections.h"
+#include "ga20_largest_empty_circle/lec.h"
 
 TimeMeasurementThread::TimeMeasurementThread(TipAlgoritma tipAlgoritma, int minValue, int step, int maxValue)
     : QThread(), _algorithmType(tipAlgoritma), _minValue(minValue), _step(step), _maxValue(maxValue)
