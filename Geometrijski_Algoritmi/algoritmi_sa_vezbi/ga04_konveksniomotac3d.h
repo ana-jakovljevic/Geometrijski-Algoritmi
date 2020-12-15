@@ -26,6 +26,9 @@ public:
     std::unordered_set<Ivica *, HashIvica, EqIvica> getIvice() const;
     std::unordered_set<Ivica *, HashIvica, EqIvica> getNaivneIvice() const;
 
+
+    std::vector<Stranica*> getNaivniOmotac3d() const;
+    std::unordered_set<Ivica*, HashIvica, EqIvica> getKonveksniOmotac3d() const;
 private:
     void crtajTeme(Teme* t) const;
     void crtajStranicu(Stranica* s) const;
@@ -44,12 +47,13 @@ private:
                               Teme *st1, Teme *st2, Teme *st3);
     Stranica* napraviDruguStranicu(Ivica* iv, Teme* t);
     Stranica* napraviPrvuStranicu(Ivica* iv, Teme* t);
-
     /* Ucitavanje podataka. */
     std::vector<Teme*> generisiNasumicneTacke(int brojTacaka) const;
     std::vector<Teme*> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
 
     std::vector<Teme*> _tacke;
+
+
 
     /* Neuredjeni skup za cuvanje ivica; nije nam sustinski vazan redosled
      * ivica u skupu, pa nema potrebe za nizovima kod kojih su pretraga i
@@ -57,6 +61,9 @@ private:
     std::unordered_set<Ivica*, HashIvica, EqIvica> _ivice;
     std::unordered_set<Ivica*, HashIvica, EqIvica> _naivneIvice;
 
+    Stranica* _tekucaStranica=nullptr;
+    //vektor stranica
+    std::vector<Stranica*> _naivniOmotac;
     // ovaj vektor je potreban kako bi se memorija uredno oslobodila
     std::vector<Stranica*> _stranice;
 };

@@ -113,9 +113,10 @@ public:
 
     /* Niz pri konstrukciji napravljenih boja kako stranice
      * ne bi u toku algoritma menjale stil, lakse se prati */
-    const double boje[3]{1.*rand()/RAND_MAX,
+    //dodata vrednost transparentnosti
+    const double boje[4]{1.*rand()/RAND_MAX,
                          1.*rand()/RAND_MAX,
-                         1.*rand()/RAND_MAX};
+                         1.*rand()/RAND_MAX, 0.3};
 
 private:
     Teme* _temena[3];

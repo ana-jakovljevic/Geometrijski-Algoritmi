@@ -295,7 +295,7 @@ void KonveksniOmotac3D::crtajTeme(Teme *t) const
 void KonveksniOmotac3D::crtajStranicu(Stranica* s) const
 {
     // postavljanje boje
-    glColor3dv(s->boje);
+    glColor4dv(s->boje);
 
     // crtanje stranice kao trougla
     glBegin(GL_POLYGON);
@@ -335,49 +335,75 @@ void KonveksniOmotac3D::pokreniNaivniAlgoritam()
                 if (kolinearne(_tacke[i], _tacke[j], _tacke[k]))
                     continue;
 
-                auto *stranica = new Stranica(_tacke[i], _tacke[j], _tacke[k]);
+                //cuva se tekuca stranica, radi lakseg pracenja algoritma
+                _tekucaStranica = new Stranica(_tacke[i], _tacke[j], _tacke[k]);
+
+                AlgoritamBaza_updateCanvasAndBlock()
 
                 // Pronalazenje jedne nenula zapremine
                 auto zapremina = 0.f;
                 for (auto tacka : _tacke) {
-                    zapremina = zapremina6(stranica, tacka);
+                    zapremina = zapremina6(_tekucaStranica, tacka);
                     if (fabsf(zapremina) > EPSf)
                         break;
                 }
-
                 // Ako ne postoje 4 nekomplanarne tacke zavrsava se algoritam
                 if (fabsf(zapremina) <= EPSf)
                     return;
+
 
                 int znakZapremine = zapremina > 0 ? 1 : -1;
 
                 auto it = _tacke.begin();
                 for (; it != _tacke.end(); it++) {
-                    zapremina = zapremina6(stranica, *it);
+                    zapremina = zapremina6(_tekucaStranica, *it);
                     if (zapremina * znakZapremine < -EPSf)
                         break;
                 }
 
-                delete stranica;
+               //delete stranica;
 
                 if (it == _tacke.end()) {
+                    _naivniOmotac.push_back(_tekucaStranica);
+                    AlgoritamBaza_updateCanvasAndBlock()
                     /* Sve zapremine su istog znaka (dozvoljavamo da su neke i nula),
                      * pa stranica pripada konveksnom omotacu */
-                    auto *ivica1 = new Ivica(_tacke[i], _tacke[j]);
-                    auto *ivica2 = new Ivica(_tacke[i], _tacke[k]);
-                    auto *ivica3 = new Ivica(_tacke[j], _tacke[k]);
-                    _naivneIvice.insert(ivica1);
-                    _naivneIvice.insert(ivica2);
-                    _naivneIvice.insert(ivica3);
+
+                     /*Postoji funkcija za iscrtavanje stranice*/
+                     //auto *ivica1 = new Ivica(_tacke[i], _tacke[j]);
+                     //auto *ivica2 = new Ivica(_tacke[i], _tacke[k]);
+                     //auto *ivica3 = new Ivica(_tacke[j], _tacke[k]);
+                     //_naivneIvice.insert(ivica1);
+                     //_naivneIvice.insert(ivica2);
+                     //_naivneIvice.insert(ivica3);
                 }
+
             }
         }
     }
-
+    AlgoritamBaza_updateCanvasAndBlock()
     emit animacijaZavrsila();
 }
 
 void KonveksniOmotac3D::crtajNaivniAlgoritam(QPainter *) const
 {
+    // crtanje svih temena
+    glBegin(GL_POINTS);
+        for(auto teme : _tacke)
+            crtajTeme(teme);
+    glEnd();
 
+    if(_tekucaStranica!=nullptr){
+        crtajStranicu(_tekucaStranica);
+    }
+
+    for(auto stranica: _naivniOmotac){
+         crtajStranicu(stranica);
+    }
+}
+std::vector<Stranica*> KonveksniOmotac3D::getNaivniOmotac3d() const{
+    return _naivniOmotac;
+}
+std::unordered_set<Ivica*, HashIvica, EqIvica> KonveksniOmotac3D::getKonveksniOmotac3d() const{
+   return _ivice;
 }
