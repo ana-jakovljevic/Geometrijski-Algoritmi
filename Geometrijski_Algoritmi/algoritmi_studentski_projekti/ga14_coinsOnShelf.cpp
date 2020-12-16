@@ -10,14 +10,31 @@ CoinsOnShelf::CoinsOnShelf(QWidget *pCrtanje, int pauzaKoraka, const bool &naivn
         }
     }
     else {
-        // TODO: Unos diskova iz datoteke
+        QString fileName = QString::fromStdString(imeDatoteke);
+
+        QFile inputFile(fileName);
+        if(inputFile.open(QIODevice::ReadOnly)) {
+            QTextStream in(&inputFile);
+
+            int discNumber = in.readLine().toInt();
+
+            for(int j = 0; j < discNumber; ++j) {
+                Disk* noviDisk = new Disk();
+                noviDisk->setSize(in.readLine().toDouble());
+                _diskoviSort.insert(noviDisk);
+            }
+        }
+        else {
+            qDebug() << "ERROR OPENING FILE";
+            exit(1);
+        }
     }
 
 }
 
 CoinsOnShelf::~CoinsOnShelf()
 {
-    for(auto disk : _diskovi)
+    for(auto disk : _diskoviSort)
         delete disk;
 }
 
@@ -52,4 +69,9 @@ Disk::Disk()
 double Disk::size()
 {
     return _size;
+}
+
+void Disk::setSize(double newSize)
+{
+    _size = newSize;
 }

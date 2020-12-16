@@ -3,6 +3,9 @@
 
 #include "algoritambaza.h"
 #include <QRandomGenerator>
+#include <QTextStream>
+#include <QFile>
+#include <QDebug>
 #include <set>
 
 using namespace std;
@@ -11,6 +14,7 @@ class Disk {
 public:
     Disk();
     double size();
+    void setSize(double newSize);
 
 private:
     double _size;
@@ -41,7 +45,6 @@ public:
     void crtajNaivniAlgoritam(QPainter *painter) const final;
 
 private:
-    vector<Disk*> _diskovi;
     multiset<Disk*, compClass> _diskoviSort;
 };
 
