@@ -10,6 +10,11 @@
 
 using namespace std;
 
+enum AlgoType {
+    SPECIAL,
+    GENERAL
+};
+
 class Disk {
 public:
     Disk();
@@ -23,7 +28,7 @@ private:
 
 class compClass {
 public:
-    bool operator() (Disk* d1, Disk *d2) {
+    bool operator() (Disk *d1, Disk *d2) const {
         return d1->size() >= d2->size();
     }
 };
@@ -45,7 +50,11 @@ public:
     void crtajNaivniAlgoritam(QPainter *painter) const final;
 
 private:
-    multiset<Disk*, compClass> _diskoviSort;
+    vector<Disk*> _discs;
+    vector<Disk*> _shelf;
+    AlgoType _algorithm;
+    unsigned _i = 0;
+    unsigned _n;
 };
 
 #endif // COINSONSHELF_H

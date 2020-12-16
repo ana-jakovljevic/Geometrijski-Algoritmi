@@ -3,12 +3,14 @@
 CoinsOnShelf::CoinsOnShelf(QWidget *pCrtanje, int pauzaKoraka, const bool &naivni, std::string imeDatoteke, int brojDiskova)
     :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni)
 {
+    // If disk sizes are not provided from file, than generate random sizes
     if(imeDatoteke == "") {
         for(int j = 0; j < brojDiskova; ++j) {
             Disk* noviDisk = new Disk();
-            _diskoviSort.insert(noviDisk);
+            _discs.push_back(noviDisk);
         }
     }
+    // Else, open file and load disk number and sizes from there
     else {
         QString fileName = QString::fromStdString(imeDatoteke);
 
@@ -21,7 +23,7 @@ CoinsOnShelf::CoinsOnShelf(QWidget *pCrtanje, int pauzaKoraka, const bool &naivn
             for(int j = 0; j < discNumber; ++j) {
                 Disk* noviDisk = new Disk();
                 noviDisk->setSize(in.readLine().toDouble());
-                _diskoviSort.insert(noviDisk);
+                _discs.push_back(noviDisk);
             }
         }
         else {
@@ -29,19 +31,38 @@ CoinsOnShelf::CoinsOnShelf(QWidget *pCrtanje, int pauzaKoraka, const bool &naivn
             exit(1);
         }
     }
+    _n = _discs.size();
+    std::sort(_discs.begin(), _discs.end(), compClass());
+
+    // Now we have disks loaded, so we decide if go with special case or general
+    float max = _discs[0]->size();
+    float min = _discs[_n-1]->size();
+
+    if(max/min < 2.0)
+        _algorithm = SPECIAL;
+    else
+        _algorithm = GENERAL;
 
 }
 
 CoinsOnShelf::~CoinsOnShelf()
 {
-    for(auto disk : _diskoviSort)
+    for(auto disk : _discs)
         delete disk;
 }
 
 void CoinsOnShelf::pokreniAlgoritam()
 {
+    while(_i < _n) {
+        if(_algorithm == SPECIAL) {
 
-    // TODO
+        }
+        if(_algorithm == GENERAL) {
+
+        }
+    }
+
+    emit animacijaZavrsila();
 }
 
 void CoinsOnShelf::crtajAlgoritam(QPainter *painter) const
