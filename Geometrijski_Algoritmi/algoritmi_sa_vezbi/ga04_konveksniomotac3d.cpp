@@ -31,6 +31,10 @@ KonveksniOmotac3D::~KonveksniOmotac3D()
 
     for (auto s: _stranice)
         delete s;
+
+    for(auto s: _naivniOmotac){
+        delete s;
+    }
 }
 
 /*--------------------------------------------------------------------------------------------------*/
@@ -329,9 +333,12 @@ void KonveksniOmotac3D::pokreniNaivniAlgoritam()
      * Ako se sve ostale tacke nalaze sa iste strane stranice, stranica pripada
      * konveksnom omotacu, u suprotnom ne pripada.
      * Slozenost naivnog algoritma je O(n^4). */
+
     for (auto i = 0ul; i < _tacke.size(); i++) {
         for (auto j = i+1; j < _tacke.size(); j++) {
             for (auto k = j+1; k < _tacke.size(); k++) {
+                /* if(i==j || i==k || j==k)
+                    continue;*/
                 if (kolinearne(_tacke[i], _tacke[j], _tacke[k]))
                     continue;
 
@@ -370,17 +377,19 @@ void KonveksniOmotac3D::pokreniNaivniAlgoritam()
                      * pa stranica pripada konveksnom omotacu */
 
                      /*Postoji funkcija za iscrtavanje stranice*/
-                     //auto *ivica1 = new Ivica(_tacke[i], _tacke[j]);
-                     //auto *ivica2 = new Ivica(_tacke[i], _tacke[k]);
-                     //auto *ivica3 = new Ivica(_tacke[j], _tacke[k]);
-                     //_naivneIvice.insert(ivica1);
-                     //_naivneIvice.insert(ivica2);
-                     //_naivneIvice.insert(ivica3);
+                     auto *ivica1 = new Ivica(_tacke[i], _tacke[j]);
+                     auto *ivica2 = new Ivica(_tacke[i], _tacke[k]);
+                     auto *ivica3 = new Ivica(_tacke[j], _tacke[k]);
+                     _naivneIvice.insert(ivica1);
+                     _naivneIvice.insert(ivica2);
+                     _naivneIvice.insert(ivica3);
                 }
 
             }
         }
     }
+    //da ne bi iscrtalo poslednju tekucu stranicu
+    _tekucaStranica = nullptr;
     AlgoritamBaza_updateCanvasAndBlock()
     emit animacijaZavrsila();
 }
