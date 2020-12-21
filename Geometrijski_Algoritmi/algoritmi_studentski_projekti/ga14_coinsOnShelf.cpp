@@ -78,39 +78,48 @@ void CoinsOnShelf::pokreniAlgoritam()
             j += 2;
         }
     }
-
+//  Don't modify upper part
     if(_algorithm == SPECIAL && (_n % 2 == 1)) {
-        int j = 1;
+        _shelf.push_back(_discs[0]);
+        int j = 2;
         unsigned i = 0;
 
-        while(i < _n/4) {
-            if((_shelf.size() != 0) && _shelf.back()->size() == _discs[_n - j]->size())
-                break;
-            _shelf.push_back(_discs[_n - j]);
-            if((_shelf.size() != 0) && _shelf.back()->size() == _discs[j]->size())
-                break;
-            _shelf.push_back(_discs[j]);
+        while(true) {
+            if(i < (_n/2 - 1)) {
+                _shelf.push_front(_discs[_n - j]);
+                ++i;
+            }
+            else break;
+            if(i < (_n/2 - 1)) {
+                _shelf.push_front(_discs[j]);
+                ++i;
+            }
+            else break;
             j += 2;
-            ++i;
         }
 
-        j = 2;
+        _shelf.push_back(_discs[1]);
+        j = 3;
         i = 0;
-        while(i < _n/4) {
-            if(_shelf.front()->size() == _discs[_n - j]->size())
-                break;
-            _shelf.push_front(_discs[_n - j]);
-            if(_shelf.front()->size() == _discs[j]->size())
-                break;
-            _shelf.push_front(_discs[j]);
+        while(true) {
+            if(i < (_n/2 - 1)) {
+                _shelf.push_back(_discs[_n - j]);
+                ++i;
+            }
+            else break;
+            if(i < (_n/2 - 1)) {
+                _shelf.push_back(_discs[j]);
+                ++i;
+            }
+            else break;
             j += 2;
-            ++i;
         }
 
-        if(_shelf.front()->size() > _shelf.back()->size())
-            _shelf.push_back(_discs[0]);
+        if(_shelf.back()->size() > _shelf.front()->size()) {
+            _shelf.push_back(_discs[_n-1]);
+        }
         else {
-            _shelf.push_front(_discs[0]);
+            _shelf.push_front(_discs[_n-1]);
         }
     }
 
