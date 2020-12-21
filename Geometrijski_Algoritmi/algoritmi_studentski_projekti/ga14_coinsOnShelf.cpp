@@ -53,13 +53,76 @@ CoinsOnShelf::~CoinsOnShelf()
 
 void CoinsOnShelf::pokreniAlgoritam()
 {
-    while(_i < _n) {
-        if(_algorithm == SPECIAL) {
+    if(_algorithm == SPECIAL && (_n % 2 == 0)) {
+        _shelf.push_back(_discs[0]);
+        int j = 1;
 
+        while(true) {
+            if(_shelf.back()->size() == _discs[_n - j]->size())
+                break;
+            _shelf.push_back(_discs[_n - j]);
+            if(_shelf.back()->size() == _discs[j]->size())
+                break;
+            _shelf.push_back(_discs[j]);
+            j += 2;
         }
-        if(_algorithm == GENERAL) {
 
+        j = 2;
+        while(true) {
+            if(_shelf.front()->size() == _discs[_n - j]->size())
+                break;
+            _shelf.push_front(_discs[_n - j]);
+            if(_shelf.front()->size() == _discs[j]->size())
+                break;
+            _shelf.push_front(_discs[j]);
+            j += 2;
         }
+    }
+
+    if(_algorithm == SPECIAL && (_n % 2 == 1)) {
+        int j = 1;
+        unsigned i = 0;
+
+        while(i < _n/4) {
+            if((_shelf.size() != 0) && _shelf.back()->size() == _discs[_n - j]->size())
+                break;
+            _shelf.push_back(_discs[_n - j]);
+            if((_shelf.size() != 0) && _shelf.back()->size() == _discs[j]->size())
+                break;
+            _shelf.push_back(_discs[j]);
+            j += 2;
+            ++i;
+        }
+
+        j = 2;
+        i = 0;
+        while(i < _n/4) {
+            if(_shelf.front()->size() == _discs[_n - j]->size())
+                break;
+            _shelf.push_front(_discs[_n - j]);
+            if(_shelf.front()->size() == _discs[j]->size())
+                break;
+            _shelf.push_front(_discs[j]);
+            j += 2;
+            ++i;
+        }
+
+        if(_shelf.front()->size() > _shelf.back()->size())
+            _shelf.push_back(_discs[0]);
+        else {
+            _shelf.push_front(_discs[0]);
+        }
+    }
+
+    auto start = _shelf.begin();
+    while(start != _shelf.end()) {
+        qDebug() << (*start)->size();
+        start++;
+    }
+
+
+    if(_algorithm == GENERAL) {
+
     }
 
     emit animacijaZavrsila();

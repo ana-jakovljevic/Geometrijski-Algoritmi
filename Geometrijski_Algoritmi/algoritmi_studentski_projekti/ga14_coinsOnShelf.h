@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QDebug>
 #include <set>
+#include <list>
 
 using namespace std;
 
@@ -51,9 +52,8 @@ public:
 
 private:
     vector<Disk*> _discs;
-    vector<Disk*> _shelf;
+    list<Disk*> _shelf;
     AlgoType _algorithm;
-    unsigned _i = 0;
     unsigned _n;
 };
 
