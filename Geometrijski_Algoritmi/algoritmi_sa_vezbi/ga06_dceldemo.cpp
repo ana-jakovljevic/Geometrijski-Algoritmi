@@ -28,9 +28,9 @@ void DCELDemo::crtajAlgoritam(QPainter *painter) const {
         painter->drawLine(_polygon.edges()[i]->origin()->coordinates(),
                          _polygon.edges()[i]->next()->origin()->coordinates());
 
-      //   Crta se poligon "u suprotnom smeru", koriscenjem twin.
-      //   * Da bi se video efekat na crtezu, koordinate su za malo pomerene u odnosu na
-      //   * originalnu tacku.
+        //   Crta se poligon "u suprotnom smeru", koriscenjem twin.
+        //   * Da bi se video efekat na crtezu, koordinate su za malo pomerene u odnosu na
+        //   * originalnu tacku.
 
         pen.setColor(Qt::red);
         painter->setPen(pen);
@@ -47,8 +47,19 @@ void DCELDemo::crtajAlgoritam(QPainter *painter) const {
     for(Vertex* v: _polygon.vertices())
     {
        painter->drawEllipse(v->coordinates(), 10, 10);
-       painter->drawText(v->coordinates().x() - 4, v->coordinates().y() + 4, QString::fromStdString(std::to_string(curr_num)));
+
+       // Okretanje cetikice kako brojevi ne bi bili obrnuti
+       painter->save();
+       painter->scale(1, -1);
+       painter->translate(0, -2*v->coordinates().y());
+
+       painter->drawText(v->coordinates().x() - 4,
+                         v->coordinates().y() + 4,
+                         QString::number(curr_num));
        curr_num++;
+
+       // Ponistavanje transformacija
+       painter->restore();
     }
 
 }
