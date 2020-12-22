@@ -782,7 +782,7 @@
          <item>
           <widget class="QCheckBox" name="naivniCheck">
            <property name="enabled">
-            <bool>true</bool>
+            <bool>false</bool>
            </property>
            <property name="toolTip">
             <string>Ukoliko je opcija oznacena, bice koriscen naivni algoritam umesto obicnog.</string>

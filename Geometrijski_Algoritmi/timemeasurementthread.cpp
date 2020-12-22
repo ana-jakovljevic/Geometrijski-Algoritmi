@@ -54,6 +54,9 @@ void TimeMeasurementThread::run()
         case TipAlgoritma::PRESECI_DUZI:
             pAlgorithm = new PreseciDuzi(nullptr, 0, false, "", i);
             break;
+        case TipAlgoritma::TRIANGULACIJA:
+            pAlgorithm = new Triangulation(nullptr, 0, false, "", i);
+            break;
         case TipAlgoritma::PRESEK_PRAVOUGAONIKA:
             pAlgorithm = new PresekPravougaonika(nullptr, 0, false, "", i);
             break;

@@ -97,6 +97,7 @@ void MainWindow::on_datoteka_dugme_clicked()
 
     napraviNoviAlgoritam();
 
+    /* DCEL nema nikakvo izvrsavanje, vec samo ucitavanje */
     if (TipAlgoritma::DCEL_DEMO != static_cast<TipAlgoritma>(ui->tipAlgoritma->currentIndex()))
         ui->Zapocni_dugme->setEnabled(true);
 }
@@ -175,27 +176,51 @@ void MainWindow::on_polozajKursora(int x, int y)
 
 void MainWindow::on_tipAlgoritma_currentIndexChanged(int index)
 {
+    animacijaButtonAktivni(false);
+
     TipAlgoritma tipAlgoritma = static_cast<TipAlgoritma>(index);
+
+    /* Specijalne vrednosti imaju jedan skup dugmadi */
     if (tipAlgoritma == TipAlgoritma::ALGORITMI_SA_VEZBI ||
         tipAlgoritma == TipAlgoritma::STUDENTSKI_PROJEKTI)
     {
         ui->datoteka_dugme->setEnabled(false);
         ui->Nasumicni_dugme->setEnabled(false);
-        animacijaButtonAktivni(false);
+        ui->naivniCheck->setEnabled(false);
     }
     else
     {
-        if (tipAlgoritma == TipAlgoritma::DCEL_DEMO) {
+        ui->datoteka_dugme->setEnabled(true);
+        ui->Nasumicni_dugme->setEnabled(true);
+        ui->merenjeButton->setEnabled(true);
+
+        /* DCEL ne podrzava rad sa nasumicnim tackama */
+        if (tipAlgoritma == TipAlgoritma::DCEL_DEMO)
+        {
             ui->Nasumicni_dugme->setEnabled(false);
-            ui->datoteka_dugme->setEnabled(true);
-            animacijaButtonAktivni(false);
-        } else {
-            ui->datoteka_dugme->setEnabled(true);
-            ui->Nasumicni_dugme->setEnabled(true);
-            animacijaButtonAktivni(false);
-            ui->merenjeButton->setEnabled(true);
+            ui->merenjeButton->setEnabled(false);
         }
 
+        switch (tipAlgoritma) {
+        /* DCEL ne podrzava rad sa nasumicnim tackama */
+        case TipAlgoritma::DCEL_DEMO:
+            ui->Nasumicni_dugme->setEnabled(false);
+            ui->merenjeButton->setEnabled(false);
+
+        /* DCEL i naredni nemaju naivne algoritme */
+        case TipAlgoritma::DEMO_ISCRTAVANJA:
+        case TipAlgoritma::BRISUCA_PRAVA:
+        case TipAlgoritma::_3D_ISCRTAVANJE:
+            ui->naivniCheck->setChecked(false);
+            ui->naivniCheck->setEnabled(false);
+            break;
+
+        /* Svi ostali imaju naivne algoritme */
+        default:
+            ui->naivniCheck->setEnabled(true);
+        }
+
+        /* Postavljanje 2D ili 3D kao aktivne stranice  */
         if (tipAlgoritma == TipAlgoritma::_3D_ISCRTAVANJE ||
             tipAlgoritma == TipAlgoritma::KONVEKSNI_OMOTAC_3D)
         {
@@ -236,11 +261,7 @@ void MainWindow::on_chartFinished()
 void MainWindow::na_krajuAnimacije()
 {
     animacijaParametriButtonAktivni(true);
-    animacijaButtonAktivni(false);
-    ui->datoteka_dugme->setEnabled(true);
-    ui->Nasumicni_dugme->setEnabled(true);
-    ui->merenjeButton->setEnabled(true);
-    ui->naivniCheck->setEnabled(true);
+    on_tipAlgoritma_currentIndexChanged(ui->tipAlgoritma->currentIndex());
     ui->Ispocetka_dugme->setEnabled(true);
 }
 
