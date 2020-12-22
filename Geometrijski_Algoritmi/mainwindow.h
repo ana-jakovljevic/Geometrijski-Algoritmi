@@ -16,6 +16,7 @@
 #include "ga04_konveksniomotac3d.h"
 #include "ga05_preseciduzi.h"
 #include "ga06_dceldemo.h"
+#include "ga07_triangulation.h"
 
 #include "ga06_presekPravougaonika.h"
 
@@ -29,6 +30,7 @@ enum class TipAlgoritma {
     KONVEKSNI_OMOTAC_3D,
     PRESECI_DUZI,
     DCEL_DEMO,
+    TRIANGULACIJA,
     SEPARATOR,
     STUDENTSKI_PROJEKTI,
     PRESEK_PRAVOUGAONIKA

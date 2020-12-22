@@ -69,3 +69,36 @@ bool pomocneFunkcije::presekDuzi(const QLineF& l1, const QLineF& l2, QPointF& pr
     return l1.intersect(l2, &presek) == QLineF::BoundedIntersection;
 #endif
 }
+
+double pomocneFunkcije::distanceKvadratF(const QPointF& A, const QPointF& B)
+{
+    return (A.x() - B.x())*(A.x() - B.x()) + (A.y() - B.y())*(A.y() - B.y());
+}
+
+///
+/// \brief pomocneFunkcije::ispod
+/// \param A
+/// \param B
+/// \return
+///
+/// A je ispod B
+///
+bool pomocneFunkcije::ispod(const QPointF &A, const QPointF &B)
+{
+    if(A.y() < B.y())
+        return true;
+    else if(fabs(A.y() - B.y()) < EPSf)
+    {
+       if(A.x() > B.x()) return true;
+    }
+    return false;
+}
+
+bool pomocneFunkcije::konveksan(const QPointF &A, const QPointF &B, const QPointF &C)
+{
+    double P = (B.x() - A.x())*(C.y() - A.y()) - (C.x() - A.x())*(B.y() - A.y());
+
+     return (P > 0) ||
+            (fabs(P) < EPSf && pomocneFunkcije::distanceKvadratF(A, B)
+                                < pomocneFunkcije::distanceKvadratF(A, C));
+}

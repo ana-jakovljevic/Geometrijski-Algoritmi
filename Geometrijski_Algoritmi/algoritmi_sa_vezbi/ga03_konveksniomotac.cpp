@@ -2,6 +2,7 @@
 #include "pomocnefunkcije.h"
 
 #include <algorithm>
+#include <QPainterPath>
 
 konveksniomotac::konveksniomotac(QWidget *pCrtanje,
                                  int pauzaKoraka,

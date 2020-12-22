@@ -43,6 +43,13 @@ private:
 };
 
 ///
+/// \brief The VertexType enum
+/// Potrebno za Triangulaciju
+/// Sluzi za zadavanje tipa za teme
+///
+enum class VertexType {START, SPLIT, END, MERGE, REGULAR};
+
+///
 /// \brief The Vertex class
 /// Teme poligona
 /// Sadrzi koordinate
@@ -57,9 +64,16 @@ public:
     HalfEdge* incidentEdge() const;
     void setIncidentEdge(HalfEdge *incidentEdge);
 
+    VertexType type() { return _type; }
+    void setType(VertexType type) { _type = type; }
+
 private:
     QPointF _coordinates;
     HalfEdge* _incidentEdge;
+
+private:
+    //za triangulaciju ga07_triangulation
+    VertexType _type;
 };
 
 
