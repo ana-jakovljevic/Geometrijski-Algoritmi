@@ -3,12 +3,12 @@
 
 #include <iostream>
 #include <fstream>
-
+#include <map>
 /***********************************************************************/
 /*                               DCEL                                  */
 /***********************************************************************/
 
-/*
+
 DCEL::DCEL(std::string imeDatoteke, int h, int w)
     :_vertices{}, _edges{}, _fields{}
 {
@@ -16,42 +16,91 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
     std::string tmp;
 
     in >> tmp;
-    if (tmp.compare("OFF") != 0)
-    {
+    if (tmp.compare("OFF") != 0) {
         std::cout << "Wrong file format: " << imeDatoteke << std::endl;
         exit(EXIT_FAILURE);
     }
 
     int vertexNum, edgeNum, fieldNum;
-    in >> vertexNum >> edgeNum >> fieldNum;
+    in >> vertexNum >> fieldNum >> edgeNum;
 
-    * Kreiranje temena. */
-    /* Za ozbiljnije testranje:
-     * Proveriti dokumentaciju za off format.
-     * Ovde je prilagodjeno za 2d. I za velicinu naseg kanvasa.
-     * Odnosno, podrazumeva se ispravan ulaz.
-
+    // citamo teme po teme iz fajla
+    // i pamtimo ga u nizu temena
     float tmpx, tmpy, tmpz;
-    int x, y;
+    float x, y;
     Vertex* v;
-    for(int i=0; i<vertexNum; i++)
-    {
-        * Koordinate u off foramatu su realne, i najcesce [-1, 1]
-         * (pp da je uvek tako, da ne ulazimo u detalje)
-         * Ovde ih namestam da slika bude na sredini kanvasa.
-         *
+    for(int i=0; i<vertexNum; i++) {
         in >> tmpx >> tmpy >> tmpz;
-        x = static_cast<int>((tmpx + 1)/2.0f*w);
-        y = static_cast<int>((tmpy + 1)/2.0f*h);
-        v = new Vertex({{x, y}, NULL});
+        x = (tmpx + 1) / 2.0f * w;
+        y = (tmpy + 1) / 2.0f * h;
+        v = new Vertex({{x, y}, nullptr});
         _vertices.push_back(v);
     }
-    * Pravljenje polja i poluivica. *
-    int firstIdx;
-    for(int i=0; i<fieldNum; i++)
-    {
+
+    // za svaki poligon(polje)
+    // za svako teme tog poligona napravimo polustranicu sa tim temenom kao pocetkom
+    // zatim prodjemo kroz napravljene polustranice i popunimo prethodnu i sledecu
+    for(int i=0; i<fieldNum; i++) {
+        Field* f = new Field();
+        int broj_temena;
+        in >> broj_temena;
+        std::vector<HalfEdge*> edges;
+        for(int j = 0; j < broj_temena; ++j){
+            int indeksTemena;
+            in >> indeksTemena;
+            HalfEdge *new_halfedge = new HalfEdge(_vertices[indeksTemena], nullptr, nullptr, nullptr, nullptr);
+            edges.push_back(new_halfedge);
+            _edges.push_back(new_halfedge);
+            _vertices[indeksTemena]->setIncidentEdge(new_halfedge);
+        }
+        for(int j = 0; j < broj_temena; j++){
+            edges[j]->setNext(edges[(j + 1) % broj_temena]);
+            edges[j]->setPrev(edges[(j - 1 + broj_temena) % broj_temena]);
+            edges[j]->setIncidentFace(f);
+        }
+        f->setOuterComponent(edges[0]);
+        _fields.push_back(f);
+    }
+
+    std::map<Vertex*, HalfEdge*> spoljasnje_ivice; // mapa u kojoj mozemo naci stranicu na osnovu temena na koji "pokazuje"
+                                                  // u njoj cemo pamtiti spoljasnje ivice i koristimo je da bi ih kasnije povezali
+    Field * spoljasnost = new Field();
+
+    // za svaku polustranicu AB pokusavamo da nadjemo polustranicu BA
+    // ako takva nepostoji to znaci da smo naisli na spoljasnju polustranicu
+    // i nju smestamo u mapu spoljasnje ivice za kasniju obradu
+    for(auto edge : _edges){
+        auto uslov = [=](HalfEdge* e){
+            return e->origin() == edge->next()->origin()
+                   && e->next()->origin() == edge->origin();
+        };
+        auto twin = std::find_if(std::begin(_edges), std::end(_edges), uslov);
+        if(twin == std::end(_edges)){
+            HalfEdge *outer_edge = new HalfEdge();
+            edge->setTwin(outer_edge);
+            outer_edge->setIncidentFace(spoljasnost);
+            outer_edge->setTwin(edge);
+            outer_edge->setOrigin(edge->next()->origin());
+            spoljasnje_ivice[edge->origin()] = outer_edge;
+        }
+        else{
+            edge->setTwin(*twin);
+        }
+    }
+
+    // za svaku spoljasnju ivicu trazimo spoljasnju koja joj prethodi
+    // to mozemo jednostavno uraditi zbog nacina pravljenja mape spoljasnje_ivice
+    // nakon sto zavrsimo "sredjivanje" te poluivice dodajemo je u listu poluivica DCEL strukture
+    for(auto outer_edge : spoljasnje_ivice){
+        outer_edge.second->setPrev(spoljasnje_ivice[outer_edge.second->origin()]);
+        spoljasnje_ivice[outer_edge.second->origin()]->setNext(outer_edge.second);
+        _edges.push_back(outer_edge.second);
+    }
+
+    spoljasnost->setInnerComponent(spoljasnje_ivice.begin()->second);
+    _fields.push_back(spoljasnost);
 }
-*/
+
 DCEL::DCEL(const std::vector<QPointF> &tacke)
     :_vertices{}, _edges{}, _fields{}
 {
