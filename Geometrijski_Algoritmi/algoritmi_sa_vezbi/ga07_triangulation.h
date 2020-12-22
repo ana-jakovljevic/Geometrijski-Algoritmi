@@ -22,16 +22,16 @@ public:
     void pokreniNaivniAlgoritam() final;
     void crtajNaivniAlgoritam(QPainter *painter) const final;
 
-    // Pomocne funkcije
+    /* Pomocne funkcije */
 private:
     std::vector<QPointF> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
-    // Funkcija generise nasumicne tacke
+    /* Funkcija generise nasumicne tacke */
     std::vector<QPointF> generisiNasumicneTacke(int brojTacaka) const;
-    // Ucitane nasumicne tacke se pripremaju za pravljenje prostog poligona
-    // (zadatog u smeru suprotno od kazaljke na satu)
+    /* Ucitane nasumicne tacke se pripremaju za pravljenje prostog poligona
+     * (zadatog u smeru suprotno od kazaljke na satu) */
     std::vector<QPointF> ucitajNasumicneTacke(int brojTacaka) const;
 
-    // Monotono particionisanje
+    /* Monotono particionisanje */
 private:
     void initialiseEventQueue();
 
@@ -53,12 +53,12 @@ private:
     void handleMergeVertex(Vertex *v);
     void handleRegularVertex(Vertex *v);
 
-    // Pomocne funkcije
+    /* Pomocne funkcije */
 private:
     void connectDiagonalsDCEL();
     bool sameDirectionVectors(HalfEdge* e1, HalfEdge* e2);
 
-    // Triangulacija
+    /* Triangulacija */
 private:
     /*
      * Ova metoda je opsana pseudo kodom u Computational Geometry
@@ -75,17 +75,17 @@ private:
     double _brisucaPravaY;
     DCEL _polygon;
 
-    // MOTONE PARTITION
+    /* MOTONE PARTITION */
     std::set<Vertex*, EventQueueCompTriangulation> _eventQueue;
     std::set<HalfEdge*, StatusQueueCompTriangulation> _statusQueue;
-    // neuredjena jer koristimo samo ubacivanje i pretragu,
-    // pa bolje da budu oba u vremenu O(1) umesto O(logn)
+    /* neuredjena jer koristimo samo ubacivanje i pretragu,
+     * pa bolje da budu oba u vremenu O(1) umesto O(logn) */
     std::unordered_map<HalfEdge*, Vertex*> _helpers;
     std::vector<std::pair<Vertex*, Vertex*>> _allDiagonals;
     // potrebno samo za crtanje
     bool _monotone;
 
-    //TRIANGULATION
+    /* TRIANGULATION  */
     std::vector<HalfEdge*> _stekTriangulacije;
     std::set<HalfEdge*, EventQueueCompTriangulation2> _eventQueueTriangulation;
 };

@@ -12,7 +12,7 @@ Triangulation::Triangulation(QWidget *pCrtanje,
 {
     std::vector<QPointF> tacke;
 
-    //ucitavanje tacka
+    /* Ucitavanje tacka */
     if (imeDatoteke != "")
         tacke = ucitajPodatkeIzDatoteke(imeDatoteke);
     else
@@ -27,7 +27,7 @@ void Triangulation::crtajAlgoritam(QPainter *painter) const
 {
     if (!painter) return;
 
-    //Podesavanje razlicitih olovki za crtanje
+    /* Podesavanje razlicitih olovki za crtanje */
     QPen regular = painter->pen();
     regular.setWidth(10);
 
@@ -120,7 +120,7 @@ void Triangulation::crtajAlgoritam(QPainter *painter) const
         painter->drawLine(QPointF(0, _brisucaPravaY),
                           QPointF(_pCrtanje->width(), _brisucaPravaY));
 
-        /* Crtanje dijagonala. */
+        /* Crtanje dijagonala */
         painter->setPen(magneta);
         for(auto d : _allDiagonals)
             painter->drawLine(d.first->coordinates(), d.second->coordinates());
@@ -230,45 +230,45 @@ void Triangulation::handleEndVertex(Vertex *v)
 
 void Triangulation::handleSplitVertex(Vertex *v)
 {
-    // Pronadi u T stranicu e_left neposredno levo od v.
+    /* Pronadi u T stranicu e_left neposredno levo od v. */
     const auto e_left = levaStranica(v);
     if (!e_left) return;
 
-    // Dodaj dijagonalu v − helper(e_left) u D.
+    /* Dodaj dijagonalu v − helper(e_left) u D. */
     _allDiagonals.emplace_back(v, _helpers[e_left]);
     AlgoritamBaza_updateCanvasAndBlock();
 
-    // Postavi helper(e_left) na v.
+    /* Postavi helper(e_left) na v. */
     _helpers[e_left] = v;
 
-    // Dodaj u T (desnu) stranicu čiji je gornje teme v i postavi njen helper na v.
+    /* Dodaj u T (desnu) stranicu čiji je gornje teme v i postavi njen helper na v. */
     _statusQueue.emplace(v->incidentEdge());
     _helpers[v->incidentEdge()] = v;
 }
 
 void Triangulation::handleMergeVertex(Vertex *v)
 {
-    // Ako je e stranica čije je donje teme v a poligon joj je lokalno desno,
-    // ako je helper(e) merge teme, onda dodaj dijagonalu v − helper(e).
+    /* Ako je e stranica čije je donje teme v a poligon joj je lokalno desno,
+     * ako je helper(e) merge teme, onda dodaj dijagonalu v − helper(e). */
     auto e = v->incidentEdge()->prev();
     if (_helpers[e]->type() == VertexType::MERGE) {
         _allDiagonals.emplace_back(v, _helpers[e]);
     }
 
-    // Izbaci e iz T
+    /* Izbaci e iz T */
     _statusQueue.erase(e);
 
-    // Pronadi u T stranicu e_left neposredno levo od v
+    /* Pronadi u T stranicu e_left neposredno levo od v */
     const auto e_left = levaStranica(v);
     if (!e_left) return;
 
-    // Ako je helper(e_left) merge teme, onda dodaj dijagonalu v − helper(e_left).
+    /* Ako je helper(e_left) merge teme, onda dodaj dijagonalu v − helper(e_left). */
     if (_helpers[e_left]->type() == VertexType::MERGE) {
         _allDiagonals.emplace_back(v, _helpers[e_left]);
         AlgoritamBaza_updateCanvasAndBlock();
     }
 
-    // Postavi helper(e_left) na v.
+    /* Postavi helper(e_left) na v. */
     _helpers[e_left] = v;
 }
 
@@ -304,7 +304,7 @@ void Triangulation::handleRegularVertex(Vertex *v)
 
 void Triangulation::triangulacija(Field *f)
 {
-    //radi vizuelizacije
+    /* radi vizuelizacije */
     _brisucaPravaY = _pCrtanje->height();
     AlgoritamBaza_updateCanvasAndBlock();
 
@@ -387,8 +387,7 @@ void Triangulation::connectDiagonalsDCEL()
 
             /* Dodavanje polja (face) ne radi kako treba.
              * Ponekad pravi greske i za outerComponent za face se zadaje pogresne
-             * ivice sto dovodi do greske.
-             */
+             * ivice sto dovodi do greske. */
             if (d->incidentFace() == nullptr) {
                 Field* f = new Field();
                 _polygon.insertFiled(f);

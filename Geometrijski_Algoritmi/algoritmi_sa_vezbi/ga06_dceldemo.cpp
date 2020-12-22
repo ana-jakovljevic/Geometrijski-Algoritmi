@@ -20,15 +20,14 @@ void DCELDemo::crtajAlgoritam(QPainter *painter) const {
     QPen pen = painter->pen();
     for(auto i=0ul; i<_polygon.edges().size(); i++)
     {
-        // Crta se poligon.
+        /* Crta se poligon */
         pen.setColor(Qt::yellow);
         painter->setPen(pen);
         painter->drawLine(_polygon.edge(i)->origin()->coordinates(),
                           _polygon.edge(i)->next()->origin()->coordinates());
 
-        //   Crta se poligon "u suprotnom smeru", koriscenjem twin.
-        //   * Da bi se video efekat na crtezu, koordinate su za malo pomerene u odnosu na
-        //   * originalnu tacku.
+        /* Crta se poligon "u suprotnom smeru", koriscenjem twin. Da bi se video efekat
+         * na crtezu, koordinate su za malo pomerene u odnosu na originalnu tacku. */
 
         pen.setColor(Qt::red);
         painter->setPen(pen);
@@ -41,12 +40,12 @@ void DCELDemo::crtajAlgoritam(QPainter *painter) const {
     int curr_num = 0;
     painter->setBrush(Qt::red);
     painter->setPen(Qt::white);
-    // Crtaju se temena, ali kao elipsa, radi lepote.
+    /* Crtaju se temena, ali kao elipsa, radi lepote. */
     for(Vertex* v: _polygon.vertices())
     {
        painter->drawEllipse(v->coordinates(), 10, 10);
 
-       // Okretanje cetikice kako brojevi ne bi bili obrnuti
+       /* Okretanje cetkice kako brojevi ne bi bili obrnuti */
        painter->save();
        painter->scale(1, -1);
        painter->translate(0, -2*v->y());
@@ -55,7 +54,7 @@ void DCELDemo::crtajAlgoritam(QPainter *painter) const {
                          QString::number(curr_num));
        curr_num++;
 
-       // Ponistavanje transformacija
+       /* Ponistavanje transformacija */
        painter->restore();
     }
 

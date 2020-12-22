@@ -77,7 +77,7 @@ private:
     HalfEdge *_incidentEdge;
 
 private:
-    //za triangulaciju ga07_triangulation
+    /* za triangulaciju ga07_triangulation */
     VertexType _type;
 };
 
