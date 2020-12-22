@@ -96,7 +96,9 @@ void MainWindow::on_datoteka_dugme_clicked()
     _imeDatoteke = imeDatoteke.toStdString();
 
     napraviNoviAlgoritam();
-    ui->Zapocni_dugme->setEnabled(true);
+
+    if (TipAlgoritma::DCEL_DEMO != static_cast<TipAlgoritma>(ui->tipAlgoritma->currentIndex()))
+        ui->Zapocni_dugme->setEnabled(true);
 }
 
 void MainWindow::on_Nasumicni_dugme_clicked()

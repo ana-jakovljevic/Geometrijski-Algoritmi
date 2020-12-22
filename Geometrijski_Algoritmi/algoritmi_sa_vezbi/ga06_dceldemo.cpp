@@ -11,13 +11,11 @@ DCELDemo::DCELDemo(QWidget *pCrtanje,
 }
 
 void DCELDemo::pokreniAlgoritam() {
-    AlgoritamBaza_updateCanvasAndBlock()
     emit animacijaZavrsila();
 }
 
 void DCELDemo::crtajAlgoritam(QPainter *painter) const {
     if (!painter) return;
-
 
     QPen pen = painter->pen();
     for(auto i=0ul; i<_polygon.edges().size(); i++)
