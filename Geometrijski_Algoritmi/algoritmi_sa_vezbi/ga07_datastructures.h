@@ -8,12 +8,13 @@
 /// \brief The EventQueueComp struct
 /// Brisuca prava se krece od jedne ka drugoj EventTacki
 ///
-/// TODO
 struct EventQueueCompTriangulation
 {
     bool operator()(const Vertex* levi, const Vertex* desni) const
     {
-        return levi->coordinates().y()> desni->coordinates().y() || ((levi->coordinates().y()==desni->coordinates().y()) && (levi->coordinates().x()< desni->coordinates().y())) ;
+        return levi->coordinates().y() > desni->coordinates().y() ||
+              (levi->coordinates().y() == desni->coordinates().y() &&
+               levi->coordinates().x() < desni->coordinates().y());
     }
 };
 
@@ -22,7 +23,6 @@ struct EventQueueCompTriangulation
 ///
 /// Status za Monotono Particionisanje
 ///
-/// TODO
 struct StatusQueueCompTriangulation
 {
 private:
@@ -36,12 +36,12 @@ public:
     bool operator()(const HalfEdge* line1, const HalfEdge* line2) const
     {
 
-       QLineF brisucaPrava = QLineF(0, *yBrisucaPrava, 5, *yBrisucaPrava);
+       QLineF brisucaPrava(0, *yBrisucaPrava, 5, *yBrisucaPrava);
        QPointF presek1;
        QPointF presek2;
 
-       QLineF line11 = QLineF(line1->origin()->coordinates(), line1->twin()->origin()->coordinates());
-       QLineF line22 = QLineF(line2->origin()->coordinates(), line2->twin()->origin()->coordinates());
+       QLineF line11(line1->origin()->coordinates(), line1->twin()->origin()->coordinates());
+       QLineF line22(line2->origin()->coordinates(), line2->twin()->origin()->coordinates());
 
        pomocneFunkcije::presekDuzi(brisucaPrava, line11, presek1);
        pomocneFunkcije::presekDuzi(brisucaPrava, line22, presek2);

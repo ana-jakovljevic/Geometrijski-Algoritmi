@@ -1,8 +1,8 @@
 #ifndef TRIANGULATION_H
 #define TRIANGULATION_H
 
-
 #include <set>
+#include <unordered_map>
 
 #include "algoritambaza.h"
 #include "pomocnefunkcije.h"
@@ -27,7 +27,8 @@ private:
     std::vector<QPointF> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
     // Funkcija generise nasumicne tacke
     std::vector<QPointF> generisiNasumicneTacke(int brojTacaka) const;
-    // Ucitane nasumicne tacke se pripremaju za pravljenje prostog poligona (zadatog u smeru suprotno od kazaljke na satu)
+    // Ucitane nasumicne tacke se pripremaju za pravljenje prostog poligona
+    // (zadatog u smeru suprotno od kazaljke na satu)
     std::vector<QPointF> ucitajNasumicneTacke(int brojTacaka) const;
 
     // Monotono particionisanje
@@ -76,7 +77,9 @@ private:
     // MOTONE PARTITION
     std::set<Vertex*, EventQueueCompTriangulation> _eventQueue;
     std::set<HalfEdge*, StatusQueueCompTriangulation> _statusQueue;
-    std::map<HalfEdge*, Vertex*> _helpers;
+    // neuredjena jer koristimo samo ubacivanje i pretragu,
+    // pa bolje da budu oba slzenosti O(1) umesto O(logn)
+    std::unordered_map<HalfEdge*, Vertex*> _helpers;
     std::vector<std::pair<Vertex*, Vertex*>> _allDiagonals;
     // potrebno samo za crtanje
     bool _monotone;
