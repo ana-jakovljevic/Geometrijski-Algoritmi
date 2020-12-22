@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <fstream>
-
+#include <map>
 /***********************************************************************/
 /*                               DCEL                                  */
 /***********************************************************************/
@@ -22,8 +22,10 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
     }
 
     int vertexNum, edgeNum, fieldNum;
-    in >> vertexNum >> edgeNum >> fieldNum;
+    in >> vertexNum >> fieldNum >> edgeNum;
 
+    // citamo teme po teme iz fajla
+    // i pamtimo ga u nizu temena
     float tmpx, tmpy, tmpz;
     float x, y;
     Vertex* v;
@@ -34,6 +36,10 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
         v = new Vertex({{x, y}, nullptr});
         _vertices.push_back(v);
     }
+
+    // za svaki poligon(polje)
+    // za svako teme tog poligona napravimo polustranicu sa tim temenom kao pocetkom
+    // zatim prodjemo kroz napravljene polustranice i popunimo prethodnu i sledecu
     for(int i=0; i<fieldNum; i++) {
         Field* f = new Field();
         int broj_temena;
@@ -42,9 +48,10 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
         for(int j = 0; j < broj_temena; ++j){
             int indeksTemena;
             in >> indeksTemena;
-            edges.push_back(new HalfEdge(_vertices[indeksTemena], nullptr, nullptr, nullptr, nullptr));
-            _edges.push_back(edges[j]);
-            _vertices[indeksTemena]->setIncidentEdge(edges[j]);
+            HalfEdge *new_halfedge = new HalfEdge(_vertices[indeksTemena], nullptr, nullptr, nullptr, nullptr);
+            edges.push_back(new_halfedge);
+            _edges.push_back(new_halfedge);
+            _vertices[indeksTemena]->setIncidentEdge(new_halfedge);
         }
         for(int j = 0; j < broj_temena; j++){
             edges[j]->setNext(edges[(j + 1) % broj_temena]);
@@ -52,7 +59,16 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
             edges[j]->setIncidentFace(f);
         }
         f->setOuterComponent(edges[0]);
+        _fields.push_back(f);
     }
+
+    std::map<Vertex*, HalfEdge*> spoljasnje_ivice; // mapa u kojoj mozemo naci stranicu na osnovu temena na koji "pokazuje"
+                                                  // u njoj cemo pamtiti spoljasnje ivice i koristimo je da bi ih kasnije povezali
+    Field * spoljasnost = new Field();
+
+    // za svaku polustranicu AB pokusavamo da nadjemo polustranicu BA
+    // ako takva nepostoji to znaci da smo naisli na spoljasnju polustranicu
+    // i nju smestamo u mapu spoljasnje ivice za kasniju obradu
     for(auto edge : _edges){
         auto uslov = [=](HalfEdge* e){
             return e->origin() == edge->next()->origin()
@@ -60,16 +76,29 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
         };
         auto twin = std::find_if(std::begin(_edges), std::end(_edges), uslov);
         if(twin == std::end(_edges)){
-            // TODO
-            // ovo je edge neogranicene oblasti ili rupe
-            std::cout << "FIX ME ga06_dcel.cpp line 65" << std::endl;
-            exit(EXIT_FAILURE);
+            HalfEdge *outer_edge = new HalfEdge();
+            edge->setTwin(outer_edge);
+            outer_edge->setIncidentFace(spoljasnost);
+            outer_edge->setTwin(edge);
+            outer_edge->setOrigin(edge->next()->origin());
+            spoljasnje_ivice[edge->origin()] = outer_edge;
         }
         else{
             edge->setTwin(*twin);
         }
     }
 
+    // za svaku spoljasnju ivicu trazimo spoljasnju koja joj prethodi
+    // to mozemo jednostavno uraditi zbog nacina pravljenja mape spoljasnje_ivice
+    // nakon sto zavrsimo "sredjivanje" te poluivice dodajemo je u listu poluivica DCEL strukture
+    for(auto outer_edge : spoljasnje_ivice){
+        outer_edge.second->setPrev(spoljasnje_ivice[outer_edge.second->origin()]);
+        spoljasnje_ivice[outer_edge.second->origin()]->setNext(outer_edge.second);
+        _edges.push_back(outer_edge.second);
+    }
+
+    spoljasnost->setInnerComponent(spoljasnje_ivice.begin()->second);
+    _fields.push_back(spoljasnost);
 }
 
 DCEL::DCEL(const std::vector<QPointF> &tacke)
