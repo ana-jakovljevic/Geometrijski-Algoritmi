@@ -1,5 +1,5 @@
 #include "ga06_dceldemo.h"
-#include <iostream>
+
 DCELDemo::DCELDemo(QWidget *pCrtanje,
                    int pauzaKoraka,
                    const bool &naivni,
@@ -20,15 +20,13 @@ void DCELDemo::crtajAlgoritam(QPainter *painter) const {
 
 
     QPen pen = painter->pen();
-    std::cout<<_polygon.edges().size();
-    for(auto i=0ul; i<_polygon.edges().size(); i+=2)
+    for(auto i=0ul; i<_polygon.edges().size(); i++)
     {
         // Crta se poligon.
         pen.setColor(Qt::yellow);
         painter->setPen(pen);
         painter->drawLine(_polygon.edges()[i]->origin()->coordinates(),
                          _polygon.edges()[i]->next()->origin()->coordinates());
-
 
       //   Crta se poligon "u suprotnom smeru", koriscenjem twin.
       //   * Da bi se video efekat na crtezu, koordinate su za malo pomerene u odnosu na
