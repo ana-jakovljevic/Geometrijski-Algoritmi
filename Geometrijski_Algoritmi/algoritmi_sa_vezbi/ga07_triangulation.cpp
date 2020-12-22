@@ -129,7 +129,7 @@ void Triangulation::crtajAlgoritam(QPainter *painter) const
 void Triangulation::pokreniAlgoritam()
 {
     initialiseEventQueue();
-//    monotonePartition();
+    monotonePartition();
 //    _monotone = false;
 //    connectDiagonalsDCEL();
 //    _allDiagonals.clear();
@@ -284,7 +284,35 @@ void Triangulation::handleMergeVertex(Vertex *v)
 
 void Triangulation::handleRegularVertex(Vertex *v)
 {
+    Vertex* v_next = v->incidentEdge()->twin()->origin();
+    if (pomocneFunkcije::ispod(v_next->coordinates(), v->coordinates())) {
+        Vertex *helper = _helpers[v->incidentEdge()->prev()];
+        if(helper->type() == VertexType::MERGE) {
+            _allDiagonals.emplace_back(v, helper);
+            AlgoritamBaza_updateCanvasAndBlock();
+        }
+        _statusQueue.erase(v->incidentEdge()->prev());
+        _statusQueue.insert(v->incidentEdge());
+        _helpers[v->incidentEdge()] = v;
+    }
+    else {
 
+        HalfEdge* e = new HalfEdge(v, nullptr, nullptr, nullptr, nullptr);
+        HalfEdge* e_twin = new HalfEdge(v, e, nullptr, nullptr, nullptr);
+        e->setTwin(e_twin);
+
+        auto edge_left = _statusQueue.lower_bound(e);
+        Vertex *helper = _helpers[*edge_left];
+        if(helper->type() == VertexType::MERGE) {
+            _allDiagonals.emplace_back(v, helper);
+            AlgoritamBaza_updateCanvasAndBlock();
+        }
+        _helpers[*edge_left] = v;
+
+        delete(e);
+        delete(e_twin);
+
+    }
 }
 
 
