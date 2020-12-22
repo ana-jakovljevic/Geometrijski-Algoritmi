@@ -183,7 +183,7 @@ void Triangulation::monotonePartition()
         _eventQueue.erase(_eventQueue.begin());
 
         _brisucaPravaY = cvor->coordinates().y();
-        AlgoritamBaza::updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock();
 
         if(cvor->type() == VertexType::START) {
             handleStartVertex(cvor);
