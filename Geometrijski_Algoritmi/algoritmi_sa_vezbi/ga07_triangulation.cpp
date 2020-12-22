@@ -177,16 +177,49 @@ void Triangulation::initialiseEventQueue()
 void Triangulation::monotonePartition()
 {
 
+    while(!_eventQueue.empty()) {
+
+        Vertex* cvor = *_eventQueue.begin();
+        _eventQueue.erase(_eventQueue.begin());
+
+        _brisucaPravaY = cvor->coordinates().y();
+        AlgoritamBaza::updateCanvasAndBlock();
+
+        if(cvor->type() == VertexType::START) {
+            handleStartVertex(cvor);
+        }
+        else if(cvor->type() == VertexType::END) {
+            handleEndVertex(cvor);
+        }
+        else if(cvor->type() == VertexType::MERGE) {
+            handleMergeVertex(cvor);
+        }
+        else if(cvor->type() == VertexType::SPLIT) {
+            handleSplitVertex(cvor);
+        }
+        else {
+            handleRegularVertex(cvor);
+        }
+
+
+    }
 }
 
 void Triangulation::handleStartVertex(Vertex *v)
 {
 
+    _helpers[v->incidentEdge()] = v;
+    _statusQueue.insert(v->incidentEdge());
 }
 
 void Triangulation::handleEndVertex(Vertex *v)
 {
+    if(_helpers[v->incidentEdge()->prev()]->type() == VertexType::MERGE) {
+        _allDiagonals.emplace_back(v, _helpers[v->incidentEdge()->prev()]);
+        AlgoritamBaza_updateCanvasAndBlock();
+    }
 
+    _statusQueue.erase(v->incidentEdge()->prev());
 }
 
 void Triangulation::handleSplitVertex(Vertex *v)

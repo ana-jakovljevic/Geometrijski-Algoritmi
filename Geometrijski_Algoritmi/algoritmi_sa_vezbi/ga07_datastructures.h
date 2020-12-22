@@ -35,7 +35,18 @@ public:
 
     bool operator()(const HalfEdge* line1, const HalfEdge* line2) const
     {
-       return true;
+
+       QLineF brisucaPrava = QLineF(0, *yBrisucaPrava, 5, *yBrisucaPrava);
+       QPointF presek1;
+       QPointF presek2;
+
+       QLineF line11 = QLineF(line1->origin()->coordinates(), line1->twin()->origin()->coordinates());
+       QLineF line22 = QLineF(line2->origin()->coordinates(), line2->twin()->origin()->coordinates());
+
+       pomocneFunkcije::presekDuzi(brisucaPrava, line11, presek1);
+       pomocneFunkcije::presekDuzi(brisucaPrava, line22, presek2);
+
+       return presek1.x() < presek2.x();
     }
 };
 
