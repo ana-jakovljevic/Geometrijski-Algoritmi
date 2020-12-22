@@ -224,12 +224,62 @@ void Triangulation::handleEndVertex(Vertex *v)
 
 void Triangulation::handleSplitVertex(Vertex *v)
 {
+    // Pronadi u T stranicu e_left neposredno levo od v.
+    HalfEdge* e = new HalfEdge(v, nullptr, nullptr, nullptr, nullptr);
+    HalfEdge* e_twin = new HalfEdge(v, e, nullptr, nullptr, nullptr);
+    e->setTwin(e_twin);
 
+    auto e_left_it = _statusQueue.lower_bound(e);
+    if (e_left_it == _statusQueue.end()) {
+        return;
+    }
+
+    auto e_left = *e_left_it;
+
+    // Dodaj dijagonalu v − helper(e_left) u D.
+    _allDiagonals.emplace_back(v, _helpers[e_left]);
+    AlgoritamBaza_updateCanvasAndBlock();
+
+    // Postavi helper(e_left) na v.
+    _helpers[e_left] = v;
+
+    // Dodaj u T (desnu) stranicu čiji je gornje teme v i postavi njen helper na v.
+    _statusQueue.emplace(v->incidentEdge());
+    _helpers[v->incidentEdge()] = v;
 }
 
 void Triangulation::handleMergeVertex(Vertex *v)
 {
+    // Ako je e stranica čije je donje teme v a poligon joj je lokalno desno,
+    // ako je helper(e) merge teme, onda dodaj dijagonalu v − helper(e).
+    auto e = v->incidentEdge()->prev();
+    if (_helpers[e]->type() == VertexType::MERGE) {
+        _allDiagonals.emplace_back(v, _helpers[e]);
+    }
 
+    // Izbaci e iz T
+    _statusQueue.erase(e);
+
+    // Pronadi u T stranicu e_left neposredno levo od v
+    HalfEdge* e_tmp = new HalfEdge(v, nullptr, nullptr, nullptr, nullptr);
+    HalfEdge* e_twin = new HalfEdge(v, e_tmp, nullptr, nullptr, nullptr);
+    e_tmp->setTwin(e_twin);
+
+    auto e_left_it = _statusQueue.lower_bound(e_tmp);
+    if (e_left_it == _statusQueue.end()) {
+        return;
+    }
+
+    auto e_left = *e_left_it;
+
+    // Ako je helper(e_left) merge teme, onda dodaj dijagonalu v − helper(e_left).
+    if (_helpers[e_left]->type() == VertexType::MERGE) {
+        _allDiagonals.emplace_back(v, _helpers[e_left]);
+        AlgoritamBaza_updateCanvasAndBlock();
+    }
+
+    // Postavi helper(e_left) na v.
+    _helpers[e_left] = v;
 }
 
 void Triangulation::handleRegularVertex(Vertex *v)
