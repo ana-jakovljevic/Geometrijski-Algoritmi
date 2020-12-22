@@ -24,12 +24,15 @@ public:
     /// bez rupa
     ///
     DCEL(const std::vector<QPointF> &tacke);
-    DCEL();
+    DCEL() = default;
     virtual ~DCEL();
 
-    std::vector<Vertex *> vertices() const;
-    std::vector<HalfEdge *> edges() const;
-    std::vector<Field *> fields() const;
+    Vertex *vertex(size_t i) const;
+    const std::vector<Vertex *> &vertices() const;
+    HalfEdge *edge(size_t i) const;
+    const std::vector<HalfEdge *> &edges() const;
+    Field *field(size_t i) const;
+    const std::vector<Field *> &fields() const;
     void setFields(const std::vector<Field *> &fileds);
     void loadData(const std::vector<QPointF> &tacke);
     void insertEdge(HalfEdge *e);
@@ -37,9 +40,9 @@ public:
     HalfEdge *findEdge(Vertex *start, Vertex *end);
 
 private:
-    std::vector<Vertex*> _vertices;
-    std::vector<HalfEdge*> _edges;
-    std::vector<Field*> _fields;
+    std::vector<Vertex *> _vertices;
+    std::vector<HalfEdge *> _edges;
+    std::vector<Field *> _fields;
 };
 
 ///
@@ -59,17 +62,19 @@ public:
     Vertex();
     Vertex(const QPointF &coordinates, HalfEdge *incidentEdge);
 
-    QPointF coordinates() const;
+    qreal x() const;
+    qreal y() const;
+    const QPointF &coordinates() const;
     void setCoordinates(const QPointF &coordinates);
     HalfEdge* incidentEdge() const;
     void setIncidentEdge(HalfEdge *incidentEdge);
 
-    VertexType type() { return _type; }
+    VertexType type() const { return _type; }
     void setType(VertexType type) { _type = type; }
 
 private:
     QPointF _coordinates;
-    HalfEdge* _incidentEdge;
+    HalfEdge *_incidentEdge;
 
 private:
     //za triangulaciju ga07_triangulation
@@ -103,11 +108,11 @@ public:
     void setIncidentFace(Field *incidentFace);
 
 private:
-    Vertex* _origin;
-    HalfEdge* _twin;
-    HalfEdge* _next;
-    HalfEdge* _prev;
-    Field* _incidentFace;
+    Vertex *_origin;
+    HalfEdge *_twin;
+    HalfEdge *_next;
+    HalfEdge *_prev;
+    Field *_incidentFace;
 };
 
 ///
@@ -126,14 +131,14 @@ public:
 
     HalfEdge *outerComponent() const;
     void setOuterComponent(HalfEdge *outerComponent);
-    std::vector<HalfEdge *> innerComponents() const;
+    const std::vector<HalfEdge *> &innerComponents() const;
     HalfEdge *innerComponent() const;
     void setInnerComponents(const std::vector<HalfEdge *> &innerComponents);
     void setInnerComponent(HalfEdge *innerComponent);
 
 private:
-    HalfEdge* _outerComponent;
-    std::vector<HalfEdge*> _innerComponents;
+    HalfEdge *_outerComponent;
+    std::vector<HalfEdge *> _innerComponents;
 };
 
 #endif // DCEL_H

@@ -78,7 +78,7 @@ private:
     std::set<Vertex*, EventQueueCompTriangulation> _eventQueue;
     std::set<HalfEdge*, StatusQueueCompTriangulation> _statusQueue;
     // neuredjena jer koristimo samo ubacivanje i pretragu,
-    // pa bolje da budu oba slzenosti O(1) umesto O(logn)
+    // pa bolje da budu oba u vremenu O(1) umesto O(logn)
     std::unordered_map<HalfEdge*, Vertex*> _helpers;
     std::vector<std::pair<Vertex*, Vertex*>> _allDiagonals;
     // potrebno samo za crtanje

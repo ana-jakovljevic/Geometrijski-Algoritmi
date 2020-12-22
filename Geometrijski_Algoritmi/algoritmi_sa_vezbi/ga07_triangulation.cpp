@@ -42,9 +42,10 @@ void Triangulation::crtajAlgoritam(QPainter *painter) const
     if (_monotone) {
         /* Crtanje pravougaonika */
         for (auto i=0ul; i < _polygon.vertices().size() - 1; i++)
-            painter->drawLine((_polygon.vertices())[i]->coordinates(), (_polygon.vertices())[i+1]->coordinates());
-        painter->drawLine((_polygon.vertices())[_polygon.vertices().size() - 1]->coordinates(),
-                            (_polygon.vertices())[0]->coordinates());
+            painter->drawLine(_polygon.vertex(i)->coordinates(),
+                              _polygon.vertex(i+1)->coordinates());
+        painter->drawLine(_polygon.vertex(_polygon.vertices().size()-1)->coordinates(),
+                          _polygon.vertex(0)->coordinates());
 
 
         /* Crtanje brisuce prave */
@@ -147,20 +148,20 @@ void Triangulation::pokreniAlgoritam()
 
 void Triangulation::initialiseEventQueue()
 {
-    std::vector<Vertex*> poligonska_temena =_polygon.vertices();
+    for(unsigned i=0; i<_polygon.vertices().size(); i++){
 
-    for(unsigned i=0; i<poligonska_temena.size(); i++){
-
-        Vertex* v = poligonska_temena.at(i);
+        Vertex* v = _polygon.vertex(i);
         Vertex* v_sledeci = v->incidentEdge()->twin()->origin();
         Vertex* v_prethodni = v->incidentEdge()->prev()->origin();
 
-    if(pomocneFunkcije::ispod(v_sledeci->coordinates(), v->coordinates()) && pomocneFunkcije::ispod(v_prethodni->coordinates(), v->coordinates())){
+    if(pomocneFunkcije::ispod(v_sledeci->coordinates(), v->coordinates()) &&
+       pomocneFunkcije::ispod(v_prethodni->coordinates(), v->coordinates())){
 
         if(pomocneFunkcije::konveksan(v->coordinates(), v_sledeci->coordinates(), v_prethodni->coordinates()))
             v->setType(VertexType::START);
         else v->setType(VertexType::SPLIT);
-    }else if(!pomocneFunkcije::ispod(v_sledeci->coordinates(), v->coordinates()) && !pomocneFunkcije::ispod(v_prethodni->coordinates(), v->coordinates())){
+    }else if(!pomocneFunkcije::ispod(v_sledeci->coordinates(), v->coordinates()) &&
+             !pomocneFunkcije::ispod(v_prethodni->coordinates(), v->coordinates())){
 
         if(pomocneFunkcije::konveksan(v->coordinates(), v_sledeci->coordinates(), v_prethodni->coordinates()))
             v->setType(VertexType::END);
@@ -168,8 +169,7 @@ void Triangulation::initialiseEventQueue()
 
     }else v->setType(VertexType::REGULAR);
 
-
-        _eventQueue.insert(poligonska_temena.at(i));
+        _eventQueue.insert(_polygon.vertex(i));
         AlgoritamBaza_updateCanvasAndBlock();
     }
 }
@@ -182,7 +182,7 @@ void Triangulation::monotonePartition()
         Vertex* cvor = *_eventQueue.begin();
         _eventQueue.erase(_eventQueue.begin());
 
-        _brisucaPravaY = cvor->coordinates().y();
+        _brisucaPravaY = cvor->y();
         AlgoritamBaza_updateCanvasAndBlock();
 
         if(cvor->type() == VertexType::START) {
@@ -392,7 +392,7 @@ void Triangulation::connectDiagonalsDCEL()
         }
     }
 
-    Field* f_old = (_polygon.fields())[1];
+    Field* f_old = _polygon.field(1);
     for(auto& v : allDiagonals) {
         HalfEdge* v_prev = v.first->incidentEdge()->prev();
         HalfEdge* v_next = v.first->incidentEdge();
@@ -439,10 +439,10 @@ bool Triangulation::sameDirectionVectors(HalfEdge *e1, HalfEdge *e2)
     Vertex* c = e2->origin();
     Vertex* d = e2->twin()->origin();
 
-    return  (b->coordinates().x() - a->coordinates().x()) *
-            (d->coordinates().x() - c->coordinates().x()) +
-            (b->coordinates().y() - a->coordinates().y()) *
-            (d->coordinates().y() - c->coordinates().y()) > 0;
+    return  (b->x() - a->x()) *
+            (d->x() - c->x()) +
+            (b->y() - a->y()) *
+            (d->y() - c->y()) > 0;
 }
 
 std::vector<QPointF> Triangulation::ucitajPodatkeIzDatoteke(std::string imeDatoteke) const

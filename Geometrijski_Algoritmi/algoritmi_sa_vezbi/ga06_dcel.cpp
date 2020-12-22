@@ -6,10 +6,7 @@
 /***********************************************************************/
 /*                               DCEL                                  */
 /***********************************************************************/
-
-
 DCEL::DCEL(std::string imeDatoteke, int h, int w)
-    :_vertices{}, _edges{}, _fields{}
 {
     std::ifstream in(imeDatoteke);
     std::string tmp;
@@ -36,7 +33,7 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
         _vertices.push_back(v);
     }
 
-    // za svaki poligon(polje)
+    // za svaki poligon (polje)
     // za svako teme tog poligona napravimo polustranicu sa tim temenom kao pocetkom
     // zatim prodjemo kroz napravljene polustranice i popunimo prethodnu i sledecu
     for(int i=0; i<fieldNum; i++) {
@@ -61,12 +58,14 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
         _fields.push_back(f);
     }
 
-    std::map<Vertex*, HalfEdge*> spoljasnje_ivice; // mapa u kojoj mozemo naci stranicu na osnovu temena na koji "pokazuje"
-                                                  // u njoj cemo pamtiti spoljasnje ivice i koristimo je da bi ih kasnije povezali
+    // mapa u kojoj mozemo naci stranicu na osnovu temena na koji "pokazuje"
+    // u njoj cemo pamtiti spoljasnje ivice i koristimo je da bi ih kasnije povezali
+    std::map<Vertex*, HalfEdge*> spoljasnje_ivice;
+
     Field * spoljasnost = new Field();
 
     // za svaku polustranicu AB pokusavamo da nadjemo polustranicu BA
-    // ako takva nepostoji to znaci da smo naisli na spoljasnju polustranicu
+    // ako takva ne postoji to znaci da smo naisli na spoljasnju polustranicu
     // i nju smestamo u mapu spoljasnje ivice za kasniju obradu
     for(auto edge : _edges){
         auto uslov = [=](HalfEdge* e){
@@ -101,14 +100,9 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
 }
 
 DCEL::DCEL(const std::vector<QPointF> &tacke)
-    :_vertices{}, _edges{}, _fields{}
 {
     loadData(tacke);
 }
-
-DCEL::DCEL()
-    :_vertices{}, _edges{}, _fields{}
-{}
 
 DCEL::~DCEL() {
     for (auto v: _vertices)
@@ -121,19 +115,34 @@ DCEL::~DCEL() {
         delete f;
 }
 
-std::vector<Vertex *> DCEL::vertices() const
+Vertex *DCEL::vertex(size_t i) const
+{
+    return _vertices[i];
+}
+
+const std::vector<Vertex *> &DCEL::vertices() const
 {
     return _vertices;
 }
 
+HalfEdge *DCEL::edge(size_t i) const
+{
+    return _edges[i];
+}
 
-std::vector<HalfEdge *> DCEL::edges() const
+
+const std::vector<HalfEdge *> &DCEL::edges() const
 {
     return _edges;
 }
 
+Field *DCEL::field(size_t i) const
+{
+    return _fields[i];
+}
 
-std::vector<Field *> DCEL::fields() const
+
+const std::vector<Field *> &DCEL::fields() const
 {
     return _fields;
 }
@@ -181,7 +190,8 @@ void DCEL::loadData(const std::vector<QPointF> &tacke)
             _edges[j]->setPrev(_edges[_vertices.size()-1]);
 
         // Postavljamo twin ivice
-        HalfEdge *_twinEdge = new HalfEdge(_vertices[(j+1) % _vertices.size() ], _edges[j], nullptr, nullptr, _outer);
+        HalfEdge *_twinEdge = new HalfEdge(_vertices[(j+1) % _vertices.size()],
+                                           _edges[j], nullptr, nullptr, _outer);
         _edges[j]->setTwin(_twinEdge);
         _edges.push_back(_twinEdge);    // Sada smo poceli da stavljamo twin ivice, one pocinju od pozicije n+j u vektoru
     }
@@ -235,14 +245,24 @@ HalfEdge *DCEL::findEdge(Vertex *start, Vertex *end)
 ***********************************************************************
 */
 Vertex::Vertex()
-    :_coordinates{}, _incidentEdge{nullptr}
+    : _incidentEdge{nullptr}
 {}
 
 Vertex::Vertex(const QPointF &coordinates, HalfEdge *incidentEdge)
-    :_coordinates{coordinates}, _incidentEdge{incidentEdge}
+    : _coordinates{coordinates}, _incidentEdge{incidentEdge}
 {}
 
-QPointF Vertex::coordinates() const
+qreal Vertex::x() const
+{
+    return _coordinates.x();
+}
+
+qreal Vertex::y() const
+{
+    return _coordinates.y();
+}
+
+const QPointF &Vertex::coordinates() const
 {
     return _coordinates;
 }
@@ -268,11 +288,11 @@ void Vertex::setIncidentEdge(HalfEdge *incidentEdge)
 */
 
 HalfEdge::HalfEdge()
-    :_origin{nullptr}, _twin{nullptr}, _next{nullptr}, _prev{nullptr}, _incidentFace{nullptr}
+    : _origin{nullptr}, _twin{nullptr}, _next{nullptr}, _prev{nullptr}, _incidentFace{nullptr}
 {}
 
 HalfEdge::HalfEdge(Vertex *origin, HalfEdge *twin, HalfEdge *next, HalfEdge *prev, Field *incidentFace)
-    :_origin(origin), _twin(twin), _next(next), _prev(prev), _incidentFace(incidentFace)
+    : _origin(origin), _twin(twin), _next(next), _prev(prev), _incidentFace(incidentFace)
 {}
 
 Vertex *HalfEdge::origin() const
@@ -331,7 +351,7 @@ void HalfEdge::setIncidentFace(Field *incidentFace)
 ***********************************************************************
 */
 Field::Field()
-    :_outerComponent{nullptr}, _innerComponents{}
+    :_outerComponent{nullptr}
 {}
 
 Field::Field(HalfEdge *outerComponent, const std::vector<HalfEdge *> &innerComponent)
@@ -348,19 +368,14 @@ void Field::setOuterComponent(HalfEdge *outerComponent)
     _outerComponent = outerComponent;
 }
 
-std::vector<HalfEdge *> Field::innerComponents() const
+const std::vector<HalfEdge *> &Field::innerComponents() const
 {
     return _innerComponents;
 }
 
 HalfEdge *Field::innerComponent() const
 {
-    if(innerComponents().empty())
-    {
-        return nullptr;
-    }
-
-    return _innerComponents[0];
+    return _innerComponents.empty() ? nullptr : _innerComponents.front();
 }
 
 void Field::setInnerComponents(const std::vector<HalfEdge *> &innerComponents)

@@ -25,8 +25,8 @@ void DCELDemo::crtajAlgoritam(QPainter *painter) const {
         // Crta se poligon.
         pen.setColor(Qt::yellow);
         painter->setPen(pen);
-        painter->drawLine(_polygon.edges()[i]->origin()->coordinates(),
-                         _polygon.edges()[i]->next()->origin()->coordinates());
+        painter->drawLine(_polygon.edge(i)->origin()->coordinates(),
+                          _polygon.edge(i)->next()->origin()->coordinates());
 
         //   Crta se poligon "u suprotnom smeru", koriscenjem twin.
         //   * Da bi se video efekat na crtezu, koordinate su za malo pomerene u odnosu na
@@ -34,10 +34,10 @@ void DCELDemo::crtajAlgoritam(QPainter *painter) const {
 
         pen.setColor(Qt::red);
         painter->setPen(pen);
-        painter->drawLine(_polygon.edges()[i]->twin()->origin()->coordinates().x() + 5,
-                         _polygon.edges()[i]->twin()->origin()->coordinates().y() + 5,
-                         _polygon.edges()[i]->twin()->next()->origin()->coordinates().x() - 5,
-                         _polygon.edges()[i]->twin()->next()->origin()->coordinates().y() + 5);
+        painter->drawLine(_polygon.edge(i)->twin()->origin()->x() + 5,
+                          _polygon.edge(i)->twin()->origin()->y() + 5,
+                          _polygon.edge(i)->twin()->next()->origin()->x() - 5,
+                          _polygon.edge(i)->twin()->next()->origin()->y() + 5);
    }
 
     int curr_num = 0;
@@ -51,10 +51,9 @@ void DCELDemo::crtajAlgoritam(QPainter *painter) const {
        // Okretanje cetikice kako brojevi ne bi bili obrnuti
        painter->save();
        painter->scale(1, -1);
-       painter->translate(0, -2*v->coordinates().y());
+       painter->translate(0, -2*v->y());
 
-       painter->drawText(v->coordinates().x() - 4,
-                         v->coordinates().y() + 4,
+       painter->drawText(v->x() - 4, v->y() + 4,
                          QString::number(curr_num));
        curr_num++;
 
