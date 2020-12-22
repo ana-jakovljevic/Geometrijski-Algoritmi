@@ -46,6 +46,7 @@ private:
      * Brojevi koji stoje u komentarima implementacije ovih metoda
      * odgovaraju brojevima u pseudo kodu u knjizi
      */
+    HalfEdge *levaStranica(Vertex *v);
     void handleStartVertex(Vertex *v);
     void handleEndVertex(Vertex *v);
     void handleSplitVertex(Vertex *v);
@@ -83,7 +84,6 @@ private:
     std::vector<std::pair<Vertex*, Vertex*>> _allDiagonals;
     // potrebno samo za crtanje
     bool _monotone;
-
 
     //TRIANGULATION
     std::vector<HalfEdge*> _stekTriangulacije;

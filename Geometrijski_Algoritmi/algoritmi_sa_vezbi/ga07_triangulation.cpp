@@ -176,7 +176,6 @@ void Triangulation::initialiseEventQueue()
 
 void Triangulation::monotonePartition()
 {
-
     while(!_eventQueue.empty()) {
 
         Vertex* cvor = *_eventQueue.begin();
@@ -200,14 +199,21 @@ void Triangulation::monotonePartition()
         else {
             handleRegularVertex(cvor);
         }
-
-
     }
+}
+
+HalfEdge *Triangulation::levaStranica(Vertex *v)
+{
+    HalfEdge e(v, nullptr, nullptr, nullptr, nullptr);
+    HalfEdge e_twin(v, &e, nullptr, nullptr, nullptr);
+    e.setTwin(&e_twin);
+
+    const auto e_left_it = _statusQueue.lower_bound(&e);
+    return e_left_it == _statusQueue.end() ? nullptr : *e_left_it;
 }
 
 void Triangulation::handleStartVertex(Vertex *v)
 {
-
     _helpers[v->incidentEdge()] = v;
     _statusQueue.insert(v->incidentEdge());
 }
@@ -225,16 +231,8 @@ void Triangulation::handleEndVertex(Vertex *v)
 void Triangulation::handleSplitVertex(Vertex *v)
 {
     // Pronadi u T stranicu e_left neposredno levo od v.
-    HalfEdge* e = new HalfEdge(v, nullptr, nullptr, nullptr, nullptr);
-    HalfEdge* e_twin = new HalfEdge(v, e, nullptr, nullptr, nullptr);
-    e->setTwin(e_twin);
-
-    auto e_left_it = _statusQueue.lower_bound(e);
-    if (e_left_it == _statusQueue.end()) {
-        return;
-    }
-
-    auto e_left = *e_left_it;
+    const auto e_left = levaStranica(v);
+    if (!e_left) return;
 
     // Dodaj dijagonalu v − helper(e_left) u D.
     _allDiagonals.emplace_back(v, _helpers[e_left]);
@@ -261,16 +259,8 @@ void Triangulation::handleMergeVertex(Vertex *v)
     _statusQueue.erase(e);
 
     // Pronadi u T stranicu e_left neposredno levo od v
-    HalfEdge* e_tmp = new HalfEdge(v, nullptr, nullptr, nullptr, nullptr);
-    HalfEdge* e_twin = new HalfEdge(v, e_tmp, nullptr, nullptr, nullptr);
-    e_tmp->setTwin(e_twin);
-
-    auto e_left_it = _statusQueue.lower_bound(e_tmp);
-    if (e_left_it == _statusQueue.end()) {
-        return;
-    }
-
-    auto e_left = *e_left_it;
+    const auto e_left = levaStranica(v);
+    if (!e_left) return;
 
     // Ako je helper(e_left) merge teme, onda dodaj dijagonalu v − helper(e_left).
     if (_helpers[e_left]->type() == VertexType::MERGE) {
@@ -296,25 +286,17 @@ void Triangulation::handleRegularVertex(Vertex *v)
         _helpers[v->incidentEdge()] = v;
     }
     else {
+        const auto e_left = levaStranica(v);
+        if (!e_left) return;
 
-        HalfEdge* e = new HalfEdge(v, nullptr, nullptr, nullptr, nullptr);
-        HalfEdge* e_twin = new HalfEdge(v, e, nullptr, nullptr, nullptr);
-        e->setTwin(e_twin);
-
-        auto edge_left = _statusQueue.lower_bound(e);
-        Vertex *helper = _helpers[*edge_left];
+        Vertex *helper = _helpers[e_left];
         if(helper->type() == VertexType::MERGE) {
             _allDiagonals.emplace_back(v, helper);
             AlgoritamBaza_updateCanvasAndBlock();
         }
-        _helpers[*edge_left] = v;
-
-        delete(e);
-        delete(e_twin);
-
+        _helpers[e_left] = v;
     }
 }
-
 
 /**********************************************************************************/
 /*                             TRIANGULACIJA                                      */
