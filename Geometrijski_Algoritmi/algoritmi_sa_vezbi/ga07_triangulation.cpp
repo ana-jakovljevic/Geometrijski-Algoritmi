@@ -128,7 +128,7 @@ void Triangulation::crtajAlgoritam(QPainter *painter) const
 
 void Triangulation::pokreniAlgoritam()
 {
-//    initialiseEventQueue();
+    initialiseEventQueue();
 //    monotonePartition();
 //    _monotone = false;
 //    connectDiagonalsDCEL();
@@ -147,7 +147,31 @@ void Triangulation::pokreniAlgoritam()
 
 void Triangulation::initialiseEventQueue()
 {
+    std::vector<Vertex*> poligonska_temena =_polygon.vertices();
 
+    for(unsigned i=0; i<poligonska_temena.size(); i++){
+
+        Vertex* v = poligonska_temena.at(i);
+        Vertex* v_sledeci = v->incidentEdge()->twin()->origin();
+        Vertex* v_prethodni = v->incidentEdge()->prev()->origin();
+
+    if(pomocneFunkcije::ispod(v_sledeci->coordinates(), v->coordinates()) && pomocneFunkcije::ispod(v_prethodni->coordinates(), v->coordinates())){
+
+        if(pomocneFunkcije::konveksan(v->coordinates(), v_sledeci->coordinates(), v_prethodni->coordinates()))
+            v->setType(VertexType::START);
+        else v->setType(VertexType::SPLIT);
+    }else if(!pomocneFunkcije::ispod(v_sledeci->coordinates(), v->coordinates()) && !pomocneFunkcije::ispod(v_prethodni->coordinates(), v->coordinates())){
+
+        if(pomocneFunkcije::konveksan(v->coordinates(), v_sledeci->coordinates(), v_prethodni->coordinates()))
+            v->setType(VertexType::END);
+        else v->setType(VertexType::MERGE);
+
+    }else v->setType(VertexType::REGULAR);
+
+
+        _eventQueue.insert(poligonska_temena.at(i));
+        AlgoritamBaza_updateCanvasAndBlock();
+    }
 }
 
 void Triangulation::monotonePartition()
