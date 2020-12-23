@@ -135,10 +135,10 @@ void Triangulation::pokreniAlgoritam()
     connectDiagonalsDCEL();
     _allDiagonals.clear();
     AlgoritamBaza_updateCanvasAndBlock();
-//    for (auto f : _polygon.fields()) {
-//        if (f->outerComponent() == nullptr) continue;
-//        triangulacija(f);
-//    }
+    for (auto f : _polygon.fields()) {
+        if (f->outerComponent() == nullptr) continue;
+        triangulacija(f);
+    }
     emit animacijaZavrsila();
 }
 
@@ -306,7 +306,12 @@ void Triangulation::triangulacija(Field *f)
     /* radi vizuelizacije */
     _brisucaPravaY = _pCrtanje->height();
     AlgoritamBaza_updateCanvasAndBlock()
-
+    auto e = f->outerComponent();
+    auto i = e;
+    do{
+        _eventQueueTriangulation.insert(i);
+        i=i->next();
+    }while(i!=e);
 
 }
 

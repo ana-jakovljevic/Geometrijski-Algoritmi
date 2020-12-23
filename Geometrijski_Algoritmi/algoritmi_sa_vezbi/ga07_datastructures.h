@@ -84,7 +84,9 @@ struct EventQueueCompTriangulation2
 {
     bool operator()(const HalfEdge* lhs, const HalfEdge* rhs) const
     {
-        return true;
+        return (lhs->origin()->y() > rhs->origin()->y())||
+                (lhs->origin()->y() == rhs->origin()->y() && lhs->origin()->x()<rhs->origin()->x());
+
     }
 };
 
