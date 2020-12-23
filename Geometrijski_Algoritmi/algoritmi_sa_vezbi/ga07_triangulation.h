@@ -26,10 +26,10 @@ public:
 private:
     std::vector<QPointF> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
     /* Funkcija generise nasumicne tacke */
-    std::vector<QPointF> generisiNasumicneTacke(int brojTacaka) const;
+    std::vector<QPointF> generisiNasumicneTacke(int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA) const;
     /* Ucitane nasumicne tacke se pripremaju za pravljenje prostog poligona
      * (zadatog u smeru suprotno od kazaljke na satu) */
-    std::vector<QPointF> ucitajNasumicneTacke(int brojTacaka) const;
+    std::vector<QPointF> ucitajNasumicneTacke(int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA) const;
 
     /* Monotono particionisanje */
 private:

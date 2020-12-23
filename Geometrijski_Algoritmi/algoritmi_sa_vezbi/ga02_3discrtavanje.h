@@ -19,6 +19,7 @@ public:
 
 private:
     std::vector<QVector3D> generisiNasumicneTacke(int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA) const;
+    std::vector<QVector3D> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
 
     std::vector<QVector3D> _tacke;
     unsigned int _n;

@@ -25,7 +25,7 @@ public:
 private:
     void naglasiTrenutnu(QPainter *painter, unsigned long i) const;
 
-    std::vector<QLineF> generisiNasumicneDuzi(int brojDuzi) const;
+    std::vector<QLineF> generisiNasumicneDuzi(int brojDuzi = BROJ_SLUCAJNIH_OBJEKATA) const;
     std::vector<QLineF> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
 
     std::vector<QLineF> _duzi;

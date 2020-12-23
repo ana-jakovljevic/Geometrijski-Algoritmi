@@ -1,15 +1,19 @@
 #include "ga02_3discrtavanje.h"
 
 #include <QVector3D>
+#include <fstream>
 
 Discrtavanje::Discrtavanje(QWidget *pCrtanje,
                            int pauzaKoraka,
                            const bool &naivni,
-                           std::string,
+                           std::string imeDatoteke,
                            int brojTacaka)
     : AlgoritamBaza(pCrtanje, pauzaKoraka, naivni), _n(0)
 {
-    _tacke = generisiNasumicneTacke(brojTacaka);
+    if (imeDatoteke != "")
+        _tacke = ucitajPodatkeIzDatoteke(imeDatoteke);
+    else
+        _tacke = generisiNasumicneTacke(brojTacaka);
 }
 
 void Discrtavanje::pokreniAlgoritam()
@@ -52,13 +56,27 @@ void Discrtavanje::crtajNaivniAlgoritam(QPainter *) const
 
 std::vector<QVector3D> Discrtavanje::generisiNasumicneTacke(int brojTacaka) const
 {
-    std::vector<QVector3D> tacke;
     srand(static_cast<unsigned>(time(nullptr)));
 
-    for(int i=0; i < brojTacaka; i++)
-        tacke.emplace_back(-100.*rand()/RAND_MAX,
-                           -100.*rand()/RAND_MAX,
-                           -120.*rand()/RAND_MAX);
+    std::vector<QVector3D> randomPoints;
 
-    return tacke;
+    for(int i=0; i < brojTacaka; i++)
+        randomPoints.emplace_back(
+           1.f*rand()/RAND_MAX,
+           1.f*rand()/RAND_MAX,
+           1.f*rand()/RAND_MAX);
+
+    return randomPoints;
+}
+
+std::vector<QVector3D> Discrtavanje::ucitajPodatkeIzDatoteke(std::string imeDatoteke) const
+{
+    std::ifstream inputFile(imeDatoteke);
+    std::vector<QVector3D> points;
+    float x, y, z;
+    while(inputFile >> x >> y >> z)
+    {
+        points.emplace_back(x, y, z);
+    }
+    return points;
 }

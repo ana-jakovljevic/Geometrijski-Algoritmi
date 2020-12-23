@@ -48,7 +48,7 @@ private:
     Stranica* napraviDruguStranicu(Ivica* iv, Teme* t);
     Stranica* napraviPrvuStranicu(Ivica* iv, Teme* t);
     /* Ucitavanje podataka. */
-    std::vector<Teme*> generisiNasumicneTacke(int brojTacaka) const;
+    std::vector<Teme*> generisiNasumicneTacke(int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA) const;
     std::vector<Teme*> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
 
     std::vector<Teme*> _tacke;
