@@ -1,5 +1,4 @@
 #include "algoritambaza.h"
-#include "animacijanit.h"
 #include <fstream>
 
 void AlgoritamBaza::timerEvent(QTimerEvent */* unused */)

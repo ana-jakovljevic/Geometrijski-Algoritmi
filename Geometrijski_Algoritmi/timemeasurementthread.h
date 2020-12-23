@@ -20,7 +20,7 @@ public:
     TimeMeasurementThread(TipAlgoritma algorithmType, int minValue, int step, int maxValue);
 
     // QThread interface
-    void run();
+    void run() override;
 
 signals:
     void updateChart(double dim, double optimal, double naive);

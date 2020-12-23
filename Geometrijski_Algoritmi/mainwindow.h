@@ -53,7 +53,7 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    virtual ~MainWindow() override;
 
 private slots:
     void on_datoteka_dugme_clicked();

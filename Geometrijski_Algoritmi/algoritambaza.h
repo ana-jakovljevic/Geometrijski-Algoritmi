@@ -66,13 +66,13 @@ private:
     /// connect its timeout() signal to the appropriate slots, and call start(). From then on, it will emit
     /// the timeout() signal at constant intervals.
     ///
-    void timerEvent(QTimerEvent *event);
+    void timerEvent(QTimerEvent *event) override;
 
 public:
     AlgoritamBaza(QWidget *pCrtanje, int pauzaKoraka, const bool &naivni);
 
     /* Algoritme ne treba da bude moguce kopirati */
-    virtual ~AlgoritamBaza() = default;
+    virtual ~AlgoritamBaza() override = default;
     AlgoritamBaza(const AlgoritamBaza &) = delete;
     AlgoritamBaza(AlgoritamBaza &&) = delete;
     AlgoritamBaza& operator=(const AlgoritamBaza &) = delete;

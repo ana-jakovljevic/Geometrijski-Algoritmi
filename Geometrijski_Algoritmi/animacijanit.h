@@ -17,7 +17,7 @@ public:
     ///
     /// \brief run - metod koji se izvrsava kada se thread pokrene
     ///
-    virtual void run();
+    virtual void run() override;
 
 private:
     AlgoritamBaza *const _pAlgoritam;
