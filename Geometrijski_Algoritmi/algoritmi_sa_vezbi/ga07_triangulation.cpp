@@ -313,6 +313,52 @@ void Triangulation::triangulacija(Field *f)
         i=i->next();
     }while(i!=e);
 
+    if (_eventQueueTriangulation.empty()) {
+        return;
+    }
+
+    _stekTriangulacije.push_back(*_eventQueueTriangulation.begin());
+    _eventQueueTriangulation.erase(_eventQueueTriangulation.begin());
+
+    if (_eventQueueTriangulation.empty()) {
+        return;
+    }
+
+    _stekTriangulacije.push_back(*_eventQueueTriangulation.begin());
+    _eventQueueTriangulation.erase(_eventQueueTriangulation.begin());
+
+    for (auto e: _eventQueueTriangulation) {
+        if (e == *_eventQueueTriangulation.rbegin()) {
+            break;
+        }
+
+        _brisucaPravaY = e->origin()->y();
+        AlgoritamBaza_updateCanvasAndBlock()
+
+        auto vrh_steka = _stekTriangulacije.back();
+
+        if (istiLanac(e, vrh_steka)) {
+            _stekTriangulacije.pop_back();
+
+
+            while (!_stekTriangulacije.empty()) {
+                auto poslednji = _stekTriangulacije.back();
+                _stekTriangulacije.pop_back();
+
+                // ukoliko je dijagonala izmedju e i poslednji u poligonu onda ide if
+                if () {
+                    _allDiagonals.emplace_back(e->origin(), poslednji->origin());
+                    AlgoritamBaza_updateCanvasAndBlock()
+                } else {
+                    break;
+                }
+            }
+        }
+
+    }
+
+
+
 }
 
 bool Triangulation::istiLanac(HalfEdge* e1, HalfEdge* e2)
