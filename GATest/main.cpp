@@ -3,6 +3,7 @@
 #include "tst_ga00_PrimerTest.h"
 #include "tst_ga00_KonveksniOmotac.h"
 #include "tst_ga00_KonveksniOmotac3D.h"
+#include "tst_ga00_PreseciDuzi.h"
 
 #include "tst_ga06_presekPravougaonika.h"
 

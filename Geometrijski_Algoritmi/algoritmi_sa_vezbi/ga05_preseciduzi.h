@@ -22,6 +22,8 @@ public:
     void pokreniNaivniAlgoritam() final;
     void crtajNaivniAlgoritam(QPainter *painter) const final;
 
+    const std::vector<QPointF> &getPreseci() const;
+    const std::vector<QPointF> &getNaivniPreseci() const;
 private:
     void naglasiTrenutnu(QPainter *painter, unsigned long i) const;
 

@@ -298,3 +298,13 @@ std::vector<QLineF> PreseciDuzi::ucitajPodatkeIzDatoteke(std::string imeDatoteke
 
     return duzi;
 }
+
+const std::vector<QPointF> &PreseciDuzi::getPreseci() const
+{
+    return _preseci;
+}
+
+const std::vector<QPointF> &PreseciDuzi::getNaivniPreseci() const
+{
+    return _naivniPreseci;
+}
