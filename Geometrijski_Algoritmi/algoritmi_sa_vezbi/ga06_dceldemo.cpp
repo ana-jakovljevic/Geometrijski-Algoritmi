@@ -31,10 +31,10 @@ void DCELDemo::crtajAlgoritam(QPainter *painter) const {
 
         pen.setColor(Qt::red);
         painter->setPen(pen);
-        painter->drawLine(_polygon.edge(i)->twin()->origin()->x() + 5,
-                          _polygon.edge(i)->twin()->origin()->y() + 5,
-                          _polygon.edge(i)->twin()->next()->origin()->x() - 5,
-                          _polygon.edge(i)->twin()->next()->origin()->y() + 5);
+        painter->drawLine(QPointF(_polygon.edge(i)->twin()->origin()->x() + 5,
+                                  _polygon.edge(i)->twin()->origin()->y() + 5),
+                          QPointF(_polygon.edge(i)->twin()->next()->origin()->x() - 5,
+                                  _polygon.edge(i)->twin()->next()->origin()->y() + 5));
    }
 
     int curr_num = 0;
@@ -50,7 +50,7 @@ void DCELDemo::crtajAlgoritam(QPainter *painter) const {
        painter->scale(1, -1);
        painter->translate(0, -2*v->y());
 
-       painter->drawText(v->x() - 4, v->y() + 4,
+       painter->drawText(QPointF(v->x() - 4, v->y() + 4),
                          QString::number(curr_num));
        curr_num++;
 

@@ -170,7 +170,7 @@ void Triangulation::initialiseEventQueue()
     }else v->setType(VertexType::REGULAR);
 
         _eventQueue.insert(_polygon.vertex(i));
-        AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock()
     }
 }
 
@@ -182,7 +182,7 @@ void Triangulation::monotonePartition()
         _eventQueue.erase(_eventQueue.begin());
 
         _brisucaPravaY = cvor->y();
-        AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock()
 
         if(cvor->type() == VertexType::START) {
             handleStartVertex(cvor);
@@ -204,8 +204,7 @@ void Triangulation::monotonePartition()
 
 HalfEdge *Triangulation::levaStranica(Vertex *v)
 {
-    HalfEdge e(v, nullptr, nullptr, nullptr, nullptr);
-    HalfEdge e_twin(v, &e, nullptr, nullptr, nullptr);
+    HalfEdge e(v), e_twin(v, &e);
     e.setTwin(&e_twin);
 
     const auto e_left_it = _statusQueue.lower_bound(&e);
@@ -222,7 +221,7 @@ void Triangulation::handleEndVertex(Vertex *v)
 {
     if(_helpers[v->incidentEdge()->prev()]->type() == VertexType::MERGE) {
         _allDiagonals.emplace_back(v, _helpers[v->incidentEdge()->prev()]);
-        AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock()
     }
 
     _statusQueue.erase(v->incidentEdge()->prev());
@@ -236,7 +235,7 @@ void Triangulation::handleSplitVertex(Vertex *v)
 
     /* Dodaj dijagonalu v − helper(e_left) u D. */
     _allDiagonals.emplace_back(v, _helpers[e_left]);
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
 
     /* Postavi helper(e_left) na v. */
     _helpers[e_left] = v;
@@ -265,7 +264,7 @@ void Triangulation::handleMergeVertex(Vertex *v)
     /* Ako je helper(e_left) merge teme, onda dodaj dijagonalu v − helper(e_left). */
     if (_helpers[e_left]->type() == VertexType::MERGE) {
         _allDiagonals.emplace_back(v, _helpers[e_left]);
-        AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock()
     }
 
     /* Postavi helper(e_left) na v. */
@@ -279,7 +278,7 @@ void Triangulation::handleRegularVertex(Vertex *v)
         Vertex *helper = _helpers[v->incidentEdge()->prev()];
         if(helper->type() == VertexType::MERGE) {
             _allDiagonals.emplace_back(v, helper);
-            AlgoritamBaza_updateCanvasAndBlock();
+            AlgoritamBaza_updateCanvasAndBlock()
         }
         _statusQueue.erase(v->incidentEdge()->prev());
         _statusQueue.insert(v->incidentEdge());
@@ -292,7 +291,7 @@ void Triangulation::handleRegularVertex(Vertex *v)
         Vertex *helper = _helpers[e_left];
         if(helper->type() == VertexType::MERGE) {
             _allDiagonals.emplace_back(v, helper);
-            AlgoritamBaza_updateCanvasAndBlock();
+            AlgoritamBaza_updateCanvasAndBlock()
         }
         _helpers[e_left] = v;
     }
@@ -306,7 +305,7 @@ void Triangulation::triangulacija(Field *f)
 {
     /* radi vizuelizacije */
     _brisucaPravaY = _pCrtanje->height();
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
 
 
 }
@@ -348,8 +347,8 @@ void Triangulation::connectDiagonalsDCEL()
 
 
     for(auto& pair : _allDiagonals) {
-        HalfEdge* ei1 = new HalfEdge(pair.first, nullptr, nullptr, nullptr, nullptr);
-        HalfEdge* ei2 = new HalfEdge(pair.second, ei1, nullptr, nullptr, nullptr);
+        HalfEdge* ei1 = new HalfEdge(pair.first);
+        HalfEdge* ei2 = new HalfEdge(pair.second, ei1);
         ei1->setTwin(ei2);
 
         _polygon.insertEdge(ei1);
@@ -475,7 +474,8 @@ std::vector<QPointF> Triangulation::ucitajNasumicneTacke(int brojTacaka) const
     QPointF maxTacka = tacke[0];
 
     for (auto i = 1ul; i < tacke.size(); i++) {
-        if (tacke[i].x() > maxTacka.x() || (tacke[i].x() == maxTacka.x() && tacke[i].y() < maxTacka.y()))
+        if (tacke[i].x() > maxTacka.x() ||
+          ((tacke[i].x() - maxTacka.x()) < EPS && tacke[i].y() < maxTacka.y()))
             maxTacka = tacke[i];
     }
 

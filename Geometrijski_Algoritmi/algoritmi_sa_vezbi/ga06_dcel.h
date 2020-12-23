@@ -60,7 +60,8 @@ enum class VertexType {START, SPLIT, END, MERGE, REGULAR};
 class Vertex{
 public:
     Vertex();
-    Vertex(const QPointF &coordinates, HalfEdge *incidentEdge);
+    Vertex(float x, float y);
+    Vertex(const QPointF &coordinates, HalfEdge *incidentEdge = nullptr);
 
     qreal x() const;
     qreal y() const;
@@ -94,7 +95,9 @@ private:
 class HalfEdge{
 public:
     HalfEdge();
-    HalfEdge(Vertex *origin, HalfEdge *twin, HalfEdge *next, HalfEdge *prev, Field *incidentFace);
+    HalfEdge(Vertex *origin, HalfEdge *twin = nullptr,
+             HalfEdge *next = nullptr, HalfEdge *prev = nullptr,
+             Field *incidentFace = nullptr);
 
     Vertex *origin() const;
     void setOrigin(Vertex *origin);
@@ -127,7 +130,7 @@ private:
 class Field{
 public:
     Field();
-    Field(HalfEdge *outerComponent, const std::vector<HalfEdge *> &innerComponent);
+    Field(HalfEdge *outerComponent, const std::vector<HalfEdge *> &innerComponents);
 
     HalfEdge *outerComponent() const;
     void setOuterComponent(HalfEdge *outerComponent);

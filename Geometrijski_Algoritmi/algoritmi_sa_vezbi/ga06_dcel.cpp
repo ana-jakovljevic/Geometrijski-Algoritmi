@@ -17,7 +17,7 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
         exit(EXIT_FAILURE);
     }
 
-    int vertexNum, edgeNum, fieldNum;
+    unsigned vertexNum, edgeNum, fieldNum;
     in >> vertexNum >> fieldNum >> edgeNum;
 
     /* citamo teme po teme iz fajla
@@ -25,31 +25,31 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
     float tmpx, tmpy, tmpz;
     float x, y;
     Vertex* v;
-    for(int i=0; i<vertexNum; i++) {
+    for(auto i=0ul; i<vertexNum; i++) {
         in >> tmpx >> tmpy >> tmpz;
-        x = (tmpx + 1) / 2.0f * w;
-        y = (tmpy + 1) / 2.0f * h;
-        v = new Vertex({{x, y}, nullptr});
+        x = (tmpx + 1) / 2 * w;
+        y = (tmpy + 1) / 2 * h;
+        v = new Vertex(x, y);
         _vertices.push_back(v);
     }
 
     /* za svaki poligon (polje)
      * za svako teme tog poligona napravimo polustranicu sa tim temenom kao pocetkom
      * zatim prodjemo kroz napravljene polustranice i popunimo prethodnu i sledecu */
-    for(int i=0; i<fieldNum; i++) {
+    for(auto i=0ul; i<fieldNum; i++) {
         Field* f = new Field();
-        int broj_temena;
+        unsigned broj_temena;
         in >> broj_temena;
         std::vector<HalfEdge*> edges;
-        for(int j = 0; j < broj_temena; ++j){
-            int indeksTemena;
+        for(auto j = 0ul; j < broj_temena; ++j){
+            unsigned indeksTemena;
             in >> indeksTemena;
-            HalfEdge *new_halfedge = new HalfEdge(_vertices[indeksTemena], nullptr, nullptr, nullptr, nullptr);
+            HalfEdge *new_halfedge = new HalfEdge(_vertices[indeksTemena]);
             edges.push_back(new_halfedge);
             _edges.push_back(new_halfedge);
             _vertices[indeksTemena]->setIncidentEdge(new_halfedge);
         }
-        for(int j = 0; j < broj_temena; j++){
+        for(auto j = 0ul; j < broj_temena; j++){
             edges[j]->setNext(edges[(j + 1) % broj_temena]);
             edges[j]->setPrev(edges[(j - 1 + broj_temena) % broj_temena]);
             edges[j]->setIncidentFace(f);
@@ -158,19 +158,19 @@ void DCEL::loadData(const std::vector<QPointF> &tacke)
     /* tacke moraju biti zadate u smeru suprotnom kazaljci na satu
        inace ova metoda nije validna */
 
-    Field* _inner = new Field();
-    Field* _outer = new Field();
+    auto inner = new Field();
+    auto outer = new Field();
 
-    _fields.push_back(_inner);
-    _fields.push_back(_outer);
+    _fields.push_back(inner);
+    _fields.push_back(outer);
 
     for(auto &tacka : tacke) {
-        Vertex* _newVertex = new Vertex(tacka, nullptr);
-        _vertices.push_back(_newVertex);
+        auto newVertex = new Vertex(tacka);
+        _vertices.push_back(newVertex);
 
-        HalfEdge* _newEdge = new HalfEdge(_newVertex, nullptr, nullptr, nullptr, _inner);
-        _edges.push_back(_newEdge);
-
+        auto newEdge = new HalfEdge(newVertex);
+        newEdge->setIncidentFace(inner);
+        _edges.push_back(newEdge);
     }
 
     for(auto j = 0ul; j < _vertices.size(); ++j) {
@@ -190,10 +190,10 @@ void DCEL::loadData(const std::vector<QPointF> &tacke)
             _edges[j]->setPrev(_edges[_vertices.size()-1]);
 
         /* Postavljamo twin ivice */
-        HalfEdge *_twinEdge = new HalfEdge(_vertices[(j+1) % _vertices.size()],
-                                           _edges[j], nullptr, nullptr, _outer);
-        _edges[j]->setTwin(_twinEdge);
-        _edges.push_back(_twinEdge);
+        auto twinEdge = new HalfEdge(_vertices[(j+1) % _vertices.size()],
+                                     _edges[j], nullptr, nullptr, outer);
+        _edges[j]->setTwin(twinEdge);
+        _edges.push_back(twinEdge);
         /* Sada smo poceli da stavljamo twin ivice, one pocinju od pozicije n+j u vektoru */
     }
 
@@ -213,10 +213,10 @@ void DCEL::loadData(const std::vector<QPointF> &tacke)
 
     /* Ovde je izabran _edges[0] umesto njegovog twin-a, zato sto smo izabrali
      * da radimo u smeru suprotnom kazaljci na satu */
-    _inner->setOuterComponent(_edges[0]);
+    inner->setOuterComponent(_edges[0]);
 
-    _outer->setInnerComponent(_edges[0]->twin());
-    _outer->setOuterComponent(nullptr); /* Outer nema granicu */
+    outer->setInnerComponent(_edges[0]->twin());
+    outer->setOuterComponent(nullptr); /* Outer nema granicu */
 }
 
 void DCEL::insertEdge(HalfEdge *e)
@@ -246,6 +246,10 @@ HalfEdge *DCEL::findEdge(Vertex *start, Vertex *end)
 */
 Vertex::Vertex()
     : _incidentEdge{nullptr}
+{}
+
+Vertex::Vertex(float x, float y)
+    : _coordinates{static_cast<qreal>(x), static_cast<qreal>(y)}
 {}
 
 Vertex::Vertex(const QPointF &coordinates, HalfEdge *incidentEdge)

@@ -13,7 +13,7 @@ struct EventQueueCompTriangulation
     bool operator()(const Vertex* levi, const Vertex* desni) const
     {
         return levi->coordinates().y() > desni->coordinates().y() ||
-              (levi->coordinates().y() == desni->coordinates().y() &&
+              (fabs(levi->coordinates().y() - desni->coordinates().y()) < EPS &&
                levi->coordinates().x() < desni->coordinates().y());
     }
 };
