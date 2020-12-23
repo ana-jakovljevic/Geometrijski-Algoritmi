@@ -22,7 +22,7 @@ CoinsOnShelf::CoinsOnShelf(QWidget *pCrtanje, int pauzaKoraka, const bool &naivn
 
             for(int j = 0; j < discNumber; ++j) {
                 Disk* noviDisk = new Disk();
-                noviDisk->setSize(in.readLine().toDouble());
+                noviDisk->setRadius(in.readLine().toDouble());
                 _discs.push_back(noviDisk);
             }
         }
@@ -35,8 +35,8 @@ CoinsOnShelf::CoinsOnShelf(QWidget *pCrtanje, int pauzaKoraka, const bool &naivn
     std::sort(_discs.begin(), _discs.end(), compClass());
 
     // Now we have disks loaded, so we decide if go with special case or general
-    float max = _discs[0]->size();
-    float min = _discs[_n-1]->size();
+    float max = _discs[0]->radius();
+    float min = _discs[_n-1]->radius();
 
     if(max/min < 2.0)
         _algorithm = SPECIAL;
@@ -54,85 +54,18 @@ CoinsOnShelf::~CoinsOnShelf()
 void CoinsOnShelf::pokreniAlgoritam()
 {
     if(_algorithm == SPECIAL && (_n % 2 == 0)) {
-        _shelf.push_back(_discs[0]);
-        int j = 1;
-
-        while(true) {
-            if(_shelf.back()->size() == _discs[_n - j]->size())
-                break;
-            _shelf.push_back(_discs[_n - j]);
-            if(_shelf.back()->size() == _discs[j]->size())
-                break;
-            _shelf.push_back(_discs[j]);
-            j += 2;
-        }
-
-        j = 2;
-        while(true) {
-            if(_shelf.front()->size() == _discs[_n - j]->size())
-                break;
-            _shelf.push_front(_discs[_n - j]);
-            if(_shelf.front()->size() == _discs[j]->size())
-                break;
-            _shelf.push_front(_discs[j]);
-            j += 2;
-        }
+        specialCaseEvenDiscs();
     }
-//  Don't modify upper part
+
     if(_algorithm == SPECIAL && (_n % 2 == 1)) {
-        _shelf.push_back(_discs[0]);
-        int j = 2;
-        unsigned i = 0;
-
-        while(true) {
-            if(i < (_n/2 - 1)) {
-                _shelf.push_front(_discs[_n - j]);
-                ++i;
-            }
-            else break;
-            if(i < (_n/2 - 1)) {
-                _shelf.push_front(_discs[j]);
-                ++i;
-            }
-            else break;
-            j += 2;
-        }
-
-        _shelf.push_back(_discs[1]);
-        j = 3;
-        i = 0;
-        while(true) {
-            if(i < (_n/2 - 1)) {
-                _shelf.push_back(_discs[_n - j]);
-                ++i;
-            }
-            else break;
-            if(i < (_n/2 - 1)) {
-                _shelf.push_back(_discs[j]);
-                ++i;
-            }
-            else break;
-            j += 2;
-        }
-
-        if(_shelf.back()->size() > _shelf.front()->size()) {
-            _shelf.push_back(_discs[_n-1]);
-        }
-        else {
-            _shelf.push_front(_discs[_n-1]);
-        }
+        specialCaseOddDiscs();
     }
-
-    auto start = _shelf.begin();
-    while(start != _shelf.end()) {
-        qDebug() << (*start)->size();
-        start++;
-    }
-
 
     if(_algorithm == GENERAL) {
-
+        generalCase();
     }
+
+    debugShelf();
 
     emit animacijaZavrsila();
 }
@@ -154,17 +87,103 @@ void CoinsOnShelf::crtajNaivniAlgoritam(QPainter *painter) const
     painter->viewport();
 }
 
+void CoinsOnShelf::specialCaseEvenDiscs()
+{
+    _shelf.push_back(_discs[0]);
+    int j = 1;
+
+    while(true) {
+        if(_shelf.back()->radius() == _discs[_n - j]->radius())
+            break;
+        _shelf.push_back(_discs[_n - j]);
+        if(_shelf.back()->radius() == _discs[j]->radius())
+            break;
+        _shelf.push_back(_discs[j]);
+        j += 2;
+    }
+
+    j = 2;
+    while(true) {
+        if(_shelf.front()->radius() == _discs[_n - j]->radius())
+            break;
+        _shelf.push_front(_discs[_n - j]);
+        if(_shelf.front()->radius() == _discs[j]->radius())
+            break;
+        _shelf.push_front(_discs[j]);
+        j += 2;
+    }
+}
+
+void CoinsOnShelf::specialCaseOddDiscs()
+{
+    _shelf.push_back(_discs[0]);
+    int j = 2;
+    unsigned i = 0;
+
+    while(true) {
+        if(i < (_n/2 - 1)) {
+            _shelf.push_front(_discs[_n - j]);
+            ++i;
+        }
+        else break;
+        if(i < (_n/2 - 1)) {
+            _shelf.push_front(_discs[j]);
+            ++i;
+        }
+        else break;
+        j += 2;
+    }
+
+    _shelf.push_back(_discs[1]);
+    j = 3;
+    i = 0;
+    while(true) {
+        if(i < (_n/2 - 1)) {
+            _shelf.push_back(_discs[_n - j]);
+            ++i;
+        }
+        else break;
+        if(i < (_n/2 - 1)) {
+            _shelf.push_back(_discs[j]);
+            ++i;
+        }
+        else break;
+        j += 2;
+    }
+
+    if(_shelf.back()->radius() > _shelf.front()->radius()) {
+        _shelf.push_back(_discs[_n-1]);
+    }
+    else {
+        _shelf.push_front(_discs[_n-1]);
+    }
+}
+
+void CoinsOnShelf::generalCase()
+{
+
+}
+
+void CoinsOnShelf::debugShelf()
+{
+    auto start = _shelf.begin();
+    while(start != _shelf.end()) {
+        qDebug() << (*start)->radius();
+        start++;
+    }
+}
+
 Disk::Disk()
 {
-    _size = _randomGen.bounded(5.0);
+    _radius = _randomGen.bounded(5.0);
 }
 
-double Disk::size()
+double Disk::radius()
 {
-    return _size;
+    return _radius;
 }
 
-void Disk::setSize(double newSize)
+void Disk::setRadius(double newRadius)
 {
-    _size = newSize;
+    _radius = newRadius;
 }

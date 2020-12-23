@@ -19,18 +19,18 @@ enum AlgoType {
 class Disk {
 public:
     Disk();
-    double size();
-    void setSize(double newSize);
+    double radius();
+    void setRadius(double newRadius);
 
 private:
-    double _size;
+    double _radius;
     QRandomGenerator _randomGen = QRandomGenerator::securelySeeded();
 };
 
 class compClass {
 public:
     bool operator() (Disk *d1, Disk *d2) const {
-        return d1->size() >= d2->size();
+        return d1->radius() >= d2->radius();
     }
 };
 
@@ -49,6 +49,13 @@ public:
     void crtajAlgoritam(QPainter *painter) const final;
     void pokreniNaivniAlgoritam() final;
     void crtajNaivniAlgoritam(QPainter *painter) const final;
+
+private:
+    void specialCaseEvenDiscs();
+    void specialCaseOddDiscs();
+    void generalCase();
+
+    void debugShelf();
 
 private:
     vector<Disk*> _discs;
