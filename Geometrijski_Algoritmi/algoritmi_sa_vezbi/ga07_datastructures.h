@@ -50,7 +50,7 @@ public:
     }
 };
 
-/// TODO
+
 struct DiagonalsAddDECELComp
 {
 private:
@@ -63,7 +63,13 @@ public:
 
     bool operator()(const HalfEdge* line1, const HalfEdge* line2) const
     {
-        return true;
+        Vertex* v1 = line1->origin() != _vertex ? line1->origin() :
+                                                  line1->twin()->origin();
+
+        Vertex* v2 = line2->origin() != _vertex ? line2->origin() :
+                                                  line2->twin()->origin();
+
+        return (!pomocneFunkcije::konveksan(_vertex->coordinates(), v1->coordinates(), v2->coordinates()));
     }
 };
 

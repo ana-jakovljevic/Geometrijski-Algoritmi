@@ -161,8 +161,8 @@ void DCEL::loadData(const std::vector<QPointF> &tacke)
     auto inner = new Field();
     auto outer = new Field();
 
-    _fields.push_back(inner);
     _fields.push_back(outer);
+    _fields.push_back(inner);
 
     for(auto &tacka : tacke) {
         auto newVertex = new Vertex(tacka);

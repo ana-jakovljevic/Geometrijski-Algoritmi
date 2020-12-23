@@ -131,10 +131,10 @@ void Triangulation::pokreniAlgoritam()
 {
     initialiseEventQueue();
     monotonePartition();
-//    _monotone = false;
-//    connectDiagonalsDCEL();
-//    _allDiagonals.clear();
-//    AlgoritamBaza_updateCanvasAndBlock();
+    _monotone = false;
+    connectDiagonalsDCEL();
+    _allDiagonals.clear();
+    AlgoritamBaza_updateCanvasAndBlock();
 //    for (auto f : _polygon.fields()) {
 //        if (f->outerComponent() == nullptr) continue;
 //        triangulacija(f);
