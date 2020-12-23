@@ -3,10 +3,10 @@
 
 #include "algoritambaza.h"
 
-class konveksniomotac : public AlgoritamBaza
+class KonveksniOmotac : public AlgoritamBaza
 {
 public:
-    konveksniomotac(QWidget *pCrtanje,
+    KonveksniOmotac(QWidget *pCrtanje,
                     int pauzaKoraka,
                     const bool &naivni = false,
                     std::string imeDatoteke = "",

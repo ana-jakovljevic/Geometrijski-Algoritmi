@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <QPainterPath>
 
-konveksniomotac::konveksniomotac(QWidget *pCrtanje,
+KonveksniOmotac::KonveksniOmotac(QWidget *pCrtanje,
                                  int pauzaKoraka,
                                  const bool &naivni,
                                  std::string imeDatoteke,
@@ -18,7 +18,7 @@ konveksniomotac::konveksniomotac(QWidget *pCrtanje,
     _k = _tacke.size();
 }
 
-void konveksniomotac::pokreniAlgoritam() {
+void KonveksniOmotac::pokreniAlgoritam() {
     /* Slozenost ovakvog (Gremovog) algoritma: O(nlogn).
      * Dominira sortiranje, dok su ostali koraci linearni. */
     _maxTacka = _tacke[0];
@@ -62,7 +62,7 @@ void konveksniomotac::pokreniAlgoritam() {
     emit animacijaZavrsila();
 }
 
-void konveksniomotac::crtajAlgoritam(QPainter *painter) const {
+void KonveksniOmotac::crtajAlgoritam(QPainter *painter) const {
     if (!painter) return;
 
     auto pen = painter->pen();
@@ -79,7 +79,7 @@ void konveksniomotac::crtajAlgoritam(QPainter *painter) const {
     }
 }
 
-void konveksniomotac::pokreniNaivniAlgoritam() {
+void KonveksniOmotac::pokreniNaivniAlgoritam() {
     /* Slozenost naivnog algoritma: O(n^3).
      * Prolazi se kroz svaki par tacaka. */
     for (_i = 0; _i < _tacke.size(); _i++) {
@@ -117,7 +117,7 @@ void konveksniomotac::pokreniNaivniAlgoritam() {
     emit animacijaZavrsila();
 }
 
-void konveksniomotac::naglasiTrenutno(QPainter *painter, unsigned long i, const char *s) const
+void KonveksniOmotac::naglasiTrenutno(QPainter *painter, unsigned long i, const char *s) const
 {
     /* Transformacija cetkice */
     painter->save();
@@ -131,7 +131,7 @@ void konveksniomotac::naglasiTrenutno(QPainter *painter, unsigned long i, const 
     painter->restore();
 }
 
-void konveksniomotac::crtajNaivniAlgoritam(QPainter *painter) const
+void KonveksniOmotac::crtajNaivniAlgoritam(QPainter *painter) const
 {
     /* Odustajanje u slucaju greske */
     if (!painter) return;
@@ -197,12 +197,12 @@ void konveksniomotac::crtajNaivniAlgoritam(QPainter *painter) const
     }
 }
 
-const std::vector<QLine> &konveksniomotac::getNaivniOmotac() const
+const std::vector<QLine> &KonveksniOmotac::getNaivniOmotac() const
 {
     return _naivniOmotac;
 }
 
-const std::vector<QPoint> &konveksniomotac::getKonveksniOmotac() const
+const std::vector<QPoint> &KonveksniOmotac::getKonveksniOmotac() const
 {
     return _konveksniOmotac;
 }

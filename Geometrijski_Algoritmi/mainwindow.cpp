@@ -291,7 +291,7 @@ void MainWindow::napraviNoviAlgoritam()
                                            _imeDatoteke, _brojSlucajnihObjekata);
         break;
     case TipAlgoritma::KONVEKSNI_OMOTAC:
-        _pAlgoritamBaza = new konveksniomotac(_pOblastCrtanja, _duzinaPauze, _naivni,
+        _pAlgoritamBaza = new KonveksniOmotac(_pOblastCrtanja, _duzinaPauze, _naivni,
                                               _imeDatoteke, _brojSlucajnihObjekata);
         break;
     case TipAlgoritma::KONVEKSNI_OMOTAC_3D:

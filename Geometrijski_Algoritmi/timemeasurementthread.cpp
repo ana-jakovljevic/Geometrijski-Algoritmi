@@ -46,7 +46,7 @@ void TimeMeasurementThread::run()
             pAlgorithm = new BrisucaPrava(nullptr, 0, false, "", i);
             break;
         case TipAlgoritma::KONVEKSNI_OMOTAC:
-            pAlgorithm = new konveksniomotac(nullptr, 0, false, "", i);
+            pAlgorithm = new KonveksniOmotac(nullptr, 0, false, "", i);
             break;
         case TipAlgoritma::KONVEKSNI_OMOTAC_3D:
             pAlgorithm = new KonveksniOmotac3D(nullptr, 0, false, "", i);
