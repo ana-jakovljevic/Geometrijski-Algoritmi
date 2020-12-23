@@ -13,7 +13,7 @@ public:
     float x() const { return _koordinate.x(); }
     float y() const { return _koordinate.y(); }
     float z() const { return _koordinate.z(); }
-    QVector3D koordinate() const { return _koordinate; }
+    const QVector3D &koordinate() const { return _koordinate; }
 
     /* Da li je teme obradjeno i stavljeno u konveksni omotac. */
     bool getObradjeno() const { return _obradjeno; }

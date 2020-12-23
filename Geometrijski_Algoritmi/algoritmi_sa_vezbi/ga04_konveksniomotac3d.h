@@ -15,7 +15,7 @@ public:
                       const bool &naivni = false,
                       std::string imeDatoteke = "",
                       int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA);
-    virtual ~KonveksniOmotac3D();
+    virtual ~KonveksniOmotac3D() override;
 
 public:
     void pokreniAlgoritam() final;
@@ -23,12 +23,12 @@ public:
     void pokreniNaivniAlgoritam() final;
     void crtajNaivniAlgoritam(QPainter *painter) const final;
 
-    std::unordered_set<Ivica *, HashIvica, EqIvica> getIvice() const;
-    std::unordered_set<Ivica *, HashIvica, EqIvica> getNaivneIvice() const;
+    const std::unordered_set<Ivica *, HashIvica, EqIvica> &getIvice() const;
+    const std::unordered_set<Ivica *, HashIvica, EqIvica> &getNaivneIvice() const;
 
 
-    std::vector<Stranica*> getNaivniOmotac3d() const;
-    std::unordered_set<Ivica*, HashIvica, EqIvica> getKonveksniOmotac3d() const;
+    const std::vector<Stranica*> &getNaivniOmotac3d() const;
+    const std::unordered_set<Ivica*, HashIvica, EqIvica> &getKonveksniOmotac3d() const;
 private:
     void crtajTeme(Teme* t) const;
     void crtajStranicu(Stranica* s) const;
@@ -53,15 +53,13 @@ private:
 
     std::vector<Teme*> _tacke;
 
-
-
     /* Neuredjeni skup za cuvanje ivica; nije nam sustinski vazan redosled
      * ivica u skupu, pa nema potrebe za nizovima kod kojih su pretraga i
      * brisanje reda O(n) umesto jednostavnog O(1) u proseku */
     std::unordered_set<Ivica*, HashIvica, EqIvica> _ivice;
     std::unordered_set<Ivica*, HashIvica, EqIvica> _naivneIvice;
 
-    Stranica* _tekucaStranica=nullptr;
+    Stranica* _tekucaStranica = nullptr;
     //vektor stranica
     std::vector<Stranica*> _naivniOmotac;
     // ovaj vektor je potreban kako bi se memorija uredno oslobodila

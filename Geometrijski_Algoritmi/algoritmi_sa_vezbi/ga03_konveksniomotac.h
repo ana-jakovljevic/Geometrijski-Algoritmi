@@ -17,8 +17,8 @@ public:
     void pokreniNaivniAlgoritam() final;
     void crtajNaivniAlgoritam(QPainter *painter) const final;
 
-    std::vector<QPoint> getKonveksniOmotac() const;
-    std::vector<QLine> getNaivniOmotac() const;
+    const std::vector<QPoint> &getKonveksniOmotac() const;
+    const std::vector<QLine> &getNaivniOmotac() const;
 
 private:
     void naglasiTrenutno(QPainter *painter, unsigned long i, const char *s) const;

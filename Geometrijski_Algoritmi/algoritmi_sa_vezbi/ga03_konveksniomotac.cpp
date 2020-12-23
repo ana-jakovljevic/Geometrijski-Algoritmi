@@ -197,12 +197,12 @@ void konveksniomotac::crtajNaivniAlgoritam(QPainter *painter) const
     }
 }
 
-std::vector<QLine> konveksniomotac::getNaivniOmotac() const
+const std::vector<QLine> &konveksniomotac::getNaivniOmotac() const
 {
     return _naivniOmotac;
 }
 
-std::vector<QPoint> konveksniomotac::getKonveksniOmotac() const
+const std::vector<QPoint> &konveksniomotac::getKonveksniOmotac() const
 {
     return _konveksniOmotac;
 }

@@ -45,13 +45,12 @@ std::vector<Teme *> KonveksniOmotac3D::generisiNasumicneTacke(int brojTacaka) co
     srand(static_cast<unsigned>(time(nullptr)));
 
     std::vector<Teme*> randomPoints;
-    auto randMaxf = static_cast<float>(RAND_MAX);
 
     for(int i=0; i < brojTacaka; i++)
         randomPoints.emplace_back(new Teme(
-           rand()/randMaxf,
-           rand()/randMaxf,
-           rand()/randMaxf));
+           1.f*rand()/RAND_MAX,
+           1.f*rand()/RAND_MAX,
+           1.f*rand()/RAND_MAX));
 
     return randomPoints;
 }
@@ -68,12 +67,12 @@ std::vector<Teme *> KonveksniOmotac3D::ucitajPodatkeIzDatoteke(std::string imeDa
     return points;
 }
 
-std::unordered_set<Ivica *, HashIvica, EqIvica> KonveksniOmotac3D::getIvice() const
+const std::unordered_set<Ivica *, HashIvica, EqIvica> &KonveksniOmotac3D::getIvice() const
 {
     return _ivice;
 }
 
-std::unordered_set<Ivica *, HashIvica, EqIvica> KonveksniOmotac3D::getNaivneIvice() const
+const std::unordered_set<Ivica *, HashIvica, EqIvica> &KonveksniOmotac3D::getNaivneIvice() const
 {
     return _naivneIvice;
 }
@@ -235,8 +234,9 @@ void KonveksniOmotac3D::ObrisiVisak()
 float KonveksniOmotac3D::zapremina6(Stranica *s, Teme *t) const
 {
     return pomocneFunkcije::zapremina(s->t1()->koordinate(),
-                s->t2()->koordinate(), s->t3()->koordinate(),
-                t->koordinate());
+                                      s->t2()->koordinate(),
+                                      s->t3()->koordinate(),
+                                      t->koordinate());
 }
 
 bool KonveksniOmotac3D::kolinearne(Teme *a, Teme *b, Teme *c) const
@@ -291,17 +291,17 @@ Stranica* KonveksniOmotac3D::napraviDruguStranicu(Ivica *iv, Teme *t)
 /*--------------------------------------------------------------------------------------------------*/
 void KonveksniOmotac3D::crtajTeme(Teme *t) const
 {
-    // crtanje tacaka preko koordinata
+    /* Crtanje tacaka preko koordinata */
     glColor3d(1, 0, 0.4);
     glVertex3f(t->x(), t->y(), t->z());
 }
 
 void KonveksniOmotac3D::crtajStranicu(Stranica* s) const
 {
-    // postavljanje boje
+    /* Postavljanje boje */
     glColor4dv(s->boje);
 
-    // crtanje stranice kao trougla
+    /* Crtanje stranice kao trougla */
     glBegin(GL_POLYGON);
         glVertex3f(s->t1()->x(), s->t1()->y(), s->t1()->z());
         glVertex3f(s->t2()->x(), s->t2()->y(), s->t2()->z());
@@ -311,14 +311,14 @@ void KonveksniOmotac3D::crtajStranicu(Stranica* s) const
 
 void KonveksniOmotac3D::crtajAlgoritam(QPainter*) const
 {
-    // crtanje svih temena
+    /* Crtanje svih temena */
     glBegin(GL_POINTS);
         for(auto teme : _tacke)
             crtajTeme(teme);
     glEnd();
 
-    // crtanje svih stranica prolaskom
-    // dve po dve kroz skup ivica
+    /* Crtanje svih stranica prolaskom
+     * dve po dve kroz skup ivica */
     for(auto ivica: _ivice)
     {
         crtajStranicu(ivica->s1());
@@ -410,9 +410,11 @@ void KonveksniOmotac3D::crtajNaivniAlgoritam(QPainter *) const
          crtajStranicu(stranica);
     }
 }
-std::vector<Stranica*> KonveksniOmotac3D::getNaivniOmotac3d() const{
+
+const std::vector<Stranica*> &KonveksniOmotac3D::getNaivniOmotac3d() const{
     return _naivniOmotac;
 }
-std::unordered_set<Ivica*, HashIvica, EqIvica> KonveksniOmotac3D::getKonveksniOmotac3d() const{
+
+const std::unordered_set<Ivica*, HashIvica, EqIvica> &KonveksniOmotac3D::getKonveksniOmotac3d() const{
    return _ivice;
 }

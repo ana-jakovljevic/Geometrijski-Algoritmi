@@ -217,7 +217,7 @@ public:
                         const bool & = false,
                         std::string = "",
                         int = BROJ_SLUCAJNIH_OBJEKATA);
-    virtual ~PresekPravougaonika();
+    virtual ~PresekPravougaonika() override;
 
     /* Dohvataci rezultata algoritama */
     IntersecSet getGlavni() const;
