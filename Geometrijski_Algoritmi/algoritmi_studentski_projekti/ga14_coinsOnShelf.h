@@ -27,7 +27,7 @@ public:
 
 private:
     double _radius;
-    double _footprint;
+    double _footprint = 0;
     QRandomGenerator _randomGen = QRandomGenerator::securelySeeded();
 };
 
@@ -42,7 +42,7 @@ class MaxGap
 {
 public:
     MaxGap(Disk *A, Disk *B);
-    float maxGapRadius;
+    float maxGapRadius();
     Disk* leftDisk();
     Disk* rightDisk();
     void setGapRadiusManual(float newRadius);
@@ -55,7 +55,7 @@ private:
 class compMaxGaps {
 public:
     bool operator() (MaxGap *g1, MaxGap *g2) const {
-        return g1->maxGapRadius > g2->maxGapRadius;
+        return g1->maxGapRadius() <= g2->maxGapRadius();
     }
 };
 

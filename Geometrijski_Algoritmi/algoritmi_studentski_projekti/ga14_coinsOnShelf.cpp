@@ -169,7 +169,7 @@ void CoinsOnShelf::generalCase()
     _queue.push(newEntry);
 
     for(unsigned i = 2; i < _n; ++i) {
-        if(_queue.top()->maxGapRadius >= _discs[i]->radius()) {
+        if(_queue.top()->maxGapRadius() >= _discs[i]->radius()) {
             // Disc can fit into gap, add id to gap, readjust gap size
             Disk *left = _queue.top()->leftDisk();
             Disk *right = _queue.top()->rightDisk();
@@ -305,6 +305,11 @@ MaxGap::MaxGap(Disk *A, Disk *B)
     float divider = sqrt(_A->radius()) + sqrt(_B->radius());
     divider = pow(divider, 2);
     _maxGapRadius = (_A->radius() * _B->radius()) / divider;
+}
+
+float MaxGap::maxGapRadius()
+{
+    return _maxGapRadius;
 }
 
 Disk *MaxGap::leftDisk()
