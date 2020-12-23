@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QDebug>
 #include <set>
+#include <queue>
 #include <list>
 
 using namespace std;
@@ -21,16 +22,40 @@ public:
     Disk();
     double radius();
     void setRadius(double newRadius);
+    double footprint();
+    void setFootprint(double newFootprint);
 
 private:
     double _radius;
+    double _footprint;
     QRandomGenerator _randomGen = QRandomGenerator::securelySeeded();
 };
 
-class compClass {
+class compDiscs {
 public:
     bool operator() (Disk *d1, Disk *d2) const {
         return d1->radius() >= d2->radius();
+    }
+};
+
+class MaxGap
+{
+public:
+    MaxGap(Disk *A, Disk *B);
+    float maxGapRadius;
+    Disk* leftDisk();
+    Disk* rightDisk();
+    void setGapRadiusManual(float newRadius);
+private:
+    Disk *_A;
+    Disk *_B;
+    float _maxGapRadius;
+};
+
+class compMaxGaps {
+public:
+    bool operator() (MaxGap *g1, MaxGap *g2) const {
+        return g1->maxGapRadius > g2->maxGapRadius;
     }
 };
 
@@ -56,10 +81,12 @@ private:
     void generalCase();
 
     void debugShelf();
+    void updateFootprintAB(Disk* A, Disk* B, bool directionBIsRightsideA);
 
 private:
     vector<Disk*> _discs;
     list<Disk*> _shelf;
+    priority_queue<MaxGap*, vector<MaxGap*>, compMaxGaps> _queue;
     AlgoType _algorithm;
     unsigned _n;
 };

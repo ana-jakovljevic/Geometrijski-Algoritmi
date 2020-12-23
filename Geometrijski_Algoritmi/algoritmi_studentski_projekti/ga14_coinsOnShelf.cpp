@@ -32,7 +32,7 @@ CoinsOnShelf::CoinsOnShelf(QWidget *pCrtanje, int pauzaKoraka, const bool &naivn
         }
     }
     _n = _discs.size();
-    std::sort(_discs.begin(), _discs.end(), compClass());
+    std::sort(_discs.begin(), _discs.end(), compDiscs());
 
     // Now we have disks loaded, so we decide if go with special case or general
     float max = _discs[0]->radius();
@@ -161,6 +161,92 @@ void CoinsOnShelf::specialCaseOddDiscs()
 
 void CoinsOnShelf::generalCase()
 {
+    // Put first two discs, adjust footprint for smaller, add gap to queue
+    _shelf.push_back(_discs[0]);
+    _shelf.push_back(_discs[1]);
+    updateFootprintAB(_discs[0], _discs[1], true);
+    MaxGap* newEntry = new MaxGap(_discs[0], _discs[1]);
+    _queue.push(newEntry);
+
+    for(unsigned i = 2; i < _n; ++i) {
+        if(_queue.top()->maxGapRadius >= _discs[i]->radius()) {
+            // Disc can fit into gap, add id to gap, readjust gap size
+            Disk *left = _queue.top()->leftDisk();
+            Disk *right = _queue.top()->rightDisk();
+
+            // We insert disc between left and right on shelf
+            list<Disk*>::iterator it = _shelf.begin();
+            while((*it)->radius() != right->radius())
+                it++;
+            _shelf.insert(it, _discs[i]);
+
+            // Now we update footprint distance, that this newly added disc touch smaller
+            // and also update two new gaps
+            if(left->radius() < right->radius()) {
+                updateFootprintAB(left, _discs[i], true);
+
+                MaxGap *newEntry = new MaxGap(left, _discs[i]);
+                _queue.push(newEntry);
+
+                MaxGap *newEntry2 = new MaxGap(_discs[i], right);
+                newEntry2->setGapRadiusManual(_discs[i]->radius());
+                _queue.push(newEntry2);
+
+            }
+            else {
+                updateFootprintAB(right, _discs[i], false);
+
+                MaxGap *newEntry = new MaxGap(_discs[i], right);
+                _queue.push(newEntry);
+
+                MaxGap *newEntry2 = new MaxGap(left, _discs[i]);
+                newEntry2->setGapRadiusManual(_discs[i]->radius());
+                _queue.push(newEntry2);
+
+            }
+            // Remove this gap becouse it's now filled
+            _queue.pop();
+        }
+        else {
+            // Disc cannot be fitted into gap, so we must add it to either side of shelf
+            Disk* leftmost = _shelf.front();
+            Disk* rightmost = _shelf.back();
+
+            float leftFootprintCandidate = 2 * sqrt( leftmost->radius() * _discs[i]->radius());
+            float rightFootprintCandidate = 2 * sqrt( rightmost->radius() * _discs[i]->radius());
+
+            if(leftFootprintCandidate <= leftmost->radius()) {
+                // We can fit disk I at leftmost point on shelf, without increasing span
+                _shelf.push_front(_discs[i]);
+                updateFootprintAB(leftmost,_discs[i], false);
+                MaxGap* newEntry = new MaxGap(_discs[i], leftmost);
+                _queue.push(newEntry);
+            }
+            else if(rightFootprintCandidate <= rightmost->radius()) {
+                // We can fit disk I at rightmost point on shelf, without increasing span
+                _shelf.push_back(_discs[i]);
+                updateFootprintAB(rightmost, _discs[i], true);
+                MaxGap* newEntry = new MaxGap(rightmost, _discs[i]);
+                _queue.push(newEntry);
+            }
+            else {
+                // We must increase span with adding disk I, so we add it to larger one
+                if(leftmost->radius() > rightmost->radius()) {
+                    _shelf.push_front(_discs[i]);
+                    updateFootprintAB(leftmost,_discs[i], false);
+                    MaxGap* newEntry = new MaxGap(_discs[i], leftmost);
+                    _queue.push(newEntry);
+                }
+                else {
+                    _shelf.push_back(_discs[i]);
+                    updateFootprintAB(rightmost, _discs[i], true);
+                    MaxGap* newEntry = new MaxGap(rightmost, _discs[i]);
+                    _queue.push(newEntry);
+                }
+            }
+
+        }
+    }
 
 }
 
@@ -170,6 +256,17 @@ void CoinsOnShelf::debugShelf()
     while(start != _shelf.end()) {
         qDebug() << (*start)->radius();
         start++;
+    }
+}
+
+void CoinsOnShelf::updateFootprintAB(Disk *A, Disk *B, bool directionBIsRightsideA)
+{
+    float increment = 2 * sqrt(A->radius() * B->radius());
+    if(directionBIsRightsideA) {    // Disk B is on A rightside
+        B->setFootprint( A->footprint() + increment);
+    }
+    else {                          // Disk B is on A leftside
+        B->setFootprint( A->footprint() - increment);
     }
 }
 
@@ -186,4 +283,41 @@ double Disk::radius()
 void Disk::setRadius(double newRadius)
 {
     _radius = newRadius;
+}
+
+double Disk::footprint()
+{
+    return _footprint;
+}
+
+void Disk::setFootprint(double newFootprint)
+{
+    _footprint = newFootprint;
+}
+
+MaxGap::MaxGap(Disk *A, Disk *B)
+{
+    // Assign disk pointers
+    _A = A;
+    _B = B;
+
+    // Calculate gap
+    float divider = sqrt(_A->radius()) + sqrt(_B->radius());
+    divider = pow(divider, 2);
+    _maxGapRadius = (_A->radius() * _B->radius()) / divider;
+}
+
+Disk *MaxGap::leftDisk()
+{
+    return _A;
+}
+
+Disk *MaxGap::rightDisk()
+{
+    return _B;
+}
+
+void MaxGap::setGapRadiusManual(float newRadius)
+{
+    _maxGapRadius = newRadius;
 }
