@@ -24,14 +24,18 @@ HEADERS += \
     ../Geometrijski_Algoritmi/algoritambaza.h \
     ../Geometrijski_Algoritmi/animacijanit.h \
     ../Geometrijski_Algoritmi/config.h \
-    ../Geometrijski_Algoritmi/oblastcrtanja.h \
-    ../Geometrijski_Algoritmi/timemeasurementthread.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga00_demoiscrtavanja.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga01_brisucaprava.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga02_3discrtavanje.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga03_konveksniomotac.h \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga04_konveksni3dDatastructures.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga04_konveksniomotac3d.h \
-    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga05_preseciduzi.h
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga05_datastructures.h \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga05_preseciduzi.h \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga06_dcel.h \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga06_dceldemo.h \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga07_datastructures.h \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga07_triangulation.h
 
 INCLUDEPATH += \
     ../Geometrijski_Algoritmi \
@@ -48,11 +52,12 @@ SOURCES += main.cpp \
     ../Geometrijski_Algoritmi/pomocnefunkcije.cpp \
     ../Geometrijski_Algoritmi/algoritambaza.cpp \
     ../Geometrijski_Algoritmi/animacijanit.cpp \
-    ../Geometrijski_Algoritmi/oblastcrtanja.cpp \
-    ../Geometrijski_Algoritmi/timemeasurementthread.cpp \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga00_demoiscrtavanja.cpp \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga01_brisucaprava.cpp \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga02_3discrtavanje.cpp \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga03_konveksniomotac.cpp \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga04_konveksniomotac3d.cpp \
-    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga05_preseciduzi.cpp
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga05_preseciduzi.cpp \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga06_dcel.cpp \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga06_dceldemo.cpp \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga07_triangulation.cpp
