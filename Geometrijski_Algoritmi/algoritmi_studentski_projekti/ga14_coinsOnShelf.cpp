@@ -65,15 +65,31 @@ void CoinsOnShelf::pokreniAlgoritam()
         generalCase();
     }
 
-    debugShelf();
+    //debugShelf();
 
     emit animacijaZavrsila();
 }
 
 void CoinsOnShelf::crtajAlgoritam(QPainter *painter) const
 {
-    // TODO
-    painter->viewport();
+    if(!painter) return;
+
+    QPen pen = painter->pen();
+    pen.setWidth(2);
+    pen.setColor(Qt::black);
+    painter->setPen(pen);
+
+    painter->drawLine(0, 70, 1100, 70);
+
+    for(Disk* disc: _shelf) {
+        float radius = disc->radius();
+        float x = disc->footprint() + 450;
+        float y = disc->radius() + 70;
+        QPointF center(x,y);
+        painter->drawEllipse(center, radius, radius);
+    }
+
+    //painter->viewport();
 }
 
 void CoinsOnShelf::pokreniNaivniAlgoritam()
@@ -91,14 +107,19 @@ void CoinsOnShelf::specialCaseEvenDiscs()
 {
     _shelf.push_back(_discs[0]);
     int j = 1;
+    AlgoritamBaza_updateCanvasAndBlock();
 
     while(true) {
         if(_shelf.back()->radius() == _discs[_n - j]->radius())
             break;
+        updateFootprintAB(_shelf.back(), _discs[_n - j], true);
         _shelf.push_back(_discs[_n - j]);
+        AlgoritamBaza_updateCanvasAndBlock();
         if(_shelf.back()->radius() == _discs[j]->radius())
             break;
+        updateFootprintAB(_shelf.back(), _discs[j], true);
         _shelf.push_back(_discs[j]);
+        AlgoritamBaza_updateCanvasAndBlock();
         j += 2;
     }
 
@@ -106,10 +127,14 @@ void CoinsOnShelf::specialCaseEvenDiscs()
     while(true) {
         if(_shelf.front()->radius() == _discs[_n - j]->radius())
             break;
+        updateFootprintAB(_shelf.front(), _discs[_n - j], false);
         _shelf.push_front(_discs[_n - j]);
+        AlgoritamBaza_updateCanvasAndBlock();
         if(_shelf.front()->radius() == _discs[j]->radius())
             break;
+        updateFootprintAB(_shelf.front(), _discs[j], false);
         _shelf.push_front(_discs[j]);
+        AlgoritamBaza_updateCanvasAndBlock();
         j += 2;
     }
 }
@@ -119,54 +144,70 @@ void CoinsOnShelf::specialCaseOddDiscs()
     _shelf.push_back(_discs[0]);
     int j = 2;
     unsigned i = 0;
+    AlgoritamBaza_updateCanvasAndBlock();
 
     while(true) {
         if(i < (_n/2 - 1)) {
+            updateFootprintAB(_shelf.front(), _discs[_n - j], false);
             _shelf.push_front(_discs[_n - j]);
             ++i;
+            AlgoritamBaza_updateCanvasAndBlock();
         }
         else break;
         if(i < (_n/2 - 1)) {
+            updateFootprintAB(_shelf.front(), _discs[j], false);
             _shelf.push_front(_discs[j]);
             ++i;
+            AlgoritamBaza_updateCanvasAndBlock();
         }
         else break;
         j += 2;
     }
 
+    updateFootprintAB(_discs[0], _discs[1], true); // POTENTIAL PROBLEM
     _shelf.push_back(_discs[1]);
+    AlgoritamBaza_updateCanvasAndBlock();
     j = 3;
     i = 0;
     while(true) {
         if(i < (_n/2 - 1)) {
+            updateFootprintAB(_shelf.back(), _discs[_n - j], true);
             _shelf.push_back(_discs[_n - j]);
             ++i;
+            AlgoritamBaza_updateCanvasAndBlock();
         }
         else break;
         if(i < (_n/2 - 1)) {
+            updateFootprintAB(_shelf.back(), _discs[j], true);
             _shelf.push_back(_discs[j]);
             ++i;
+            AlgoritamBaza_updateCanvasAndBlock();
         }
         else break;
         j += 2;
     }
 
     if(_shelf.back()->radius() > _shelf.front()->radius()) {
+        updateFootprintAB(_shelf.back(), _discs[_n -1], true);
         _shelf.push_back(_discs[_n-1]);
     }
     else {
+        updateFootprintAB(_shelf.front(), _discs[_n-1], false);
         _shelf.push_front(_discs[_n-1]);
     }
+    AlgoritamBaza_updateCanvasAndBlock();
 }
 
 void CoinsOnShelf::generalCase()
 {
     // Put first two discs, adjust footprint for smaller, add gap to queue
     _shelf.push_back(_discs[0]);
+    AlgoritamBaza_updateCanvasAndBlock();
     _shelf.push_back(_discs[1]);
     updateFootprintAB(_discs[0], _discs[1], true);
     MaxGap* newEntry = new MaxGap(_discs[0], _discs[1]);
     _queue.push(newEntry);
+    AlgoritamBaza_updateCanvasAndBlock();
 
     for(unsigned i = 2; i < _n; ++i) {
         if(_queue.top()->maxGapRadius() >= _discs[i]->radius()) {
@@ -206,6 +247,7 @@ void CoinsOnShelf::generalCase()
             }
             // Remove this gap becouse it's now filled
             _queue.pop();
+            AlgoritamBaza_updateCanvasAndBlock();
         }
         else {
             // Disc cannot be fitted into gap, so we must add it to either side of shelf
@@ -244,7 +286,7 @@ void CoinsOnShelf::generalCase()
                     _queue.push(newEntry);
                 }
             }
-
+            AlgoritamBaza_updateCanvasAndBlock();
         }
     }
 
@@ -272,7 +314,7 @@ void CoinsOnShelf::updateFootprintAB(Disk *A, Disk *B, bool directionBIsRightsid
 
 Disk::Disk()
 {
-    _radius = _randomGen.bounded(5.0);
+    _radius = _randomGen.bounded(55.0);
 }
 
 double Disk::radius()
