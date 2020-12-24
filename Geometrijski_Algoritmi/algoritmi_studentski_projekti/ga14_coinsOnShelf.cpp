@@ -1,5 +1,27 @@
 #include "ga14_coinsOnShelf.h"
 
+void CoinsOnShelf::printSpan(QPainter *painter) const
+{
+    float span = _shelf.back()->radius() + _shelf.back()->footprint() - _shelf.front()->footprint() - _shelf.front()->radius();
+    QPointF point(50, 500);
+    QString spanText = "Total span: " + QString::number(span);
+
+    painter->save();
+    painter->scale(1, -1);
+    painter->translate(0, -2*525);
+
+    QPen pen = painter->pen();
+    pen.setColor(Qt::black);
+    QFont font;
+    font.setPixelSize(24);
+    painter->setFont(font);
+    painter->setPen(pen);
+
+    painter->drawText(point, spanText);
+    painter->restore();
+
+}
+
 CoinsOnShelf::CoinsOnShelf(QWidget *pCrtanje, int pauzaKoraka, const bool &naivni, std::string imeDatoteke, int brojDiskova)
     :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni)
 {
@@ -100,6 +122,12 @@ void CoinsOnShelf::crtajAlgoritam(QPainter *painter) const
     }
 
     if(_ended) {
+
+    }
+
+    if(_shelf.size() >= 2) {
+        printSpan(painter);
+
         QPen redPen = painter->pen();
         redPen.setWidth(2);
         redPen.setColor(Qt::red);
@@ -259,7 +287,7 @@ void CoinsOnShelf::generalCase()
                                                 // Code bellow will calculate gap size //
                 float z = pow( (left->radius() + _discs[i]->radius()) , 2) - pow( (left->radius() - _discs[i]->radius()) ,2);
                 z = sqrt(z);
-                z = right->footprint() - left->footprint() - z;
+                z = fabs(right->footprint() - left->footprint()) - z;
                 z = z / (2 * (sqrt(_discs[i]->radius()) + sqrt(right->radius())));
                 z = pow(z,2);
                                                 //                 End                 //
@@ -280,7 +308,7 @@ void CoinsOnShelf::generalCase()
                                                 // Code bellow will calculate gap size //
                 float z = pow( (right->radius() + _discs[i]->radius()) , 2) - pow( (right->radius() - _discs[i]->radius()) ,2);
                 z = sqrt(z);
-                z = right->footprint() - left->footprint() - z;
+                z = fabs(right->footprint() - left->footprint()) - z;
                 z = z / (2 * (sqrt(_discs[i]->radius()) + sqrt(left->radius())));
                 z = pow(z,2);
                                                 //                 End                 //

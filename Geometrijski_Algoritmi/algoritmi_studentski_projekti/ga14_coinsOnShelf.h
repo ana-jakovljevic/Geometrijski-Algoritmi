@@ -82,6 +82,7 @@ private:
 
     void debugShelf();
     void updateFootprintAB(Disk* A, Disk* B, bool directionBIsRightsideA);
+    void printSpan(QPainter *painter) const;
 
 private:
     vector<Disk*> _discs;
