@@ -32,6 +32,7 @@ CoinsOnShelf::CoinsOnShelf(QWidget *pCrtanje, int pauzaKoraka, const bool &naivn
         }
     }
     _n = _discs.size();
+    _ended = false;
     std::sort(_discs.begin(), _discs.end(), compDiscs());
 
     // Now we have disks loaded, so we decide if go with special case or general
@@ -66,6 +67,8 @@ void CoinsOnShelf::pokreniAlgoritam()
     }
 
     //debugShelf();
+    _ended = true;
+    AlgoritamBaza_updateCanvasAndBlock();
 
     emit animacijaZavrsila();
 }
@@ -73,11 +76,18 @@ void CoinsOnShelf::pokreniAlgoritam()
 void CoinsOnShelf::crtajAlgoritam(QPainter *painter) const
 {
     if(!painter) return;
+    painter->viewport();
 
     QPen pen = painter->pen();
     pen.setWidth(2);
     pen.setColor(Qt::black);
     painter->setPen(pen);
+
+    painter->save();
+    painter->scale(1,-1);
+    painter->translate(0, 200);
+    painter->drawText(QPointF(300,300), QString("test"));
+    painter->restore();
 
     painter->drawLine(0, 70, 1100, 70);
 
@@ -89,7 +99,22 @@ void CoinsOnShelf::crtajAlgoritam(QPainter *painter) const
         painter->drawEllipse(center, radius, radius);
     }
 
-    //painter->viewport();
+    if(_ended) {
+        QPen redPen = painter->pen();
+        redPen.setWidth(2);
+        redPen.setColor(Qt::red);
+        painter->setPen(redPen);
+
+        float x = _shelf.front()->footprint() + 450 - _shelf.front()->radius() - 2;
+        QPointF leftDown(x, 70);
+        QPointF leftUp(x, 70 + _shelf.front()->radius() * 2.5);
+        painter->drawLine(leftDown, leftUp);
+
+        x = _shelf.back()->footprint() + 450 + _shelf.back()->radius() + 2;
+        QPoint rightDown(x, 70);
+        QPoint rightUp(x, 70 + _shelf.back()->radius() * 2.5);
+        painter->drawLine(rightDown, rightUp);
+    }
 }
 
 void CoinsOnShelf::pokreniNaivniAlgoritam()
@@ -211,7 +236,7 @@ void CoinsOnShelf::generalCase()
 
     for(unsigned i = 2; i < _n; ++i) {
         if(_queue.top()->maxGapRadius() >= _discs[i]->radius()) {
-            // Disc can fit into gap, add id to gap, readjust gap size
+            // Disc can fit into gap, add it to gap, readjust gap size
             Disk *left = _queue.top()->leftDisk();
             Disk *right = _queue.top()->rightDisk();
 
@@ -230,18 +255,36 @@ void CoinsOnShelf::generalCase()
                 _queue.push(newEntry);
 
                 MaxGap *newEntry2 = new MaxGap(_discs[i], right);
+
+                                                // Code bellow will calculate gap size //
+                float z = pow( (left->radius() + _discs[i]->radius()) , 2) - pow( (left->radius() - _discs[i]->radius()) ,2);
+                z = sqrt(z);
+                z = right->footprint() - left->footprint() - z;
+                z = z / (2 * (sqrt(_discs[i]->radius()) + sqrt(right->radius())));
+                z = pow(z,2);
+                                                //                 End                 //
+
                 newEntry2->setGapRadiusManual(_discs[i]->radius());
                 _queue.push(newEntry2);
 
             }
             else {
+                // Right disc iz smaller, so this disk will touch right disc on its left side
                 updateFootprintAB(right, _discs[i], false);
 
                 MaxGap *newEntry = new MaxGap(_discs[i], right);
                 _queue.push(newEntry);
 
                 MaxGap *newEntry2 = new MaxGap(left, _discs[i]);
-                newEntry2->setGapRadiusManual(_discs[i]->radius());
+
+                                                // Code bellow will calculate gap size //
+                float z = pow( (right->radius() + _discs[i]->radius()) , 2) - pow( (right->radius() - _discs[i]->radius()) ,2);
+                z = sqrt(z);
+                z = right->footprint() - left->footprint() - z;
+                z = z / (2 * (sqrt(_discs[i]->radius()) + sqrt(left->radius())));
+                z = pow(z,2);
+                                                //                 End                 //
+                newEntry2->setGapRadiusManual(z);
                 _queue.push(newEntry2);
 
             }

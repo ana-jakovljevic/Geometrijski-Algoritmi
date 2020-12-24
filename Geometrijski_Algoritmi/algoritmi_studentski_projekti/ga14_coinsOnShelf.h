@@ -89,6 +89,7 @@ private:
     priority_queue<MaxGap*, vector<MaxGap*>, compMaxGaps> _queue;
     AlgoType _algorithm;
     unsigned _n;
+    bool _ended;
 };
 
 #endif // COINSONSHELF_H
