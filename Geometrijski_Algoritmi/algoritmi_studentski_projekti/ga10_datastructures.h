@@ -12,20 +12,23 @@ enum EventType{
 
 struct EventPoint{
     EventPoint(QPoint* point,
-               const EventType eventType)
-        : point(point),eventType(eventType)
+               const EventType eventType,
+               EventPoint* sitePoint)
+        : point(point),eventType(eventType), sitePoint(sitePoint)
     {}
 
     QPoint* point;
     EventType eventType;
+    EventPoint* sitePoint; //postoji samo kada je eventType = DeletionEvent
 };
 
 struct EventQueueComp
 {
     bool operator()(const EventPoint* left, const EventPoint* right) const
     {
-        return (left->point->x() < right->point->x()
-                || (left->point->x() == right->point->x() && left->point->y() < left->point->y()));
+        return (left->point->x() < right->point->x())
+                || (left->point->x() == right->point->x() && left->point->y() < right->point->y())
+                || (left->point->x() == right->point->x() && left->point->y() == right->point->y() && left->eventType == SiteEvent && right->eventType == DeletionEvent);
     }
 };
 
@@ -34,7 +37,7 @@ struct StatusQueueComp
     bool operator()(const EventPoint* left, const EventPoint* right) const
     {
         return (left->point->y() > right->point->y())
-                || (left->point->y() == right->point->y() && left->point->x() < left->point->x());
+                || (left->point->y() == right->point->y() && left->point->x() < right->point->x());
     }
 };
 

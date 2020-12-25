@@ -6,7 +6,6 @@
 #include <iostream>
 #include <complex>
 #include <set>
-#include <unordered_set>
 #include "ga10_datastructures.h"
 
 class UnitDiskCover : public AlgoritamBaza
@@ -30,9 +29,9 @@ private:
     std::vector<QPoint> _nezavisanSkup; //I
 
     std::vector<QPoint> _pokrivac;
-
-    std::set<EventPoint*,EventQueueComp> _eventQueue;
+    std::set<EventPoint*, EventQueueComp> _eventQueue;
     std::set<EventPoint*, StatusQueueComp> _statusQueue;
+
     void initialiseEventQueue();
     void createCover();
 };
