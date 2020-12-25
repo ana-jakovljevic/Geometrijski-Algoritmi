@@ -88,10 +88,10 @@ void CoinsOnShelf::pokreniAlgoritam()
         generalCase();
     }
 
-    //debugShelf();
+
     _ended = true;
     AlgoritamBaza_updateCanvasAndBlock();
-
+    debugShelf();
     emit animacijaZavrsila();
 }
 
@@ -101,7 +101,7 @@ void CoinsOnShelf::crtajAlgoritam(QPainter *painter) const
     painter->viewport();
 
     QPen pen = painter->pen();
-    pen.setWidth(2);
+    pen.setWidth(1);
     pen.setColor(Qt::black);
     painter->setPen(pen);
 
@@ -292,7 +292,7 @@ void CoinsOnShelf::generalCase()
                 z = pow(z,2);
                                                 //                 End                 //
 
-                newEntry2->setGapRadiusManual(_discs[i]->radius());
+                newEntry2->setGapRadiusManual(z);
                 _queue.push(newEntry2);
 
             }
