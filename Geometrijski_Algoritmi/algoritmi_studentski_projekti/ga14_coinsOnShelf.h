@@ -82,15 +82,24 @@ private:
 
     void debugShelf();
     void updateFootprintAB(Disk* A, Disk* B, bool directionBIsRightsideA);
-    void printSpan(QPainter *painter) const;
+    void printSpan(QPainter *painter, bool naive) const;
+    void printSpanFinal(QPainter *painter) const;
+    float calculateSpan();
+
+    void naiveSpecialCase();
+    void naiveGeneralCase();
+
 
 private:
     vector<Disk*> _discs;
     list<Disk*> _shelf;
+    list<Disk*> _shelfNaive;
+    vector<Disk*> _shelfNaiveFinal;
     priority_queue<MaxGap*, vector<MaxGap*>, compMaxGaps> _queue;
     AlgoType _algorithm;
     unsigned _n;
-    bool _ended;
+    bool _ended = false;
+    float _naiveMinSpan;
 };
 
 #endif // COINSONSHELF_H

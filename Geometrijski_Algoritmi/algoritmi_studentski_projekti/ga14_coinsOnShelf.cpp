@@ -1,8 +1,19 @@
 #include "ga14_coinsOnShelf.h"
 
-void CoinsOnShelf::printSpan(QPainter *painter) const
+void CoinsOnShelf::printSpan(QPainter *painter, bool naive) const
 {
-    float span = _shelf.back()->radius() + _shelf.back()->footprint() - _shelf.front()->footprint() - _shelf.front()->radius();
+    float span;
+    float x, y;
+    if(!naive) {
+        x = _shelf.back()->footprint() + _shelf.back()->radius();
+        y = _shelf.front()->footprint() - _shelf.front()->radius();
+    }
+    else {
+        x = _shelfNaive.back()->footprint() + _shelfNaive.back()->radius();
+        y = _shelfNaive.front()->footprint() - _shelfNaive.front()->radius();
+    }
+    span = x - y;
+
     QPointF point(50, 500);
     QString spanText = "Total span: " + QString::number(span);
 
@@ -19,6 +30,80 @@ void CoinsOnShelf::printSpan(QPainter *painter) const
 
     painter->drawText(point, spanText);
     painter->restore();
+
+}
+
+void CoinsOnShelf::printSpanFinal(QPainter *painter) const
+{
+    QPointF point(50, 500);
+    QString spanText = "Total span: " + QString::number(_naiveMinSpan);
+
+    painter->save();
+    painter->scale(1, -1);
+    painter->translate(0, -2*525);
+
+    QPen pen = painter->pen();
+    pen.setColor(Qt::red);
+    QFont font;
+    font.setPixelSize(24);
+    painter->setFont(font);
+    painter->setPen(pen);
+
+    painter->drawText(point, spanText);
+    painter->restore();
+}
+
+float CoinsOnShelf::calculateSpan()
+{
+    float x = _shelfNaive.back()->footprint() + _shelfNaive.back()->radius();
+    float y = _shelfNaive.front()->footprint() - _shelfNaive.front()->radius();
+    return x-y;
+}
+
+
+void CoinsOnShelf::naiveSpecialCase()
+{
+    float minSpan = 99999;
+
+    vector<unsigned> indexes;
+    for(unsigned j = 0; j < _n; j++)
+        indexes.push_back(j);
+
+    do {
+        AlgoritamBaza_updateCanvasAndBlock();
+        _shelfNaive.resize(0);
+        for(auto disc: _discs)
+            disc->setFootprint(0);
+
+        _shelfNaive.push_back( _discs[indexes[0]] );
+        for(unsigned j = 1; j < _n; j++) {
+            _shelfNaive.push_back( _discs[indexes[j]] );
+            updateFootprintAB( _discs[indexes[j-1]], _discs[indexes[j]], true);
+            AlgoritamBaza_updateCanvasAndBlock();
+
+            if(_shelfNaive.size() == _n) {
+                float currentSpan = calculateSpan();
+                if(minSpan > currentSpan) {
+                    minSpan = currentSpan;
+                    _shelfNaiveFinal.resize(0);
+                    for(auto disc : _shelfNaive) {
+                        Disk* discTmp = new Disk();
+                        discTmp->setRadius(disc->radius());
+                        discTmp->setFootprint(disc->footprint());
+                        _shelfNaiveFinal.push_back(discTmp);
+                    }
+                }
+            }
+        }
+
+    } while( next_permutation(indexes.begin(), indexes.end()));
+
+    _ended = true;
+    _naiveMinSpan = minSpan;
+}
+
+void CoinsOnShelf::naiveGeneralCase()
+{
 
 }
 
@@ -105,12 +190,6 @@ void CoinsOnShelf::crtajAlgoritam(QPainter *painter) const
     pen.setColor(Qt::black);
     painter->setPen(pen);
 
-    painter->save();
-    painter->scale(1,-1);
-    painter->translate(0, 200);
-    painter->drawText(QPointF(300,300), QString("test"));
-    painter->restore();
-
     painter->drawLine(0, 70, 1100, 70);
 
     for(Disk* disc: _shelf) {
@@ -121,12 +200,8 @@ void CoinsOnShelf::crtajAlgoritam(QPainter *painter) const
         painter->drawEllipse(center, radius, radius);
     }
 
-    if(_ended) {
-
-    }
-
     if(_shelf.size() >= 2) {
-        printSpan(painter);
+        printSpan(painter,false);
 
         QPen redPen = painter->pen();
         redPen.setWidth(2);
@@ -147,13 +222,92 @@ void CoinsOnShelf::crtajAlgoritam(QPainter *painter) const
 
 void CoinsOnShelf::pokreniNaivniAlgoritam()
 {
-    // TODO
+    if(_algorithm == SPECIAL) {
+        naiveSpecialCase();
+    }
+
+    if(_algorithm == GENERAL) {
+        naiveGeneralCase();
+    }
+
+    _ended = true;
+    AlgoritamBaza_updateCanvasAndBlock();
+    debugShelf();
+    emit animacijaZavrsila();
 }
 
 void CoinsOnShelf::crtajNaivniAlgoritam(QPainter *painter) const
 {
-    // TODO
+
+    if(!painter) return;
     painter->viewport();
+
+    QPen pen = painter->pen();
+    pen.setWidth(1);
+    pen.setColor(Qt::black);
+    painter->setPen(pen);
+
+    // Draw horizontal line
+    painter->drawLine(0, 70, 1100, 70);
+
+    if(_ended == false) {
+
+        // Draw disks
+        for(Disk* disc: _shelfNaive) {
+            float radius = disc->radius();
+            float x = disc->footprint() + 120;
+            float y = disc->radius() + 70;
+            QPointF center(x,y);
+            painter->drawEllipse(center, radius, radius);
+        }
+
+        // Draw vertical red lines and text
+        if(_shelfNaive.size() >= 2) {
+            printSpan(painter,true);
+
+            QPen redPen = painter->pen();
+            redPen.setWidth(2);
+            redPen.setColor(Qt::red);
+            painter->setPen(redPen);
+
+            float x = _shelfNaive.front()->footprint() + 120 - _shelfNaive.front()->radius() - 2;
+            QPointF leftDown(x, 70);
+            QPointF leftUp(x, 70 + _shelfNaive.front()->radius() * 2.5);
+            painter->drawLine(leftDown, leftUp);
+
+            x = _shelfNaive.back()->footprint() + 120 + _shelfNaive.back()->radius() + 2;
+            QPoint rightDown(x, 70);
+            QPoint rightUp(x, 70 + _shelfNaive.back()->radius() * 2.5);
+            painter->drawLine(rightDown, rightUp);
+        }
+    }
+    else {
+        printSpanFinal(painter);
+
+        for(Disk* disc: _shelfNaiveFinal) {
+            float radius = disc->radius();
+            float x = disc->footprint() + 120;
+            float y = disc->radius() + 70;
+            QPointF center(x,y);
+            painter->drawEllipse(center, radius, radius);
+        }
+
+        QPen redPen = painter->pen();
+        redPen.setWidth(2);
+        redPen.setColor(Qt::red);
+        painter->setPen(redPen);
+
+        float x = _shelfNaiveFinal.front()->footprint() + 120 - _shelfNaiveFinal.front()->radius() - 2;
+        QPointF leftDown(x, 70);
+        QPointF leftUp(x, 70 + _shelfNaiveFinal.front()->radius() * 2.5);
+        painter->drawLine(leftDown, leftUp);
+
+        x = _shelfNaiveFinal.back()->footprint() + 120 + _shelfNaiveFinal.back()->radius() + 2;
+        QPoint rightDown(x, 70);
+        QPoint rightUp(x, 70 + _shelfNaiveFinal.back()->radius() * 2.5);
+        painter->drawLine(rightDown, rightUp);
+
+    }
 }
 
 void CoinsOnShelf::specialCaseEvenDiscs()
