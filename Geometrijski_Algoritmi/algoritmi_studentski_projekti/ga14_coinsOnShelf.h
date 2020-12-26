@@ -93,7 +93,7 @@ private:
 private:
     vector<Disk*> _discs;
     list<Disk*> _shelf;
-    list<Disk*> _shelfNaive;
+    vector<Disk*> _shelfNaive;
     vector<Disk*> _shelfNaiveFinal;
     priority_queue<MaxGap*, vector<MaxGap*>, compMaxGaps> _queue;
     AlgoType _algorithm;
