@@ -340,7 +340,6 @@ void CoinsOnShelf::crtajNaivniAlgoritam(QPainter *painter) const
 
             float y = 99999;
             for(auto disc: _shelfNaive) {
-                qDebug() << "y " << QString::number(disc->footprint() - disc->radius());
                 if (disc->footprint() - disc->radius() < y)
                     y = disc->footprint() - disc->radius();
             }
@@ -375,7 +374,6 @@ void CoinsOnShelf::crtajNaivniAlgoritam(QPainter *painter) const
 
         float y = 99999;
         for(auto disc: _shelfNaiveFinal) {
-            qDebug() << "y " << QString::number(disc->footprint() - disc->radius());
             if (disc->footprint() - disc->radius() < y)
                 y = disc->footprint() - disc->radius();
         }

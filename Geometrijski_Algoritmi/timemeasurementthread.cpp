@@ -13,11 +13,14 @@
 #include "ga05_preseciduzi.h"
 
 #include "ga06_presekPravougaonika.h"
+#include "ga14_coinsOnShelf.h"
 
 TimeMeasurementThread::TimeMeasurementThread(TipAlgoritma tipAlgoritma, int minValue, int step, int maxValue)
     : QThread(), _algorithmType(tipAlgoritma), _minValue(minValue), _step(step), _maxValue(maxValue)
 {
 }
+
+#define SKIP_NAIVE 1
 
 void TimeMeasurementThread::run()
 {
@@ -31,6 +34,7 @@ void TimeMeasurementThread::run()
      * i poredi se vreme izvrsavanja efikasnog i naivnog algoritma
      * nad tih _i_ nasumicnih tacaka.
      */
+
     for(int i= _minValue; i <= _maxValue; i += _step)
     {
 
@@ -56,6 +60,9 @@ void TimeMeasurementThread::run()
             break;
         case TipAlgoritma::PRESEK_PRAVOUGAONIKA:
             pAlgorithm = new PresekPravougaonika(nullptr, 0, false, "", i);
+            break;
+        case TipAlgoritma::COINS_ON_SHELF:
+            pAlgorithm = new CoinsOnShelf(nullptr, 0, false, "", i);
             break;
         default:
             break;
