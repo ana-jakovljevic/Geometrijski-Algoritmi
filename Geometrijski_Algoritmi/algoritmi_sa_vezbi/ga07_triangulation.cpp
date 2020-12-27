@@ -201,28 +201,45 @@ void Triangulation::monotonePartition()
             handleRegularVertex(cvor);
         }
 
-        fix_faces();
+        fix_fields();
     }
 }
 
-void Triangulation::fix_faces(){
+void Triangulation::fix_fields(){
+    // na pocetku spoljasnjost ne diramo sa sve
+    // unutrasnji ivice obrisemo
+    Field* spoljasnost;
+    for(auto f:_polygon.fields()){
+        if(f->outerComponent() == nullptr)
+            spoljasnost = f;
+        else
+            delete f;
+    }
+
+
     // Mozemo da se izvucemo bez ovoga ako dodamo atribut u
     // klasu Vertex, ali je po mom misljenju to resenje
     // "prljavo", a kako je prostorna slozenost efektivno
     // ista ovo smatram za bolje resenje
-    std::unordered_map<Vertex*, bool> visited;
-    for(auto v: _polygon.vertices()){
+    std::unordered_map<HalfEdge*, bool> visited;
+    for(auto e: _polygon.edges()){
         // koristimo svojstvo mape boolova
         // ukoliko kljuc nije u mapi i pokusamo pristup sa
         // operatorom [] ubacuje se sa podrzaumevanom vrednoscu
         // za tip vrednosti, u nasem slucaju false za bool
-        if(!visited[v]){
-            visited[v] = true;
-            // pratim lanac v->next->next.... dok ne napravimo krug
-            // usput sve stranice stavljamo kao posecene
-            // i lica azuriramo sa novim posecenim licima
-            // moramo paziti samo da ispravno brisemo lica sto nije neki
-            // problem(i hope :))
+        if(e->incidentFace() != spoljasnost && !visited[e]){
+            // pravimo novu stranu/novo polje
+            // koje postavljamo kao polje za ceop poligon
+            // odredjen sa lancem sa pocetkom u e
+            Field* field = new Field();
+            field->setOuterComponent(e);
+            visited[e] = true;
+            e->setIncidentFace(field);
+            HalfEdge* next_edge = e->next();
+            while(next_edge != e){
+                visited[e] = true;
+                e->setIncidentFace(field);
+            }
         }
     }
 }

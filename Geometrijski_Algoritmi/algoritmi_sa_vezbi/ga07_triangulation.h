@@ -33,7 +33,7 @@ private:
 
     /* pozivamo ovu funkciju da nam sredi broj poligona koje imamo u DCEL strukturi
        prolazicemo kroz ivice i pamtiti kada napravimo neki krug    */
-    void fix_faces();
+    void fix_fields();
 
     /* Monotono particionisanje */
 private:
