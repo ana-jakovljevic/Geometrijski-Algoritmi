@@ -155,7 +155,6 @@ void CoinsOnShelf::naiveGeneralCase()
 
             if(_shelfNaive.size() == _n) {
                 float currentSpan = calculateSpan();
-                qDebug() << QString::number(currentSpan);
                 if(minSpan > currentSpan) {
                     minSpan = currentSpan;
                     _shelfNaiveFinal.resize(0);
@@ -345,18 +344,16 @@ void CoinsOnShelf::crtajNaivniAlgoritam(QPainter *painter) const
                 if (disc->footprint() - disc->radius() < y)
                     y = disc->footprint() - disc->radius();
             }
-            QPointF leftDown(y, 70);
-            QPointF leftUp(y, 150);
+            QPointF leftDown(y+120, 70);
+            QPointF leftUp(y+120, 150);
             painter->drawLine(leftDown, leftUp);
-
-
 
             float x = 0;
             for(auto disc: _shelfNaive)
                 if (disc->footprint() + disc->radius() > x)
                     x = disc->footprint() + disc->radius();
-            QPoint rightDown(x, 70);
-            QPoint rightUp(x, 150);
+            QPoint rightDown(x+120, 70);
+            QPoint rightUp(x+120, 150);
             painter->drawLine(rightDown, rightUp);
         }
     }
@@ -376,14 +373,22 @@ void CoinsOnShelf::crtajNaivniAlgoritam(QPainter *painter) const
         redPen.setColor(Qt::red);
         painter->setPen(redPen);
 
-        float x = _shelfNaiveFinal.front()->footprint() + 120 - _shelfNaiveFinal.front()->radius() - 2;
-        QPointF leftDown(x, 70);
-        QPointF leftUp(x, 70 + _shelfNaiveFinal.front()->radius() * 2.5);
+        float y = 99999;
+        for(auto disc: _shelfNaiveFinal) {
+            qDebug() << "y " << QString::number(disc->footprint() - disc->radius());
+            if (disc->footprint() - disc->radius() < y)
+                y = disc->footprint() - disc->radius();
+        }
+        QPointF leftDown(y+120, 70);
+        QPointF leftUp(y+120, 150);
         painter->drawLine(leftDown, leftUp);
 
-        x = _shelfNaiveFinal.back()->footprint() + 120 + _shelfNaiveFinal.back()->radius() + 2;
-        QPoint rightDown(x, 70);
-        QPoint rightUp(x, 70 + _shelfNaiveFinal.back()->radius() * 2.5);
+        float x = 0;
+        for(auto disc: _shelfNaiveFinal)
+            if (disc->footprint() + disc->radius() > x)
+                x = disc->footprint() + disc->radius();
+        QPoint rightDown(x+120, 70);
+        QPoint rightUp(x+120, 150);
         painter->drawLine(rightDown, rightUp);
 
     }
