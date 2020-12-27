@@ -31,6 +31,10 @@ private:
      * (zadatog u smeru suprotno od kazaljke na satu) */
     std::vector<QPointF> ucitajNasumicneTacke(int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA) const;
 
+    /* pozivamo ovu funkciju da nam sredi broj poligona koje imamo u DCEL strukturi
+       prolazicemo kroz ivice i pamtiti kada napravimo neki krug    */
+    void fix_faces();
+
     /* Monotono particionisanje */
 private:
     void initialiseEventQueue();

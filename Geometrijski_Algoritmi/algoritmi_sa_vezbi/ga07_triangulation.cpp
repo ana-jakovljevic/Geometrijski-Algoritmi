@@ -1,5 +1,6 @@
 #include "ga07_triangulation.h"
 #include <fstream>
+#include <ga06_dcel.h>
 
 Triangulation::Triangulation(QWidget *pCrtanje,
                          int pauzaKoraka,
@@ -198,6 +199,30 @@ void Triangulation::monotonePartition()
         }
         else {
             handleRegularVertex(cvor);
+        }
+
+        fix_faces();
+    }
+}
+
+void Triangulation::fix_faces(){
+    // Mozemo da se izvucemo bez ovoga ako dodamo atribut u
+    // klasu Vertex, ali je po mom misljenju to resenje
+    // "prljavo", a kako je prostorna slozenost efektivno
+    // ista ovo smatram za bolje resenje
+    std::unordered_map<Vertex*, bool> visited;
+    for(auto v: _polygon.vertices()){
+        // koristimo svojstvo mape boolova
+        // ukoliko kljuc nije u mapi i pokusamo pristup sa
+        // operatorom [] ubacuje se sa podrzaumevanom vrednoscu
+        // za tip vrednosti, u nasem slucaju false za bool
+        if(!visited[v]){
+            visited[v] = true;
+            // pratim lanac v->next->next.... dok ne napravimo krug
+            // usput sve stranice stavljamo kao posecene
+            // i lica azuriramo sa novim posecenim licima
+            // moramo paziti samo da ispravno brisemo lica sto nije neki
+            // problem(i hope :))
         }
     }
 }
