@@ -154,6 +154,7 @@ void Triangulation::initialiseEventQueue()
         Vertex* v_prethodni = v->incidentEdge()->prev()->origin();
 
         _allDiagonals[v].insert(v->incidentEdge());
+        _allDiagonals[v].insert(v->incidentEdge()->twin()->next());
         if(pomocneFunkcije::ispod(v_sledeci->coordinates(), v->coordinates()) &&
            pomocneFunkcije::ispod(v_prethodni->coordinates(), v->coordinates()))
         {
@@ -247,6 +248,44 @@ void Triangulation::fix_fields(){
     }
 }
 
+void Triangulation::insert_diagonal(Vertex* v1, Vertex* v2){
+    HalfEdge* d1 = new HalfEdge(v1); // from v1 to v2
+    HalfEdge* d2 = new HalfEdge(v2); // from v2 to v1
+    d1->setTwin(d2);
+    d2->setTwin(d1);
+
+    // nadjemo gde ubacujemo d1 medju dijagonale sa pocetkom u v1
+    auto v1_result = _allDiagonals[v1].insert(d1);
+    // nadjemo gde ubacujemo d2 u odnosu na
+    auto v2_result = _allDiagonals[v2].insert(d2);
+
+    assert(v1_result.second && v2_result.second); // svi unosi moraju upseti!
+
+    // sredjivanje pokazivaca za v1
+    HalfEdge *red, *green;
+    if(v1_result.first == std::prev(_allDiagonals[v1].end())){
+        green = *_allDiagonals[v1].begin();
+    }
+    else{
+        green = *std::next(v1_result.first);
+    }
+    red = green->next();
+    red->setNext(d1);
+    green->setPrev(d2);
+
+    // sredjivanje pokazivaca za v2
+    if(v2_result.first == std::prev(_allDiagonals[v2].end())){
+        green = *_allDiagonals[v2].begin();
+    }
+    else{
+        green = *std::next(v2_result.first);
+    }
+    red = green->next();
+    red->setNext(d2);
+    green->setPrev(d1);
+
+}
+
 HalfEdge *Triangulation::levaStranica(Vertex *v)
 {
     HalfEdge e(v), e_twin(v, &e);
@@ -265,10 +304,8 @@ void Triangulation::handleStartVertex(Vertex *v)
 void Triangulation::handleEndVertex(Vertex *v)
 {
     if(_helpers[v->incidentEdge()->prev()]->type() == VertexType::MERGE) {
-        // ovde treba dodati dijagonalu u DCEL strukturu
-        // v->helpers[leve stranice temena v]
 
-        _allDiagonals.emplace_back(v, _helpers[v->incidentEdge()->prev()]);
+        insert_diagonal(v, _helpers[v->incidentEdge()->prev()]);
         AlgoritamBaza_updateCanvasAndBlock()
     }
 
@@ -282,7 +319,7 @@ void Triangulation::handleSplitVertex(Vertex *v)
     if (!e_left) return;
 
     /* Dodaj dijagonalu v − helper(e_left) u D. */
-    _allDiagonals.emplace_back(v, _helpers[e_left]);
+    insert_diagonal(v, _helpers[e_left]);
     AlgoritamBaza_updateCanvasAndBlock()
 
     /* Postavi helper(e_left) na v. */
@@ -299,7 +336,7 @@ void Triangulation::handleMergeVertex(Vertex *v)
      * ako je helper(e) merge teme, onda dodaj dijagonalu v − helper(e). */
     auto e = v->incidentEdge()->prev();
     if (_helpers[e]->type() == VertexType::MERGE) {
-        _allDiagonals.emplace_back(v, _helpers[e]);
+        insert_diagonal(v, _helpers[e]);
     }
 
     /* Izbaci e iz T */
@@ -311,7 +348,7 @@ void Triangulation::handleMergeVertex(Vertex *v)
 
     /* Ako je helper(e_left) merge teme, onda dodaj dijagonalu v − helper(e_left). */
     if (_helpers[e_left]->type() == VertexType::MERGE) {
-        _allDiagonals.emplace_back(v, _helpers[e_left]);
+        insert_diagonal(v, _helpers[e_left]);
         AlgoritamBaza_updateCanvasAndBlock()
     }
 
@@ -325,7 +362,7 @@ void Triangulation::handleRegularVertex(Vertex *v)
     if (pomocneFunkcije::ispod(v_next->coordinates(), v->coordinates())) {
         Vertex *helper = _helpers[v->incidentEdge()->prev()];
         if(helper->type() == VertexType::MERGE) {
-            _allDiagonals.emplace_back(v, helper);
+            insert_diagonal(v, helper);
             AlgoritamBaza_updateCanvasAndBlock()
         }
         _statusQueue.erase(v->incidentEdge()->prev());
@@ -338,7 +375,7 @@ void Triangulation::handleRegularVertex(Vertex *v)
 
         Vertex *helper = _helpers[e_left];
         if(helper->type() == VertexType::MERGE) {
-            _allDiagonals.emplace_back(v, helper);
+            insert_diagonal(v, helper);
             AlgoritamBaza_updateCanvasAndBlock()
         }
         _helpers[e_left] = v;

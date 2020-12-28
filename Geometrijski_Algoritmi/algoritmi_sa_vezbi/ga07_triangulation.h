@@ -35,6 +35,8 @@ private:
        prolazicemo kroz ivice i pamtiti kada napravimo neki krug    */
     void fix_fields();
 
+    void insert_diagonal(Vertex *v1, Vertex *v2);
+
     /* Monotono particionisanje */
 private:
     void initialiseEventQueue();
@@ -85,7 +87,7 @@ private:
     /* neuredjena jer koristimo samo ubacivanje i pretragu,
      * pa bolje da budu oba u vremenu O(1) umesto O(logn) */
     std::unordered_map<HalfEdge*, Vertex*> _helpers;
-    std::unordered_map<Vertex*, std::set<Vertex*>>
+    std::unordered_map<Vertex*, std::set<HalfEdge*, DiagonalsComp>> _allDiagonals;
     // potrebno samo za crtanje
     bool _monotone;
 
