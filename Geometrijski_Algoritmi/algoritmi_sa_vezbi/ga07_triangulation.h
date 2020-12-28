@@ -58,6 +58,8 @@ private:
     void connectDiagonalsDCEL();
     bool sameDirectionVectors(HalfEdge* e1, HalfEdge* e2);
 
+    // pomocna funkcija u naivnom algoritmu
+    bool checkDiagonal(Vertex* v, Vertex* u);
     /* Triangulacija */
 private:
     /*
@@ -88,6 +90,9 @@ private:
     /* TRIANGULATION  */
     std::vector<HalfEdge*> _stekTriangulacije;
     std::set<HalfEdge*, EventQueueCompTriangulation2> _eventQueueTriangulation;
+
+    DCEL _naivePolygon;
+    std::vector<std::pair<Vertex*, Vertex*>> _naiveDiagonals;
 };
 
 

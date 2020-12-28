@@ -20,6 +20,7 @@ Triangulation::Triangulation(QWidget *pCrtanje,
 
     _monotone = true;
     _polygon.loadData(tacke);
+    _naivePolygon.loadData(tacke);
 }
 
 
@@ -346,7 +347,7 @@ void Triangulation::triangulacija(Field *f)
                 _stekTriangulacije.pop_back();
 
                 // ukoliko je dijagonala izmedju e i poslednji u poligonu onda ide if
-                if () {
+                if (true) {
                     _allDiagonals.emplace_back(e->origin(), poslednji->origin());
                     AlgoritamBaza_updateCanvasAndBlock()
                 } else {
@@ -541,12 +542,103 @@ std::vector<QPointF> Triangulation::ucitajNasumicneTacke(int brojTacaka) const
 /*                         NAIVNI ALGORITAM                                       */
 /**********************************************************************************/
 
-void Triangulation::pokreniNaivniAlgoritam()
-{
+void Triangulation::pokreniNaivniAlgoritam(){
 
+    for(auto i=0u;i<_naivePolygon.vertices().size();i++){
+        Vertex* v = _naivePolygon.vertex(i);
+
+        for (auto j=i+1; j<_naivePolygon.vertices().size(); j++){
+            Vertex* u = _naivePolygon.vertex(j);
+
+            QPointF presek;
+
+            // provera da li je (v,u) spoljasnja dijagonala
+            bool badDiag = checkDiagonal(v,u);
+
+            // ako jeste, duz (v,u) nije odgovarajuca, prelazi se na sledecu duz
+            if(badDiag)
+                continue;
+
+            // proverava da li dijagonala sece neku od ivica poligona
+            for(auto k=0;k<int(_naivePolygon.edges().size()/2);k++){
+                HalfEdge* edge = _naivePolygon.edge(k);
+                if(edge == v->incidentEdge() || edge == v->incidentEdge()->prev() || edge == u->incidentEdge() || edge == u->incidentEdge()->prev())
+                    continue;
+
+                if(pomocneFunkcije::presekDuzi(QLineF(edge->origin()->coordinates(), edge->twin()->origin()->coordinates()),
+                                                QLineF(v->coordinates(), u->coordinates()),
+                                                presek)){
+                    //postoji presek
+                    badDiag = true;
+                    break;
+                }
+            }
+
+            //ako sece, duz (v,u) nije odgovarajuca, prelazi se na sledecu duz
+            if(badDiag)
+                continue;
+
+            //provera da li (v,u) sece neku od trenutnih dijagonala
+            for(auto diag: _naiveDiagonals){
+                    if(diag.first == v || diag.second == v || diag.first == u || diag.second == u)
+                        continue;
+
+                    if(pomocneFunkcije::presekDuzi(QLineF(diag.first->coordinates(),diag.second->coordinates()),QLineF(v->coordinates(),u->coordinates()),presek)){
+                        //sece dijagonalu
+                        badDiag = true;
+                        break;
+                    }
+             }
+
+            //ako ispunjava sve uslove, dodajemo dijagonalu (v,u)
+            if (!badDiag){
+                _naiveDiagonals.emplace_back(v,u);
+                AlgoritamBaza_updateCanvasAndBlock();
+            }
+        }
+    }
+
+    AlgoritamBaza_updateCanvasAndBlock();
+    emit animacijaZavrsila();
+}
+
+bool Triangulation::checkDiagonal(Vertex* v, Vertex* u){
+
+    Vertex* v_next = v->incidentEdge()->next()->origin();
+    Vertex* v_prev = v->incidentEdge()->prev()->origin();
+
+    if(pomocneFunkcije::konveksan(v_prev->coordinates(), v->coordinates(),v_next->coordinates())){
+        if(!pomocneFunkcije::konveksan(v->coordinates(), u->coordinates(), v_prev->coordinates()) ||
+           !pomocneFunkcije::konveksan(v->coordinates(), v_next->coordinates(), u->coordinates()))
+                 return true;
+    } else {
+        if(!pomocneFunkcije::konveksan(v->coordinates(), u->coordinates(), v_prev->coordinates()) &&
+           !pomocneFunkcije::konveksan(v->coordinates(), v_next->coordinates() ,u->coordinates()))
+                  return true;
+    }
+
+    return false;
 }
 
 void Triangulation::crtajNaivniAlgoritam(QPainter *painter) const
 {
     if (!painter) return;
+
+    QPen regular = painter->pen();
+    regular.setWidth(3);
+
+    QPen green = painter->pen();
+    green.setColor(Qt::darkGreen);
+    green.setWidth(2);
+    painter->setPen(green);
+
+    for(auto diag: _naiveDiagonals){
+        painter->drawLine(diag.first->coordinates(),diag.second->coordinates());
+    }
+
+    painter->setPen(regular);
+    for (auto v: _naivePolygon.vertices())
+    {
+        painter->drawLine(v->coordinates(), v->incidentEdge()->twin()->origin()->coordinates());
+    }
 }
