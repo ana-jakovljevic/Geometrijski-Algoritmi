@@ -68,7 +68,7 @@ private:
      * Brojevi koji stoje u komentarima implementacije ove metode
      * odgovara brojevima u pseudo kodu u knjizi
      */
-    void triangulacija(Field *f);
+    void triangulacija(Face *f);
     bool istiLanac(HalfEdge *e1, HalfEdge *e2);
     bool leviLanac(HalfEdge *e1, HalfEdge *e2);
     bool desniLanac(HalfEdge *e1, HalfEdge *e2);

@@ -302,7 +302,7 @@ void Triangulation::handleRegularVertex(Vertex *v)
 /*                             TRIANGULACIJA                                      */
 /**********************************************************************************/
 
-void Triangulation::triangulacija(Field *f)
+void Triangulation::triangulacija(Face *f)
 {
     /* radi vizuelizacije */
     _brisucaPravaY = _pCrtanje->height();
@@ -425,7 +425,7 @@ void Triangulation::connectDiagonalsDCEL()
         }
     }
 
-    Field* f_old = _polygon.field(1);
+    Face* f_old = _polygon.field(1);
     for(auto& v : allDiagonals) {
         HalfEdge* v_prev = v.first->incidentEdge()->prev();
         HalfEdge* v_next = v.first->incidentEdge();
@@ -440,7 +440,7 @@ void Triangulation::connectDiagonalsDCEL()
              * Ponekad pravi greske i za outerComponent za face se zadaje pogresne
              * ivice sto dovodi do greske. */
             if (d->incidentFace() == nullptr) {
-                Field* f = new Field();
+                Face* f = new Face();
                 _polygon.insertFiled(f);
 
                 if (sameDirectionVectors(f_old->outerComponent(), d)) {
