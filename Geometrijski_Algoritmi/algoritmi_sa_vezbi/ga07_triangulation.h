@@ -85,7 +85,7 @@ private:
     /* neuredjena jer koristimo samo ubacivanje i pretragu,
      * pa bolje da budu oba u vremenu O(1) umesto O(logn) */
     std::unordered_map<HalfEdge*, Vertex*> _helpers;
-    std::vector<std::pair<Vertex*, Vertex*>> _allDiagonals;
+    std::unordered_map<Vertex*, std::set<Vertex*>>
     // potrebno samo za crtanje
     bool _monotone;
 

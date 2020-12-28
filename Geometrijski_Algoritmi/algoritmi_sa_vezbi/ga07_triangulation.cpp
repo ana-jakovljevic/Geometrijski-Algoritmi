@@ -1,6 +1,6 @@
 #include "ga07_triangulation.h"
+#include "ga06_dcel.h"
 #include <fstream>
-#include <ga06_dcel.h>
 
 Triangulation::Triangulation(QWidget *pCrtanje,
                          int pauzaKoraka,
@@ -133,8 +133,6 @@ void Triangulation::pokreniAlgoritam()
     initialiseEventQueue();
     monotonePartition();
     _monotone = false;
-    connectDiagonalsDCEL();
-    _allDiagonals.clear();
     AlgoritamBaza_updateCanvasAndBlock();
     for (auto f : _polygon.fields()) {
         if (f->outerComponent() == nullptr) continue;
@@ -155,20 +153,25 @@ void Triangulation::initialiseEventQueue()
         Vertex* v_sledeci = v->incidentEdge()->twin()->origin();
         Vertex* v_prethodni = v->incidentEdge()->prev()->origin();
 
-    if(pomocneFunkcije::ispod(v_sledeci->coordinates(), v->coordinates()) &&
-       pomocneFunkcije::ispod(v_prethodni->coordinates(), v->coordinates())){
+        _allDiagonals[v].insert(v->incidentEdge());
+        if(pomocneFunkcije::ispod(v_sledeci->coordinates(), v->coordinates()) &&
+           pomocneFunkcije::ispod(v_prethodni->coordinates(), v->coordinates()))
+        {
+            if(pomocneFunkcije::konveksan(v->coordinates(), v_sledeci->coordinates(), v_prethodni->coordinates()))
+                v->setType(VertexType::START);
+            else v->setType(VertexType::SPLIT);
+        }
+        else if(!pomocneFunkcije::ispod(v_sledeci->coordinates(), v->coordinates()) &&
+                 !pomocneFunkcije::ispod(v_prethodni->coordinates(), v->coordinates()))
+        {
 
-        if(pomocneFunkcije::konveksan(v->coordinates(), v_sledeci->coordinates(), v_prethodni->coordinates()))
-            v->setType(VertexType::START);
-        else v->setType(VertexType::SPLIT);
-    }else if(!pomocneFunkcije::ispod(v_sledeci->coordinates(), v->coordinates()) &&
-             !pomocneFunkcije::ispod(v_prethodni->coordinates(), v->coordinates())){
+            if(pomocneFunkcije::konveksan(v->coordinates(), v_sledeci->coordinates(), v_prethodni->coordinates()))
+                v->setType(VertexType::END);
+            else v->setType(VertexType::MERGE);
 
-        if(pomocneFunkcije::konveksan(v->coordinates(), v_sledeci->coordinates(), v_prethodni->coordinates()))
-            v->setType(VertexType::END);
-        else v->setType(VertexType::MERGE);
-
-    }else v->setType(VertexType::REGULAR);
+        }
+        else
+            v->setType(VertexType::REGULAR);
 
         _eventQueue.insert(_polygon.vertex(i));
         AlgoritamBaza_updateCanvasAndBlock()
@@ -262,6 +265,9 @@ void Triangulation::handleStartVertex(Vertex *v)
 void Triangulation::handleEndVertex(Vertex *v)
 {
     if(_helpers[v->incidentEdge()->prev()]->type() == VertexType::MERGE) {
+        // ovde treba dodati dijagonalu u DCEL strukturu
+        // v->helpers[leve stranice temena v]
+
         _allDiagonals.emplace_back(v, _helpers[v->incidentEdge()->prev()]);
         AlgoritamBaza_updateCanvasAndBlock()
     }

@@ -50,26 +50,43 @@ public:
     }
 };
 
-
-struct DiagonalsAddDECELComp
+struct DiagonalsComp
 {
-private:
-    Vertex* _vertex;
-
 public:
-    DiagonalsAddDECELComp(Vertex* vertex = nullptr)
-        :_vertex(vertex)
-    {}
-
     bool operator()(const HalfEdge* line1, const HalfEdge* line2) const
     {
-        Vertex* v1 = line1->origin() != _vertex ? line1->origin() :
-                                                  line1->twin()->origin();
-
-        Vertex* v2 = line2->origin() != _vertex ? line2->origin() :
-                                                  line2->twin()->origin();
-
-        return (!pomocneFunkcije::konveksan(_vertex->coordinates(), v1->coordinates(), v2->coordinates()));
+        assert(line1->origin() == line2->origin());
+        float x1 = line1->twin()->origin()->x() - line1->origin()->x();
+        float y1 = line1->twin()->origin()->y() - line1->origin()->y();
+        float x2 = line2->twin()->origin()->x() - line2->origin()->x();
+        float y2 = line2->twin()->origin()->y() - line2->origin()->y();
+        if(y1 < 0){
+            if(y2 < 0){
+                return x1/y1 > x2/y2;
+            }
+            else{
+                return false;
+            }
+        }
+        else if(y1 > 0){
+            if(y2 > 0){
+                return x1/y1 > x2/y2;
+            }
+            else if(y2 < 0){
+                return true;
+            }
+            else{
+                return x2 < 0;
+            }
+        }
+        else{
+            if(y2 == 0)
+                return x1 > x2;
+            else if(y2 < 0)
+                return true;
+            else
+                return x1 > 0;
+        }
     }
 };
 
