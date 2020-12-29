@@ -9,6 +9,9 @@
 #include <config.h>
 
 namespace pomocneFunkcije {
+bool bliski(float a, float b);
+bool bliski(double a, double b);
+
 int povrsinaTrougla(const QPoint& A, const QPoint& B, const QPoint& C);
 int distanceKvadrat(const QPoint& A, const QPoint& B);
 bool presekDuzi(const QLineF& l1, const QLineF& l2, QPointF& presek);

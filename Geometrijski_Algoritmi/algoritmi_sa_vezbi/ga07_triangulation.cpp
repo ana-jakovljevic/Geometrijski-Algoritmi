@@ -527,7 +527,7 @@ std::vector<QPointF> Triangulation::ucitajNasumicneTacke(int brojTacaka) const
 
     for (auto i = 1ul; i < tacke.size(); i++) {
         if (tacke[i].x() > maxTacka.x() ||
-           (fabs(tacke[i].x() - maxTacka.x()) < EPS && tacke[i].y() < maxTacka.y()))
+           (pomocneFunkcije::bliski(tacke[i].x(), maxTacka.x()) && tacke[i].y() < maxTacka.y()))
             maxTacka = tacke[i];
     }
 

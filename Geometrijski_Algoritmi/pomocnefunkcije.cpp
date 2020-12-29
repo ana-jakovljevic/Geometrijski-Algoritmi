@@ -2,6 +2,16 @@
 
 #include <QtGlobal>
 
+bool pomocneFunkcije::bliski(float a, float b)
+{
+    return fabsf(a - b) < EPSf;
+}
+
+bool pomocneFunkcije::bliski(double a, double b)
+{
+    return fabs(a - b) < EPS;
+}
+
 int pomocneFunkcije::povrsinaTrougla(const QPoint& A, const QPoint& B, const QPoint& C)
 {
     /* (Dvostruka) Povrsina trougla.
@@ -28,12 +38,12 @@ bool pomocneFunkcije::kolinearne3D(const QVector3D& a, const QVector3D& b, const
      * |ax-bx  ay-by  az-bz| = (0, 0, 0)
      * |ax-cx  ay-cy  az-cz|
      */
-    return (fabsf((c.z() - a.z()) * (b.y() - a.y()) -
-              (b.z() - a.z()) * (c.y() - a.y())) < EPSf) &&
-           (fabsf((b.z() - a.z()) * (c.x() - a.x()) -
-              (b.x() - a.x()) * (c.z() - a.z())) < EPSf) &&
-           (fabsf((b.x() - a.x()) * (c.y() - a.y()) -
-              (b.y() - a.y()) * (c.x() - a.x())) < EPSf);
+    return bliski((c.z() - a.z()) * (b.y() - a.y()),
+                  (b.z() - a.z()) * (c.y() - a.y())) &&
+           bliski((b.z() - a.z()) * (c.x() - a.x()),
+                  (b.x() - a.x()) * (c.z() - a.z())) &&
+           bliski((b.x() - a.x()) * (c.y() - a.y()),
+                  (b.y() - a.y()) * (c.x() - a.x()));
 }
 
 
@@ -77,13 +87,11 @@ double pomocneFunkcije::distanceKvadratF(const QPointF& A, const QPointF& B)
 
 bool pomocneFunkcije::ispod(const QPointF &A, const QPointF &B)
 {
-    if(A.y() < B.y())
+    if (A.y() < B.y())
         return true;
-    else if(fabs(A.y() - B.y()) < EPS)
-    {
-       if(A.x() > B.x()) return true;
-    }
-    return false;
+    else if (bliski(A.y(), B.y()))
+        return A.x() > B.x();
+    else return false;
 }
 
 bool pomocneFunkcije::konveksan(const QPointF &A, const QPointF &B, const QPointF &C)
