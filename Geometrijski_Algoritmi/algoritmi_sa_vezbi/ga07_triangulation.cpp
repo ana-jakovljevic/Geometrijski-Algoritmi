@@ -336,8 +336,9 @@ void Triangulation::triangulacija(Face *f)
     if (_eventQueueTriangulation.empty()) {
         return;
     }
-
+    HalfEdge* curr_node = nullptr;
     for (auto e: _eventQueueTriangulation) {
+        curr_node = e;
         if (e == *_eventQueueTriangulation.rbegin()) {
             break;
         }
@@ -346,23 +347,36 @@ void Triangulation::triangulacija(Face *f)
         AlgoritamBaza_updateCanvasAndBlock()
 
         auto vrh_steka = _stekTriangulacije.back();
-
+        HalfEdge* poslednji = nullptr;
+        bool vracam_vrh = true;
         if (istiLanac(e, vrh_steka)) {
+
             _stekTriangulacije.pop_back();
 
 
             while (!_stekTriangulacije.empty()) {
-                auto poslednji = _stekTriangulacije.back();
-                _stekTriangulacije.pop_back();
+                poslednji = _stekTriangulacije.back();
 
                 // ukoliko je dijagonala izmedju e i poslednji u poligonu onda ide if
                 if (true) {
+                    vracam_vrh = false;
                     _allDiagonals.emplace_back(e->origin(), poslednji->origin());
-                    AlgoritamBaza_updateCanvasAndBlock()
+                    AlgoritamBaza_updateCanvasAndBlock();
+                    _stekTriangulacije.pop_back();
+
                 } else {
                     break;
                 }
+
             }
+            if (vracam_vrh) {
+                _stekTriangulacije.push_back(vrh_steka);
+            } else {
+                _stekTriangulacije.push_back(poslednji);
+            }
+            _stekTriangulacije.push_back(e);
+
+
         } else {
 
             while(!_stekTriangulacije.empty()) {
@@ -385,6 +399,14 @@ void Triangulation::triangulacija(Face *f)
 
         eprev = e;
     }
+
+    for (auto it = _stekTriangulacije.begin()+1; it != _stekTriangulacije.end()-1; it++) {
+        _allDiagonals.emplace_back((*it)->origin(), curr_node->origin());
+        AlgoritamBaza_updateCanvasAndBlock();
+    }
+
+    _stekTriangulacije.clear();
+    _eventQueueTriangulation.clear();
 }
 
 bool Triangulation::istiLanac(HalfEdge* e1, HalfEdge* e2)
