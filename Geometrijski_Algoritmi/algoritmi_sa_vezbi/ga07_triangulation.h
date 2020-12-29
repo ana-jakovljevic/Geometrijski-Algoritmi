@@ -22,6 +22,9 @@ public:
     void pokreniNaivniAlgoritam() final;
     void crtajNaivniAlgoritam(QPainter *painter) const final;
 
+    const DCEL &getNaivePolygon() const;
+    const std::vector<std::pair<Vertex *, Vertex *>> &getNaiveDiagonals() const;
+
     /* Pomocne funkcije */
 private:
     std::vector<QPointF> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
@@ -78,21 +81,21 @@ private:
     DCEL _polygon;
 
     /* MOTONE PARTITION */
-    std::set<Vertex*, EventQueueCompTriangulation> _eventQueue;
-    std::set<HalfEdge*, StatusQueueCompTriangulation> _statusQueue;
+    std::set<Vertex *, EventQueueCompTriangulation> _eventQueue;
+    std::set<HalfEdge *, StatusQueueCompTriangulation> _statusQueue;
     /* neuredjena jer koristimo samo ubacivanje i pretragu,
      * pa bolje da budu oba u vremenu O(1) umesto O(logn) */
-    std::unordered_map<HalfEdge*, Vertex*> _helpers;
-    std::vector<std::pair<Vertex*, Vertex*>> _allDiagonals;
+    std::unordered_map<HalfEdge *, Vertex *> _helpers;
+    std::vector<std::pair<Vertex *, Vertex *>> _allDiagonals;
     /* potrebno samo za crtanje */
     bool _monotone;
 
     /* TRIANGULATION  */
-    std::vector<HalfEdge*> _stekTriangulacije;
-    std::set<HalfEdge*, EventQueueCompTriangulation2> _eventQueueTriangulation;
+    std::vector<HalfEdge *> _stekTriangulacije;
+    std::set<HalfEdge *, EventQueueCompTriangulation2> _eventQueueTriangulation;
 
     DCEL _naivePolygon;
-    std::vector<std::pair<Vertex*, Vertex*>> _naiveDiagonals;
+    std::vector<std::pair<Vertex *, Vertex *>> _naiveDiagonals;
 };
 
 

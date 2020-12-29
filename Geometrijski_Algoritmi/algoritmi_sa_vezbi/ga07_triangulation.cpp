@@ -638,3 +638,13 @@ void Triangulation::crtajNaivniAlgoritam(QPainter *painter) const
     for (auto v: _naivePolygon.vertices())
         painter->drawLine(v->coordinates(), v->incidentEdge()->twin()->origin()->coordinates());
 }
+
+const DCEL &Triangulation::getNaivePolygon() const
+{
+    return _naivePolygon;
+}
+
+const std::vector<std::pair<Vertex *, Vertex *> > &Triangulation::getNaiveDiagonals() const
+{
+    return _naiveDiagonals;
+}

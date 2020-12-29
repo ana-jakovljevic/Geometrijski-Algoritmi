@@ -14,9 +14,9 @@ static constexpr auto bezPauze = 0;
 static constexpr auto naivnostNebitna = false;
 
 /* Staticki nazivi datoteka sa test primerima */
-static constexpr auto datoteka1 = "../Geometrijski_Algoritmi/input_files/ga06_presekPravougaonika/input1.txt";
-static constexpr auto datoteka2 = "../Geometrijski_Algoritmi/input_files/ga06_presekPravougaonika/input2.txt";
-static constexpr auto datoteka3 = "../Geometrijski_Algoritmi/input_files/ga06_presekPravougaonika/input3.txt";
+static constexpr auto datoteka1 = "../Geometrijski_Algoritmi/input_files/ga06_PresekPravougaonika/input1.txt";
+static constexpr auto datoteka2 = "../Geometrijski_Algoritmi/input_files/ga06_PresekPravougaonika/input2.txt";
+static constexpr auto datoteka3 = "../Geometrijski_Algoritmi/input_files/ga06_PresekPravougaonika/input3.txt";
 
 /* Testiranje prve pripremljene datoteke */
 TEST(ga06_presekPravougaonikaTests, datotekaTest1)

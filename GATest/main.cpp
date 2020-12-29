@@ -5,6 +5,7 @@
 #include "tst_ga00_KonveksniOmotac3D.h"
 #include "tst_ga00_PreseciDuzi.h"
 #include "tst_ga00_DCEL.h"
+#include "tst_ga00_Triangulation.h"
 
 #include "tst_ga06_PresekPravougaonika.h"
 
