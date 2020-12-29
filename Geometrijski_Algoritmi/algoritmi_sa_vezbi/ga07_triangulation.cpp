@@ -352,18 +352,24 @@ void Triangulation::triangulacija(Face *f)
         if (istiLanac(e, vrh_steka)) {
 
             _stekTriangulacije.pop_back();
-
+            bool levi_lanac = leviLanac(e, vrh_steka);
+            bool desni_lanac = desniLanac(e, vrh_steka);
 
             while (!_stekTriangulacije.empty()) {
                 poslednji = _stekTriangulacije.back();
 
                 // ukoliko je dijagonala izmedju e i poslednji u poligonu onda ide if
-                if (true) {
+                if ((levi_lanac && pomocneFunkcije::konveksan(e->origin()->coordinates(),
+                                                             poslednji->origin()->coordinates(),
+                                                             vrh_steka->origin()->coordinates()))
+                        ||
+                     (desni_lanac && pomocneFunkcije::konveksan(e->origin()->coordinates(),
+                                                                vrh_steka->origin()->coordinates(),
+                                                                poslednji->origin()->coordinates()))) {
                     vracam_vrh = false;
                     _allDiagonals.emplace_back(e->origin(), poslednji->origin());
                     AlgoritamBaza_updateCanvasAndBlock();
                     _stekTriangulacije.pop_back();
-
                 } else {
                     break;
                 }
@@ -411,7 +417,15 @@ void Triangulation::triangulacija(Face *f)
 
 bool Triangulation::istiLanac(HalfEdge* e1, HalfEdge* e2)
 {
-    return true;
+    if (leviLanac(e1, e2)) {
+        return true;
+    }
+    else if (desniLanac(e1, e2)) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 bool Triangulation::leviLanac(HalfEdge *e1, HalfEdge *e2)
@@ -428,7 +442,14 @@ bool Triangulation::leviLanac(HalfEdge *e1, HalfEdge *e2)
 
 bool Triangulation::desniLanac(HalfEdge *e1, HalfEdge *e2)
 {
-    return true;
+    QPointF a = e1->origin()->coordinates();
+    QPointF a_next = e1->twin()->origin()->coordinates();
+
+    QPointF b = e2->origin()->coordinates();
+    QPointF b_next = e2->twin()->origin()->coordinates();
+
+    return pomocneFunkcije::ispod(a, a_next) &&
+           pomocneFunkcije::ispod(b, b_next);
 }
 
 
