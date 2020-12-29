@@ -9,14 +9,14 @@
 using namespace testing;
 
 /* Staticki podrazumevani parametri algoritma */
-static const auto bezCrtanja = nullptr;
-static const auto bezPauze = 0;
-static const auto naivnostNebitna = false;
+static constexpr auto bezCrtanja = nullptr;
+static constexpr auto bezPauze = 0;
+static constexpr auto naivnostNebitna = false;
 
 /* Staticki nazivi datoteka sa test primerima */
-static const auto datoteka1 = "../Geometrijski_Algoritmi/input_files/ga06_presekPravougaonika/input1.txt";
-static const auto datoteka2 = "../Geometrijski_Algoritmi/input_files/ga06_presekPravougaonika/input2.txt";
-static const auto datoteka3 = "../Geometrijski_Algoritmi/input_files/ga06_presekPravougaonika/input3.txt";
+static constexpr auto datoteka1 = "../Geometrijski_Algoritmi/input_files/ga06_presekPravougaonika/input1.txt";
+static constexpr auto datoteka2 = "../Geometrijski_Algoritmi/input_files/ga06_presekPravougaonika/input2.txt";
+static constexpr auto datoteka3 = "../Geometrijski_Algoritmi/input_files/ga06_presekPravougaonika/input3.txt";
 
 /* Testiranje prve pripremljene datoteke */
 TEST(ga06_presekPravougaonikaTests, datotekaTest1)
@@ -88,10 +88,10 @@ TEST(ga06_presekPravougaonikaTests, datotekaTest3)
 }
 
 /* Staticki brojevi pravougaonika za test primere */
-static const auto randomPravougaonici = "";
-static const auto brojPravougaonika1 = 10;
-static const auto brojPravougaonika2 = 100;
-static const auto brojPravougaonika3 = 1000;
+static constexpr auto randomPravougaonici = "";
+static constexpr auto brojPravougaonika1 = 10;
+static constexpr auto brojPravougaonika2 = 100;
+static constexpr auto brojPravougaonika3 = 1000;
 
 /* Testiranje sa prvim slucajnim pravougaonicima */
 TEST(ga06_presekPravougaonikaTests, randomTest1)
@@ -160,8 +160,8 @@ TEST(ga06_presekPravougaonikaTests, randomTest3)
 }
 
 /* Staticki brojevi pravougaonika za granicne slucajeve */
-static const auto nemaPravougaonika = 0;
-static const auto jedanPravougaonik = 1;
+static constexpr auto nemaPravougaonika = 0;
+static constexpr auto jedanPravougaonik = 1;
 
 /* Testiranje kada nema pravougaonika */
 TEST(ga06_presekPravougaonikaTests, nemaPravougaonika)

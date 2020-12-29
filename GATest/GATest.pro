@@ -15,11 +15,12 @@ QT += core gui charts widgets opengl
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 HEADERS += \
+    tst_ga00_PrimerTest.h \
     tst_ga00_KonveksniOmotac.h \
     tst_ga00_KonveksniOmotac3D.h \
     tst_ga00_PreseciDuzi.h \
-    tst_ga00_PrimerTest.h \
-    tst_ga06_presekPravougaonika.h \
+    tst_ga00_DCEL.h \
+    tst_ga06_PresekPravougaonika.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.h \
     ../Geometrijski_Algoritmi/pomocnefunkcije.h \
     ../Geometrijski_Algoritmi/algoritambaza.h \

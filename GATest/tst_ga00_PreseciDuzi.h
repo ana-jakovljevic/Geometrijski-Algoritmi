@@ -8,7 +8,7 @@
 
 using namespace testing;
 
-static const auto duzi = "../Geometrijski_Algoritmi/input_files/ga00_PreseciDuzi/input1.txt";
+static constexpr auto duzi = "../Geometrijski_Algoritmi/input_files/ga00_PreseciDuzi/input1.txt";
 
 TEST(ga05_preseciduzi, test1)
 {

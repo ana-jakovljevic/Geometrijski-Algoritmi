@@ -10,7 +10,7 @@
 
 using namespace testing;
 
-static const auto input_file_1 = "../Geometrijski_Algoritmi/input_files/ga00_KonveksniOmotac3D/input1.txt";
+static constexpr auto input_file_1 = "../Geometrijski_Algoritmi/input_files/ga00_KonveksniOmotac3D/input1.txt";
 
 /*
  * U slucaju vise od tri komplanarne tacke Naivni algoritam ce vratiti
