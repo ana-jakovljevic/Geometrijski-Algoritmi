@@ -104,9 +104,9 @@ void Triangulation::crtajAlgoritam(QPainter *painter) const
     } else {
         regular.setWidth(3);
         painter->setPen(regular);
-        for (auto f : _polygon.fields()) {
-            HalfEdge* v_start = f->outerComponent();
-            HalfEdge* v_next = v_start;
+        for (auto f : _polygon.faces()) {
+            auto v_start = f->outerComponent();
+            auto v_next = v_start;
 
             if (v_start == nullptr) continue;
 
@@ -136,7 +136,7 @@ void Triangulation::pokreniAlgoritam()
     connectDiagonalsDCEL();
     _allDiagonals.clear();
     AlgoritamBaza_updateCanvasAndBlock();
-    for (auto f : _polygon.fields()) {
+    for (auto f : _polygon.faces()) {
         if (f->outerComponent() == nullptr) continue;
         triangulacija(f);
     }
@@ -398,9 +398,9 @@ void Triangulation::connectDiagonalsDCEL()
     std::map<Vertex*, std::set<HalfEdge*, DiagonalsAddDECELComp>>::iterator it;
 
 
-    for(auto& pair : _allDiagonals) {
-        HalfEdge* ei1 = new HalfEdge(pair.first);
-        HalfEdge* ei2 = new HalfEdge(pair.second, ei1);
+    for(auto &pair : _allDiagonals) {
+        auto ei1 = new HalfEdge(pair.first);
+        auto ei2 = new HalfEdge(pair.second, ei1);
         ei1->setTwin(ei2);
 
         _polygon.insertEdge(ei1);
@@ -410,7 +410,7 @@ void Triangulation::connectDiagonalsDCEL()
         if (it != allDiagonals.end()) {
             allDiagonals[pair.first].emplace(ei1);
         } else {
-            std::set<HalfEdge*, DiagonalsAddDECELComp> s1(DiagonalsAddDECELComp(pair.first));
+            std::set<HalfEdge *, DiagonalsAddDECELComp> s1(DiagonalsAddDECELComp(pair.first));
             s1.emplace(ei1);
             allDiagonals[pair.first] = s1;
         }
@@ -419,18 +419,18 @@ void Triangulation::connectDiagonalsDCEL()
         if (it != allDiagonals.end()) {
             allDiagonals[pair.second].emplace(ei2);
         } else {
-            std::set<HalfEdge*, DiagonalsAddDECELComp> s2(DiagonalsAddDECELComp(pair.second));
+            std::set<HalfEdge *, DiagonalsAddDECELComp> s2(DiagonalsAddDECELComp(pair.second));
             s2.emplace(ei2);
             allDiagonals[pair.second] = s2;
         }
     }
 
-    Face* f_old = _polygon.field(1);
-    for(auto& v : allDiagonals) {
-        HalfEdge* v_prev = v.first->incidentEdge()->prev();
-        HalfEdge* v_next = v.first->incidentEdge();
+    auto f_old = _polygon.face(1);
+    for(auto &v : allDiagonals) {
+        auto v_prev = v.first->incidentEdge()->prev();
+        auto v_next = v.first->incidentEdge();
 
-        for(auto& d : v.second) {
+        for(auto &d : v.second) {
             v_prev->setNext(d);
             d->setPrev(v_prev);
 
@@ -440,8 +440,8 @@ void Triangulation::connectDiagonalsDCEL()
              * Ponekad pravi greske i za outerComponent za face se zadaje pogresne
              * ivice sto dovodi do greske. */
             if (d->incidentFace() == nullptr) {
-                Face* f = new Face();
-                _polygon.insertFiled(f);
+                auto f = new Face();
+                _polygon.insertFace(f);
 
                 if (sameDirectionVectors(f_old->outerComponent(), d)) {
                     f->setOuterComponent(d);
@@ -545,10 +545,10 @@ std::vector<QPointF> Triangulation::ucitajNasumicneTacke(int brojTacaka) const
 void Triangulation::pokreniNaivniAlgoritam(){
 
     for(auto i=0u;i<_naivePolygon.vertices().size();i++){
-        Vertex* v = _naivePolygon.vertex(i);
+        auto v = _naivePolygon.vertex(i);
 
         for (auto j=i+1; j<_naivePolygon.vertices().size(); j++){
-            Vertex* u = _naivePolygon.vertex(j);
+            auto u = _naivePolygon.vertex(j);
 
             QPointF presek;
 
@@ -561,7 +561,7 @@ void Triangulation::pokreniNaivniAlgoritam(){
 
             // proverava da li dijagonala sece neku od ivica poligona
             for(auto k=0;k<int(_naivePolygon.edges().size()/2);k++){
-                HalfEdge* edge = _naivePolygon.edge(k);
+                auto edge = _naivePolygon.edge(k);
                 if(edge == v->incidentEdge() || edge == v->incidentEdge()->prev() || edge == u->incidentEdge() || edge == u->incidentEdge()->prev())
                     continue;
 

@@ -31,18 +31,18 @@ public:
     const std::vector<Vertex *> &vertices() const;
     HalfEdge *edge(size_t i) const;
     const std::vector<HalfEdge *> &edges() const;
-    Face *field(size_t i) const;
-    const std::vector<Face *> &fields() const;
-    void setFields(const std::vector<Face *> &fileds);
+    Face *face(size_t i) const;
+    const std::vector<Face *> &faces() const;
+    void setFaces(const std::vector<Face *> &faces);
     void loadData(const std::vector<QPointF> &tacke);
     void insertEdge(HalfEdge *e);
-    void insertFiled(Face *f);
+    void insertFace(Face *f);
     HalfEdge *findEdge(Vertex *start, Vertex *end);
 
 private:
     std::vector<Vertex *> _vertices;
     std::vector<HalfEdge *> _edges;
-    std::vector<Face *> _fields;
+    std::vector<Face *> _faces;
 };
 
 ///

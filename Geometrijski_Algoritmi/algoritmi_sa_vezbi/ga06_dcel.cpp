@@ -17,8 +17,8 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
         exit(EXIT_FAILURE);
     }
 
-    unsigned vertexNum, edgeNum, fieldNum;
-    in >> vertexNum >> fieldNum >> edgeNum;
+    unsigned vertexNum, edgeNum, faceNum;
+    in >> vertexNum >> faceNum >> edgeNum;
 
     /* citamo teme po teme iz fajla
      * i pamtimo ga u nizu temena */
@@ -36,8 +36,8 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
     /* za svaki poligon (polje)
      * za svako teme tog poligona napravimo polustranicu sa tim temenom kao pocetkom
      * zatim prodjemo kroz napravljene polustranice i popunimo prethodnu i sledecu */
-    for(auto i=0ul; i<fieldNum; i++) {
-        Face* f = new Face();
+    for(auto i=0ul; i<faceNum; i++) {
+        auto f = new Face();
         unsigned broj_temena;
         in >> broj_temena;
         std::vector<HalfEdge*> edges;
@@ -55,14 +55,14 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
             edges[j]->setIncidentFace(f);
         }
         f->setOuterComponent(edges[0]);
-        _fields.push_back(f);
+        _faces.push_back(f);
     }
 
     /* mapa u kojoj mozemo naci stranicu na osnovu temena na koji "pokazuje"
      * u njoj cemo pamtiti spoljasnje ivice i koristimo je da bi ih kasnije povezali */
     std::map<Vertex*, HalfEdge*> spoljasnje_ivice;
 
-    Face * spoljasnost = new Face();
+    auto spoljasnost = new Face();
 
     /* za svaku polustranicu AB pokusavamo da nadjemo polustranicu BA
      * ako takva ne postoji to znaci da smo naisli na spoljasnju polustranicu
@@ -96,7 +96,7 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
     }
 
     spoljasnost->setInnerComponent(spoljasnje_ivice.begin()->second);
-    _fields.push_back(spoljasnost);
+    _faces.push_back(spoljasnost);
 }
 
 DCEL::DCEL(const std::vector<QPointF> &tacke)
@@ -111,7 +111,7 @@ DCEL::~DCEL() {
     for (auto e: _edges)
         delete e;
 
-    for (auto f: _fields)
+    for (auto f: _faces)
         delete f;
 }
 
@@ -136,21 +136,21 @@ const std::vector<HalfEdge *> &DCEL::edges() const
     return _edges;
 }
 
-Face *DCEL::field(size_t i) const
+Face *DCEL::face(size_t i) const
 {
-    return _fields[i];
+    return _faces[i];
 }
 
 
-const std::vector<Face *> &DCEL::fields() const
+const std::vector<Face *> &DCEL::faces() const
 {
-    return _fields;
+    return _faces;
 }
 
 
-void DCEL::setFields(const std::vector<Face *> &fileds)
+void DCEL::setFaces(const std::vector<Face *> &faces)
 {
-    _fields = fileds;
+    _faces = faces;
 }
 
 void DCEL::loadData(const std::vector<QPointF> &tacke)
@@ -161,8 +161,8 @@ void DCEL::loadData(const std::vector<QPointF> &tacke)
     auto inner = new Face();
     auto outer = new Face();
 
-    _fields.push_back(outer);
-    _fields.push_back(inner);
+    _faces.push_back(outer);
+    _faces.push_back(inner);
 
     for(auto &tacka : tacke) {
         auto newVertex = new Vertex(tacka);
@@ -224,9 +224,9 @@ void DCEL::insertEdge(HalfEdge *e)
     _edges.push_back(e);
 }
 
-void DCEL::insertFiled(Face *f)
+void DCEL::insertFace(Face *f)
 {
-    _fields.push_back(f);
+    _faces.push_back(f);
 }
 
 HalfEdge *DCEL::findEdge(Vertex *start, Vertex *end)
@@ -351,7 +351,7 @@ void HalfEdge::setIncidentFace(Face *incidentFace)
 
 /*
 ***********************************************************************
-*                             FIELD                                   *
+*                             FACE (FIELD)                            *
 ***********************************************************************
 */
 Face::Face()
