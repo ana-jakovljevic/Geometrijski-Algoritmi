@@ -136,7 +136,7 @@ void Triangulation::pokreniAlgoritam()
     _monotone = false;
     connectDiagonalsDCEL();
     _allDiagonals.clear();
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
     for (auto f : _polygon.faces()) {
         if (f->outerComponent() == nullptr) continue;
         triangulacija(f);
@@ -152,9 +152,9 @@ void Triangulation::initialiseEventQueue()
 {
     for(unsigned i=0; i<_polygon.vsize(); i++){
 
-        Vertex* v = _polygon.vertex(i);
-        Vertex* v_sledeci = v->incidentEdge()->twin()->origin();
-        Vertex* v_prethodni = v->incidentEdge()->prev()->origin();
+        auto v = _polygon.vertex(i);
+        auto v_sledeci = v->incidentEdge()->twin()->origin();
+        auto v_prethodni = v->incidentEdge()->prev()->origin();
 
     if(pomocneFunkcije::ispod(v_sledeci->coordinates(), v->coordinates()) &&
        pomocneFunkcije::ispod(v_prethodni->coordinates(), v->coordinates())){
@@ -180,7 +180,7 @@ void Triangulation::monotonePartition()
 {
     while(!_eventQueue.empty()) {
 
-        Vertex* cvor = *_eventQueue.begin();
+        auto cvor = *_eventQueue.begin();
         _eventQueue.erase(_eventQueue.begin());
 
         _brisucaPravaY = cvor->y();
@@ -275,9 +275,9 @@ void Triangulation::handleMergeVertex(Vertex *v)
 
 void Triangulation::handleRegularVertex(Vertex *v)
 {
-    Vertex* v_next = v->incidentEdge()->twin()->origin();
+    auto v_next = v->incidentEdge()->twin()->origin();
     if (pomocneFunkcije::ispod(v_next->coordinates(), v->coordinates())) {
-        Vertex *helper = _helpers[v->incidentEdge()->prev()];
+        auto helper = _helpers[v->incidentEdge()->prev()];
         if(helper->type() == VertexType::MERGE) {
             _allDiagonals.emplace_back(v, helper);
             AlgoritamBaza_updateCanvasAndBlock()
@@ -290,7 +290,7 @@ void Triangulation::handleRegularVertex(Vertex *v)
         const auto e_left = levaStranica(v);
         if (!e_left) return;
 
-        Vertex *helper = _helpers[e_left];
+        auto helper = _helpers[e_left];
         if(helper->type() == VertexType::MERGE) {
             _allDiagonals.emplace_back(v, helper);
             AlgoritamBaza_updateCanvasAndBlock()
@@ -308,12 +308,12 @@ void Triangulation::triangulacija(Face *f)
     /* radi vizuelizacije */
     _brisucaPravaY = _pCrtanje->height();
     AlgoritamBaza_updateCanvasAndBlock()
-    auto e = f->outerComponent();
-    auto i = e;
+    auto eo = f->outerComponent();
+    auto i = eo;
     do{
         _eventQueueTriangulation.insert(i);
         i=i->next();
-    }while(i!=e);
+    }while(i!=eo);
 
     if (_eventQueueTriangulation.empty()) {
         return;
@@ -356,11 +356,7 @@ void Triangulation::triangulacija(Face *f)
                 }
             }
         }
-
     }
-
-
-
 }
 
 bool Triangulation::istiLanac(HalfEdge* e1, HalfEdge* e2)
@@ -376,11 +372,8 @@ bool Triangulation::leviLanac(HalfEdge *e1, HalfEdge *e2)
     QPointF b = e2->origin()->coordinates();
     QPointF b_next = e2->twin()->origin()->coordinates();
 
-    if (pomocneFunkcije::ispod(a_next, a) &&
-        pomocneFunkcije::ispod(b_next, b))
-        return true;
-    else
-        return false;
+    return pomocneFunkcije::ispod(a_next, a) &&
+           pomocneFunkcije::ispod(b_next, b);
 }
 
 bool Triangulation::desniLanac(HalfEdge *e1, HalfEdge *e2)
@@ -395,8 +388,8 @@ bool Triangulation::desniLanac(HalfEdge *e1, HalfEdge *e2)
 
 void Triangulation::connectDiagonalsDCEL()
 {
-    std::map<Vertex*, std::set<HalfEdge*, DiagonalsAddDECELComp>> allDiagonals;
-    std::map<Vertex*, std::set<HalfEdge*, DiagonalsAddDECELComp>>::iterator it;
+    std::map<Vertex *, std::set<HalfEdge *, DiagonalsAddDECELComp>> allDiagonals;
+    std::map<Vertex *, std::set<HalfEdge *, DiagonalsAddDECELComp>>::iterator it;
 
 
     for(auto &pair : _allDiagonals) {
@@ -466,11 +459,11 @@ void Triangulation::connectDiagonalsDCEL()
 
 bool Triangulation::sameDirectionVectors(HalfEdge *e1, HalfEdge *e2)
 {
-    Vertex* a = e1->origin();
-    Vertex* b = e1->twin()->origin();
+    auto a = e1->origin();
+    auto b = e1->twin()->origin();
 
-    Vertex* c = e2->origin();
-    Vertex* d = e2->twin()->origin();
+    auto c = e2->origin();
+    auto d = e2->twin()->origin();
 
     return  (b->x() - a->x()) *
             (d->x() - c->x()) +
@@ -546,68 +539,72 @@ std::vector<QPointF> Triangulation::ucitajNasumicneTacke(int brojTacaka) const
 void Triangulation::pokreniNaivniAlgoritam()
 {
     /* Slozenost algoritma: O(n^3) */
-    for(auto i=0u;i<_naivePolygon.vsize();i++){
+    for(auto i = 0ul; i < _naivePolygon.vsize(); i++){
         auto v = _naivePolygon.vertex(i);
 
-        for (auto j=i+1; j<_naivePolygon.vsize(); j++){
+        for (auto j = i+1; j < _naivePolygon.vsize(); j++){
             auto u = _naivePolygon.vertex(j);
 
             QPointF presek;
 
-            // provera da li je (v,u) spoljasnja dijagonala
-            bool badDiag = checkDiagonal(v,u);
+            /* Provera da li je (v, u) spoljasnja dijagonala */
+            bool badDiag = checkDiagonal(v, u);
 
-            // ako jeste, duz (v,u) nije odgovarajuca, prelazi se na sledecu duz
-            if(badDiag)
-                continue;
+            /* Ako jeste, duz (v, u) nije odgovarajuca, prelazi se na sledecu duz */
+            if (badDiag) continue;
 
-            // proverava da li dijagonala sece neku od ivica poligona
-            for(auto k=0;k<int(_naivePolygon.esize()/2);k++){
+            /* Provera da li dijagonala sece neku od ivica poligona */
+            for(auto k = 0ul; k < _naivePolygon.esize()/2; k++){
                 auto edge = _naivePolygon.edge(k);
-                if(edge == v->incidentEdge() || edge == v->incidentEdge()->prev() || edge == u->incidentEdge() || edge == u->incidentEdge()->prev())
+                if (edge == v->incidentEdge() || edge == v->incidentEdge()->prev() ||
+                    edge == u->incidentEdge() || edge == u->incidentEdge()->prev())
                     continue;
 
-                if(pomocneFunkcije::presekDuzi(QLineF(edge->origin()->coordinates(), edge->twin()->origin()->coordinates()),
+                if (pomocneFunkcije::presekDuzi(QLineF(edge->origin()->coordinates(),
+                                                       edge->twin()->origin()->coordinates()),
                                                 QLineF(v->coordinates(), u->coordinates()),
                                                 presek)){
-                    //postoji presek
+                    /* Postoji presek */
                     badDiag = true;
                     break;
                 }
             }
 
-            //ako sece, duz (v,u) nije odgovarajuca, prelazi se na sledecu duz
-            if(badDiag)
-                continue;
+            /* Ako sece, duz (v, u) nije odgovarajuca, prelazi se na sledecu duz */
+            if (badDiag) continue;
 
-            //provera da li (v,u) sece neku od trenutnih dijagonala
-            for(auto diag: _naiveDiagonals){
-                    if(diag.first == v || diag.second == v || diag.first == u || diag.second == u)
+            /* Provera da li (v, u) sece neku od trenutnih dijagonala */
+            for (auto diag: _naiveDiagonals){
+                    if (diag.first == v || diag.second == v ||
+                        diag.first == u || diag.second == u)
                         continue;
 
-                    if(pomocneFunkcije::presekDuzi(QLineF(diag.first->coordinates(),diag.second->coordinates()),QLineF(v->coordinates(),u->coordinates()),presek)){
-                        //sece dijagonalu
+                    if (pomocneFunkcije::presekDuzi(QLineF(diag.first->coordinates(),
+                                                           diag.second->coordinates()),
+                                                    QLineF(v->coordinates(),u->coordinates()),
+                                                    presek)){
+                        /* Sece dijagonalu */
                         badDiag = true;
                         break;
                     }
              }
 
-            //ako ispunjava sve uslove, dodajemo dijagonalu (v,u)
+            /* Ako ispunjava sve uslove, dodajemo dijagonalu (v, u) */
             if (!badDiag){
                 _naiveDiagonals.emplace_back(v,u);
-                AlgoritamBaza_updateCanvasAndBlock();
+                AlgoritamBaza_updateCanvasAndBlock()
             }
         }
     }
 
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
     emit animacijaZavrsila();
 }
 
-bool Triangulation::checkDiagonal(Vertex* v, Vertex* u){
+bool Triangulation::checkDiagonal(Vertex *v, Vertex *u){
 
-    Vertex* v_next = v->incidentEdge()->next()->origin();
-    Vertex* v_prev = v->incidentEdge()->prev()->origin();
+    auto v_next = v->incidentEdge()->next()->origin();
+    auto v_prev = v->incidentEdge()->prev()->origin();
 
     if(pomocneFunkcije::konveksan(v_prev->coordinates(), v->coordinates(),v_next->coordinates())){
         if(!pomocneFunkcije::konveksan(v->coordinates(), u->coordinates(), v_prev->coordinates()) ||
@@ -615,7 +612,7 @@ bool Triangulation::checkDiagonal(Vertex* v, Vertex* u){
                  return true;
     } else {
         if(!pomocneFunkcije::konveksan(v->coordinates(), u->coordinates(), v_prev->coordinates()) &&
-           !pomocneFunkcije::konveksan(v->coordinates(), v_next->coordinates() ,u->coordinates()))
+           !pomocneFunkcije::konveksan(v->coordinates(), v_next->coordinates(), u->coordinates()))
                   return true;
     }
 
@@ -634,13 +631,10 @@ void Triangulation::crtajNaivniAlgoritam(QPainter *painter) const
     green.setWidth(2);
     painter->setPen(green);
 
-    for(auto diag: _naiveDiagonals){
+    for(auto diag: _naiveDiagonals)
         painter->drawLine(diag.first->coordinates(),diag.second->coordinates());
-    }
 
     painter->setPen(regular);
     for (auto v: _naivePolygon.vertices())
-    {
         painter->drawLine(v->coordinates(), v->incidentEdge()->twin()->origin()->coordinates());
-    }
 }

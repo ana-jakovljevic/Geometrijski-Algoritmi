@@ -84,7 +84,7 @@ private:
      * pa bolje da budu oba u vremenu O(1) umesto O(logn) */
     std::unordered_map<HalfEdge*, Vertex*> _helpers;
     std::vector<std::pair<Vertex*, Vertex*>> _allDiagonals;
-    // potrebno samo za crtanje
+    /* potrebno samo za crtanje */
     bool _monotone;
 
     /* TRIANGULATION  */
