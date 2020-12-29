@@ -130,6 +130,7 @@ void Triangulation::crtajAlgoritam(QPainter *painter) const
 
 void Triangulation::pokreniAlgoritam()
 {
+    /* Slozenost algoritma: O(nlogn) */
     initialiseEventQueue();
     monotonePartition();
     _monotone = false;
@@ -542,8 +543,9 @@ std::vector<QPointF> Triangulation::ucitajNasumicneTacke(int brojTacaka) const
 /*                         NAIVNI ALGORITAM                                       */
 /**********************************************************************************/
 
-void Triangulation::pokreniNaivniAlgoritam(){
-
+void Triangulation::pokreniNaivniAlgoritam()
+{
+    /* Slozenost algoritma: O(n^3) */
     for(auto i=0u;i<_naivePolygon.vertices().size();i++){
         auto v = _naivePolygon.vertex(i);
 

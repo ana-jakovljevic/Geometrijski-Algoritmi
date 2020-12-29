@@ -337,17 +337,15 @@ void KonveksniOmotac3D::pokreniNaivniAlgoritam()
     for (auto i = 0ul; i < _tacke.size(); i++) {
         for (auto j = i+1; j < _tacke.size(); j++) {
             for (auto k = j+1; k < _tacke.size(); k++) {
-                /* if(i==j || i==k || j==k)
-                    continue;*/
                 if (kolinearne(_tacke[i], _tacke[j], _tacke[k]))
                     continue;
 
-                //cuva se tekuca stranica, radi lakseg pracenja algoritma
+                 /* Cuva se tekuca stranica, radi lakseg pracenja algoritma */
                 _tekucaStranica = new Stranica(_tacke[i], _tacke[j], _tacke[k]);
 
                 AlgoritamBaza_updateCanvasAndBlock()
 
-                // Pronalazenje jedne nenula zapremine
+                /* Pronalazenje jedne nenula zapremine */
                 auto zapremina = 0.f;
                 for (auto tacka : _tacke) {
                     zapremina = zapremina6(_tekucaStranica, tacka);
@@ -368,15 +366,12 @@ void KonveksniOmotac3D::pokreniNaivniAlgoritam()
                         break;
                 }
 
-               //delete stranica;
 
                 if (it == _tacke.end()) {
                     _naivniOmotac.push_back(_tekucaStranica);
                     AlgoritamBaza_updateCanvasAndBlock()
                     /* Sve zapremine su istog znaka (dozvoljavamo da su neke i nula),
                      * pa stranica pripada konveksnom omotacu */
-
-                     /*Postoji funkcija za iscrtavanje stranice*/
                      auto *ivica1 = new Ivica(_tacke[i], _tacke[j]);
                      auto *ivica2 = new Ivica(_tacke[i], _tacke[k]);
                      auto *ivica3 = new Ivica(_tacke[j], _tacke[k]);
@@ -388,7 +383,8 @@ void KonveksniOmotac3D::pokreniNaivniAlgoritam()
             }
         }
     }
-    //da ne bi iscrtalo poslednju tekucu stranicu
+
+    /* Da ne bi iscrtalo poslednju tekucu stranicu */
     _tekucaStranica = nullptr;
     AlgoritamBaza_updateCanvasAndBlock()
     emit animacijaZavrsila();
@@ -396,7 +392,6 @@ void KonveksniOmotac3D::pokreniNaivniAlgoritam()
 
 void KonveksniOmotac3D::crtajNaivniAlgoritam(QPainter *) const
 {
-    // crtanje svih temena
     glBegin(GL_POINTS);
         for(auto teme : _tacke)
             crtajTeme(teme);
