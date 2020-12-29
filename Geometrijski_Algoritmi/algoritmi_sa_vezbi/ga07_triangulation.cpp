@@ -1,6 +1,7 @@
 #include "ga07_triangulation.h"
 #include "ga06_dcel.h"
 #include <fstream>
+#include <iostream>
 
 Triangulation::Triangulation(QWidget *pCrtanje,
                          int pauzaKoraka,
@@ -97,10 +98,10 @@ void Triangulation::crtajAlgoritam(QPainter *painter) const
             painter->drawPoint(v->coordinates());
         }
 
-        /* Crtanje dijagonala. */
+        /* Crtanje ivica. */
         painter->setPen(magneta);
-        for(auto d : _allDiagonals)
-            painter->drawLine(d.first->coordinates(), d.second->coordinates());
+        for(auto e : _polygon.edges())
+            painter->drawLine(e->origin()->coordinates(), e->twin()->origin()->coordinates());
     } else {
         regular.setWidth(3);
         painter->setPen(regular);
@@ -121,10 +122,10 @@ void Triangulation::crtajAlgoritam(QPainter *painter) const
         painter->drawLine(QPointF(0, _brisucaPravaY),
                           QPointF(_pCrtanje->width(), _brisucaPravaY));
 
-        /* Crtanje dijagonala */
+        /* Crtanje ivica */
         painter->setPen(magneta);
-        for(auto d : _allDiagonals)
-            painter->drawLine(d.first->coordinates(), d.second->coordinates());
+        for(auto e : _polygon.edges())
+            painter->drawLine(e->origin()->coordinates(), e->twin()->origin()->coordinates());
     }
 }
 
@@ -134,10 +135,10 @@ void Triangulation::pokreniAlgoritam()
     monotonePartition();
     _monotone = false;
     AlgoritamBaza_updateCanvasAndBlock();
-    for (auto f : _polygon.fields()) {
-        if (f->outerComponent() == nullptr) continue;
-        triangulacija(f);
-    }
+//    for (auto f : _polygon.fields()) {
+//        if (f->outerComponent() == nullptr) continue;
+//        triangulacija(f);
+//    }
     emit animacijaZavrsila();
 }
 
@@ -154,7 +155,7 @@ void Triangulation::initialiseEventQueue()
         Vertex* v_prethodni = v->incidentEdge()->prev()->origin();
 
         _allDiagonals[v].insert(v->incidentEdge());
-        _allDiagonals[v].insert(v->incidentEdge()->twin()->next());
+        _allDiagonals[v].insert(v->incidentEdge()->prev()->twin());
         if(pomocneFunkcije::ispod(v_sledeci->coordinates(), v->coordinates()) &&
            pomocneFunkcije::ispod(v_prethodni->coordinates(), v->coordinates()))
         {
@@ -204,9 +205,8 @@ void Triangulation::monotonePartition()
         else {
             handleRegularVertex(cvor);
         }
-
-        fix_fields();
     }
+    fix_fields();
 }
 
 void Triangulation::fix_fields(){
@@ -241,8 +241,9 @@ void Triangulation::fix_fields(){
             e->setIncidentFace(field);
             HalfEdge* next_edge = e->next();
             while(next_edge != e){
-                visited[e] = true;
-                e->setIncidentFace(field);
+                visited[next_edge] = true;
+                next_edge->setIncidentFace(field);
+                next_edge = next_edge->next();
             }
         }
     }
@@ -251,6 +252,9 @@ void Triangulation::fix_fields(){
 void Triangulation::insert_diagonal(Vertex* v1, Vertex* v2){
     HalfEdge* d1 = new HalfEdge(v1); // from v1 to v2
     HalfEdge* d2 = new HalfEdge(v2); // from v2 to v1
+    _polygon.insertEdge(d1);
+    _polygon.insertEdge(d2);
+
     d1->setTwin(d2);
     d2->setTwin(d1);
 
@@ -272,6 +276,8 @@ void Triangulation::insert_diagonal(Vertex* v1, Vertex* v2){
     red = green->next();
     red->setNext(d1);
     green->setPrev(d2);
+    d1->setPrev(red);
+    d2->setNext(green);
 
     // sredjivanje pokazivaca za v2
     if(v2_result.first == std::prev(_allDiagonals[v2].end())){
@@ -283,6 +289,8 @@ void Triangulation::insert_diagonal(Vertex* v1, Vertex* v2){
     red = green->next();
     red->setNext(d2);
     green->setPrev(d1);
+    d2->setPrev(red);
+    d1->setNext(green);
 
 }
 
@@ -388,59 +396,59 @@ void Triangulation::handleRegularVertex(Vertex *v)
 
 void Triangulation::triangulacija(Field *f)
 {
-    /* radi vizuelizacije */
-    _brisucaPravaY = _pCrtanje->height();
-    AlgoritamBaza_updateCanvasAndBlock()
-    auto e = f->outerComponent();
-    auto i = e;
-    do{
-        _eventQueueTriangulation.insert(i);
-        i=i->next();
-    }while(i!=e);
+//    /* radi vizuelizacije */
+//    _brisucaPravaY = _pCrtanje->height();
+//    AlgoritamBaza_updateCanvasAndBlock()
+//    auto e = f->outerComponent();
+//    auto i = e;
+//    do{
+//        _eventQueueTriangulation.insert(i);
+//        i=i->next();
+//    }while(i!=e);
 
-    if (_eventQueueTriangulation.empty()) {
-        return;
-    }
+//    if (_eventQueueTriangulation.empty()) {
+//        return;
+//    }
 
-    _stekTriangulacije.push_back(*_eventQueueTriangulation.begin());
-    _eventQueueTriangulation.erase(_eventQueueTriangulation.begin());
+//    _stekTriangulacije.push_back(*_eventQueueTriangulation.begin());
+//    _eventQueueTriangulation.erase(_eventQueueTriangulation.begin());
 
-    if (_eventQueueTriangulation.empty()) {
-        return;
-    }
+//    if (_eventQueueTriangulation.empty()) {
+//        return;
+//    }
 
-    _stekTriangulacije.push_back(*_eventQueueTriangulation.begin());
-    _eventQueueTriangulation.erase(_eventQueueTriangulation.begin());
+//    _stekTriangulacije.push_back(*_eventQueueTriangulation.begin());
+//    _eventQueueTriangulation.erase(_eventQueueTriangulation.begin());
 
-    for (auto e: _eventQueueTriangulation) {
-        if (e == *_eventQueueTriangulation.rbegin()) {
-            break;
-        }
+//    for (auto e: _eventQueueTriangulation) {
+//        if (e == *_eventQueueTriangulation.rbegin()) {
+//            break;
+//        }
 
-        _brisucaPravaY = e->origin()->y();
-        AlgoritamBaza_updateCanvasAndBlock()
+//        _brisucaPravaY = e->origin()->y();
+//        AlgoritamBaza_updateCanvasAndBlock()
 
-        auto vrh_steka = _stekTriangulacije.back();
+//        auto vrh_steka = _stekTriangulacije.back();
 
-        if (istiLanac(e, vrh_steka)) {
-            _stekTriangulacije.pop_back();
+//        if (istiLanac(e, vrh_steka)) {
+//            _stekTriangulacije.pop_back();
 
 
-            while (!_stekTriangulacije.empty()) {
-                auto poslednji = _stekTriangulacije.back();
-                _stekTriangulacije.pop_back();
+//            while (!_stekTriangulacije.empty()) {
+//                auto poslednji = _stekTriangulacije.back();
+//                _stekTriangulacije.pop_back();
 
-                // ukoliko je dijagonala izmedju e i poslednji u poligonu onda ide if
-                if () {
-                    _allDiagonals.emplace_back(e->origin(), poslednji->origin());
-                    AlgoritamBaza_updateCanvasAndBlock()
-                } else {
-                    break;
-                }
-            }
-        }
+//                // ukoliko je dijagonala izmedju e i poslednji u poligonu onda ide if
+//                if () {
+//                    _allDiagonals.emplace_back(e->origin(), poslednji->origin());
+//                    AlgoritamBaza_updateCanvasAndBlock()
+//                } else {
+//                    break;
+//                }
+//            }
+//        }
 
-    }
+//    }
 
 
 
@@ -475,77 +483,6 @@ bool Triangulation::desniLanac(HalfEdge *e1, HalfEdge *e2)
 /**********************************************************************************/
 /*                          POMOCNE FUNKCIJE                                      */
 /**********************************************************************************/
-
-void Triangulation::connectDiagonalsDCEL()
-{
-    std::map<Vertex*, std::set<HalfEdge*, DiagonalsAddDECELComp>> allDiagonals;
-    std::map<Vertex*, std::set<HalfEdge*, DiagonalsAddDECELComp>>::iterator it;
-
-
-    for(auto& pair : _allDiagonals) {
-        HalfEdge* ei1 = new HalfEdge(pair.first);
-        HalfEdge* ei2 = new HalfEdge(pair.second, ei1);
-        ei1->setTwin(ei2);
-
-        _polygon.insertEdge(ei1);
-        _polygon.insertEdge(ei2);
-
-        it = allDiagonals.find(pair.first);
-        if (it != allDiagonals.end()) {
-            allDiagonals[pair.first].emplace(ei1);
-        } else {
-            std::set<HalfEdge*, DiagonalsAddDECELComp> s1(DiagonalsAddDECELComp(pair.first));
-            s1.emplace(ei1);
-            allDiagonals[pair.first] = s1;
-        }
-
-        it = allDiagonals.find(pair.second);
-        if (it != allDiagonals.end()) {
-            allDiagonals[pair.second].emplace(ei2);
-        } else {
-            std::set<HalfEdge*, DiagonalsAddDECELComp> s2(DiagonalsAddDECELComp(pair.second));
-            s2.emplace(ei2);
-            allDiagonals[pair.second] = s2;
-        }
-    }
-
-    Field* f_old = _polygon.field(1);
-    for(auto& v : allDiagonals) {
-        HalfEdge* v_prev = v.first->incidentEdge()->prev();
-        HalfEdge* v_next = v.first->incidentEdge();
-
-        for(auto& d : v.second) {
-            v_prev->setNext(d);
-            d->setPrev(v_prev);
-
-            v_prev = d->twin();
-
-            /* Dodavanje polja (face) ne radi kako treba.
-             * Ponekad pravi greske i za outerComponent za face se zadaje pogresne
-             * ivice sto dovodi do greske. */
-            if (d->incidentFace() == nullptr) {
-                Field* f = new Field();
-                _polygon.insertFiled(f);
-
-                if (sameDirectionVectors(f_old->outerComponent(), d)) {
-                    f->setOuterComponent(d);
-                    f_old->setOuterComponent(d->twin());
-                    d->setIncidentFace(f);
-                    d->twin()->setIncidentFace(f_old);
-                } else {
-                    f->setOuterComponent(d->twin());
-                    f_old->setOuterComponent(d);
-                    d->twin()->setIncidentFace(f);
-                    d->setIncidentFace(f_old);
-                }
-
-                f_old = f;
-            }
-        }
-        v_prev->setNext(v_next);
-        v_next->setPrev(v_prev);
-    }
-}
 
 bool Triangulation::sameDirectionVectors(HalfEdge *e1, HalfEdge *e2)
 {
