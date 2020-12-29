@@ -18,7 +18,7 @@ void DCELDemo::crtajAlgoritam(QPainter *painter) const {
     if (!painter) return;
 
     QPen pen = painter->pen();
-    for(auto i=0ul; i<_polygon.edges().size(); i++)
+    for(auto i=0ul; i<_polygon.esize(); i++)
     {
         /* Crta se poligon */
         pen.setColor(Qt::yellow);

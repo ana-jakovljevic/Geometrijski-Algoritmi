@@ -13,8 +13,7 @@ class Face;
 /// Dvostruko povezna lista (Doubly-Connected Edge List)
 /// Vise procitati u knjizi Computational Geometry
 ///
-class DCEL
-{
+class DCEL {
 public:
     DCEL(std::string imeDatoteke, int h, int w);
 
@@ -27,10 +26,14 @@ public:
     DCEL() = default;
     virtual ~DCEL();
 
+    size_t vsize() const;
     Vertex *vertex(size_t i) const;
+    const QPointF &coordinates(size_t i) const;
     const std::vector<Vertex *> &vertices() const;
+    size_t esize() const;
     HalfEdge *edge(size_t i) const;
     const std::vector<HalfEdge *> &edges() const;
+    size_t fsize() const;
     Face *face(size_t i) const;
     const std::vector<Face *> &faces() const;
     void setFaces(const std::vector<Face *> &faces);
@@ -57,7 +60,7 @@ enum class VertexType {START, SPLIT, END, MERGE, REGULAR};
 /// Teme poligona
 /// Sadrzi koordinate
 /// i jednu incident (proizvoljnu) HalfEdge
-class Vertex{
+class Vertex {
 public:
     Vertex();
     Vertex(float x, float y);
@@ -92,7 +95,7 @@ private:
 /// Origin je Vrtex koji je pocetak HalfEdge
 /// Vise o ovoj strukturi procitati u Computational Geoemtry
 ///
-class HalfEdge{
+class HalfEdge {
 public:
     HalfEdge();
     HalfEdge(Vertex *origin, HalfEdge *twin = nullptr,
@@ -127,7 +130,7 @@ private:
 /// Moze biti prazan
 /// Vise o ovoj strukturi procitati u Computational Geoemtry
 ///
-class Face{
+class Face {
 public:
     Face();
     Face(HalfEdge *outerComponent, const std::vector<HalfEdge *> &innerComponents);

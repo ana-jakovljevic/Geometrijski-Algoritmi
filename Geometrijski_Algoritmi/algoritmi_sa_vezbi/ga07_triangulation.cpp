@@ -42,11 +42,11 @@ void Triangulation::crtajAlgoritam(QPainter *painter) const
 
     if (_monotone) {
         /* Crtanje pravougaonika */
-        for (auto i=0ul; i < _polygon.vertices().size() - 1; i++)
-            painter->drawLine(_polygon.vertex(i)->coordinates(),
-                              _polygon.vertex(i+1)->coordinates());
-        painter->drawLine(_polygon.vertex(_polygon.vertices().size()-1)->coordinates(),
-                          _polygon.vertex(0)->coordinates());
+        for (auto i=0ul; i < _polygon.vsize() - 1; i++)
+            painter->drawLine(_polygon.coordinates(i),
+                              _polygon.coordinates(i+1));
+        painter->drawLine(_polygon.coordinates(_polygon.vsize()-1),
+                          _polygon.coordinates(0));
 
 
         /* Crtanje brisuce prave */
@@ -150,7 +150,7 @@ void Triangulation::pokreniAlgoritam()
 
 void Triangulation::initialiseEventQueue()
 {
-    for(unsigned i=0; i<_polygon.vertices().size(); i++){
+    for(unsigned i=0; i<_polygon.vsize(); i++){
 
         Vertex* v = _polygon.vertex(i);
         Vertex* v_sledeci = v->incidentEdge()->twin()->origin();
@@ -546,10 +546,10 @@ std::vector<QPointF> Triangulation::ucitajNasumicneTacke(int brojTacaka) const
 void Triangulation::pokreniNaivniAlgoritam()
 {
     /* Slozenost algoritma: O(n^3) */
-    for(auto i=0u;i<_naivePolygon.vertices().size();i++){
+    for(auto i=0u;i<_naivePolygon.vsize();i++){
         auto v = _naivePolygon.vertex(i);
 
-        for (auto j=i+1; j<_naivePolygon.vertices().size(); j++){
+        for (auto j=i+1; j<_naivePolygon.vsize(); j++){
             auto u = _naivePolygon.vertex(j);
 
             QPointF presek;
@@ -562,7 +562,7 @@ void Triangulation::pokreniNaivniAlgoritam()
                 continue;
 
             // proverava da li dijagonala sece neku od ivica poligona
-            for(auto k=0;k<int(_naivePolygon.edges().size()/2);k++){
+            for(auto k=0;k<int(_naivePolygon.esize()/2);k++){
                 auto edge = _naivePolygon.edge(k);
                 if(edge == v->incidentEdge() || edge == v->incidentEdge()->prev() || edge == u->incidentEdge() || edge == u->incidentEdge()->prev())
                     continue;

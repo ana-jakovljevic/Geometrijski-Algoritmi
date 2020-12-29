@@ -115,14 +115,29 @@ DCEL::~DCEL() {
         delete f;
 }
 
+size_t DCEL::vsize() const
+{
+    return _vertices.size();
+}
+
 Vertex *DCEL::vertex(size_t i) const
 {
     return _vertices[i];
 }
 
+const QPointF &DCEL::coordinates(size_t i) const
+{
+    return _vertices[i]->coordinates();
+}
+
 const std::vector<Vertex *> &DCEL::vertices() const
 {
     return _vertices;
+}
+
+size_t DCEL::esize() const
+{
+    return _edges.size();
 }
 
 HalfEdge *DCEL::edge(size_t i) const
@@ -134,6 +149,11 @@ HalfEdge *DCEL::edge(size_t i) const
 const std::vector<HalfEdge *> &DCEL::edges() const
 {
     return _edges;
+}
+
+size_t DCEL::fsize() const
+{
+    return _faces.size();
 }
 
 Face *DCEL::face(size_t i) const
