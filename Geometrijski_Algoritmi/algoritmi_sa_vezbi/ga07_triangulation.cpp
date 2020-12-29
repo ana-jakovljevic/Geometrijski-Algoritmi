@@ -327,7 +327,15 @@ void Triangulation::triangulacija(Face *f)
     }
 
     _stekTriangulacije.push_back(*_eventQueueTriangulation.begin());
+
+
+    auto eprev = *_eventQueueTriangulation.begin();
+
     _eventQueueTriangulation.erase(_eventQueueTriangulation.begin());
+
+    if (_eventQueueTriangulation.empty()) {
+        return;
+    }
 
     for (auto e: _eventQueueTriangulation) {
         if (e == *_eventQueueTriangulation.rbegin()) {
@@ -355,7 +363,27 @@ void Triangulation::triangulacija(Face *f)
                     break;
                 }
             }
+        } else {
+
+            while(!_stekTriangulacije.empty()) {
+                auto poslednji = _stekTriangulacije.back();
+
+                if (_stekTriangulacije.size() != 1){
+
+                    _allDiagonals.emplace_back(e->origin(), poslednji->origin());
+                    AlgoritamBaza_updateCanvasAndBlock()
+
+                }
+
+                _stekTriangulacije.pop_back();
+            }
+
+            _stekTriangulacije.push_back(eprev);
+            _stekTriangulacije.push_back(e);
+
         }
+
+        eprev = e;
     }
 }
 
