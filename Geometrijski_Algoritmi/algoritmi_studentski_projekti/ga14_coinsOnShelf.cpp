@@ -2,6 +2,8 @@
 
 void CoinsOnShelf::printSpan(QPainter *painter, bool naive) const
 {
+    /* Calculate span that we need to display. Naive boolean value is
+     * used to differ shelfs when calculating */
     float span;
     float x, y;
     if(!naive) {
@@ -14,6 +16,7 @@ void CoinsOnShelf::printSpan(QPainter *painter, bool naive) const
     }
     span = x - y;
 
+    // Now print it on screen
     QPointF point(50, 500);
     QString spanText = "Total span: " + QString::number(span);
 
@@ -35,6 +38,7 @@ void CoinsOnShelf::printSpan(QPainter *painter, bool naive) const
 
 void CoinsOnShelf::printSpanFinal(QPainter *painter) const
 {
+    // This method is only used at end of naive algorithm
     QPointF point(50, 500);
     QString spanText = "Total span: " + QString::number(_naiveMinSpan);
 
@@ -55,6 +59,11 @@ void CoinsOnShelf::printSpanFinal(QPainter *painter) const
 
 float CoinsOnShelf::calculateSpan()
 {
+    /* Span in this case couldn't be calculated only from first and last disc
+     * One example: if we have very large disc that's second on shelf and first disc is very very
+     * small. In that case, left edge of that large disc is what we want, not left edge of first (small)
+     * disc
+     */
     float x = 0;
     for(auto disc: _shelfNaive)
         if(disc->footprint() + disc->radius() > x)
@@ -71,6 +80,8 @@ float CoinsOnShelf::calculateSpan()
 
 void CoinsOnShelf::naiveSpecialCase()
 {
+    /* For each permutation, display it, calcluate it's span
+     * and update minSpan if it's smaller */
     float minSpan = 99999;
 
     vector<unsigned> indexes;
@@ -112,6 +123,10 @@ void CoinsOnShelf::naiveSpecialCase()
 
 void CoinsOnShelf::naiveGeneralCase()
 {
+    /* The same as previous, only thats different that now
+     * discs could be moved apart to fill new disc in new permutation
+     * If we used previous method, some discs could overlap
+     */
     float minSpan = 99999;
 
     vector<unsigned> indexes;
@@ -258,8 +273,10 @@ void CoinsOnShelf::crtajAlgoritam(QPainter *painter) const
     pen.setColor(Qt::black);
     painter->setPen(pen);
 
+    // Draw horizontal line - shelf
     painter->drawLine(0, 70, 1100, 70);
 
+    // Draw all discs
     for(Disk* disc: _shelf) {
         float radius = disc->radius();
         float x = disc->footprint() + 450;
@@ -268,6 +285,7 @@ void CoinsOnShelf::crtajAlgoritam(QPainter *painter) const
         painter->drawEllipse(center, radius, radius);
     }
 
+    // And print span and red vertical lines if we have more than 1 disc
     if(_shelf.size() >= 2) {
         printSpan(painter,false);
 
@@ -428,6 +446,7 @@ double CoinsOnShelf::getSpanNaive()
 
 void CoinsOnShelf::specialCaseEvenDiscs()
 {
+    // This method follow schema in documentation
     _shelf.push_back(_discs[0]);
     int j = 1;
     AlgoritamBaza_updateCanvasAndBlock();
@@ -464,6 +483,7 @@ void CoinsOnShelf::specialCaseEvenDiscs()
 
 void CoinsOnShelf::specialCaseOddDiscs()
 {
+    // This method follows schema in documentation
     _shelf.push_back(_discs[0]);
     int j = 2;
     unsigned i = 0;
@@ -487,7 +507,7 @@ void CoinsOnShelf::specialCaseOddDiscs()
         j += 2;
     }
 
-    updateFootprintAB(_discs[0], _discs[1], true); // POTENTIAL PROBLEM
+    updateFootprintAB(_discs[0], _discs[1], true);
     _shelf.push_back(_discs[1]);
     AlgoritamBaza_updateCanvasAndBlock();
     j = 3;

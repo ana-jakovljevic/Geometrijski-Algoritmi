@@ -26,8 +26,8 @@ TEST(ga14_CoinsOnShelf, bothShelfsSameSizeRadnom)
 TEST(ga14_CoinsOnShelf, bothShelfsSameFinalSpan)
 {
     // Arrange
-    CoinsOnShelf cos1(nullptr, 0, false, specialCase1File, 4);
-    CoinsOnShelf cos2(nullptr, 0, false, specialCase1File, 4);
+    CoinsOnShelf cos1(nullptr, 0, false, specialCase1File);
+    CoinsOnShelf cos2(nullptr, 0, false, specialCase1File);
     cos1.pokreniAlgoritam();
     cos2.pokreniNaivniAlgoritam();
 
@@ -37,6 +37,31 @@ TEST(ga14_CoinsOnShelf, bothShelfsSameFinalSpan)
 
     // Assert
     EXPECT_DOUBLE_EQ(span1, span2);
+}
+
+TEST(ga14_CoinsOnShelf, footprintsConsecutive)
+{
+    // Arrange
+    CoinsOnShelf cos1(nullptr, 0, false, "", 10);
+    cos1.pokreniAlgoritam();
+
+    // Act
+    list<Disk*> discs = cos1.getShelfDisks();
+    list<Disk*>::iterator fst = discs.begin();
+    list<Disk*>::iterator snd= fst;
+    snd++;
+    list<Disk*>::iterator lst = discs.end();
+
+    while(snd != lst) {
+        EXPECT_TRUE((*fst)->footprint() < (*snd)->footprint());
+        fst++;
+        snd++;
+    }
+
+
+
+
+
 }
 
 #endif // TST_GA14_COINSONSHELF_H
