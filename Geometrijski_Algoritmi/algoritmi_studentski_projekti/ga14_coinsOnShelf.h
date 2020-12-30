@@ -75,7 +75,13 @@ public:
     void pokreniNaivniAlgoritam() final;
     void crtajNaivniAlgoritam(QPainter *painter) const final;
 
-private:
+    int getShelfSize();
+    int getNaiveShelfSize();
+    list<Disk *> getShelfDisks();
+    vector<Disk*> getShelfNaiveDisks();
+    double getSpan();
+    double getSpanNaive();
+
     void specialCaseEvenDiscs();
     void specialCaseOddDiscs();
     void generalCase();
@@ -88,7 +94,6 @@ private:
 
     void naiveSpecialCase();
     void naiveGeneralCase();
-
 
 private:
     vector<Disk*> _discs;

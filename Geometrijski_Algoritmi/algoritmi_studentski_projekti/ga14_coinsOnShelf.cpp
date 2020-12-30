@@ -244,7 +244,7 @@ void CoinsOnShelf::pokreniAlgoritam()
 
     _ended = true;
     AlgoritamBaza_updateCanvasAndBlock();
-    //debugShelf();
+    //qDebug() << getSpan();
     emit animacijaZavrsila();
 }
 
@@ -300,7 +300,7 @@ void CoinsOnShelf::pokreniNaivniAlgoritam()
 
     _ended = true;
     AlgoritamBaza_updateCanvasAndBlock();
-    debugShelf();
+    //qDebug() << getSpanNaive();
     emit animacijaZavrsila();
 }
 
@@ -390,6 +390,40 @@ void CoinsOnShelf::crtajNaivniAlgoritam(QPainter *painter) const
         painter->drawLine(rightDown, rightUp);
 
     }
+}
+
+int CoinsOnShelf::getShelfSize()
+{
+    return _shelf.size();
+}
+
+int CoinsOnShelf::getNaiveShelfSize()
+{
+    return _shelfNaiveFinal.size();
+}
+
+list<Disk *> CoinsOnShelf::getShelfDisks()
+{
+    return _shelf;
+}
+
+vector<Disk *> CoinsOnShelf::getShelfNaiveDisks()
+{
+    return _shelfNaiveFinal;
+}
+
+double CoinsOnShelf::getSpan()
+{
+    double leftEdge = _shelf.front()->footprint() - _shelf.front()->radius();
+    double rightEdge = _shelf.back()->footprint() + _shelf.back()->radius();
+    return rightEdge - leftEdge;
+}
+
+double CoinsOnShelf::getSpanNaive()
+{
+    double leftEdge = _shelfNaiveFinal.front()->footprint() - _shelfNaiveFinal.front()->radius();
+    double rightEdge = _shelfNaiveFinal.back()->footprint() + _shelfNaiveFinal.back()->radius();
+    return rightEdge - leftEdge;
 }
 
 void CoinsOnShelf::specialCaseEvenDiscs()

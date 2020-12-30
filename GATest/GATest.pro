@@ -30,7 +30,8 @@ HEADERS += \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga02_3discrtavanje.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga03_konveksniomotac.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga04_konveksniomotac3d.h \
-    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga05_preseciduzi.h
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga05_preseciduzi.h \
+    tst_ga14_CoinsOnShelf.h
 
 INCLUDEPATH += \
     ../Geometrijski_Algoritmi \
@@ -44,6 +45,7 @@ INCLUDEPATH += \
 
 SOURCES += main.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.cpp \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga14_coinsOnShelf.cpp \
     ../Geometrijski_Algoritmi/pomocnefunkcije.cpp \
     ../Geometrijski_Algoritmi/algoritambaza.cpp \
     ../Geometrijski_Algoritmi/animacijanit.cpp \

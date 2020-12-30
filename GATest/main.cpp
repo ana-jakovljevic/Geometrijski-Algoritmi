@@ -5,6 +5,7 @@
 #include "tst_ga00_KonveksniOmotac3D.h"
 
 #include "tst_ga06_presekPravougaonika.h"
+#include "tst_ga14_CoinsOnShelf.h"
 
 int main(int argc, char *argv[])
 {
