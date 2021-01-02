@@ -2,6 +2,7 @@
 #define COLLISIONDETECTION_H
 
 #include "algoritambaza.h"
+#include "pomocnefunkcije.h"
 
 class CollisionDetection : public AlgoritamBaza
 {
@@ -22,8 +23,12 @@ private:
     std::vector<QPoint> _polygon1;
     std::vector<QPoint> _polygon2;
 
+    void generateRandomPolygons(int brojTacaka);
+    void loadPolygonsFromFile(std::string imeDatoteke);
 
-
+    std::vector<QPoint> parsePointsFromLine(std::string line);
+    void scalePolygonAlongXAxis(std::vector<QPoint> &polygon, double factor = 1);
+    void shiftPolygonAlongXAxis(std::vector<QPoint> &polygon, int d = 0);
 };
 
 #endif // COLLISIONDETECTION_H
