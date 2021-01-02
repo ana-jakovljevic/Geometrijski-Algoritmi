@@ -314,6 +314,10 @@ void MainWindow::napraviNoviAlgoritam()
         _pAlgoritamBaza = new PresekPravougaonika(_pOblastCrtanja, _duzinaPauze, _naivni,
                                                   _imeDatoteke, _brojSlucajnihObjekata);
         break;
+    case TipAlgoritma::COLLISION_DETECTION:
+        _pAlgoritamBaza = new CollisionDetection(_pOblastCrtanja, _duzinaPauze, _naivni,
+                                                  _imeDatoteke, _brojSlucajnihObjekata);
+        break;
     default: /* ako nije algoritam uopste */
         break;
     }
