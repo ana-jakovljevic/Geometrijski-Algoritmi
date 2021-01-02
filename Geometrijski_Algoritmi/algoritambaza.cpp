@@ -116,30 +116,6 @@ std::vector<QPoint> AlgoritamBaza::generisiNasumicneTacke(int brojTacaka) const
     return randomPoints;
 }
 
-std::vector<QPoint> AlgoritamBaza::generisiNasumicneTackeZaPoligon(int brojTacaka) const
-{
-/*
- *  Generisemo nasumicne tacke i sortiramo ih tako da kada se obilaze redom
- *  predstavljaju temena PROSTOG poligona u smeru suprotnom od kazaljke na satu.
- */
-
-    std::vector<QPoint> tacke = generisiNasumicneTacke(brojTacaka);
-
-    QPoint maxTacka = tacke[0];
-
-    for (auto i = 1ul; i < tacke.size(); i++) {
-        if (tacke[i].x() > maxTacka.x() ||
-           (tacke[i].x() == maxTacka.x() && tacke[i].y() < maxTacka.y()))
-            maxTacka = tacke[i];
-    }
-
-    std::sort(tacke.begin(), tacke.end(), [&](const auto& lhs, const auto& rhs) {
-        return pomocneFunkcije::konveksan(maxTacka, lhs, rhs);
-    });
-
-    return tacke;
-}
-
 std::vector<QPoint> AlgoritamBaza::ucitajPodatkeIzDatoteke(std::string imeDatoteke) const
 {
     std::ifstream inputFile(imeDatoteke);

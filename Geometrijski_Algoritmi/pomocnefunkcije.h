@@ -19,6 +19,12 @@ double distanceKvadratF(const QPointF& A, const QPointF& B);
 bool ispod(const QPointF& A, const QPointF& B);
 bool konveksan(const QPointF& A, const QPointF& B, const QPointF& C);
 
+///
+/// \brief sortirajTackeZaProstPoligon - rasporedjuje tacke kao temena prostog poligona
+///
+void sortirajTackeZaProstPoligon(std::vector<QPoint> &tacke);
+void sortirajTackeZaProstPoligon(std::vector<QPointF> &tacke);
+
 /* Pomocni metodi za 3D. */
 bool kolinearne3D(const QVector3D& a, const QVector3D& b, const QVector3D& c);
 float zapremina(const QVector3D& a, const QVector3D& b, const QVector3D& c, const QVector3D& d);
