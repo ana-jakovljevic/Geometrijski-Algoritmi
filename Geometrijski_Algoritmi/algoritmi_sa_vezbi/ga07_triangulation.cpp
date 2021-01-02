@@ -565,12 +565,8 @@ std::vector<QPointF> Triangulation::generisiNasumicneTacke(int brojTacaka) const
 
 std::vector<QPointF> Triangulation::ucitajNasumicneTacke(int brojTacaka) const
 {
-    std::vector<QPointF> randomPoints;
-    std::vector<QPoint> randomPointsInt = AlgoritamBaza::generisiNasumicneTackeZaPoligon(brojTacaka);
-
-    for(int i=0; i < brojTacaka; i++)
-        randomPoints.emplace_back(randomPointsInt[i]);
-
+    std::vector<QPointF> randomPoints = generisiNasumicneTacke(brojTacaka);
+    pomocneFunkcije::sortirajTackeZaProstPoligon(randomPoints);
     return randomPoints;
 }
 

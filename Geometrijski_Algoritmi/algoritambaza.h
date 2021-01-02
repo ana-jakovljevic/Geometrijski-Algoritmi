@@ -149,12 +149,6 @@ protected:
     std::vector<QPoint> generisiNasumicneTacke(int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA) const;
     std::vector<QPoint> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
 
-    ///
-    /// \brief generisiNasumicneTackeZaPoligon - generise nasumicne i sortira ih za PROST poligon
-    ///
-    std::vector<QPoint> generisiNasumicneTackeZaPoligon(int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA) const;
-
-
     /* Parametar naivnosti */
     const bool &_naivni;
 };
