@@ -554,53 +554,24 @@ std::vector<QPointF> Triangulation::ucitajPodatkeIzDatoteke(std::string imeDatot
 
 std::vector<QPointF> Triangulation::generisiNasumicneTacke(int brojTacaka) const
 {
-    static int constexpr DRAWING_BORDER = 10;
-
-    srand(static_cast<unsigned>(time(nullptr)));
-    int xMax;
-    int yMax;
-
-    if (_pCrtanje)
-    {
-        xMax = _pCrtanje->width() - DRAWING_BORDER;
-        yMax = _pCrtanje->height() - DRAWING_BORDER;
-    }
-    else
-    {
-        xMax = CANVAS_WIDTH;
-        yMax = CANVAS_HEIGHT;
-    }
-
-    int xMin = DRAWING_BORDER;
-    int yMin = DRAWING_BORDER;
-
     std::vector<QPointF> randomPoints;
+    std::vector<QPoint> randomPointsInt = AlgoritamBaza::generisiNasumicneTacke(brojTacaka);
 
-    int xDiff = xMax-xMin;
-    int yDiff = yMax-yMin;
     for(int i=0; i < brojTacaka; i++)
-        randomPoints.emplace_back(xMin + rand()%xDiff, yMin + rand()%yDiff);
+        randomPoints.emplace_back(randomPointsInt[i]);
 
     return randomPoints;
 }
 
 std::vector<QPointF> Triangulation::ucitajNasumicneTacke(int brojTacaka) const
 {
-    std::vector<QPointF> tacke = generisiNasumicneTacke(brojTacaka);
+    std::vector<QPointF> randomPoints;
+    std::vector<QPoint> randomPointsInt = AlgoritamBaza::generisiNasumicneTackeZaPoligon(brojTacaka);
 
-    QPointF maxTacka = tacke[0];
+    for(int i=0; i < brojTacaka; i++)
+        randomPoints.emplace_back(randomPointsInt[i]);
 
-    for (auto i = 1ul; i < tacke.size(); i++) {
-        if (tacke[i].x() > maxTacka.x() ||
-           (pomocneFunkcije::bliski(tacke[i].x(), maxTacka.x()) && tacke[i].y() < maxTacka.y()))
-            maxTacka = tacke[i];
-    }
-
-    std::sort(tacke.begin(), tacke.end(), [&](const auto& lhs, const auto& rhs) {
-        return pomocneFunkcije::konveksan(maxTacka, lhs, rhs);
-    });
-
-    return tacke;
+    return randomPoints;
 }
 
 /**********************************************************************************/
