@@ -27,8 +27,8 @@ void CollisionDetection::crtajAlgoritam(QPainter *painter) const
 {
     if (!painter) return;
 
-    painter->drawPolygon(_polygon1.data(), _polygon1.size());
-    painter->drawPolygon(_polygon2.data(), _polygon2.size());
+    painter->drawPolygon(_leftPolygon);
+    painter->drawPolygon(_rightPolygon);
 }
 
 void CollisionDetection::pokreniNaivniAlgoritam()
@@ -39,22 +39,38 @@ void CollisionDetection::pokreniNaivniAlgoritam()
 void CollisionDetection::crtajNaivniAlgoritam(QPainter *painter) const
 {
     if (!painter) return;
-}
 
+}
 void CollisionDetection::generateRandomPolygons(int numberOfPoints)
 {
     std::vector<QPoint> points = AlgoritamBaza::generisiNasumicneTacke(numberOfPoints);
+    std::vector<QPoint> leftPoints;
+    std::vector<QPoint> rightPoints;
 
     for (int i = 0; i < numberOfPoints; i++)
     {
-        if (points[i].x() < (_pCrtanje->width())/2)
-            _polygon1.emplace_back(points[i]);
+        // TODO: is width ok?
+        int width;
+        if (_pCrtanje) width = _pCrtanje->width();
+        else width = CANVAS_WIDTH;
+
+        if (points[i].x() < width/2)
+            leftPoints.emplace_back(points[i]);
         else
-            _polygon2.emplace_back(points[i]);
+            rightPoints.emplace_back(points[i]);
     }
 
-    pomocneFunkcije::sortirajTackeZaProstPoligon(_polygon1);
-    pomocneFunkcije::sortirajTackeZaProstPoligon(_polygon2);
+    pomocneFunkcije::sortirajTackeZaProstPoligon(leftPoints);
+    pomocneFunkcije::sortirajTackeZaProstPoligon(rightPoints);
+
+    for (QPoint &point : leftPoints)
+    {
+        _leftPolygon.append(point);
+    }
+    for (QPoint &point : rightPoints)
+    {
+        _rightPolygon.append(point);
+    }
 }
 
 void CollisionDetection::loadPolygonsFromFile(std::string fileName)
@@ -64,25 +80,23 @@ void CollisionDetection::loadPolygonsFromFile(std::string fileName)
     std::getline(inputFile, line1);
     std::getline(inputFile, line2);
 
-    _polygon1 = parsePointsFromLine(line1);
-    _polygon2 = parsePointsFromLine(line2);
+    _leftPolygon = parsePolygonFromLine(line1);
+    _rightPolygon = parsePolygonFromLine(line2);
 }
 
-std::vector<QPoint> CollisionDetection::parsePointsFromLine(std::string line)
+QPolygon CollisionDetection::parsePolygonFromLine(std::string line)
 {
     std::stringstream ss;
     ss << line;
-    std::vector<QPoint> points;
+    QPolygon polygon;
     int x, y;
     while(!ss.eof())
     {
         ss >> x >> y;
-        points.emplace_back(x, y);
+        polygon.append(QPoint(x, y));
     }
-    return points;
+    return polygon;
 }
-
-
 
 
 

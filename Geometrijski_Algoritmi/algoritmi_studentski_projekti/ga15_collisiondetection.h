@@ -20,13 +20,13 @@ public:
     void crtajNaivniAlgoritam(QPainter *painter) const final;
 
 private:
-    std::vector<QPoint> _polygon1;
-    std::vector<QPoint> _polygon2;
+    QPolygon _leftPolygon;
+    QPolygon _rightPolygon;
 
     void generateRandomPolygons(int numberOfPoints);
     void loadPolygonsFromFile(std::string fileName);
+    QPolygon parsePolygonFromLine(std::string line);
 
-    std::vector<QPoint> parsePointsFromLine(std::string line);
 };
 
 #endif // COLLISIONDETECTION_H
