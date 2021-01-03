@@ -14,10 +14,10 @@ public:
                        int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA);
 
 
-    void pokreniAlgoritam() = 0;
-    void crtajAlgoritam(QPainter *painter) const = 0;
-    void pokreniNaivniAlgoritam() = 0;
-    void crtajNaivniAlgoritam(QPainter *painter) const = 0;
+    void pokreniAlgoritam() final;
+    void crtajAlgoritam(QPainter *painter) const final;
+    void pokreniNaivniAlgoritam() final;
+    void crtajNaivniAlgoritam(QPainter *painter) const final;
 
 private:
     std::vector<QPoint> _polygon1;
@@ -27,8 +27,6 @@ private:
     void loadPolygonsFromFile(std::string imeDatoteke);
 
     std::vector<QPoint> parsePointsFromLine(std::string line);
-    void scalePolygonAlongXAxis(std::vector<QPoint> &polygon, double factor = 1);
-    void shiftPolygonAlongXAxis(std::vector<QPoint> &polygon, int d = 0);
 };
 
 #endif // COLLISIONDETECTION_H

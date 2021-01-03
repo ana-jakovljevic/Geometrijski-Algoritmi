@@ -18,12 +18,18 @@ CollisionDetection::CollisionDetection(QWidget *pCrtanje,
 
 void CollisionDetection::pokreniAlgoritam()
 {
+    while(1)
+        AlgoritamBaza_updateCanvasAndBlock();
 
+    emit animacijaZavrsila();
 }
 
 void CollisionDetection::crtajAlgoritam(QPainter *painter) const
 {
     if (!painter) return;
+
+    painter->drawPolygon(_polygon1.data(), _polygon1.size());
+    painter->drawPolygon(_polygon2.data(), _polygon2.size());
 }
 
 void CollisionDetection::pokreniNaivniAlgoritam()
@@ -38,31 +44,18 @@ void CollisionDetection::crtajNaivniAlgoritam(QPainter *painter) const
 
 void CollisionDetection::generateRandomPolygons(int brojTacaka)
 {
-    _polygon1 = generisiNasumicneTackeZaPoligon(brojTacaka);
-    scalePolygonAlongXAxis(_polygon1, 0.5);
-    _polygon2 = generisiNasumicneTackeZaPoligon(brojTacaka);
-    scalePolygonAlongXAxis(_polygon2, 0.5);
-    shiftPolygonAlongXAxis(_polygon2, CANVAS_WIDTH/2);
-}
+    std::vector<QPoint> points = AlgoritamBaza::generisiNasumicneTacke(brojTacaka);
 
-void CollisionDetection::scalePolygonAlongXAxis(std::vector<QPoint> &polygon, double factor)
-{
-    int n = polygon.size();
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < brojTacaka; i++)
     {
-//        polygon[i].setX(factor*polygon[i].x());
-        polygon[i].rx() *= factor;
+        if (points[i].x() < (_pCrtanje->width())/2)
+            _polygon1.emplace_back(points[i]);
+        else
+            _polygon2.emplace_back(points[i]);
     }
-}
 
-void CollisionDetection::shiftPolygonAlongXAxis(std::vector<QPoint> &polygon, int d)
-{
-    int n = polygon.size();
-    for (int i = 0; i < n; i++)
-    {
-//        polygon[i].setX(polygon[i].x() + d);
-        polygon[i].rx() += d;
-    }
+    pomocneFunkcije::sortirajTackeZaProstPoligon(_polygon1);
+    pomocneFunkcije::sortirajTackeZaProstPoligon(_polygon2);
 }
 
 void CollisionDetection::loadPolygonsFromFile(std::string imeDatoteke)
