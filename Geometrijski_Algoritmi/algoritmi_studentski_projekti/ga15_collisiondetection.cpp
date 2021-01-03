@@ -18,8 +18,7 @@ CollisionDetection::CollisionDetection(QWidget *pCrtanje,
 
 void CollisionDetection::pokreniAlgoritam()
 {
-    while(1)
-        AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock();
 
     emit animacijaZavrsila();
 }
@@ -42,11 +41,11 @@ void CollisionDetection::crtajNaivniAlgoritam(QPainter *painter) const
     if (!painter) return;
 }
 
-void CollisionDetection::generateRandomPolygons(int brojTacaka)
+void CollisionDetection::generateRandomPolygons(int numberOfPoints)
 {
-    std::vector<QPoint> points = AlgoritamBaza::generisiNasumicneTacke(brojTacaka);
+    std::vector<QPoint> points = AlgoritamBaza::generisiNasumicneTacke(numberOfPoints);
 
-    for (int i = 0; i < brojTacaka; i++)
+    for (int i = 0; i < numberOfPoints; i++)
     {
         if (points[i].x() < (_pCrtanje->width())/2)
             _polygon1.emplace_back(points[i]);
@@ -58,9 +57,9 @@ void CollisionDetection::generateRandomPolygons(int brojTacaka)
     pomocneFunkcije::sortirajTackeZaProstPoligon(_polygon2);
 }
 
-void CollisionDetection::loadPolygonsFromFile(std::string imeDatoteke)
+void CollisionDetection::loadPolygonsFromFile(std::string fileName)
 {
-    std::ifstream inputFile(imeDatoteke);
+    std::ifstream inputFile(fileName);
     std::string line1, line2;
     std::getline(inputFile, line1);
     std::getline(inputFile, line2);
@@ -73,14 +72,14 @@ std::vector<QPoint> CollisionDetection::parsePointsFromLine(std::string line)
 {
     std::stringstream ss;
     ss << line;
-    std::vector<QPoint> polygon;
+    std::vector<QPoint> points;
     int x, y;
     while(!ss.eof())
     {
         ss >> x >> y;
-        polygon.emplace_back(x, y);
+        points.emplace_back(x, y);
     }
-    return polygon;
+    return points;
 }
 
 

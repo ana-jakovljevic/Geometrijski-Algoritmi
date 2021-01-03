@@ -23,8 +23,8 @@ private:
     std::vector<QPoint> _polygon1;
     std::vector<QPoint> _polygon2;
 
-    void generateRandomPolygons(int brojTacaka);
-    void loadPolygonsFromFile(std::string imeDatoteke);
+    void generateRandomPolygons(int numberOfPoints);
+    void loadPolygonsFromFile(std::string fileName);
 
     std::vector<QPoint> parsePointsFromLine(std::string line);
 };
