@@ -23,6 +23,20 @@ private:
     QPolygon _leftPolygon;
     QPolygon _rightPolygon;
 
+    enum class WhichPolygon {
+        LEFT,
+        RIGHT
+    };
+
+    QLineF _horizontalLine;
+    QLineF _edge;
+    QPointF _intersectionPoint;
+    QPoint *_collisionVertex;
+    double _minDistance;
+
+    void findCollisionVertexInPolygon(WhichPolygon whichPolygon);
+    void shiftLeftPolygonAlongXAxis();
+
     void generateRandomPolygons(int numberOfPoints);
     void loadPolygonsFromFile(std::string fileName);
     QPolygon parsePolygonFromLine(std::string line);
