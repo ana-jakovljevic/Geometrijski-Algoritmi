@@ -1,8 +1,12 @@
 #ifndef COLLISIONDETECTION_H
 #define COLLISIONDETECTION_H
 
+#include <set>
+
 #include "algoritambaza.h"
 #include "pomocnefunkcije.h"
+
+#include "ga15_datastructures.h"
 
 class CollisionDetection : public AlgoritamBaza
 {
@@ -13,33 +17,51 @@ public:
                        std::string imeDatoteke = "",
                        int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA);
 
-
+    // base class methods
     void pokreniAlgoritam() final;
     void crtajAlgoritam(QPainter *painter) const final;
     void pokreniNaivniAlgoritam() final;
     void crtajNaivniAlgoritam(QPainter *painter) const final;
 
+    // getters and setters
+    double getMinDistance() const;
+    double getMinDistanceNaive() const;
+    void setIntersectionPointToNull();
+    void setEdgeToNull();
+    void setHorizontalLineY(double y);
+
 private:
     QPolygon _leftPolygon;
     QPolygon _rightPolygon;
 
-    enum class WhichPolygon {
-        LEFT,
-        RIGHT
-    };
+    // for efficient implementation
+    double _sweepLineY;
+    std::set<eventPoint, eventComparison> _eventQueue;
+    std::set<QLineF*, edgeComparison> _leftPolygonEdgeQueue;
+    std::set<QLineF*, edgeComparison> _rightPolygonEdgeQueue;
 
-    QLineF _horizontalLine;
-    QLineF _edge;
-    QPointF _intersectionPoint;
     QPoint *_collisionVertex;
     double _minDistance;
 
-    void findCollisionVertexInPolygon(WhichPolygon whichPolygon);
-    void shiftLeftPolygonAlongXAxis();
+    void fillEventQueue(WhichPolygon which);
 
+    // for naive implementation
+    double _horizontalLineY;
+    QLineF _edge;
+    QPointF _intersectionPoint;
+
+    QPoint *_collisionVertexNaive;
+    double _minDistanceNaive;
+
+    void findCollisionVertexInPolygonNaive(WhichPolygon whichPolygon);
+
+    double horizontalDistance(const QPoint &point, const QLineF &edge);
+    void shiftLeftPolygon(double distance);
+
+    // methods for parsing input
     void generateRandomPolygons(int numberOfPoints);
     void loadPolygonsFromFile(std::string fileName);
-    QPolygon parsePolygonFromLine(std::string line);
+    QPolygon parsePolygonFromString(std::string line);
 
 };
 
