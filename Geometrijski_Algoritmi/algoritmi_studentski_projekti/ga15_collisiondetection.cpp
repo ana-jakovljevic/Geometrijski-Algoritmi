@@ -56,15 +56,15 @@ void CollisionDetection::pokreniAlgoritam()
                 edgeQueueToUpdate.emplace(it->edge2);
                 break;
             case EventType::MIDDLE_VERTEX:
-                delete(it->edge1);
                 edgeQueueToUpdate.erase(it->edge1);
                 edgeQueueToUpdate.emplace(it->edge2);
+                delete(it->edge1);
                 break;
             case EventType::BOTTOM_VERTEX:
-                delete(it->edge1);
-                delete(it->edge2);
                 edgeQueueToUpdate.erase(it->edge1);
                 edgeQueueToUpdate.erase(it->edge2);
+                delete(it->edge1);
+                delete(it->edge2);
                 break;
         }
 
