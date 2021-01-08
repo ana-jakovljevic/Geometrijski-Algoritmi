@@ -46,6 +46,7 @@ HEADERS += \
     algoritmi_sa_vezbi/ga07_datastructures.h \
     algoritmi_sa_vezbi/ga07_triangulation.h \
     algoritmi_studentski_projekti/ga15_collisiondetection.h \
+    algoritmi_studentski_projekti/ga15_datastructures.h \
     animacijanit.h \
     config.h \
     mainwindow.h \
