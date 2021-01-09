@@ -243,6 +243,22 @@ double CollisionDetection::horizontalDistance(const QPoint &point, const QLineF 
     QLineF horizontalLine(0, point.y(), inf, point.y());
 
     double dist;
+    if (pomocneFunkcije::paralelneDuzi(edge, horizontalLine) &&
+        pomocneFunkcije::bliski(edge.y1(), horizontalLine.y1()))
+    {
+        double d1 = pomocneFunkcije::distanceKvadratF(point, edge.p1());
+        double d2 = pomocneFunkcije::distanceKvadratF(point, edge.p2());
+        if (d1 < d2)
+        {
+            dist = d1;
+            _intersectionPoint = edge.p1();
+        }
+        else
+        {
+            dist = d2;
+            _intersectionPoint = edge.p2();
+        }
+    }
     if (pomocneFunkcije::presekDuzi(edge, horizontalLine, _intersectionPoint))
         dist = pomocneFunkcije::distanceKvadratF(point, _intersectionPoint);
     else

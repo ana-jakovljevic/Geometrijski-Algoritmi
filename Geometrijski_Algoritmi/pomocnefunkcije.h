@@ -15,6 +15,7 @@ bool bliski(double a, double b);
 int povrsinaTrougla(const QPoint& A, const QPoint& B, const QPoint& C);
 int distanceKvadrat(const QPoint& A, const QPoint& B);
 bool presekDuzi(const QLineF& l1, const QLineF& l2, QPointF& presek);
+bool paralelneDuzi(const QLineF& l1, const QLineF& l2);
 double distanceKvadratF(const QPointF& A, const QPointF& B);
 bool ispod(const QPointF& A, const QPointF& B);
 bool konveksan(const QPointF& A, const QPointF& B, const QPointF& C);

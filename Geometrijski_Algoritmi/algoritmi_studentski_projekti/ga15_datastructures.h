@@ -66,6 +66,13 @@ struct edgeComparison {
         pomocneFunkcije::presekDuzi(*edge1, sweepLine, intersection1);
         pomocneFunkcije::presekDuzi(*edge2, sweepLine, intersection2);
 
+        if (pomocneFunkcije::paralelneDuzi(*edge1, sweepLine) &&
+            pomocneFunkcije::bliski(edge1->y1(), sweepLine.y1()))
+                intersection1 = edge1->center();
+        if (pomocneFunkcije::paralelneDuzi(*edge2, sweepLine) &&
+            pomocneFunkcije::bliski(edge2->y1(), sweepLine.y1()))
+                intersection1 = edge2->center();
+
         if (whichPolygon == WhichPolygon::RIGHT)
             return intersection1.x() < intersection2.x();
         /*else if (whichPolygon == WhichPolygon::LEFT)*/
