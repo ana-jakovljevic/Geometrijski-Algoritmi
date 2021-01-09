@@ -38,8 +38,8 @@ private:
     // for efficient implementation
     double _sweepLineY;
     std::set<eventPoint, eventComparison> _eventQueue;
-    std::set<QLineF*, edgeComparison> _leftPolygonEdgeQueue;
-    std::set<QLineF*, edgeComparison> _rightPolygonEdgeQueue;
+    std::set<QLine*, edgeComparison> _leftPolygonEdgeQueue;
+    std::set<QLine*, edgeComparison> _rightPolygonEdgeQueue;
 
     QPoint *_collisionVertex;
     double _minDistance;
@@ -54,7 +54,7 @@ private:
 
     void findCollisionVertexInPolygonNaive(WhichPolygon whichPolygon);
 
-    double horizontalDistance(const QPoint &point, const QLineF &edge);
+    double horizontalDistance(const QPointF &point, const QLineF &edge);
     void shiftLeftPolygon(double distance);
 
     // methods for parsing input
@@ -63,7 +63,7 @@ private:
     QPolygon parsePolygonFromString(std::string line);
 
     // fields and methods for illustrations
-    QLineF _edge;
+    QLine _edge;
     QPointF _intersectionPoint;
     QPoint _vertex;
 

@@ -23,8 +23,8 @@ struct eventPoint {
     eventPoint(QPoint *v,
                const EventType &type,
                const WhichPolygon &which,
-               QLineF *e1,
-               QLineF *e2)
+               QLine *e1,
+               QLine *e2)
         : vertex(v), vertexType(type),
           whichPolygon(which),
           edge1(e1), edge2(e2) {}
@@ -32,8 +32,8 @@ struct eventPoint {
     QPoint *vertex;
     const EventType vertexType;
     const WhichPolygon whichPolygon;
-    QLineF *edge1;
-    QLineF *edge2;
+    QLine *edge1;
+    QLine *edge2;
 
 };
 
@@ -53,7 +53,7 @@ struct edgeComparison {
         : sweepLineY(y), whichPolygon(which)
     {}
 
-    bool operator()(const QLineF *edge1, const QLineF *edge2) const {
+    bool operator()(const QLine *edge1, const QLine *edge2) const {
 
         double minY1 = std::min(edge1->y1(), edge1->y2());
         double minY2 = std::min(edge2->y1(), edge2->y2());

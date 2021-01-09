@@ -43,9 +43,9 @@ void CollisionDetection::pokreniAlgoritam()
         _vertex = *it->vertex;
         _sweepLineY = it->vertex->y();
 
-        std::set<QLineF*, edgeComparison> &edgeQueueToUpdate = it->whichPolygon == WhichPolygon::LEFT ?
+        std::set<QLine*, edgeComparison> &edgeQueueToUpdate = it->whichPolygon == WhichPolygon::LEFT ?
                                                               _leftPolygonEdgeQueue : _rightPolygonEdgeQueue;
-        std::set<QLineF*, edgeComparison> &edgeQueueToFindCollision = it->whichPolygon == WhichPolygon::LEFT ?
+        std::set<QLine*, edgeComparison> &edgeQueueToFindCollision = it->whichPolygon == WhichPolygon::LEFT ?
                                                               _rightPolygonEdgeQueue : _leftPolygonEdgeQueue;
 
         double dist = DBL_INFINITY;
@@ -85,15 +85,14 @@ void CollisionDetection::pokreniAlgoritam()
         _eventQueue.erase(it);
     }
 
-//    std::cout << "min distance " << _minDistance << std::endl;
-
     _sweepLineY = 0;
     setEdgeToNull();
     setIntersectionPointToNull();
     setVertexToNull();
 
+    _minDistance = sqrt(_minDistance);
     if(_pCrtanje)
-        shiftLeftPolygon(sqrt(_minDistance));
+        shiftLeftPolygon(_minDistance);
 
     AlgoritamBaza_updateCanvasAndBlock();
     emit animacijaZavrsila();
@@ -106,6 +105,7 @@ void CollisionDetection::crtajAlgoritam(QPainter *painter) const
     QPen pen = painter->pen();
 
     drawPolygons(painter);
+
     if (_sweepLineY != 0)
     {
         QLineF sweepLine(0, _sweepLineY, _pCrtanje->width(), _sweepLineY);
@@ -128,10 +128,9 @@ void CollisionDetection::pokreniNaivniAlgoritam()
     findCollisionVertexInPolygonNaive(WhichPolygon::LEFT);
     findCollisionVertexInPolygonNaive(WhichPolygon::RIGHT);
 
-//    std::cout << "min distance naive " << _minDistanceNaive << std::endl;
-
+    _minDistanceNaive = sqrt(_minDistanceNaive);
     if(_pCrtanje)
-        shiftLeftPolygon(sqrt(_minDistanceNaive));
+        shiftLeftPolygon(_minDistanceNaive);
 
     AlgoritamBaza_updateCanvasAndBlock();
     emit animacijaZavrsila();
@@ -164,7 +163,7 @@ void CollisionDetection::fillEventQueue(WhichPolygon whichPolygon)
 
     int n = polygon.size();
     auto *prevVertex = &polygon[n-1];
-    QLineF *prevEdge = new QLineF(polygon[0], *prevVertex);
+    QLine *prevEdge = new QLine(polygon[0], *prevVertex);
     auto firstEdge = prevEdge;
 
     for (int i = 0; i < n; i++)
@@ -172,7 +171,7 @@ void CollisionDetection::fillEventQueue(WhichPolygon whichPolygon)
         QPoint* vertex = &polygon[i];
 
         QPoint *nextVertex = &polygon[(i+1)%n];
-        QLineF *nextEdge = i == n-1 ? firstEdge : new QLineF(*vertex, *nextVertex);
+        QLine *nextEdge = i == n-1 ? firstEdge : new QLine(*vertex, *nextVertex);
         if(pomocneFunkcije::ispod(*prevVertex, *vertex) &&
            pomocneFunkcije::ispod(*nextVertex, *vertex))
         {
@@ -237,7 +236,7 @@ void CollisionDetection::findCollisionVertexInPolygonNaive(WhichPolygon whichPol
     setVertexToNull();
 }
 
-double CollisionDetection::horizontalDistance(const QPoint &point, const QLineF &edge)
+double CollisionDetection::horizontalDistance(const QPointF &point, const QLineF &edge)
 {
     double inf = _pCrtanje ? _pCrtanje->width() : CANVAS_WIDTH;
     QLineF horizontalLine(0, point.y(), inf, point.y());
@@ -294,7 +293,6 @@ void CollisionDetection::generateRandomPolygons(int numberOfPoints)
 
     for (int i = 0; i < numberOfPoints; i++)
     {
-        // TODO: is width ok?
         int width = _pCrtanje ? _pCrtanje->width() : CANVAS_WIDTH;
 
         if (points[i].x() < width/2)
@@ -356,7 +354,7 @@ void CollisionDetection::setIntersectionPointToNull()
 
 void CollisionDetection::setEdgeToNull()
 {
-    _edge.setLength(0);
+    _edge.setLine(0, 0, 0, 0);
 }
 
 void CollisionDetection::setVertexToNull()
