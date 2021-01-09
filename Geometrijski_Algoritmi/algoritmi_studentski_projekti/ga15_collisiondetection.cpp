@@ -17,9 +17,9 @@ CollisionDetection::CollisionDetection(QWidget *pCrtanje,
       _rightPolygonEdgeQueue(edgeComparison(&_sweepLineY, WhichPolygon::RIGHT)),
       _collisionVertex(),
       _minDistance(DBL_INFINITY),
-      _horizontalLineY(), _edge(), _intersectionPoint(),
-      _collisionVertexNaive(),
-      _minDistanceNaive(DBL_INFINITY)
+      _horizontalLineY(), _collisionVertexNaive(),
+      _minDistanceNaive(DBL_INFINITY),
+      _edge(), _intersectionPoint(), _vertex()
 {
     if (imeDatoteke == "")
         generateRandomPolygons(brojTacaka);
@@ -40,13 +40,13 @@ void CollisionDetection::pokreniAlgoritam()
     {
         auto it = _eventQueue.begin();
 
-        AlgoritamBaza_updateCanvasAndBlock();
+        _vertex = *it->vertex;
+        _sweepLineY = it->vertex->y();
 
         std::set<QLineF*, edgeComparison> &edgeQueueToUpdate = it->whichPolygon == WhichPolygon::LEFT ?
                                                               _leftPolygonEdgeQueue : _rightPolygonEdgeQueue;
         std::set<QLineF*, edgeComparison> &edgeQueueToFindCollision = it->whichPolygon == WhichPolygon::LEFT ?
                                                               _rightPolygonEdgeQueue : _leftPolygonEdgeQueue;
-        _sweepLineY = it->vertex->y();
 
         double dist = DBL_INFINITY;
 
@@ -69,7 +69,12 @@ void CollisionDetection::pokreniAlgoritam()
         }
 
         if (edgeQueueToFindCollision.begin() != edgeQueueToFindCollision.end())
+        {
+            _edge = **edgeQueueToFindCollision.begin();
             dist = horizontalDistance(*it->vertex, **edgeQueueToFindCollision.begin());
+        }
+
+        AlgoritamBaza_updateCanvasAndBlock();
 
         if(dist < _minDistance)
         {
@@ -81,7 +86,11 @@ void CollisionDetection::pokreniAlgoritam()
     }
 
 //    std::cout << "min distance " << _minDistance << std::endl;
+
     _sweepLineY = 0;
+    setEdgeToNull();
+    setIntersectionPointToNull();
+    setVertexToNull();
 
     if(_pCrtanje)
         shiftLeftPolygon(sqrt(_minDistance));
@@ -96,30 +105,20 @@ void CollisionDetection::crtajAlgoritam(QPainter *painter) const
 
     QPen pen = painter->pen();
 
-    pen.setColor(Qt::black);
-    pen.setWidth(4);
-    painter->setPen(pen);
-    painter->drawPolygon(_leftPolygon);
-    painter->drawPolygon(_rightPolygon);
-
+    drawPolygons(painter);
     if (_sweepLineY != 0)
     {
-        pen.setColor(Qt::green);
-        pen.setWidth(2);
-        painter->setPen(pen);
-
         QLineF sweepLine(0, _sweepLineY, _pCrtanje->width(), _sweepLineY);
-        painter->drawLine(sweepLine);
+        drawLine(painter, sweepLine, Qt::green, 2);
     }
-
+    if(!_edge.isNull())
+        drawLine(painter, _edge, Qt::yellow, 4);
     if (_collisionVertex)
-    {
-        pen.setColor(Qt::red);
-        pen.setWidth(10);
-        painter->setPen(pen);
-        painter->drawPoint(*_collisionVertex);
-    }
-
+        drawPoint(painter, *_collisionVertex, Qt::red, 15);
+    if(!_intersectionPoint.isNull())
+        drawPoint(painter, _intersectionPoint, Qt::blue, 10);
+    if(!_vertex.isNull())
+        drawPoint(painter, _vertex, Qt::darkGreen, 10);
 }
 
 void CollisionDetection::pokreniNaivniAlgoritam()
@@ -142,48 +141,21 @@ void CollisionDetection::crtajNaivniAlgoritam(QPainter *painter) const
 {
     if (!painter) return;
 
-    QPen pen = painter->pen();
-
-    // draw polygons
-    pen.setColor(Qt::black);
-    pen.setWidth(4);
-    painter->setPen(pen);
-    painter->drawPolygon(_leftPolygon);
-    painter->drawPolygon(_rightPolygon);
-
-    if (_collisionVertexNaive)
-    {
-        pen.setColor(Qt::red);
-        pen.setWidth(10);
-        painter->setPen(pen);
-        painter->drawPoint(*_collisionVertexNaive);
-    }
-
-    if (!_intersectionPoint.isNull())
-    {
-        pen.setColor(Qt::blue);
-        pen.setWidth(10);
-        painter->setPen(pen);
-        painter->drawPoint(_intersectionPoint);
-    }
+    drawPolygons(painter);
 
     if(_horizontalLineY != 0)
     {
-        pen.setColor(Qt::green);
-        pen.setWidth(2);
-        painter->setPen(pen);
-
         QLineF horizontalLine(0, _horizontalLineY, _pCrtanje->width(), _horizontalLineY);
-        painter->drawLine(horizontalLine);
+        drawLine(painter, horizontalLine, Qt::green, 2);
     }
-
     if(!_edge.isNull())
-    {
-        pen.setColor(Qt::yellow);
-        pen.setWidth(4);
-        painter->setPen(pen);
-        painter->drawLine(_edge);
-    }
+        drawLine(painter, _edge, Qt::yellow, 4);
+    if(_collisionVertexNaive)
+        drawPoint(painter, *_collisionVertexNaive, Qt::red, 15);
+    if(!_intersectionPoint.isNull())
+        drawPoint(painter, _intersectionPoint, Qt::blue, 10);
+    if(!_vertex.isNull())
+        drawPoint(painter, _vertex, Qt::darkGreen, 10);
 }
 
 void CollisionDetection::fillEventQueue(WhichPolygon whichPolygon)
@@ -240,6 +212,7 @@ void CollisionDetection::findCollisionVertexInPolygonNaive(WhichPolygon whichPol
     int n = polygon2.size();
     for(QPoint &vertex : polygon1)
     {
+        _vertex = vertex;
         _horizontalLineY = vertex.y();
         for (int i = 0; i < n; i++)
         {
@@ -261,6 +234,7 @@ void CollisionDetection::findCollisionVertexInPolygonNaive(WhichPolygon whichPol
     setIntersectionPointToNull();
     setEdgeToNull();
     setHorizontalLineY(0);
+    setVertexToNull();
 }
 
 double CollisionDetection::horizontalDistance(const QPoint &point, const QLineF &edge)
@@ -369,9 +343,60 @@ void CollisionDetection::setEdgeToNull()
     _edge.setLength(0);
 }
 
+void CollisionDetection::setVertexToNull()
+{
+    _vertex.setX(0);
+    _vertex.setY(0);
+}
+
 void CollisionDetection::setHorizontalLineY(double y)
 {
     _horizontalLineY = y;
 }
 
+void CollisionDetection::drawPolygons(QPainter *painter) const
+{
+    if(!painter) return;
 
+    QPen pen = painter->pen();
+    QBrush brush = painter->brush();
+
+    // draw polygons
+    pen.setColor(Qt::black);
+    pen.setWidth(4);
+    painter->setPen(pen);
+    painter->drawPolygon(_leftPolygon);
+    painter->drawPolygon(_rightPolygon);
+
+    // fill polygons
+    brush.setColor(Qt::gray);
+    brush.setStyle(Qt::Dense3Pattern);
+    QPainterPath path;
+    path.addPolygon(_leftPolygon);
+    path.addPolygon(_rightPolygon);
+    painter->fillPath(path, brush);
+}
+
+void CollisionDetection::drawPoint(QPainter *painter, const QPointF &point,
+                                   const QColor &color, const int width) const
+{
+    if(!painter) return;
+
+    QPen pen = painter->pen();
+    pen.setColor(color);
+    pen.setWidth(width);
+    painter->setPen(pen);
+    painter->drawPoint(point);
+}
+
+void CollisionDetection::drawLine(QPainter *painter, const QLineF &line,
+                                 const QColor &color, const int width) const
+{
+    if(!painter) return;
+
+    QPen pen = painter->pen();
+    pen.setColor(color);
+    pen.setWidth(width);
+    painter->setPen(pen);
+    painter->drawLine(line);
+}

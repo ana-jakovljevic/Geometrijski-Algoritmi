@@ -28,6 +28,7 @@ public:
     double getMinDistanceNaive() const;
     void setIntersectionPointToNull();
     void setEdgeToNull();
+    void setVertexToNull();
     void setHorizontalLineY(double y);
 
 private:
@@ -47,8 +48,6 @@ private:
 
     // for naive implementation
     double _horizontalLineY;
-    QLineF _edge;
-    QPointF _intersectionPoint;
 
     QPoint *_collisionVertexNaive;
     double _minDistanceNaive;
@@ -63,6 +62,16 @@ private:
     void loadPolygonsFromFile(std::string fileName);
     QPolygon parsePolygonFromString(std::string line);
 
+    // fields and methods for illustrations
+    QLineF _edge;
+    QPointF _intersectionPoint;
+    QPoint _vertex;
+
+    void drawPolygons(QPainter *painter) const;
+    void drawPoint(QPainter *painter, const QPointF &point,
+                   const QColor &color, int width) const;
+    void drawLine(QPainter *painter, const QLineF &line,
+                  const QColor &color, int width) const;
 };
 
 #endif // COLLISIONDETECTION_H
