@@ -18,14 +18,18 @@ ConvexHullLineIntersections::ConvexHullLineIntersections(QWidget *pCrtanje,
     if (imeDatoteke != "")
         _duzi = ConvexHullLineIntersections::ucitajPodatkeIzDatoteke(imeDatoteke);
     else {
+        if(brojDuzi == 0)
+            return;
         _duzi = ConvexHullLineIntersections::generisiNasumicneLinije(brojDuzi);
     }
-    std::ofstream myfile;
-    myfile.open ("andja.txt");
-    for (auto &d: _duzi) {
-        myfile << d.x1() << " " << d.y1() << " " << d.x2() << " " << d.y2() << std::endl;
-    }
-    myfile.close();
+
+    /* Stampanje koordinata u fajl */
+//    std::ofstream myfile;
+//    myfile.open ("andja.txt");
+//    for (auto &d: _duzi) {
+//        myfile << d.x1() << " " << d.y1() << " " << d.x2() << " " << d.y2() << std::endl;
+//    }
+//    myfile.close();
 
     pretvoriDuziUMapu();
 }
@@ -36,7 +40,7 @@ void ConvexHullLineIntersections::pokreniAlgoritam()
      *
      * 1. Sortirati sve linije prema nagibu koji zaklapaju sa x-osom (vec sortirano u mapi)
      * 2. Pronaci presek izmedju svake dve susedne (gledano po prvom sledecem uglu koji je razlicit)
-     *    i smestiti u preseke (ima ih maksimalno n)
+     *    i smestiti u preseke
      * 3. Napraviti konveksni omotac od presecnih tacaka
      *    - Gremov algoritam
     */
@@ -56,26 +60,30 @@ void ConvexHullLineIntersections::pokreniAlgoritam()
         }
         QLineF prvaDuz = it->second[0];
         QLineF poslednjaDuz;
+        /* Zbog provere da li postoji */
         poslednjaDuz.setLength(0);
 
-        // poslednja ako ima
+        // Poslednja ako ima
         if (it->second.size() > 1)
             poslednjaDuz = it->second[it->second.size()-1];
 
 
         QLineF prvaDuzZaPresek;
         QLineF poslednjaDuzZaPresek;
+        /* Zbog provere da li postoji */
         poslednjaDuzZaPresek.setLength(0);
 
+        /* Ako smo na kraju uzmemo onda prvu */
         if (std::next(it) == _mapaUgaoDuzi.end()) {
             prvaDuzZaPresek = _mapaUgaoDuzi.begin()->second.at(0);
-            // poslednja ako ima
+            // Poslednja ako ima
             if (_mapaUgaoDuzi[0].size() > 1){
                 poslednjaDuzZaPresek = _mapaUgaoDuzi.begin()->second.at(_mapaUgaoDuzi.begin()->second.size()-1);
             }
+        /* Ako nismo na kraju uzimamo sledecu */
         } else {
             prvaDuzZaPresek = std::next(it)->second.at(0);
-            // poslednja ako ima
+            // Poslednja ako ima
             if (std::next(it)->second.size()>1)
                 poslednjaDuzZaPresek = std::next(it)->second[std::next(it)->second.size()-1];
         }
@@ -122,6 +130,7 @@ void ConvexHullLineIntersections::pokreniAlgoritam()
             AlgoritamBaza_updateCanvasAndBlock()
         }
     }
+    /* Koristimo samo zbog provere da li presek vec postoji */
     _preseciSet.clear();
 
     /* 3. korak - Gremov algoritam O(nlogn) */
@@ -150,7 +159,7 @@ void ConvexHullLineIntersections::crtajAlgoritam(QPainter *painter) const
 
             /* Oznacavanje trenutne linije */
             std::stringstream s;
-            s << "linija " << i;
+            s << "L" << i;
             naglasiTrenutno(painter, &d, i, s.str().c_str());
             i++;
         }
@@ -221,7 +230,7 @@ void ConvexHullLineIntersections::pokreniNaivniAlgoritam()
                                                                     _sviPreseci[_naivnoJ],
                                                                     _sviPreseci[_naivnoK]);
                 AlgoritamBaza_updateCanvasAndBlock()
-                if (_naivnoPovrsina > 0) {
+                if (_naivnoPovrsina >= 0) {
                     svePovrsineNegativne = false;
                     break;
                 }
@@ -235,6 +244,29 @@ void ConvexHullLineIntersections::pokreniNaivniAlgoritam()
             }
         }
     }
+
+    /* Ovde fix naivniOmotac */
+//    std::ofstream myfile;
+//    std::set<QPointF, ConvexHullLineIntersections::poredjenjeTacaka> naivniOmotacTacke;
+//    for (auto &l: _naivniOmotac) {
+//        naivniOmotacTacke.emplace(l.x1(), l.y1());
+//    }
+
+//    /* Proveravamo kolinearnost tacaka, izbacujemo sredisnje od kolinearnih */
+//    for (unsigned i=0; i < naivniOmotacTacke.size()-2; i++) {
+//        while (fabs(pomocneFunkcije::povrsinaTrouglaF(naivniOmotacTacke.at(i),
+//                                                      naivniOmotacTacke.at(i+1),
+//                                                      naivniOmotacTacke.at(i+2))) <= static_cast<double>(EPSf)) {
+//            naivniOmotacTacke.erase(std::next(naivniOmotacTacke.begin(), i+1));
+//        }
+//    }
+//    std::ofstream myfile;
+//    myfile.open ("andja_naivninaivni.txt");
+//    for (auto &p: _naivniOmotac) {
+//        myfile << p.x1() << " " << p.y1() << " " << p.x2() << " " << p.y2() << std::endl;
+//    }
+//    myfile.close();
+
     AlgoritamBaza_updateCanvasAndBlock()
     emit animacijaZavrsila();
 #endif
@@ -264,7 +296,7 @@ void ConvexHullLineIntersections::crtajNaivniAlgoritam(QPainter *painter) const
 
         /* Oznacavanje trenutne linije */
         std::stringstream s;
-        s << "linija " << i;
+        s << "L" << i;
         naglasiTrenutno(painter, &d, i, s.str().c_str());
         i++;
     }
@@ -272,7 +304,6 @@ void ConvexHullLineIntersections::crtajNaivniAlgoritam(QPainter *painter) const
     /* Ako je algoritam u toku */
 #ifndef GREMOV_NAIVNI
     if (_naivnoK < _sviPreseci.size()) {
-        std::cout << "Usao" << std::endl;
         /* Podesavanje stila olovke */
         if (_naivnoPovrsina < 0) {
             olovka.setColor(Qt::green);
@@ -283,33 +314,35 @@ void ConvexHullLineIntersections::crtajNaivniAlgoritam(QPainter *painter) const
         painter->setPen(olovka);
 
         /* Crtanje tekuceg trougla */
-//        QPainterPath put(_sviPreseci[_naivnoI]);
-//        put.lineTo(_sviPreseci[_naivnoJ]);
-//        put.lineTo(_sviPreseci[_naivnoK]);
-//        put.lineTo(_sviPreseci[_naivnoI]);
-//        painter->fillPath(put, olovka.color());
+        QPainterPath put(_sviPreseci[_naivnoI]);
+        put.lineTo(_sviPreseci[_naivnoJ]);
+        put.lineTo(_sviPreseci[_naivnoK]);
+        put.lineTo(_sviPreseci[_naivnoI]);
+        painter->fillPath(put, olovka.color());
 
         /* Crtanje tekuce ivice */
-//        olovka.setColor(Qt::red);
-//        painter->setPen(olovka);
-//        painter->drawLine(_sviPreseci[_naivnoI], _sviPreseci[_naivnoJ]);
+        olovka.setColor(Qt::red);
+        painter->setPen(olovka);
+        painter->drawLine(_sviPreseci[_naivnoI], _sviPreseci[_naivnoJ]);
     }
 #endif
     /* Podesavanje stila olovke */
     olovka.setColor(Qt::yellow);
     painter->setPen(olovka);
 
-    /* Crtanje svih tacaka */
+    /* Crtanje svih preseka */
     for(auto &presek: _sviPreseci) {
         painter->drawPoint(presek);
     }
 
     /* Podesavanje stila olovke */
     olovka.setColor(Qt::blue);
+    olovka.setWidth(5);
     painter->setPen(olovka);
 
     /* Iscrtavanje konveksnog omotaca */
     if (!_naivniOmotac.empty()) {
+
         for(unsigned i = 0; i < _naivniOmotac.size(); i++) {
            painter->drawLine(_naivniOmotac[i]);
         }
@@ -375,20 +408,21 @@ void ConvexHullLineIntersections::gremovAlgoritam() {
         /* Dodajemo prvu tacku opet, da zatvorimo omotac */
         _naivniOmotacGrem.push_back(_maxTacka);
 
+        /* Proveravamo kolinearnost tacaka, izbacujemo sredisnje iz kolinearnih */
         for (unsigned i=0; i < _naivniOmotacGrem.size()-2; i++) {
             while (fabs(pomocneFunkcije::povrsinaTrouglaF(_naivniOmotacGrem.at(i),
-                                                     _naivniOmotacGrem.at(i+1),
+                                                          _naivniOmotacGrem.at(i+1),
                                                           _naivniOmotacGrem.at(i+2))) <= static_cast<double>(EPSf)) {
                 _naivniOmotacGrem.erase(std::next(_naivniOmotacGrem.begin(), i+1));
             }
         }
 
-        std::ofstream myfile;
-        myfile.open ("andja_naivni.txt");
-        for (auto &d: _naivniOmotacGrem) {
-            myfile << d.x() << " " << d.y() << std::endl;
-        }
-        myfile.close();
+//        std::ofstream myfile;
+//        myfile.open ("andja_naivni.txt");
+//        for (auto &d: _naivniOmotacGrem) {
+//            myfile << d.x() << " " << d.y() << std::endl;
+//        }
+//        myfile.close();
 
     }
     /* Ako radimo za optimalni algoritam Grema */
@@ -437,12 +471,12 @@ void ConvexHullLineIntersections::gremovAlgoritam() {
         /* Dodajemo prvu tacku opet, da zatvorimo omotac */
         _konveksniOmotac.push_back(_maxTacka);
 
-        std::ofstream myfile;
-        myfile.open ("andja_optimalni.txt");
-        for (auto &d: _konveksniOmotac) {
-            myfile << d.x() << " " << d.y() << std::endl;
-        }
-        myfile.close();
+//        std::ofstream myfile;
+//        myfile.open ("andja_optimalni.txt");
+//        for (auto &d: _konveksniOmotac) {
+//            myfile << d.x() << " " << d.y() << std::endl;
+//        }
+//        myfile.close();
     }
     AlgoritamBaza_updateCanvasAndBlock();
     emit animacijaZavrsila();
@@ -459,7 +493,7 @@ void ConvexHullLineIntersections::naglasiTrenutno(QPainter *painter, const QLine
     } else {
         duz = new QLineF(*d);
     }
-    painter->translate(0, -2*duz->p1().y()-10);
+    painter->translate(0, -2*duz->p1().y()-40);
 
     /* Oznacavanje prvog temena */
     painter->drawText(duz->p1(), s);
@@ -481,12 +515,12 @@ bool ConvexHullLineIntersections::presekLinija(const QLineF& l1, const QLineF& l
 
 std::vector<QPointF> ConvexHullLineIntersections::vratiRazapinjuceTacke(double angle, double n) const {
     std::vector<QPointF> twoPoints;
-    double scaleFactor = 1;
+    double scaleFactor = 0.9;
     /* Nadji maksimalne razapinjuce tacke prave na kanvasu */
     auto leftX = 0;
     auto bottomY = 0;
-    auto rightX = 3200;
-    auto upY = 1500;
+    auto rightX = 3200; // ako nemam _pcrtanje
+    auto upY = 1500; // ako nemam _pcrtanje
     if (_pCrtanje) {
         rightX = _pCrtanje->width();
         upY = _pCrtanje->height();
@@ -517,7 +551,6 @@ std::vector<QPointF> ConvexHullLineIntersections::vratiRazapinjuceTacke(double a
 }
 
 void ConvexHullLineIntersections::generateAngles(const int N, const double minAngleDegree, const double maxAngleDegree, std::set<double> &angles) {
-
     for (int i = 0; i < N; i++) {
         bool angleOkay = true;
         while (angleOkay) {
@@ -573,33 +606,33 @@ std::vector<QLineF> ConvexHullLineIntersections::generisiNasumicneLinije(int bro
 
             twoPoints = ConvexHullLineIntersections::vratiRazapinjuceTacke(firstAngle, n1);
 
-            if (twoPoints.size() == 2){
-                if (twoPoints[0].y() < twoPoints[1].y() ||
-                        (pomocneFunkcije::bliski(twoPoints[0].y(), twoPoints[1].y())
-                         && twoPoints[1].x() < twoPoints[0].x())) {
-                    randomDuzi.emplace_back(twoPoints[1].x(), twoPoints[1].y(),
-                            twoPoints[0].x(), twoPoints[0].y());
-                } else {
-                    randomDuzi.emplace_back(twoPoints[0].x(), twoPoints[0].y(), twoPoints[1].x(), twoPoints[1].y());
-                }
-            } else {
+            if (twoPoints.size() < 2){
                 std::cout << "[i==1]: Nije vratila funkcija vratiRazapinjuceTacke dovoljno :(" << std::endl;
+                twoPoints = ConvexHullLineIntersections::vratiRazapinjuceTacke(firstAngle, 1000);
+            }
+            if (twoPoints[0].y() < twoPoints[1].y() ||
+                    (pomocneFunkcije::bliski(twoPoints[0].y(), twoPoints[1].y())
+                     && twoPoints[1].x() < twoPoints[0].x())) {
+                randomDuzi.emplace_back(twoPoints[1].x(), twoPoints[1].y(),
+                        twoPoints[0].x(), twoPoints[0].y());
+            } else {
+                randomDuzi.emplace_back(twoPoints[0].x(), twoPoints[0].y(), twoPoints[1].x(), twoPoints[1].y());
             }
 
             twoPoints.clear();
             twoPoints = ConvexHullLineIntersections::vratiRazapinjuceTacke(secondAngle, n2);
 
-            if (twoPoints.size() == 2){
-                if (twoPoints[0].y() < twoPoints[1].y() ||
-                        (pomocneFunkcije::bliski(twoPoints[0].y(), twoPoints[1].y())
-                         && twoPoints[1].x() < twoPoints[0].x())) {
-                    randomDuzi.emplace_back(twoPoints[1].x(), twoPoints[1].y(),
-                            twoPoints[0].x(), twoPoints[0].y());
-                } else {
-                    randomDuzi.emplace_back(twoPoints[0].x(), twoPoints[0].y(), twoPoints[1].x(), twoPoints[1].y());
-                }
-            } else {
+            if (twoPoints.size() < 2){
                 std::cout << "[i==1]: Nije vratila funkcija vratiRazapinjuceTacke dovoljno :(" << std::endl;
+                twoPoints = ConvexHullLineIntersections::vratiRazapinjuceTacke(firstAngle, 1000);
+            }
+            if (twoPoints[0].y() < twoPoints[1].y() ||
+                    (pomocneFunkcije::bliski(twoPoints[0].y(), twoPoints[1].y())
+                     && twoPoints[1].x() < twoPoints[0].x())) {
+                randomDuzi.emplace_back(twoPoints[1].x(), twoPoints[1].y(),
+                        twoPoints[0].x(), twoPoints[0].y());
+            } else {
+                randomDuzi.emplace_back(twoPoints[0].x(), twoPoints[0].y(), twoPoints[1].x(), twoPoints[1].y());
             }
 
             x1 = twoPoints[0].x();
@@ -623,17 +656,17 @@ std::vector<QLineF> ConvexHullLineIntersections::generisiNasumicneLinije(int bro
             twoPoints.clear();
             twoPoints = ConvexHullLineIntersections::vratiRazapinjuceTacke(secondAngle, n2);
 
-            if (twoPoints.size() == 2){
-                if (twoPoints[0].y() < twoPoints[1].y() ||
-                        (pomocneFunkcije::bliski(twoPoints[0].y(), twoPoints[1].y())
-                         && twoPoints[1].x() < twoPoints[0].x())) {
-                    randomDuzi.emplace_back(twoPoints[1].x(), twoPoints[1].y(),
-                            twoPoints[0].x(), twoPoints[0].y());
-                } else {
-                    randomDuzi.emplace_back(twoPoints[0].x(), twoPoints[0].y(), twoPoints[1].x(), twoPoints[1].y());
-                }
-            } else {
+            if (twoPoints.size() < 2){
                 std::cout << "[i>0]: Nije vratila funkcija vratiRazapinjuceTacke dovoljno :(" << std::endl;
+                twoPoints = ConvexHullLineIntersections::vratiRazapinjuceTacke(firstAngle, 1000);
+            }
+            if (twoPoints[0].y() < twoPoints[1].y() ||
+                    (pomocneFunkcije::bliski(twoPoints[0].y(), twoPoints[1].y())
+                     && twoPoints[1].x() < twoPoints[0].x())) {
+                randomDuzi.emplace_back(twoPoints[1].x(), twoPoints[1].y(),
+                        twoPoints[0].x(), twoPoints[0].y());
+            } else {
+                randomDuzi.emplace_back(twoPoints[0].x(), twoPoints[0].y(), twoPoints[1].x(), twoPoints[1].y());
             }
 
             x1 = twoPoints[0].x();
@@ -690,4 +723,9 @@ const std::vector<QPointF> &ConvexHullLineIntersections::getNaivniKonveksniOmota
 const std::vector<QLineF> &ConvexHullLineIntersections::getNaivniKonveksniOmotac() const
 {
     return _naivniOmotac;
+}
+
+bool ConvexHullLineIntersections::getGREMOV_NAIVNI() const
+{
+    return _GREMOV_NAIVNI;
 }

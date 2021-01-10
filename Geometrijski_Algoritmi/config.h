@@ -7,10 +7,10 @@
 // Measurement testing params
 #define MIN_DIM                  (3)
 #define STEP                     (100)
-#define MAX_DIM                  (1003)
+#define MAX_DIM                  (2500)
 
 // Axes params
-#define Y_MAX_VAL                (1)
+#define Y_MAX_VAL                (0.2)
 #define X_MAX_VAL                (MAX_DIM)
 
 // Velicina kanvasa

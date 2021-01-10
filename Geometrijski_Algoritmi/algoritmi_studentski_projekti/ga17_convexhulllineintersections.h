@@ -14,8 +14,6 @@ public:
                                 std::string imeDatoteke = "",
                                 int brojDuzi = BROJ_SLUCAJNIH_OBJEKATA);
 
-    //~ConvexHullLineIntersections();
-
     struct poredjenjeDuzi {
         bool operator()(const QLineF &duz1, const QLineF &duz2) const {
             return duz1.angle() < duz2.angle();
@@ -40,8 +38,10 @@ public:
     const std::vector<QPointF> &getNaivniKonveksniOmotacGrem() const;
     const std::vector<QLineF> &getNaivniKonveksniOmotac() const;
     void generateAngles(const int N, const double minAngleDegree, const double maxAngleDegree, std::set<double> &angles);
-private:
     std::vector<QLineF> generisiNasumicneLinije(int brojDuzi = BROJ_SLUCAJNIH_OBJEKATA);
+    bool getGREMOV_NAIVNI() const;
+
+private:
     std::vector<QLineF> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
     std::vector<QPointF> vratiRazapinjuceTacke(double angle, double n) const;
     void pretvoriDuziUMapu()
@@ -70,6 +70,8 @@ private:
     std::vector<QLineF> _naivniOmotac;
     unsigned long _naivnoI, _naivnoJ, _naivnoK;
     double _naivnoPovrsina;
+
+    bool _GREMOV_NAIVNI = true;
 };
 
 #endif // GA17_CONVEXHULLLINEINTERSECTIONS_H
