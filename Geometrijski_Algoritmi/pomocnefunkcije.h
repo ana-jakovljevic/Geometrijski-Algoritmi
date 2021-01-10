@@ -2,6 +2,7 @@
 #define POMOCNEFUNKCIJE_H
 
 #include <QPoint>
+#include <QPointF>
 #include <QLineF>
 #include <QVector3D>
 #include <cmath>
@@ -22,6 +23,11 @@ bool konveksan(const QPointF& A, const QPointF& B, const QPointF& C);
 /* Pomocni metodi za 3D. */
 bool kolinearne3D(const QVector3D& a, const QVector3D& b, const QVector3D& c);
 float zapremina(const QVector3D& a, const QVector3D& b, const QVector3D& c, const QVector3D& d);
+
+/* Pomocni metodi za ConvexHullLineIntersections */
+qreal ugaoDuzi(const QLineF& line);
+double povrsinaTrouglaF(const QPointF& A, const QPointF& B, const QPointF& C);
+
 }
 
 #endif // POMOCNEFUNKCIJE_H

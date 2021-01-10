@@ -8,6 +8,7 @@
 #include "tst_ga00_Triangulation.h"
 
 #include "tst_ga06_PresekPravougaonika.h"
+#include "tst_ga17_convexhulllineintersections.h"
 
 int main(int argc, char *argv[])
 {

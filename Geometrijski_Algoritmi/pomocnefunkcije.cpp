@@ -85,6 +85,16 @@ double pomocneFunkcije::distanceKvadratF(const QPointF& A, const QPointF& B)
     return (A.x() - B.x())*(A.x() - B.x()) + (A.y() - B.y())*(A.y() - B.y());
 }
 
+double pomocneFunkcije::povrsinaTrouglaF(const QPointF& A, const QPointF& B, const QPointF& C)
+{
+    /* (Dvostruka) Povrsina trougla.
+     * 2P(Trougla) = |ax ay 1|
+     *               |bx by 1|
+     *               |cx cy 1|
+     */
+    return (B.x() - A.x())*(C.y() - A.y()) - (C.x() - A.x())*(B.y() - A.y());
+}
+
 bool pomocneFunkcije::ispod(const QPointF &A, const QPointF &B)
 {
     if (A.y() < B.y())
@@ -101,4 +111,9 @@ bool pomocneFunkcije::konveksan(const QPointF &A, const QPointF &B, const QPoint
      return (P > 0) ||
             (fabs(P) < EPS && pomocneFunkcije::distanceKvadratF(A, B)
                             < pomocneFunkcije::distanceKvadratF(A, C));
+}
+
+qreal pomocneFunkcije::ugaoDuzi(const QLineF& line)
+{
+    return line.angle();
 }

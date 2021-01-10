@@ -22,6 +22,7 @@ HEADERS += \
     tst_ga00_DCEL.h \
     tst_ga00_Triangulation.h \
     tst_ga06_PresekPravougaonika.h \
+    tst_ga17_convexhulllineintersections.h\
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.h \
     ../Geometrijski_Algoritmi/pomocnefunkcije.h \
     ../Geometrijski_Algoritmi/algoritambaza.h \
@@ -38,7 +39,7 @@ HEADERS += \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga06_dcel.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga06_dceldemo.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga07_datastructures.h \
-    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga07_triangulation.h
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga07_triangulation.h \
 
 INCLUDEPATH += \
     ../Geometrijski_Algoritmi \
@@ -52,6 +53,7 @@ INCLUDEPATH += \
 
 SOURCES += main.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.cpp \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga17_convexhulllineintersections.cpp \
     ../Geometrijski_Algoritmi/pomocnefunkcije.cpp \
     ../Geometrijski_Algoritmi/algoritambaza.cpp \
     ../Geometrijski_Algoritmi/animacijanit.cpp \
