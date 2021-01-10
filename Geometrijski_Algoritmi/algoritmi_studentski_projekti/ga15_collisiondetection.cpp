@@ -327,6 +327,7 @@ QPolygon CollisionDetection::parsePolygonFromString(std::string line)
     std::stringstream ss;
     ss << line;
     QPolygon polygon;
+    if(line.size() == 0) return polygon;
     int x, y;
     while(!ss.eof())
     {
