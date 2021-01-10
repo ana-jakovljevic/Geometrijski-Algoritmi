@@ -35,7 +35,6 @@ void CollisionDetection::pokreniAlgoritam()
     fillEventQueue(WhichPolygon::LEFT);
     fillEventQueue(WhichPolygon::RIGHT);
 
-
     while (!_eventQueue.empty())
     {
         auto it = _eventQueue.begin();
@@ -162,6 +161,7 @@ void CollisionDetection::fillEventQueue(WhichPolygon whichPolygon)
     QPolygon &polygon = whichPolygon == WhichPolygon::LEFT ? _leftPolygon : _rightPolygon;
 
     int n = polygon.size();
+    if (n == 0) return;
     auto *prevVertex = &polygon[n-1];
     QLine *prevEdge = new QLine(polygon[0], *prevVertex);
     auto firstEdge = prevEdge;
@@ -232,7 +232,7 @@ void CollisionDetection::findCollisionVertexInPolygonNaive(WhichPolygon whichPol
 
     setIntersectionPointToNull();
     setEdgeToNull();
-    setHorizontalLineY(0);
+    _horizontalLineY = 0;
     setVertexToNull();
 }
 
@@ -242,6 +242,8 @@ double CollisionDetection::horizontalDistance(const QPointF &point, const QLineF
     QLineF horizontalLine(0, point.y(), inf, point.y());
 
     double dist;
+
+    // if lines are collinear we have to manually calculate distance and intersection point
     if (pomocneFunkcije::paralelneDuzi(edge, horizontalLine) &&
         pomocneFunkcije::bliski(edge.y1(), horizontalLine.y1()))
     {
@@ -258,7 +260,7 @@ double CollisionDetection::horizontalDistance(const QPointF &point, const QLineF
             _intersectionPoint = edge.p2();
         }
     }
-    if (pomocneFunkcije::presekDuzi(edge, horizontalLine, _intersectionPoint))
+    else if (pomocneFunkcije::presekDuzi(edge, horizontalLine, _intersectionPoint))
         dist = pomocneFunkcije::distanceKvadratF(point, _intersectionPoint);
     else
         dist = DBL_INFINITY;
@@ -291,10 +293,9 @@ void CollisionDetection::generateRandomPolygons(int numberOfPoints)
     std::vector<QPoint> leftPoints;
     std::vector<QPoint> rightPoints;
 
+    int width = _pCrtanje ? _pCrtanje->width() : CANVAS_WIDTH;
     for (int i = 0; i < numberOfPoints; i++)
     {
-        int width = _pCrtanje ? _pCrtanje->width() : CANVAS_WIDTH;
-
         if (points[i].x() < width/2)
             leftPoints.emplace_back(points[i]);
         else
@@ -337,14 +338,23 @@ QPolygon CollisionDetection::parsePolygonFromString(std::string line)
     return polygon;
 }
 
-double CollisionDetection::getMinDistance() const
+double CollisionDetection::getDistance() const
 {
     return _minDistance;
 }
 
-double CollisionDetection::getMinDistanceNaive() const
+double CollisionDetection::getDistanceNaive() const
 {
    return _minDistanceNaive;
+}
+
+QPointF CollisionDetection::getCollisionPoint() const
+{
+    return *_collisionVertex;
+}
+QPointF CollisionDetection::getCollisionPointNaive() const
+{
+    return *_collisionVertexNaive;
 }
 
 void CollisionDetection::setIntersectionPointToNull()
@@ -362,11 +372,6 @@ void CollisionDetection::setVertexToNull()
 {
     _vertex.setX(0);
     _vertex.setY(0);
-}
-
-void CollisionDetection::setHorizontalLineY(double y)
-{
-    _horizontalLineY = y;
 }
 
 void CollisionDetection::drawPolygons(QPainter *painter) const
@@ -415,3 +420,4 @@ void CollisionDetection::drawLine(QPainter *painter, const QLineF &line,
     painter->setPen(pen);
     painter->drawLine(line);
 }
+

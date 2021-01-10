@@ -9,12 +9,12 @@
 using namespace testing;
 
 static constexpr auto inputFile1 = "../Geometrijski_Algoritmi/input_files/ga15_CollisionDetection/input1.txt";
-static constexpr auto inputFile2 = "../Geometrijski_Algoritmi/input_files/ga15_CollisionDetection/input1.txt";
-static constexpr auto inputFile3 = "../Geometrijski_Algoritmi/input_files/ga15_CollisionDetection/input1.txt";
-static constexpr auto inputFile4 = "../Geometrijski_Algoritmi/input_files/ga15_CollisionDetection/input1.txt";
-static constexpr auto inputFile5 = "../Geometrijski_Algoritmi/input_files/ga15_CollisionDetection/input1.txt";
-static constexpr auto inputFile6 = "../Geometrijski_Algoritmi/input_files/ga15_CollisionDetection/input1.txt";
-static constexpr auto inputFile7 = "../Geometrijski_Algoritmi/input_files/ga15_CollisionDetection/input1.txt";
+static constexpr auto inputFile2 = "../Geometrijski_Algoritmi/input_files/ga15_CollisionDetection/input2.txt";
+static constexpr auto inputFile3 = "../Geometrijski_Algoritmi/input_files/ga15_CollisionDetection/input3.txt";
+static constexpr auto inputFile4 = "../Geometrijski_Algoritmi/input_files/ga15_CollisionDetection/input4.txt";
+static constexpr auto inputFile5 = "../Geometrijski_Algoritmi/input_files/ga15_CollisionDetection/input5.txt";
+static constexpr auto inputFile6 = "../Geometrijski_Algoritmi/input_files/ga15_CollisionDetection/input6.txt";
+static constexpr auto inputFile7 = "../Geometrijski_Algoritmi/input_files/ga15_CollisionDetection/input7.txt";
 
 
 TEST(ga15_CollisionDetection, test1)
@@ -24,8 +24,8 @@ TEST(ga15_CollisionDetection, test1)
     cd.pokreniAlgoritam();
     cd.pokreniNaivniAlgoritam();
 
-    EXPECT_DOUBLE_EQ(sqrt(cd.getMinDistance()),
-                     sqrt(cd.getMinDistanceNaive()));
+    EXPECT_DOUBLE_EQ(sqrt(cd.getDistance()),
+                     sqrt(cd.getDistanceNaive()));
 }
 
 TEST(ga15_CollisionDetection, test2)
@@ -35,8 +35,8 @@ TEST(ga15_CollisionDetection, test2)
     cd.pokreniAlgoritam();
     cd.pokreniNaivniAlgoritam();
 
-    EXPECT_DOUBLE_EQ(sqrt(cd.getMinDistance()),
-                     sqrt(cd.getMinDistanceNaive()));
+    EXPECT_DOUBLE_EQ(sqrt(cd.getDistance()),
+                     sqrt(cd.getDistanceNaive()));
 }
 
 TEST(ga15_CollisionDetection, test3)
@@ -46,8 +46,8 @@ TEST(ga15_CollisionDetection, test3)
     cd.pokreniAlgoritam();
     cd.pokreniNaivniAlgoritam();
 
-    EXPECT_DOUBLE_EQ(sqrt(cd.getMinDistance()),
-                     sqrt(cd.getMinDistanceNaive()));
+    EXPECT_DOUBLE_EQ(sqrt(cd.getDistance()),
+                     sqrt(cd.getDistanceNaive()));
 }
 
 TEST(ga15_CollisionDetection, test4)
@@ -57,8 +57,8 @@ TEST(ga15_CollisionDetection, test4)
     cd.pokreniAlgoritam();
     cd.pokreniNaivniAlgoritam();
 
-    EXPECT_DOUBLE_EQ(sqrt(cd.getMinDistance()),
-                     sqrt(cd.getMinDistanceNaive()));
+    EXPECT_DOUBLE_EQ(sqrt(cd.getDistance()),
+                     sqrt(cd.getDistanceNaive()));
 }
 
 TEST(ga15_CollisionDetection, test5)
@@ -68,8 +68,8 @@ TEST(ga15_CollisionDetection, test5)
     cd.pokreniAlgoritam();
     cd.pokreniNaivniAlgoritam();
 
-    EXPECT_DOUBLE_EQ(sqrt(cd.getMinDistance()),
-                     sqrt(cd.getMinDistanceNaive()));
+    EXPECT_DOUBLE_EQ(sqrt(cd.getDistance()),
+                     sqrt(cd.getDistanceNaive()));
 }
 
 TEST(ga15_CollisionDetection, test6)
@@ -79,8 +79,8 @@ TEST(ga15_CollisionDetection, test6)
     cd.pokreniAlgoritam();
     cd.pokreniNaivniAlgoritam();
 
-    EXPECT_DOUBLE_EQ(sqrt(cd.getMinDistance()),
-                     sqrt(cd.getMinDistanceNaive()));
+    EXPECT_DOUBLE_EQ(sqrt(cd.getDistance()),
+                     sqrt(cd.getDistanceNaive()));
 }
 
 TEST(ga15_CollisionDetection, test7)
@@ -90,8 +90,8 @@ TEST(ga15_CollisionDetection, test7)
     cd.pokreniAlgoritam();
     cd.pokreniNaivniAlgoritam();
 
-    EXPECT_DOUBLE_EQ(sqrt(cd.getMinDistance()),
-                     sqrt(cd.getMinDistanceNaive()));
+    EXPECT_DOUBLE_EQ(sqrt(cd.getDistance()),
+                     sqrt(cd.getDistanceNaive()));
 }
 
 TEST(ga15_CollisionDetection, test8)
@@ -101,8 +101,8 @@ TEST(ga15_CollisionDetection, test8)
     cd.pokreniAlgoritam();
     cd.pokreniNaivniAlgoritam();
 
-    EXPECT_DOUBLE_EQ(sqrt(cd.getMinDistance()),
-                     sqrt(cd.getMinDistanceNaive()));
+    EXPECT_DOUBLE_EQ(sqrt(cd.getDistance()),
+                     sqrt(cd.getDistanceNaive()));
 }
 
 TEST(ga15_CollisionDetection, test9)
@@ -112,8 +112,8 @@ TEST(ga15_CollisionDetection, test9)
     cd.pokreniAlgoritam();
     cd.pokreniNaivniAlgoritam();
 
-    EXPECT_DOUBLE_EQ(sqrt(cd.getMinDistance()),
-                     sqrt(cd.getMinDistanceNaive()));
+    EXPECT_DOUBLE_EQ(sqrt(cd.getDistance()),
+                     sqrt(cd.getDistanceNaive()));
 }
 
 TEST(ga15_CollisionDetection, test10)
@@ -123,8 +123,8 @@ TEST(ga15_CollisionDetection, test10)
     cd.pokreniAlgoritam();
     cd.pokreniNaivniAlgoritam();
 
-    EXPECT_DOUBLE_EQ(sqrt(cd.getMinDistance()),
-                     sqrt(cd.getMinDistanceNaive()));
+    EXPECT_DOUBLE_EQ(sqrt(cd.getDistance()),
+                     sqrt(cd.getDistanceNaive()));
 }
 
 #endif // TST_GA15_COLLISIONDETECTION_H

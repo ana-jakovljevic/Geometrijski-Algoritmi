@@ -24,12 +24,18 @@ public:
     void crtajNaivniAlgoritam(QPainter *painter) const final;
 
     // getters and setters
-    double getMinDistance() const;
-    double getMinDistanceNaive() const;
-    void setIntersectionPointToNull();
-    void setEdgeToNull();
-    void setVertexToNull();
-    void setHorizontalLineY(double y);
+    /// returns the distance left polygon has to travel before the collision.
+    /// obtained by efficient algorithm.
+    double getDistance() const;
+    /// returns the distance left polygon has to travel before the collision.
+    /// obtained by naive algorithm.
+    double getDistanceNaive() const;
+    /// returns an arbitrary collision point.
+    /// obtained by efficient algorithm.
+    QPointF getCollisionPoint() const;
+    /// returns an arbitrary collision point.
+    /// obtained by naive algorithm.
+    QPointF getCollisionPointNaive() const;
 
 private:
     QPolygon _leftPolygon;
@@ -37,35 +43,59 @@ private:
 
     // for efficient implementation
     double _sweepLineY;
+    /// set of events, events are vertices sorted by y coordinate
     std::set<eventPoint, eventComparison> _eventQueue;
+    /// status - set of edges from left polygon currently intersected by the sweepline
+    /// edges are sorted ascending by x coordinate
     std::set<QLine*, edgeComparison> _leftPolygonEdgeQueue;
+    /// status - set of edges from right polygon currently intersected by the sweepline
+    /// edges are sorted descending by x coordinate
     std::set<QLine*, edgeComparison> _rightPolygonEdgeQueue;
 
+    /// collision vertex
+    /// obtained by efficient algorithm
     QPoint *_collisionVertex;
+    /// minimum of all distances beetwen vertices of one polygon and edges of opposite polygon
+    /// at the end of the algorithm that will be the distance left polygon has to travel before the collision
     double _minDistance;
 
+    /// fills event queue with all vertices
     void fillEventQueue(WhichPolygon which);
 
     // for naive implementation
     double _horizontalLineY;
 
+    /// collision vertex
+    /// obtained by naive algorithm
     QPoint *_collisionVertexNaive;
+    /// minimum of all distances beetwen vertices of one polygon and edges of opposite polygon
+    /// at the end of the algorithm that will be the distance that left polygon has to travel before the collision
     double _minDistanceNaive;
 
+    /// finds candidate for collision vertex in one polygon
+    /// we will apply the function to both left and right polygon
     void findCollisionVertexInPolygonNaive(WhichPolygon whichPolygon);
 
+    /// horizontal distance beetwen point and edge
     double horizontalDistance(const QPointF &point, const QLineF &edge);
-    void shiftLeftPolygon(double distance);
+
 
     // methods for parsing input
     void generateRandomPolygons(int numberOfPoints);
     void loadPolygonsFromFile(std::string fileName);
     QPolygon parsePolygonFromString(std::string line);
 
-    // fields and methods for illustrations
+    // fields and methods for visualization
     QLine _edge;
     QPointF _intersectionPoint;
     QPoint _vertex;
+
+    void setEdgeToNull();
+    void setIntersectionPointToNull();
+    void setVertexToNull();
+
+    /// shifting left polygon to illustrate the collision
+    void shiftLeftPolygon(double distance);
 
     void drawPolygons(QPainter *painter) const;
     void drawPoint(QPainter *painter, const QPointF &point,
