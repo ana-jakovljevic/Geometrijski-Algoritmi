@@ -336,7 +336,7 @@ void ConvexHullLineIntersections::crtajNaivniAlgoritam(QPainter *painter) const
     }
 
     /* Podesavanje stila olovke */
-    olovka.setColor(Qt::blue);
+    olovka.setColor(Qt::magenta);
     olovka.setWidth(5);
     painter->setPen(olovka);
 
@@ -515,7 +515,7 @@ bool ConvexHullLineIntersections::presekLinija(const QLineF& l1, const QLineF& l
 
 std::vector<QPointF> ConvexHullLineIntersections::vratiRazapinjuceTacke(double angle, double n) const {
     std::vector<QPointF> twoPoints;
-    double scaleFactor = 0.9;
+    double scaleFactor = 0.95;
     /* Nadji maksimalne razapinjuce tacke prave na kanvasu */
     auto leftX = 0;
     auto bottomY = 0;
