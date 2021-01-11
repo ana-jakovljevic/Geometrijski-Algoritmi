@@ -747,6 +747,11 @@
              <string>Klasterovanje</string>
             </property>
            </item>
+           <item>
+            <property name="text">
+             <string>Detekcija kolizija</string>
+             </property>
+            </item>
           </widget>
          </item>
         </layout>

@@ -23,6 +23,7 @@ HEADERS += \
     tst_ga00_Triangulation.h \
     tst_ga06_PresekPravougaonika.h \
     tst_ga09_klasterovanje.h \
+    tst_ga15_CollisionDetection.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga09_klasterovanje.h \
     ../Geometrijski_Algoritmi/pomocnefunkcije.h \
@@ -55,6 +56,7 @@ INCLUDEPATH += \
 SOURCES += main.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga09_klasterovanje.cpp \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga15_collisiondetection.cpp \
     ../Geometrijski_Algoritmi/pomocnefunkcije.cpp \
     ../Geometrijski_Algoritmi/algoritambaza.cpp \
     ../Geometrijski_Algoritmi/animacijanit.cpp \

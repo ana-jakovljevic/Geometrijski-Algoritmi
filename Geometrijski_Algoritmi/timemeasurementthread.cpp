@@ -14,6 +14,7 @@
 
 #include "ga06_presekPravougaonika.h"
 #include "ga09_klasterovanje.h"
+#include "ga15_collisiondetection.h"
 
 TimeMeasurementThread::TimeMeasurementThread(TipAlgoritma tipAlgoritma, int minValue, int step, int maxValue)
     : QThread(), _algorithmType(tipAlgoritma), _minValue(minValue), _step(step), _maxValue(maxValue)
@@ -63,6 +64,9 @@ void TimeMeasurementThread::run()
             break;
         case TipAlgoritma::KLASTEROVANJE:
             pAlgorithm = new Klasterovanje(nullptr, 0, false, "", i);
+            break;
+        case TipAlgoritma::COLLISION_DETECTION:
+            pAlgorithm = new CollisionDetection(nullptr, 0, false, "", i);
             break;
         default:
             break;

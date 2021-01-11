@@ -80,6 +80,16 @@ bool pomocneFunkcije::presekDuzi(const QLineF& l1, const QLineF& l2, QPointF& pr
 #endif
 }
 
+bool pomocneFunkcije::paralelneDuzi(const QLineF &l1, const QLineF &l2)
+{
+    QPointF presek;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    return l1.intersects(l2, &presek) == QLineF::NoIntersection;
+#else
+    return l1.intersect(l2, &presek) == QLineF::NoIntersection;
+#endif
+}
+
 double pomocneFunkcije::distanceKvadratF(const QPointF& A, const QPointF& B)
 {
     return (A.x() - B.x())*(A.x() - B.x()) + (A.y() - B.y())*(A.y() - B.y());

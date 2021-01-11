@@ -316,6 +316,10 @@ void MainWindow::napraviNoviAlgoritam()
         break;
     case TipAlgoritma::KLASTEROVANJE:
         _pAlgoritamBaza = new Klasterovanje(_pOblastCrtanja, _duzinaPauze, _naivni,
+                                            _imeDatoteke, _brojSlucajnihObjekata);
+        break;
+    case TipAlgoritma::COLLISION_DETECTION:
+        _pAlgoritamBaza = new CollisionDetection(_pOblastCrtanja, _duzinaPauze, _naivni,
                                                   _imeDatoteke, _brojSlucajnihObjekata);
         break;
     default: /* ako nije algoritam uopste */
