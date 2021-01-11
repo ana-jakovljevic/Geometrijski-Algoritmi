@@ -19,7 +19,7 @@
 #include "ga07_triangulation.h"
 
 #include "ga06_presekPravougaonika.h"
-
+#include "ga18_shortestpath.h"
 /* Enumeracija algoritama */
 enum class TipAlgoritma {
     ALGORITMI_SA_VEZBI,
@@ -33,7 +33,8 @@ enum class TipAlgoritma {
     TRIANGULACIJA,
     SEPARATOR,
     STUDENTSKI_PROJEKTI,
-    PRESEK_PRAVOUGAONIKA
+    PRESEK_PRAVOUGAONIKA,
+    NAJKRACI_PUTEVI
 };
 
 /* Enumeracija tabova */

@@ -742,6 +742,11 @@
              <string>Presek pravougaonika</string>
             </property>
            </item>
+           <item>
+            <property name="text">
+             <string>Najkraci Putevi</string>
+            </property>
+           </item>
           </widget>
          </item>
         </layout>

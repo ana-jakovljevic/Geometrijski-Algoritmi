@@ -13,7 +13,7 @@
 #include "ga05_preseciduzi.h"
 
 #include "ga06_presekPravougaonika.h"
-
+#include "ga18_shortestpath.h"
 TimeMeasurementThread::TimeMeasurementThread(TipAlgoritma tipAlgoritma, int minValue, int step, int maxValue)
     : QThread(), _algorithmType(tipAlgoritma), _minValue(minValue), _step(step), _maxValue(maxValue)
 {
@@ -58,6 +58,9 @@ void TimeMeasurementThread::run()
             pAlgorithm = new Triangulation(nullptr, 0, false, "", i);
             break;
         case TipAlgoritma::PRESEK_PRAVOUGAONIKA:
+            pAlgorithm = new PresekPravougaonika(nullptr, 0, false, "", i);
+            break;
+        case TipAlgoritma::NAJKRACI_PUTEVI:
             pAlgorithm = new PresekPravougaonika(nullptr, 0, false, "", i);
             break;
         default:
