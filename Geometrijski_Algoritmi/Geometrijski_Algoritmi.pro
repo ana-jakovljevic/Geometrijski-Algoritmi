@@ -30,7 +30,8 @@ SOURCES += \
     pomocnefunkcije.cpp \
     timemeasurementthread.cpp \
     algoritmi_studentski_projekti/ga06_presekPravougaonika.cpp \
-    algoritmi_studentski_projekti/ga09_klasterovanje.cpp
+    algoritmi_studentski_projekti/ga09_klasterovanje.cpp \
+    algoritmi_studentski_projekti/ga17_convexhulllineintersections.cpp \
 
 HEADERS += \
     algoritambaza.h \
@@ -56,7 +57,8 @@ HEADERS += \
     pomocnefunkcije.h \
     timemeasurementthread.h \
     algoritmi_studentski_projekti/ga06_presekPravougaonika.h \
-    algoritmi_studentski_projekti/ga09_klasterovanje.h
+    algoritmi_studentski_projekti/ga09_klasterovanje.h \
+    algoritmi_studentski_projekti/ga17_convexhulllineintersections.h \
 
 FORMS += \
     mainwindow.ui

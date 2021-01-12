@@ -21,6 +21,7 @@
 #include "ga06_presekPravougaonika.h"
 #include "ga09_klasterovanje.h"
 #include "ga15_collisiondetection.h"
+#include "ga17_convexhulllineintersections.h"
 
 /* Enumeracija algoritama */
 enum class TipAlgoritma {
@@ -37,7 +38,8 @@ enum class TipAlgoritma {
     STUDENTSKI_PROJEKTI,
     PRESEK_PRAVOUGAONIKA,
     KLASTEROVANJE,
-    COLLISION_DETECTION
+    COLLISION_DETECTION,
+    CONVEX_HULL_LINE_INTERSECTIONS
 };
 
 /* Enumeracija tabova */

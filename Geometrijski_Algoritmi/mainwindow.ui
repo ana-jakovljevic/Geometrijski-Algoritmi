@@ -752,6 +752,11 @@
              <string>Detekcija kolizija</string>
              </property>
             </item>
+            <item>
+             <property name="text">
+              <string>Konveksni omotac preseka duzi</string>
+              </property>
+             </item>
           </widget>
          </item>
         </layout>
