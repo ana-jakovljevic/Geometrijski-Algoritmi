@@ -23,7 +23,7 @@ ConvexHullLineIntersections::ConvexHullLineIntersections(QWidget *pCrtanje,
         _duzi = ConvexHullLineIntersections::generisiNasumicneLinije(brojDuzi);
     }
 
-    /* Stampanje koordinata u fajl */
+    /* Stampanje koordinata u fajl za potrebe provere */
 //    std::ofstream myfile;
 //    myfile.open ("andja.txt");
 //    for (auto &d: _duzi) {
@@ -134,7 +134,7 @@ void ConvexHullLineIntersections::pokreniAlgoritam()
     _preseciSet.clear();
 
     /* 3. korak - Gremov algoritam O(nlogn) */
-    gremovAlgoritam();
+    gremovAlgoritam(false);
 }
 
 void ConvexHullLineIntersections::crtajAlgoritam(QPainter *painter) const
@@ -211,7 +211,7 @@ void ConvexHullLineIntersections::pokreniNaivniAlgoritam()
     AlgoritamBaza_updateCanvasAndBlock()
 
 #ifdef GREMOV_NAIVNI
-    ConvexHullLineIntersections::gremovAlgoritam();
+    ConvexHullLineIntersections::gremovAlgoritam(true);
 #else
     /* Slozenost naivnog algoritma: O(n^3).
      * Prolazi se kroz svaki par tacaka. */
@@ -354,12 +354,12 @@ void ConvexHullLineIntersections::crtajNaivniAlgoritam(QPainter *painter) const
     }
 }
 
-void ConvexHullLineIntersections::gremovAlgoritam() {
+void ConvexHullLineIntersections::gremovAlgoritam(bool naivni) {
     /* Slozenost ovakvog (Gremovog) algoritma: O(nlogn).
      * Dominira sortiranje, dok su ostali koraci linearni. */
 
     /* Ako radimo za naivni algoritam Grema */
-    if (_naivni){
+    if (naivni){
         if (_sviPreseci.size() == 0) {
             emit animacijaZavrsila();
             return;
@@ -368,19 +368,34 @@ void ConvexHullLineIntersections::gremovAlgoritam() {
         auto _maxTacka = _sviPreseci[0];
         for (unsigned i = 1; i < _sviPreseci.size(); i++) {
             if ( _sviPreseci[i].x() > _maxTacka.x() ||
-                (abs(_sviPreseci[i].x() - _maxTacka.x()) < static_cast<double>(EPSf)
-                 && _sviPreseci[i].y() < _maxTacka.y()) )
+                (pomocneFunkcije::bliski(_sviPreseci[i].x(), _maxTacka.x()) && _sviPreseci[i].y() < _maxTacka.y()) )
                 _maxTacka = _sviPreseci[i];
         }
+
         AlgoritamBaza_updateCanvasAndBlock()
 
         std::sort(_sviPreseci.begin(),
                   _sviPreseci.end(),
                   [&](const auto& lhs, const auto& rhs) {
-            double P = pomocneFunkcije::povrsinaTrouglaF(_maxTacka, lhs, rhs);
-            return (P < 0) ||  (fabs(P) == 0 && pomocneFunkcije::distanceKvadratF(_maxTacka, lhs)
-                                        < pomocneFunkcije::distanceKvadratF(_maxTacka, rhs));
+            int P = pomocneFunkcije::povrsinaTrouglaF(_maxTacka, lhs, rhs);
+            return (P < 0) ||  (P == 0 && pomocneFunkcije::distanceKvadratF(_maxTacka, lhs)
+                                       < pomocneFunkcije::distanceKvadratF(_maxTacka, rhs));
         });
+
+        /* Sredjuju se tacke koje su kolinearne sa prvom tackom u omotacu, zbog gresaka */
+        unsigned p = 2;
+        while (p < _sviPreseci.size()) {
+            double P = pomocneFunkcije::povrsinaTrouglaF(_sviPreseci.at(p),
+                                                       _sviPreseci.at(p-1),
+                                                       _sviPreseci.at(0));
+            P = static_cast<int>(P);
+            if (pomocneFunkcije::bliski(P, 0)) {
+                _sviPreseci.erase(std::next(_sviPreseci.begin(), (p-1)));
+            }
+            else {
+                p += 1;
+            }
+        }
 
         _naivniOmotacGrem.push_back(_maxTacka);
         _naivniOmotacGrem.push_back(_sviPreseci[1]);
@@ -391,7 +406,7 @@ void ConvexHullLineIntersections::gremovAlgoritam() {
         while(i < _sviPreseci.size()) {
             if(pomocneFunkcije::povrsinaTrouglaF(_naivniOmotacGrem[tmp-2],
                                                  _naivniOmotacGrem[tmp-1],
-                                                 _sviPreseci[i]) <= 0)
+                                                 _sviPreseci[i]) < 0)
             {
                 _naivniOmotacGrem.push_back(_sviPreseci[i]);
                 ++tmp;
@@ -406,16 +421,7 @@ void ConvexHullLineIntersections::gremovAlgoritam() {
         }
 
         /* Dodajemo prvu tacku opet, da zatvorimo omotac */
-        _naivniOmotacGrem.push_back(_maxTacka);
-
-        /* Proveravamo kolinearnost tacaka, izbacujemo sredisnje iz kolinearnih */
-        for (unsigned i=0; i < _naivniOmotacGrem.size()-2; i++) {
-            while (fabs(pomocneFunkcije::povrsinaTrouglaF(_naivniOmotacGrem.at(i),
-                                                          _naivniOmotacGrem.at(i+1),
-                                                          _naivniOmotacGrem.at(i+2))) <= static_cast<double>(EPSf)) {
-                _naivniOmotacGrem.erase(std::next(_naivniOmotacGrem.begin(), i+1));
-            }
-        }
+        _naivniOmotacGrem.push_back(_maxTacka); 
 
 //        std::ofstream myfile;
 //        myfile.open ("andja_naivni.txt");
@@ -423,15 +429,17 @@ void ConvexHullLineIntersections::gremovAlgoritam() {
 //            myfile << d.x() << " " << d.y() << std::endl;
 //        }
 //        myfile.close();
-
     }
     /* Ako radimo za optimalni algoritam Grema */
     else {
+        if (_preseci.size() == 0) {
+            emit animacijaZavrsila();
+            return;
+        }
+
         auto _maxTacka = _preseci[0];
         for (unsigned i = 1; i < _preseci.size(); i++) {
-            if ( _preseci[i].x() > _maxTacka.x() ||
-                (abs(_preseci[i].x() - _maxTacka.x()) < static_cast<double>(EPSf)
-                 && _preseci[i].y() < _maxTacka.y()) )
+            if ( _preseci[i].x() > _maxTacka.x() || (pomocneFunkcije::bliski(_preseci[i].x(), _maxTacka.x()) && _preseci[i].y() < _maxTacka.y()) )
                 _maxTacka = _preseci[i];
         }
         AlgoritamBaza_updateCanvasAndBlock()
@@ -439,10 +447,9 @@ void ConvexHullLineIntersections::gremovAlgoritam() {
         std::sort(_preseci.begin(),
                   _preseci.end(),
                   [&](const auto& lhs, const auto& rhs) {
-            double P = pomocneFunkcije::povrsinaTrouglaF(_maxTacka, lhs, rhs);
-            return  (P < 0.0) || (fabs(P) == 0 &&
-                                  (pomocneFunkcije::distanceKvadratF(_maxTacka, lhs)
-                                   < pomocneFunkcije::distanceKvadratF(_maxTacka, rhs)));
+            int P = pomocneFunkcije::povrsinaTrouglaF(_maxTacka, lhs, rhs);
+            return (P < 0) ||  (P == 0 && pomocneFunkcije::distanceKvadratF(_maxTacka, lhs)
+                                        < pomocneFunkcije::distanceKvadratF(_maxTacka, rhs));
         });
 
         _konveksniOmotac.push_back(_maxTacka);
@@ -454,7 +461,7 @@ void ConvexHullLineIntersections::gremovAlgoritam() {
         while(i < _preseci.size()) {
             if(pomocneFunkcije::povrsinaTrouglaF(_konveksniOmotac[tmp-2],
                                                  _konveksniOmotac[tmp-1],
-                                                 _preseci[i]) <= 0.0)
+                                                 _preseci[i]) < 0)
             {
                 _konveksniOmotac.push_back(_preseci[i]);
                 ++tmp;
@@ -481,6 +488,7 @@ void ConvexHullLineIntersections::gremovAlgoritam() {
     AlgoritamBaza_updateCanvasAndBlock();
     emit animacijaZavrsila();
 }
+
 
 void ConvexHullLineIntersections::naglasiTrenutno(QPainter *painter, const QLineF *d, unsigned long i, const char *s) const
 {
@@ -515,7 +523,7 @@ bool ConvexHullLineIntersections::presekLinija(const QLineF& l1, const QLineF& l
 
 std::vector<QPointF> ConvexHullLineIntersections::vratiRazapinjuceTacke(double angle, double n) const {
     std::vector<QPointF> twoPoints;
-    double scaleFactor = 0.95;
+    double scaleFactor = 1;
     /* Nadji maksimalne razapinjuce tacke prave na kanvasu */
     auto leftX = 0;
     auto bottomY = 0;
@@ -573,6 +581,9 @@ std::vector<QLineF> ConvexHullLineIntersections::generisiNasumicneLinije(int bro
     srand(static_cast<unsigned>(time(nullptr)));
 
     std::vector<QLineF> randomDuzi;
+    if(brojDuzi == 0){
+        return randomDuzi;
+    }
     std::set<double> angles;
 
     /* Generisanje uglova */
@@ -660,6 +671,7 @@ std::vector<QLineF> ConvexHullLineIntersections::generisiNasumicneLinije(int bro
                 std::cout << "[i>0]: Nije vratila funkcija vratiRazapinjuceTacke dovoljno :(" << std::endl;
                 twoPoints = ConvexHullLineIntersections::vratiRazapinjuceTacke(firstAngle, 1000);
             }
+
             if (twoPoints[0].y() < twoPoints[1].y() ||
                     (pomocneFunkcije::bliski(twoPoints[0].y(), twoPoints[1].y())
                      && twoPoints[1].x() < twoPoints[0].x())) {
@@ -686,7 +698,23 @@ std::vector<QLineF> ConvexHullLineIntersections::generisiNasumicneLinije(int bro
         n1 = n2;
     }
 
-    return randomDuzi;
+    std::vector<QLineF> duzi;
+    for (auto &d: randomDuzi) {
+        if (d.y1() < d.y2() || (pomocneFunkcije::bliski(d.y1(), d.y2()) && d.x2() < d.x1())) {
+           duzi.emplace_back(d.x2(),
+                             d.y2(),
+                             d.x1(),
+                             d.y1());
+        }
+        else {
+           duzi.emplace_back(d.x1(),
+                             d.y1(),
+                             d.x2(),
+                             d.y2());
+        }
+    }
+
+    return duzi;
 }
 
 std::vector<QLineF> ConvexHullLineIntersections::ucitajPodatkeIzDatoteke(std::string imeDatoteke) const
@@ -714,13 +742,25 @@ const std::vector<QPointF> &ConvexHullLineIntersections::getPreseci() const {
 const std::vector<QPointF> &ConvexHullLineIntersections::getNaivniPreseci() const {
     return _sviPreseci;
 }
-const std::vector<QPointF> &ConvexHullLineIntersections::getKonveksniOmotac() const {
+const std::vector<QPointF> &ConvexHullLineIntersections::getKonveksniOmotac() {
+    std::sort(_konveksniOmotac.begin(),
+              _konveksniOmotac.end(),
+              [&](const auto &lhs, const auto &rhs) {
+        return (lhs.x() < rhs.x() ||
+                (fabs(lhs.x() - rhs.x()) < 1e-6f && lhs.y() < rhs.y()));
+    });
     return _konveksniOmotac;
 }
-const std::vector<QPointF> &ConvexHullLineIntersections::getNaivniKonveksniOmotacGrem() const {
+const std::vector<QPointF> &ConvexHullLineIntersections::getNaivniKonveksniOmotacGrem() {
+    std::sort(_naivniOmotacGrem.begin(),
+              _naivniOmotacGrem.end(),
+              [&](const auto &lhs, const auto &rhs) {
+        return (lhs.x() < rhs.x() ||
+                (fabs(lhs.x() - rhs.x()) < 1e-6f && lhs.y() < rhs.y()));
+    });
     return _naivniOmotacGrem;
 }
-const std::vector<QLineF> &ConvexHullLineIntersections::getNaivniKonveksniOmotac() const
+const std::vector<QLineF> &ConvexHullLineIntersections::getNaivniKonveksniOmotac()
 {
     return _naivniOmotac;
 }

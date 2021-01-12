@@ -18,8 +18,9 @@ static constexpr auto ulaz6 = "../Geometrijski_Algoritmi/input_files/ga17_Convex
 /* Staticki brojevi linija za test primere */
 static constexpr auto brojLinija1 = 10;
 static constexpr auto brojLinija2 = 100;
-static constexpr auto brojLinija3 = 1000;
-static constexpr auto brojLinija4 = 10000;
+static constexpr auto brojLinija3 = 200;
+static constexpr auto brojLinija4 = 500;
+
 
 TEST(ga17_convexhulllineintersections, input10)
 {
@@ -37,10 +38,15 @@ TEST(ga17_convexhulllineintersections, input10)
     const auto konveksniNaivniGrem = chli->getNaivniKonveksniOmotacGrem(); // vraca QPointF
     const auto konveksniNaivni = chli->getNaivniKonveksniOmotac(); // vraca QLineF
 
+    //std::cout << "Omotaci su jednaki? " << (konveksniOmotac == konveksniNaivniGrem) << std::endl;
+
     if (!konveksniNaivniGrem.empty()){
         /* ASSERT: potvrda ocekivanja test primera */
         ASSERT_EQ(konveksniOmotac, konveksniNaivniGrem);
+        ASSERT_EQ(konveksniOmotac.size(), konveksniNaivniGrem.size());
+
     }
+
     if (!konveksniNaivni.empty()) {
         /* ASSERT: potvrda ocekivanja test primera */
         ASSERT_LE(konveksniOmotac.size()-1, konveksniNaivni.size()); // -1 zbog prve ponovljene tacke
@@ -67,14 +73,16 @@ TEST(ga17_convexhulllineintersections, input100)
 
         if (!konveksniNaivniGrem.empty()){
             /* ASSERT: potvrda ocekivanja test primera */
+            ASSERT_EQ(konveksniOmotac.size(), konveksniNaivniGrem.size());
             ASSERT_EQ(konveksniOmotac, konveksniNaivniGrem);
+
         }
     }
 
     delete chli;
 }
 
-TEST(ga17_convexhulllineintersections, input1000)
+TEST(ga17_convexhulllineintersections, input200)
 {
     /* ARRANGE: instanciranje i izvrsavanje algoritma */
     ConvexHullLineIntersections *chli = new ConvexHullLineIntersections(nullptr,
@@ -93,6 +101,7 @@ TEST(ga17_convexhulllineintersections, input1000)
 
         if (!konveksniNaivniGrem.empty()){
             /* ASSERT: potvrda ocekivanja test primera */
+            ASSERT_EQ(konveksniOmotac.size(), konveksniNaivniGrem.size());
             ASSERT_EQ(konveksniOmotac, konveksniNaivniGrem);
         }
     }
@@ -100,7 +109,7 @@ TEST(ga17_convexhulllineintersections, input1000)
     delete chli;
 }
 
-TEST(ga17_convexhulllineintersections, input10000)
+TEST(ga17_convexhulllineintersections, input500)
 {
     /* ARRANGE: instanciranje i izvrsavanje algoritma */
     ConvexHullLineIntersections *chli = new ConvexHullLineIntersections(nullptr,
@@ -118,6 +127,7 @@ TEST(ga17_convexhulllineintersections, input10000)
 
         if (!konveksniNaivniGrem.empty()){
             /* ASSERT: potvrda ocekivanja test primera */
+            ASSERT_EQ(konveksniOmotac.size(), konveksniNaivniGrem.size());
             ASSERT_EQ(konveksniOmotac, konveksniNaivniGrem);
         }
 
@@ -143,6 +153,7 @@ TEST(ga17_convexhulllineintersections, inputFileBasic)
 
     if (!konveksniNaivniGrem.empty()){
         /* ASSERT: potvrda ocekivanja test primera */
+        ASSERT_EQ(konveksniOmotac.size(), konveksniNaivniGrem.size());
         ASSERT_EQ(konveksniOmotac, konveksniNaivniGrem);
     }
     if (!konveksniNaivni.empty()) {
@@ -172,6 +183,7 @@ TEST(ga17_convexhulllineintersections, inputFileCollinear)
 
     if (!konveksniNaivniGrem.empty()){
         /* ASSERT: potvrda ocekivanja test primera */
+        ASSERT_EQ(konveksniOmotac.size(), konveksniNaivniGrem.size());
         ASSERT_EQ(konveksniOmotac, konveksniNaivniGrem);
     }
     if (!konveksniNaivni.empty()) {
@@ -201,6 +213,7 @@ TEST(ga17_convexhulllineintersections, inputFileGridParallel)
 
     if (!konveksniNaivniGrem.empty()){
         /* ASSERT: potvrda ocekivanja test primera */
+        ASSERT_EQ(konveksniOmotac.size(), konveksniNaivniGrem.size());
         ASSERT_EQ(konveksniOmotac, konveksniNaivniGrem);
     }
     if (!konveksniNaivni.empty()) {
@@ -230,6 +243,7 @@ TEST(ga17_convexhulllineintersections, inputFileEmpty)
 
     if (!konveksniNaivniGrem.empty()){
         /* ASSERT: potvrda ocekivanja test primera */
+        ASSERT_EQ(konveksniOmotac.size(), konveksniNaivniGrem.size());
         ASSERT_EQ(konveksniOmotac, konveksniNaivniGrem);
     }
     if (!konveksniNaivni.empty()) {
@@ -259,6 +273,7 @@ TEST(ga17_convexhulllineintersections, inputFile2Parallel)
 
     if (!konveksniNaivniGrem.empty()){
         /* ASSERT: potvrda ocekivanja test primera */
+        ASSERT_EQ(konveksniOmotac.size(), konveksniNaivniGrem.size());
         ASSERT_EQ(konveksniOmotac, konveksniNaivniGrem);
     }
     if (!konveksniNaivni.empty()) {
@@ -288,6 +303,7 @@ TEST(ga17_convexhulllineintersections, inputFileRandom)
 
     if (!konveksniNaivniGrem.empty()){
         /* ASSERT: potvrda ocekivanja test primera */
+        ASSERT_EQ(konveksniOmotac.size(), konveksniNaivniGrem.size());
         ASSERT_EQ(konveksniOmotac, konveksniNaivniGrem);
     }
     if (!konveksniNaivni.empty()) {
@@ -305,15 +321,15 @@ TEST(ga17_convexhulllineintersections, testGenerisiLinije)
                                                                         0,
                                                                         false,
                                                                         "",
-                                                                        brojLinija1);
+                                                                        brojLinija4);
 
     chli->pokreniAlgoritam();
 
     /* ACT: dohvatanje dobijenih skupova preseka */
-    const auto brojLinija = chli->generisiNasumicneLinije(brojLinija1);
+    const auto brojLinija = chli->generisiNasumicneLinije(brojLinija4);
 
     /* ASSERT: potvrda ocekivanja test primera */
-    ASSERT_EQ(brojLinija.size(), brojLinija1);
+    ASSERT_EQ(brojLinija.size(), brojLinija4);
 
     delete chli;
 }
@@ -330,10 +346,10 @@ TEST(ga17_convexhulllineintersections, testGenerisiLinijeInput0)
     chli->pokreniAlgoritam();
 
     /* ACT: dohvatanje dobijenih skupova preseka */
-    const auto brojLinija = chli->generisiNasumicneLinije(brojLinija1);
+    const auto brojLinija = chli->generisiNasumicneLinije(0);
 
     /* ASSERT: potvrda ocekivanja test primera */
-    ASSERT_EQ(brojLinija.size(), brojLinija1);
+    ASSERT_EQ(brojLinija.size(), 0);
 
     delete chli;
 }
@@ -345,15 +361,15 @@ TEST(ga17_convexhulllineintersections, testGenerisiUglove)
                                                                         0,
                                                                         false,
                                                                         "",
-                                                                        brojLinija1);
+                                                                        brojLinija4);
     std::set<double> angles;
     chli->pokreniAlgoritam();
 
     /* ACT: dohvatanje dobijenih skupova preseka */
-    chli->generateAngles(brojLinija1, 1, 179, angles);
+    chli->generateAngles(brojLinija4, 1, 179, angles);
 
     /* ASSERT: potvrda ocekivanja test primera */
-    ASSERT_EQ(angles.size(), brojLinija1);
+    ASSERT_EQ(angles.size(), brojLinija4);
 
     delete chli;
 }

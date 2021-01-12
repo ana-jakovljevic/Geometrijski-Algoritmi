@@ -34,9 +34,9 @@ public:
 
     const std::vector<QPointF> &getPreseci() const;
     const std::vector<QPointF> &getNaivniPreseci() const;
-    const std::vector<QPointF> &getKonveksniOmotac() const;
-    const std::vector<QPointF> &getNaivniKonveksniOmotacGrem() const;
-    const std::vector<QLineF> &getNaivniKonveksniOmotac() const;
+    const std::vector<QPointF> &getKonveksniOmotac();
+    const std::vector<QPointF> &getNaivniKonveksniOmotacGrem();
+    const std::vector<QLineF> &getNaivniKonveksniOmotac();
     void generateAngles(const int N, const double minAngleDegree, const double maxAngleDegree, std::set<double> &angles);
     std::vector<QLineF> generisiNasumicneLinije(int brojDuzi = BROJ_SLUCAJNIH_OBJEKATA);
     bool getGREMOV_NAIVNI() const;
@@ -54,7 +54,7 @@ private:
 
     bool presekLinija(const QLineF& l1, const QLineF& l2, QPointF& presek);
     void naglasiTrenutno(QPainter *painter, const QLineF *d, unsigned long i, const char *s) const;
-    void gremovAlgoritam();
+    void gremovAlgoritam(bool naivni);
 
     std::vector<QLineF> _duzi;
     std::map<double, std::vector<QLineF>> _mapaUgaoDuzi;
