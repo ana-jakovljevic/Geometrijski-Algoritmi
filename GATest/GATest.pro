@@ -22,14 +22,12 @@ HEADERS += \
     tst_ga00_DCEL.h \
     tst_ga00_Triangulation.h \
     tst_ga06_PresekPravougaonika.h \
-<<<<<<< HEAD
     tst_ga09_klasterovanje.h \
     tst_ga15_CollisionDetection.h \
-=======
-    tst_ga17_convexhulllineintersections.h\
->>>>>>> ga17_ConvexHullLineIntersections
+    tst_ga17_convexhulllineintersections.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga09_klasterovanje.h \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga17_convexhulllineintersections.h \
     ../Geometrijski_Algoritmi/pomocnefunkcije.h \
     ../Geometrijski_Algoritmi/algoritambaza.h \
     ../Geometrijski_Algoritmi/animacijanit.h \
@@ -59,12 +57,9 @@ INCLUDEPATH += \
 
 SOURCES += main.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.cpp \
-<<<<<<< HEAD
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga09_klasterovanje.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga15_collisiondetection.cpp \
-=======
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga17_convexhulllineintersections.cpp \
->>>>>>> ga17_ConvexHullLineIntersections
     ../Geometrijski_Algoritmi/pomocnefunkcije.cpp \
     ../Geometrijski_Algoritmi/algoritambaza.cpp \
     ../Geometrijski_Algoritmi/animacijanit.cpp \

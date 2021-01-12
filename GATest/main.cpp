@@ -8,12 +8,9 @@
 #include "tst_ga00_Triangulation.h"
 
 #include "tst_ga06_PresekPravougaonika.h"
-<<<<<<< HEAD
 #include "tst_ga09_klasterovanje.h"
 #include "tst_ga15_CollisionDetection.h"
-=======
 #include "tst_ga17_convexhulllineintersections.h"
->>>>>>> ga17_ConvexHullLineIntersections
 
 int main(int argc, char *argv[])
 {
