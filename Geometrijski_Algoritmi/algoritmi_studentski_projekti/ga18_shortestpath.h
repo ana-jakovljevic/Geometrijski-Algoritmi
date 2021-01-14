@@ -100,8 +100,6 @@ public:
     bool desno(PoluIvica* p1);
 
     double povrsinaTrougla(QPointF, QPointF, QPointF);
-    bool operator==(PoluIvica*p);
-    bool operator<(PoluIvica*p);
 private:
     Cvor* _origin;
     PoluIvica* _tvin;
