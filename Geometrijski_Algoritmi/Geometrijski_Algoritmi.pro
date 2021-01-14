@@ -28,7 +28,8 @@ SOURCES += \
     oblastcrtanjaopengl.cpp \
     pomocnefunkcije.cpp \
     timemeasurementthread.cpp \
-    algoritmi_studentski_projekti/ga06_presekPravougaonika.cpp
+    algoritmi_studentski_projekti/ga06_presekPravougaonika.cpp \
+    algoritmi_studentski_projekti/ga07_konturaPravougaonika.cpp
 
 HEADERS += \
     algoritambaza.h \
@@ -51,7 +52,8 @@ HEADERS += \
     oblastcrtanjaopengl.h \
     pomocnefunkcije.h \
     timemeasurementthread.h \
-    algoritmi_studentski_projekti/ga06_presekPravougaonika.h
+    algoritmi_studentski_projekti/ga06_presekPravougaonika.h \
+    algoritmi_studentski_projekti/ga07_konturaPravougaonika.h
 
 FORMS += \
     mainwindow.ui

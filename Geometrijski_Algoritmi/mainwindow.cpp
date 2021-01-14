@@ -314,6 +314,10 @@ void MainWindow::napraviNoviAlgoritam()
         _pAlgoritamBaza = new PresekPravougaonika(_pOblastCrtanja, _duzinaPauze, _naivni,
                                                   _imeDatoteke, _brojSlucajnihObjekata);
         break;
+    case TipAlgoritma::KONTURA_PRAVOUGAONIKA:
+        _pAlgoritamBaza = new KonturaPravougaonika(_pOblastCrtanja, _duzinaPauze, _naivni,
+                                                  _imeDatoteke, _brojSlucajnihObjekata);
+        break;
     default: /* ako nije algoritam uopste */
         break;
     }

@@ -19,6 +19,7 @@
 #include "ga07_triangulation.h"
 
 #include "ga06_presekPravougaonika.h"
+#include "ga07_konturaPravougaonika.h"
 
 /* Enumeracija algoritama */
 enum class TipAlgoritma {
@@ -33,7 +34,8 @@ enum class TipAlgoritma {
     TRIANGULACIJA,
     SEPARATOR,
     STUDENTSKI_PROJEKTI,
-    PRESEK_PRAVOUGAONIKA
+    PRESEK_PRAVOUGAONIKA,
+    KONTURA_PRAVOUGAONIKA,
 };
 
 /* Enumeracija tabova */
