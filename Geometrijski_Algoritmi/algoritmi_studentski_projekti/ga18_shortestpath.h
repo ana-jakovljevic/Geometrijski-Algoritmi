@@ -31,11 +31,14 @@ public:
     void ucitajIzDatoteke(const std::string);
     std::vector<Cvor*> pronadjiVidljiveSusede(Cvor *p);
     void sortirajNizPoTacki(Cvor*);
-    bool vidljivCvor(Cvor *p, Cvor *wi, int i, std::vector<Cvor*>&);
+    bool vidljivCvor(Cvor *p, Cvor *wi, int i, Cvor* wi_1);
     void inicijalizujRedCvorova(Cvor* p);
     void InicijalizujDuzinuGranama();
-private:
+    std::vector<Cvor*> getNajkraciPut();
+    double getDuzinaNajkracegPuta();
     double povrsinaTrougla(QPointF, QPointF, QPointF);
+
+private:
     Cvor* _pocetak, *_kraj;
     std::vector<Cvor*> _cvorovi_za_graf;
     std::vector<PoluIvica*> _ivice_za_graf;
@@ -43,7 +46,7 @@ private:
     std::set<PoluIvica*, PoredjenjeZaStabloPretrage>* _stablo_pretrage;
     PoluIvica* _prava_za_poredjene;
     std::vector<Cvor*> _najkraci_put;
-
+    double _duzina;
 };
 
 enum class TipCvora{
@@ -93,6 +96,12 @@ public:
     void postaviPrethodnu(PoluIvica* prethodna);
     double duzinaPoluIvice();
     void izracunajDuzinu();
+    bool levo(PoluIvica* p1);
+    bool desno(PoluIvica* p1);
+
+    double povrsinaTrougla(QPointF, QPointF, QPointF);
+    bool operator==(PoluIvica*p);
+    bool operator<(PoluIvica*p);
 private:
     Cvor* _origin;
     PoluIvica* _tvin;
@@ -115,6 +124,7 @@ public:
     PoluIvica* pronadjiIvicu(Cvor* pocetak, Cvor* kraj);
     bool pronadjiPresekSaLinijom(PoluIvica*);
     PoluIvica* pronadjiIvicuPoCvoru(Cvor*);
+
 private:
     std::vector<Cvor*> _cvorovi;
     std::vector<PoluIvica*> _ivice;
@@ -144,6 +154,8 @@ public:
     Graf(std::vector<Cvor*>, std::vector<PoluIvica*>);
 
     std::vector<Cvor*> najkraciPut(Cvor*, Cvor*);
+
+    double duzina(Cvor* c){ return _duzine_najkracih_puteva_do_cvora[c];}
 private:
     std::map<Cvor*, std::vector<std::pair<Cvor*, double>>> _susedi;
     std::list<Cvor*> _svi_cvorovi_grafa;

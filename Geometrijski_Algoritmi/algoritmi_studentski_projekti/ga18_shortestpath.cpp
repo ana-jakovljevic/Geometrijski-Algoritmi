@@ -30,7 +30,8 @@ void ShortestPath::pokreniAlgoritam(){
         }
     }
 
-    _cvorovi_za_graf.push_back(_kraj);
+   _cvorovi_za_graf.push_back(_kraj);
+
 
 
     for(unsigned i= 0; i<_cvorovi_za_graf.size(); i++){
@@ -41,9 +42,10 @@ void ShortestPath::pokreniAlgoritam(){
             PoluIvica* pwi = new PoluIvica(_cvorovi_za_graf[i]);
             PoluIvica* wip = new PoluIvica(vidljivi_susedi_za_cvor[j], pwi);
             pwi->postaviTvin(wip);
+
             _ivice_za_graf.push_back(pwi);
             _ivice_za_graf.push_back(wip);
-            AlgoritamBaza_updateCanvasAndBlock();
+          //  AlgoritamBaza_updateCanvasAndBlock();
 
         }
     }
@@ -54,6 +56,12 @@ void ShortestPath::pokreniAlgoritam(){
      *  Ako nema dijkstrin onda podji od prve tacke i uzimaj onaj put koji je najmanji
      *  Problem sa tim algoritmom je sto ne nalazi globalno najkraci put
      */
+
+    Graf* novi_graf = new Graf(_cvorovi_za_graf, _ivice_za_graf);
+
+    _najkraci_put = novi_graf->najkraciPut(_pocetak, _kraj);
+    _duzina = novi_graf->duzina(_kraj);
+
     AlgoritamBaza_updateCanvasAndBlock();
     emit animacijaZavrsila();
 }
@@ -92,20 +100,27 @@ void ShortestPath::crtajAlgoritam(QPainter *painter) const {
 
     pen.setColor(Qt::gray);
     painter->setPen(pen);
-
-    for(unsigned i = 0; i<_ivice_za_graf.size(); i++){
+/*
+   for(unsigned i = 0; i<_ivice_za_graf.size(); i++){
             QLineF linija(_ivice_za_graf[i]->origin()->koordinate(), _ivice_za_graf[i]->tvin()->origin()->koordinate());
             painter->drawLine(linija);
-
-
     }
 
 
     for(unsigned i=0; i<_cvorovi_za_graf.size(); i++){
         painter->drawPoint(_cvorovi_za_graf[i]->koordinate());
     }
+*/
+    pen.setColor(Qt::blue);
+    painter->setPen(pen);
 
-  /*   for(auto it = _stablo_pretrage->begin(); it!=_stablo_pretrage->end(); it++){
+
+    for(unsigned i=1; i<_najkraci_put.size(); i++){
+        QLineF linija(_najkraci_put[i-1]->koordinate(), _najkraci_put[i]->koordinate());
+        painter->drawLine(linija);
+    }
+
+/*     for(auto it = _stablo_pretrage->begin(); it!=_stablo_pretrage->end(); it++){
                QLineF linija((*it)->origin()->koordinate(), (*it)->tvin()->origin()->koordinate());
                painter->drawLine(linija);
 
@@ -119,7 +134,6 @@ void ShortestPath::crtajAlgoritam(QPainter *painter) const {
 
 void ShortestPath::pokreniNaivniAlgoritam() {
 
-    _cvorovi_za_graf.push_back(_pocetak);
     for(unsigned i=0; i<_poligoni.size(); i++)
     {
         for(auto& c: _poligoni[i]->cvorovi()){
@@ -127,7 +141,6 @@ void ShortestPath::pokreniNaivniAlgoritam() {
         }
     }
 
-    _cvorovi_za_graf.push_back(_kraj);
 
     for(unsigned i=0; i<_cvorovi_za_graf.size(); i++){
         for(unsigned j=i+1; j<_cvorovi_za_graf.size(); j++){
@@ -143,22 +156,15 @@ void ShortestPath::pokreniNaivniAlgoritam() {
 
             if(ima_presek==false){
                     _ivice_za_graf.push_back(ivica);
-                  //  _ivice_za_graf.push_back(ivica_tvin);
             }
 
         }
     }
-    /* TODO:
-     *
-     *  Preostaje da se ivicama grafa dodele tezine
-     *  Napravi dijkstrin algoritam uz pomoc neke strukture
-     *  Ako nema dijkstrin onda podji od prve tacke i uzimaj onaj put koji je najmanji
-     *  Problem sa tim algoritmom je sto ne nalazi globalno najkraci put
-     */
 
     Graf* novi_graf = new Graf(_cvorovi_za_graf, _ivice_za_graf);
 
     _najkraci_put = novi_graf->najkraciPut(_pocetak, _kraj);
+    _duzina = novi_graf->duzina(_kraj);
     AlgoritamBaza_updateCanvasAndBlock();
 
     emit animacijaZavrsila();
@@ -197,20 +203,14 @@ void ShortestPath::crtajNaivniAlgoritam(QPainter *painter) const{
     painter->drawPoint(_kraj->koordinate());
 
 
-/*
-    for(unsigned i = 0; i<_ivice_za_graf.size(); i++){
-            QLineF linija(_ivice_za_graf[i]->origin()->koordinate(), _ivice_za_graf[i]->tvin()->origin()->koordinate());
-            painter->drawLine(linija);
-    }*/
 
 
-    pen.setColor(Qt::darkGray);
+    pen.setColor(Qt::darkCyan);
+    QBrush brush = painter->brush();
+    brush.setStyle(Qt::CrossPattern);
+
     painter->setPen(pen);
-/*
-   for(unsigned i = 0; i<_najkraci_put.size(); i++){
-         QLineF linija(_najkraci_put[i]->origin()->koordinate(), _najkraci_put[i]->tvin()->origin()->koordinate());
-         painter->drawLine(linija);
-    }*/
+    painter->setBrush(brush);
 
     for(unsigned i=1; i<_najkraci_put.size(); i++){
         QLineF linija(_najkraci_put[i-1]->koordinate(), _najkraci_put[i]->koordinate());
@@ -224,7 +224,7 @@ void ShortestPath::generisiNasumicnePoligone(int brojPoligona){
     srand(static_cast<unsigned>(time(nullptr)));
    // double poluprecnik = brojPoligona <= 6? 50: 425*(1.0/brojPoligona);
     double poluprecnik = brojPoligona>0? 460.0/brojPoligona: 0;
-    _pocetak = new Cvor(20+rand()%70, 20 + rand()%950);
+    _pocetak = new Cvor(50+rand()%100, 20 + rand()%950);
 
     Poligon* p1 = new Poligon();
     Poligon* p2 = new Poligon();
@@ -241,7 +241,6 @@ void ShortestPath::generisiNasumicnePoligone(int brojPoligona){
 
     PoluIvica* kraj = new PoluIvica(_kraj);
     _kraj->postaviSusednuIvicu(kraj);
-    _kraj->postaviIdPoligona(brojPoligona+1);
 
     kraj->postaviPrethodnu(kraj);
     kraj->postaviSledecu(kraj);
@@ -255,7 +254,8 @@ void ShortestPath::generisiNasumicnePoligone(int brojPoligona){
     std::vector<PoluIvica*> niz_ivica;
     bool ima_presek;
     _poligoni.push_back(p1);
-    for(int i= 0; i<brojPoligona; i++){
+    int i= 0;
+    for(; i<brojPoligona; i++){
 
         QPolygonF poligon = QPolygonF();
         QPointF p(100+rand()%1400, 20+rand()%930);
@@ -281,7 +281,7 @@ void ShortestPath::generisiNasumicnePoligone(int brojPoligona){
             }
         }
         if(ima_presek){
-            i= i-1;
+            i=i-1;
             continue;
         }
         niz_poligona.push_back(poligon);
@@ -296,6 +296,8 @@ void ShortestPath::generisiNasumicnePoligone(int brojPoligona){
 
             poseban_poligon->dodajPoluIvicu(i);
         }
+
+
 
         for(unsigned p = 0; p<poseban_poligon->cvorovi().size(); p++){
             poseban_poligon->cvorovi()[p]->postaviSusednuIvicu( poseban_poligon->ivice()[p]);
@@ -328,21 +330,12 @@ void ShortestPath::generisiNasumicnePoligone(int brojPoligona){
 
         }
 
-        /*for(auto& c: niz_cvorova){
-            poseban_poligon->dodajCvor(c);
-        }
 
+        _kraj->postaviIdPoligona(brojPoligona+1);
 
-        for(auto& i: niz_ivica){
-            poseban_poligon->dodajPoluIvicu(i);
-        }
-*/
         _poligoni.push_back(poseban_poligon);
 
-     //   niz_cvorova.clear();
-       // niz_ivica.clear();
     }
-//    _kraj->postaviIdPoligona();
 
     _poligoni.push_back(p2);
 }
@@ -454,120 +447,165 @@ void ShortestPath::ucitajIzDatoteke(const std::string imeDatoteke){
 }
 
 std::vector<Cvor*> ShortestPath::pronadjiVidljiveSusede(Cvor *p){
-
     std::vector<Cvor*> novi_niz_tacaka;
-    for(auto& c: _cvorovi_za_graf){
-        c->postaviTipCvora(TipCvora::NEPOSECEN);
+    for(auto c: _cvorovi_za_graf){
+        c->postaviTipCvora(TipCvora::NEVIDLJIV);
         novi_niz_tacaka.push_back(c);
     }
-
-    std::sort(novi_niz_tacaka.begin(), novi_niz_tacaka.end(), [&](Cvor* c1, Cvor* c2){
-        QLineF l1(p->koordinate(), c1->koordinate());
-        QLineF l2(p->koordinate(), c2->koordinate());
-        return l1.angle()<l2.angle() || (l1.angle()==l2.angle() &&  l1.length()>l2.length());
-    });
-
-
-    _prava_za_poredjene = new PoluIvica(p);
+   _prava_za_poredjene = new PoluIvica(p);
     Cvor* cvor_paralelna_sa_x_osom = new Cvor(p->x()+1500, p->y());
     PoluIvica *tvin_za_poredjenje = new PoluIvica(cvor_paralelna_sa_x_osom, _prava_za_poredjene);
     _prava_za_poredjene->postaviTvin(tvin_za_poredjenje);
+    QLineF duz1(_prava_za_poredjene->origin()->koordinate(), _prava_za_poredjene->tvin()->origin()->koordinate());
 
-    QLineF duz(_prava_za_poredjene->origin()->koordinate(), _prava_za_poredjene->tvin()->origin()->koordinate());
+    std::sort(novi_niz_tacaka.begin(), novi_niz_tacaka.end(), [&](Cvor *c1, Cvor *c2){
+        QLineF l1(p->koordinate(), c1->koordinate());
+        QLineF l2(p->koordinate(), c2->koordinate());
 
-    for(unsigned i=0; i<_poligoni.size(); i++){
+        //return l1.length()<l2.length() || (l1.length()==l2.length() && l1.angle()>l2.angle()  );
+        return l1.angle()>l2.angle() || (l1.angle()==l2.angle() && l1.length()>l2.length());
+    });
+
+
+   for(unsigned i=0; i<_poligoni.size(); i++){
 
         for(unsigned j=0; j<_poligoni[i]->ivice().size(); j++){
-            QLineF ivica(_poligoni[i]->ivice()[j]->origin()->koordinate(), _poligoni[i]->ivice()[j]->tvin()->origin()->koordinate());
+            QLineF ivica(_poligoni[i]->poluIvica(j)->origin()->koordinate(), _poligoni[i]->poluIvica(j)->tvin()->origin()->koordinate());
             QPointF tacka;
-            if(pomocneFunkcije::presekDuzi(duz, ivica, tacka)){
-                if(tacka!=duz.p1() && tacka!=duz.p2())
-                  _stablo_pretrage->insert(_poligoni[i]->ivice()[j]);
+            if(pomocneFunkcije::presekDuzi(duz1, ivica, tacka)){
+                if(tacka!=p->koordinate() && tacka!=cvor_paralelna_sa_x_osom->koordinate()){
+                      _stablo_pretrage->emplace(_poligoni[i]->poluIvica(j));
+
+
+
+               }
             }
         }
     }
     std::vector<Cvor*> susedi;
 
     for(unsigned i=0; i<novi_niz_tacaka.size(); i++){
-        if(novi_niz_tacaka[i] == p)
-            continue;
+            if(novi_niz_tacaka[i]==p )
+                continue;
 
-        _prava_za_poredjene = new PoluIvica(p);
-        PoluIvica *wi_ivica = new PoluIvica(novi_niz_tacaka[i], _prava_za_poredjene);
-        _prava_za_poredjene->postaviTvin(wi_ivica);
-
-
-        if(vidljivCvor(p, novi_niz_tacaka[i], i, novi_niz_tacaka)){
-
-            susedi.push_back(novi_niz_tacaka[i]);
+            _prava_za_poredjene = new PoluIvica(p);
+            PoluIvica *wi_ivica = new PoluIvica(novi_niz_tacaka[i], _prava_za_poredjene);
+            _prava_za_poredjene->postaviTvin(wi_ivica);
 
 
 
-            _stablo_pretrage->insert(novi_niz_tacaka[i]->susednaIvica()->prethodna());
-            _stablo_pretrage->erase(novi_niz_tacaka[i]->susednaIvica()->sledeca());
+            if(vidljivCvor(p, novi_niz_tacaka[i], i, novi_niz_tacaka[(i+1)%novi_niz_tacaka.size()])){
 
-        }
+                    susedi.push_back(novi_niz_tacaka[i]);
 
+            }
+
+           _stablo_pretrage->emplace(novi_niz_tacaka[i]->susednaIvica()->sledeca());
+            _stablo_pretrage->erase(novi_niz_tacaka[i]->susednaIvica()->prethodna());
+         /* if(pomocneFunkcije::ispod(novi_niz_tacaka[i]->susednaIvica()->sledeca()->origin()->koordinate(), novi_niz_tacaka[i]->koordinate())){
+                _stablo_pretrage->insert(novi_niz_tacaka[i]->susednaIvica()->sledeca());
+
+            }else{
+                _stablo_pretrage->erase(novi_niz_tacaka[i]->susednaIvica()->sledeca());
+
+            }
+
+            if(pomocneFunkcije::ispod(novi_niz_tacaka[i]->susednaIvica()->prethodna()->origin()->koordinate(), novi_niz_tacaka[i]->koordinate())){
+
+                _stablo_pretrage->insert(novi_niz_tacaka[i]->susednaIvica()->prethodna());
+
+            }else{
+                _stablo_pretrage->erase(novi_niz_tacaka[i]->susednaIvica()->prethodna());
+            }*/
 
     }
 
     return susedi;
 }
 
-bool ShortestPath::vidljivCvor(Cvor *p, Cvor *wi, int i, std::vector<Cvor*>& niz){
-
+bool ShortestPath::vidljivCvor(Cvor *p, Cvor *wi, int i, Cvor* wi_1){
 
     PoluIvica *pwi = new PoluIvica(p);
     PoluIvica* wip = new PoluIvica(wi, pwi);
     pwi->postaviTvin(wip);
 
-   /* if(_poligoni[wi->id_poligona()]->pronadjiPresekSaLinijom(pwi)==true){
-        wi->postaviTipCvora(TipCvora::NEVIDLJIV);
-        return false;
-    }*/
-
-
     QLineF linija_ps(wi->susednaIvica()->prethodna()->origin()->koordinate(),wi->susednaIvica()->sledeca()->origin()->koordinate());
     QLineF linija_za_presek(pwi->origin()->koordinate(), pwi->tvin()->origin()->koordinate());
+    QLineF linija_ps_p(p->susednaIvica()->prethodna()->origin()->koordinate(),p->susednaIvica()->sledeca()->origin()->koordinate());
     QPointF tacka;
+    QPointF tacka1;
 
-   if(pomocneFunkcije::presekDuzi(linija_za_presek, linija_ps, tacka)){
-       if(tacka!=p->koordinate() && tacka!=wi->koordinate()){
-             wi->postaviTipCvora(TipCvora::NEVIDLJIV);
-             return false;
-        }
-    }
 
-    int k = i-1;
-    if(i==0){
-        k = niz.size()-1;
-    }
+    bool indikator = true;
 
-    if(i==0 || povrsinaTrougla(p->koordinate(), wi->koordinate(), niz[k]->koordinate())!=0){
+    if(pomocneFunkcije::presekDuzi(linija_za_presek, linija_ps, tacka)){
+
+        if(tacka!=p->koordinate() && tacka!=wi->koordinate()){
+
+            indikator = indikator && false;
+         }
+     }else if(pomocneFunkcije::presekDuzi(linija_za_presek, linija_ps_p, tacka1)){
+
+        if(tacka1!=p->koordinate() && tacka1!=wi->koordinate()){
+
+            indikator = indikator && false;
+         }
+     } else if(i==0){
+
 
         auto e = _stablo_pretrage->lower_bound(pwi);
 
+
         if(e!=_stablo_pretrage->end()){
-            QLineF e_linija = QLineF((*e)->origin()->koordinate(), (*e)->tvin()->origin()->koordinate());
-            if(pomocneFunkcije::presekDuzi(linija_za_presek, e_linija, tacka)){
-                wi->postaviTipCvora(TipCvora::NEVIDLJIV);
-                return false;
-            }
+
+              indikator = indikator && false;
          }else{
-               wi->postaviTipCvora(TipCvora::VIDLJIV);
-               return true;
-         }
+            //  wi->postaviTipCvora(TipCvora::VIDLJIV);
+             // return true;
 
+              indikator = indikator && true;
 
-    }else if(niz[k]->tip()==TipCvora::NEVIDLJIV){
+          }
 
-        wi->postaviTipCvora(TipCvora::NEVIDLJIV);
-        return false;
+    }else if(ShortestPath::povrsinaTrougla(p->koordinate(), wi->koordinate(), wi_1->koordinate())){
+            //auto e1 = _stablo_pretrage->lower_bound(pwi);
 
-    }else{
+        auto e = _stablo_pretrage->begin();
+        for(; e!=_stablo_pretrage->end(); e++){
+            QLineF e_ivica((*e)->origin()->koordinate(), (*e)->tvin()->origin()->koordinate());
+            bool ind= false;
+            if(pomocneFunkcije::presekDuzi(linija_za_presek, e_ivica, tacka)){
+                if(tacka!=wi->koordinate() && tacka!=p->koordinate()){
+                    ind = true;
+               }
+            }
+            if(ind){
+                break;
+            }
+        }
+        //auto e = _stablo_pretrage->lower_bound(pwi);
+
+        if(e!=_stablo_pretrage->end()){
+              indikator = indikator && false;
+
+        }else{
+            //  wi->postaviTipCvora(TipCvora::VIDLJIV);
+             // return true;
+
+              indikator = indikator && true;
+
+          }
+
+    }else if(wi_1->tip()==TipCvora::NEVIDLJIV){
+        //     wi->postaviTipCvora(TipCvora::NEVIDLJIV);
+          //   return false;
+        indikator = indikator && false;
+
+       } else if(wi_1->tip()!=TipCvora::NEVIDLJIV){
+
 
         PoluIvica* wiwi = new PoluIvica(wi);
-        PoluIvica* wiwi_tvin = new PoluIvica(niz[k], wiwi);
+        PoluIvica* wiwi_tvin = new PoluIvica(wi_1, wiwi);
         wiwi->postaviTvin(wiwi_tvin);
 
         auto e = _stablo_pretrage->begin();
@@ -576,107 +614,37 @@ bool ShortestPath::vidljivCvor(Cvor *p, Cvor *wi, int i, std::vector<Cvor*>& niz
             QLineF wiwi_ivica(wiwi->origin()->koordinate(), wiwi->tvin()->origin()->koordinate());
             bool ind= false;
             if(pomocneFunkcije::presekDuzi(wiwi_ivica, e_ivica, tacka)){
-                if(tacka!=wi->koordinate() && tacka!=niz[k]->koordinate()){
+                if(tacka!=wi->koordinate() && tacka!=wi_1->koordinate()){
                     ind = true;
-                }
+               }
             }
-            if(ind) {
+            if(ind){
                 break;
             }
         }
 
         if(e!=_stablo_pretrage->end())
-          {
-            wi->postaviTipCvora(TipCvora::NEVIDLJIV);
-            return false;
+         {
+            /*wi->postaviTipCvora(TipCvora::NEVIDLJIV);
+            return false;*/
+            indikator = indikator && false;
 
          }else{
-            wi->postaviTipCvora(TipCvora::VIDLJIV);
-            return true;
 
+           /* wi    ->postaviTipCvora(TipCvora::VIDLJIV);
+            return true;*/
+
+            indikator = indikator && true;
         }
+
     }
-/*        if(i==0 || povrsinaTrougla(p->koordinate(), wi->koordinate(), niz[k]->koordinate())!=0){
-            auto e = _stablo_pretrage->lower_bound(pwi);
 
-/*            auto ee = _stablo_pretrage->begin();
+  //  wi->postaviTipCvora(TipCvora::NEVIDLJIV);
 
-            while (ee != _stablo_pretrage->end()){
+    if(indikator)
+        wi->postaviTipCvora(TipCvora::VIDLJIV);
 
-                QLineF e_ivica = QLineF((*ee)->origin()->koordinate(), (*ee)->tvin()->origin()->koordinate());
-
-                QPointF tacka;
-
-                if(pomocneFunkcije::presekDuzi(linija_za_presek, e_ivica, tacka)/* && tacka!=p->koordinate() && tacka!=wi->koordinate() && *ee < pwi){
-                    break;
-                }
-
-                ee++;
-            }
-
-            if(e!=_stablo_pretrage->end()){
-                QLineF e_linija((*e)->origin()->koordinate(), (*e)->tvin()->origin()->koordinate());
-                if(pomocneFunkcije::presekDuzi(e_linija, linija_za_presek, tacka)){
-                   // if(tacka!= p->koordinate() && tacka!=wi->koordinate()){
-                        wi->postaviTipCvora(TipCvora::NEVIDLJIV);
-                        return false;
-                   // }
-                }
-            }else {
-                wi->postaviTipCvora(TipCvora::VIDLJIV);
-                return true;
-            }
-/*            if(e!=_stablo_pretrage->end()){
-                QLineF e_linija((*e)->origin()->koordinate(), (*e)->tvin()->origin()->koordinate());
-                if(pomocneFunkcije::presekDuzi(e_linija, linija_za_presek, tacka)){
-                    if(tacka!= p->koordinate() && tacka!=wi->koordinate()){
-                        wi->postaviTipCvora(TipCvora::NEVIDLJIV);
-                        return false;
-                    }
-                }
-
-            //}
-
-        }else if(niz[k]->tip()==TipCvora::NEVIDLJIV){
-
-            wi->postaviTipCvora(TipCvora::NEVIDLJIV);
-            return false;
-
-        }else{
-
-            PoluIvica* wiwi = new PoluIvica(wi);
-            PoluIvica* wiwi_tvin = new PoluIvica(niz[k], wiwi);
-            wiwi->postaviTvin(wiwi_tvin);
-
-            auto e = _stablo_pretrage->begin();
-            for(; e!=_stablo_pretrage->end(); e++){
-                QLineF e_ivica((*e)->origin()->koordinate(), (*e)->tvin()->origin()->koordinate());
-                QLineF wiwi_ivica(wiwi->origin()->koordinate(), wiwi->tvin()->origin()->koordinate());
-                bool ind= false;
-                if(pomocneFunkcije::presekDuzi(wiwi_ivica, e_ivica, tacka)){
-                  //  if(tacka!=wi->koordinate() && tacka!=niz[k]->koordinate()){
-                        ind = true;
-                   // }
-                }
-                if(ind) {
-                    break;
-                }
-            }
-
-            if(e!=_stablo_pretrage->end())
-              {
-                wi->postaviTipCvora(TipCvora::NEVIDLJIV);
-                return false;
-
-             }else{
-                wi->postaviTipCvora(TipCvora::VIDLJIV);
-                return true;
-
-            }
-        }
-*/
-        wi->postaviTipCvora(TipCvora::NEVIDLJIV);
-        return false;
+    return indikator;
 
 }
 
@@ -693,6 +661,13 @@ double ShortestPath::povrsinaTrougla(QPointF A, QPointF B, QPointF C){
 
 }
 
+std::vector<Cvor*> ShortestPath::getNajkraciPut(){
+    return _najkraci_put;
+}
+double ShortestPath::getDuzinaNajkracegPuta(){
+ return _duzina;
+
+}
 /////////////////////////////////////////////
 /// \brief Cvor::Cvor
 /// \param koordinate
@@ -745,6 +720,7 @@ void Cvor::postaviIdPoligona(int id){
 void Cvor::postaviSledeciCvor(Cvor *c){
     _sledeci = c;
 }
+
 ////////////////////////////////////////
 /// \brief PoluIvica
 ///
@@ -795,6 +771,32 @@ void PoluIvica::izracunajDuzinu(){
     QLineF l(_origin->koordinate(), _tvin->origin()->koordinate());
     _duzina = l.length();
 
+}
+bool PoluIvica::levo(PoluIvica *p1){
+
+    double prva_koordinata = povrsinaTrougla(_origin->koordinate(), _tvin->origin()->koordinate(), p1->origin()->koordinate());
+    double druga_koordinata =povrsinaTrougla(_origin->koordinate(), _tvin->origin()->koordinate(), p1->origin()->koordinate());
+
+    return prva_koordinata<0 && druga_koordinata<0;
+}
+bool PoluIvica::desno(PoluIvica *p1){
+
+    double prva_koordinata = povrsinaTrougla(_origin->koordinate(), _tvin->origin()->koordinate(), p1->origin()->koordinate());
+    double druga_koordinata =povrsinaTrougla(_origin->koordinate(), _tvin->origin()->koordinate(), p1->origin()->koordinate());
+
+    return prva_koordinata>=0 && druga_koordinata>=0;
+}
+double PoluIvica::povrsinaTrougla(QPointF A, QPointF B, QPointF C){
+
+    return (B.x() - A.x())*(C.y() - A.y()) - (C.x() - A.x())*(B.y() - A.y());
+
+}
+bool PoluIvica::operator==(PoluIvica *p){
+    return p->origin()->koordinate()==_origin->koordinate() && p->tvin()->origin()->koordinate()==_tvin->origin()->koordinate();
+}
+
+bool PoluIvica::operator<(PoluIvica *p){
+    return p->origin()->koordinate().y()>_origin->koordinate().y() || ( p->tvin()->origin()->koordinate().y()==_tvin->origin()->koordinate().y() &&  p->tvin()->origin()->koordinate().x()<_tvin->origin()->koordinate().x() );
 }
 ////////////////////////////////////
 /// \brief Poligon
@@ -874,7 +876,12 @@ bool Poligon::pronadjiPresekSaLinijom(PoluIvica *ivica){
     return ima_presek_sa_poligonom;
 
 }
-
+/////////////////////////////
+/// \brief PoredjenjeZaStabloPretrage::operator ()
+/// \param prva
+/// \param druga
+/// \return
+///
 bool PoredjenjeZaStabloPretrage::operator()(PoluIvica *prva, PoluIvica *druga)
 {
 
@@ -887,7 +894,8 @@ bool PoredjenjeZaStabloPretrage::operator()(PoluIvica *prva, PoluIvica *druga)
 
         pomocneFunkcije::presekDuzi(_linija_za_poredjenje, linija_druga, tacka2);
 
-        return tacka1.y()>tacka2.y() || (tacka1.y()==tacka2.y() && tacka1.x()<tacka2.y());
+
+        return tacka1.y()>tacka2.y() || (tacka1.y()==tacka2.y() && tacka1.x()<tacka2.x());
  }
 
 PoredjenjeZaCvorove::PoredjenjeZaCvorove(Cvor** cvor){
