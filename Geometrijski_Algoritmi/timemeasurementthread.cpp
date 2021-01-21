@@ -20,7 +20,7 @@ TimeMeasurementThread::TimeMeasurementThread(TipAlgoritma tipAlgoritma, int minV
 {
 }
 
-#define SKIP_NAIVE 1
+//#define SKIP_NAIVE 1
 
 void TimeMeasurementThread::run()
 {
