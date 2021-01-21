@@ -22,6 +22,7 @@ SOURCES += \
     algoritmi_sa_vezbi/ga06_dceldemo.cpp \
     algoritmi_sa_vezbi/ga07_triangulation.cpp \
     algoritmi_studentski_projekti/ga15_collisiondetection.cpp \
+    algoritmi_studentski_projekti/ga14_coinsOnShelf.cpp \
     animacijanit.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -49,6 +50,7 @@ HEADERS += \
     algoritmi_sa_vezbi/ga07_triangulation.h \
     algoritmi_studentski_projekti/ga15_collisiondetection.h \
     algoritmi_studentski_projekti/ga15_datastructures.h \
+    algoritmi_studentski_projekti/ga14_coinsOnShelf.h \
     animacijanit.h \
     config.h \
     mainwindow.h \

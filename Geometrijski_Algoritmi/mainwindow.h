@@ -22,7 +22,7 @@
 #include "ga09_klasterovanje.h"
 #include "ga15_collisiondetection.h"
 #include "ga17_convexhulllineintersections.h"
-
+#include "ga14_coinsOnShelf.h"
 /* Enumeracija algoritama */
 enum class TipAlgoritma {
     ALGORITMI_SA_VEZBI,
@@ -40,6 +40,7 @@ enum class TipAlgoritma {
     KLASTEROVANJE,
     COLLISION_DETECTION,
     CONVEX_HULL_LINE_INTERSECTIONS
+    COINS_ON_SHELF
 };
 
 /* Enumeracija tabova */

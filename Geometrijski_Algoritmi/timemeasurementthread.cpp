@@ -13,14 +13,20 @@
 #include "ga05_preseciduzi.h"
 
 #include "ga06_presekPravougaonika.h"
+<<<<<<< HEAD
 #include "ga09_klasterovanje.h"
 #include "ga15_collisiondetection.h"
 #include "ga17_convexhulllineintersections.h"
+=======
+#include "ga14_coinsOnShelf.h"
+>>>>>>> 14_coinsOnShelf
 
 TimeMeasurementThread::TimeMeasurementThread(TipAlgoritma tipAlgoritma, int minValue, int step, int maxValue)
     : QThread(), _algorithmType(tipAlgoritma), _minValue(minValue), _step(step), _maxValue(maxValue)
 {
 }
+
+//#define SKIP_NAIVE 1
 
 void TimeMeasurementThread::run()
 {
@@ -34,6 +40,7 @@ void TimeMeasurementThread::run()
      * i poredi se vreme izvrsavanja efikasnog i naivnog algoritma
      * nad tih _i_ nasumicnih tacaka.
      */
+
     for(int i= _minValue; i <= _maxValue; i += _step)
     {
 
@@ -63,6 +70,7 @@ void TimeMeasurementThread::run()
         case TipAlgoritma::PRESEK_PRAVOUGAONIKA:
             pAlgorithm = new PresekPravougaonika(nullptr, 0, false, "", i);
             break;
+<<<<<<< HEAD
         case TipAlgoritma::KLASTEROVANJE:
             pAlgorithm = new Klasterovanje(nullptr, 0, false, "", i);
             break;
@@ -71,6 +79,10 @@ void TimeMeasurementThread::run()
             break;
         case TipAlgoritma::CONVEX_HULL_LINE_INTERSECTIONS:
             pAlgorithm = new ConvexHullLineIntersections(nullptr, 0, false, "", i);
+=======
+        case TipAlgoritma::COINS_ON_SHELF:
+            pAlgorithm = new CoinsOnShelf(nullptr, 0, false, "", i);
+>>>>>>> 14_coinsOnShelf
             break;
         default:
             break;

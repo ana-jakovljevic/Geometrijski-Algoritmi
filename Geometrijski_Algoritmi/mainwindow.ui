@@ -744,6 +744,7 @@
            </item>
            <item>
             <property name="text">
+<<<<<<< HEAD
              <string>Klasterovanje</string>
             </property>
            </item>
@@ -757,6 +758,11 @@
               <string>Konveksni omotac preseka duzi</string>
               </property>
              </item>
+=======
+             <string>CoinsOnShelf</string>
+            </property>
+           </item>
+>>>>>>> 14_coinsOnShelf
           </widget>
          </item>
         </layout>
@@ -836,7 +842,7 @@
      <x>0</x>
      <y>0</y>
      <width>1183</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
