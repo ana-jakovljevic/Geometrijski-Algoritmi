@@ -75,20 +75,24 @@ public:
 private:
     std::vector<QRectF> generisiNasumicnePravougaonike(int brojDuzi = BROJ_SLUCAJNIH_OBJEKATA) const;
     std::vector<QRectF> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
+
+    // Naivni algoritam - faza 1
     void pocetakPravougaonika(ivica* iv);
     void krajPravougaonika(ivica* iv);
     void dodajVertikalnuIvicu(ivica* iv);
+    void dodajHorizontalnuIvicu(QLineF* duz);
+
+    void faza2();
 
     std::vector<QRectF> _pravougaonici;
     std::vector<QPointF*> _kontura;
     double _brisucaPravaY;
 
+    std::vector<QLineF*> iviceKonture;
     std::set<ivica, poredjenjeIvicaPoY> _ivice;
     std::multiset<ivica*, poredjenjeIvicaPoX> ph1_vertikalneIvice;
     // koristim multiset umesto set jer sa set samo prvi poziv dodajVertikalnuIvicu uspesno ubacuje element
     std::set<tacka1d*, poredjenje1d> ph1_tackeUKonturi;
-    std::set<QPointF*, poredjenjeTacakaPoX> _najlevlje;
-    std::set<QPointF*, poredjenjeTacakaPoX> _najdesnije;
 };
 
 #endif // GA07_KONTURA_H

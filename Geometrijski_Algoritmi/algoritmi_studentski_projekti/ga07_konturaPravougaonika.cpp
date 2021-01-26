@@ -31,8 +31,14 @@ void KonturaPravougaonika::crtajAlgoritam(QPainter *painter) const
 
 void KonturaPravougaonika::dodajVertikalnuIvicu(ivica* iv) {
     if (iv->duz->y1() != iv->duz->y2())
-        const auto tmp = ph1_vertikalneIvice.insert(iv);
+    ph1_vertikalneIvice.insert(iv);
+    iviceKonture.push_back(iv->duz);
 }
+void KonturaPravougaonika::dodajHorizontalnuIvicu(QLineF *duz) {
+    if (duz->x1() != duz->x2())
+    iviceKonture.push_back(duz);
+}
+
 void KonturaPravougaonika::pocetakPravougaonika(ivica* iv) {
     std::cout << "Od " << iv->duz->y1() << " do " << iv->duz->y2() << std::endl;
     if (ph1_tackeUKonturi.size() == 0) {
@@ -126,6 +132,47 @@ void KonturaPravougaonika::krajPravougaonika(ivica* iv) {
     if (found != ph1_tackeUKonturi.end()) ph1_tackeUKonturi.erase(found);
 }
 
+void KonturaPravougaonika::faza2() {
+    std::vector<QLineF*> ph2_ivice = {};
+    std::cout << "faza 2 " << iviceKonture.size() << " " << ph1_vertikalneIvice.size() << std::endl;
+    for (auto iv: ph1_vertikalneIvice) {
+//        iviceKonture.push_back(iv->duz);
+        ph2_ivice.push_back(iv->duz);
+        auto iv2 = new QLineF(iv->duz->x1(), iv->duz->y2(), iv->duz->x2(), iv->duz->y1());
+        ph2_ivice.push_back(iv2);
+    }
+    std::cout << "faza 2.2 " << ph2_ivice.size() << std::endl;
+    std::sort(ph2_ivice.begin(), ph2_ivice.end(), [](QLineF* a, QLineF* b) {
+        if (a->y1() == b->y1()) return a->x1() < b->x1();
+        return a->y1() < b->y1();
+    });
+    std::cout << "faza 2.3 sortirano " << ph2_ivice.size() << std::endl;
+
+    for (unsigned long k = 0; k < ph2_ivice.size()/2; k++) {
+
+        std::cout << "faza 2.4 " << std::endl;
+        auto a = ph2_ivice[2*k];
+        auto b = ph2_ivice[2*k + 1];
+
+        float _y2 = a->y1() > b->y1() ? a->y1() : b->y1();
+        float _y1 = a->y1() < b->y1() ? a->y1() : b->y1();
+
+        bool isDownward = ph1_vertikalneIvice.end() == std::find_if(ph1_vertikalneIvice.begin(), ph1_vertikalneIvice.end(), [&](const auto &e) {
+            return e->duz->x1() == a->x1() && e->duz->y1() == _y1 && e->duz->y2() == _y2;
+        });;
+
+        float maxX = a->x1() > b->x1() ? a->x1() : b->x1();
+        float minX = a->x1() < b->x1() ? a->x1() : b->x1();
+
+        if ((isDownward && a->y1() < a->y2()) || (!isDownward && a->y2() < a->y1())) {
+            dodajHorizontalnuIvicu(new QLineF(minX, a->y1(), maxX, a->y1()));
+        } else {
+            dodajHorizontalnuIvicu(new QLineF(maxX, a->y1(), minX, a->y1()));
+        }
+        AlgoritamBaza_updateCanvasAndBlock();
+    }
+}
+
 void KonturaPravougaonika::pokreniNaivniAlgoritam()
 {
     std::vector<ivica*> ivicePragougaonika = {};
@@ -144,8 +191,10 @@ void KonturaPravougaonika::pokreniNaivniAlgoritam()
         } else {
             krajPravougaonika(iv);
         }
-        AlgoritamBaza_updateCanvasAndBlock();
+//        AlgoritamBaza_updateCanvasAndBlock();
     }
+    AlgoritamBaza_updateCanvasAndBlock();
+    faza2();
     /*
     std::cout << "ivice duzine " << _ivice  .size() << std::endl;
     QPointF presek;
@@ -204,32 +253,6 @@ void KonturaPravougaonika::pokreniNaivniAlgoritam()
     emit animacijaZavrsila();
 }
 
-//void KonturaPravougaonika::naglasiTrenutnu(QPainter *painter, unsigned long i) const
-//{
-//    /* Ako je trenutna duz u redu */
-//    if (i < _kontura.size()) {
-//        /* Transformacija cetkice */
-//        painter->save();
-//        painter->scale(1, -1);
-//        painter->translate(0, _kontura[i].y());
-
-//        /* Podesavanje stila olovke */
-//        auto olovka = painter->pen();
-//        olovka.setColor(Qt::darkGreen);
-//        painter->setPen(olovka);
-
-//        /* Ponistavanje transformacija */
-//        painter->restore();
-
-//        /* Podesavanje stila olovke */
-//        olovka.setColor(Qt::red);
-//        painter->setPen(olovka);
-
-//        /* Iscrtavanje duzi */
-////        painter->draw(_duzi[i]);
-//    }
-//}
-
 void KonturaPravougaonika::crtajNaivniAlgoritam(QPainter *painter) const
 {
     /* Odustajanje u slucaju greske */
@@ -256,8 +279,8 @@ void KonturaPravougaonika::crtajNaivniAlgoritam(QPainter *painter) const
     olovka.setWidth(2*olovka.width());
     painter->setPen(olovka);
 
-    for (const auto iv: ph1_vertikalneIvice) {
-        painter->drawLine(*iv->duz);
+    for (const auto duz: iviceKonture) {
+        painter->drawLine(*duz);
     }
 
 //    std::cout << "kontura duzine " << _kontura.size() << std::endl;
