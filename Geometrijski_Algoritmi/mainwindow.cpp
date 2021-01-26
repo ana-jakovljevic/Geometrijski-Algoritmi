@@ -325,9 +325,6 @@ void MainWindow::napraviNoviAlgoritam()
     case TipAlgoritma::CONVEX_HULL_LINE_INTERSECTIONS:
         _pAlgoritamBaza = new ConvexHullLineIntersections(_pOblastCrtanja, _duzinaPauze, _naivni,
                                                           _imeDatoteke, _brojSlucajnihObjekata);
-    case TipAlgoritma::COINS_ON_SHELF:
-        _pAlgoritamBaza = new CoinsOnShelf(_pOblastCrtanja, _duzinaPauze, _naivni,
-                                           _imeDatoteke, _brojSlucajnihObjekata);
         break;
     default: /* ako nije algoritam uopste */
         break;
