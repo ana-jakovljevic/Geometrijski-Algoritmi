@@ -4,7 +4,6 @@
 #include "algoritambaza.h"
 #include <set>
 #include <map>
-#include <iostream>
 
 class ConvexHullLineIntersections : public AlgoritamBaza
 {
@@ -49,91 +48,7 @@ private:
     {
         for (auto &d: _duzi){
             auto angle = d.angle();
-
-            /* kad ih je vise od 2 paralelne, onda mora da se nekako vidi koje su ekstremne (na krajevima)
-             * tu moram da izbacim sve ove izmedju, ali tu ne upadam u slozenost nlogn ako sortiram kroz mapu
-             */
-            if (_mapaUgaoDuzi[angle].size() < 2) {
-                _mapaUgaoDuzi[angle].push_back(d);
-            }
-            else {
-                /* paralelne sa y osom */
-                if (pomocneFunkcije::bliski(d.x1(), d.x2())) {
-                    auto element1 = _mapaUgaoDuzi[angle].at(0);
-                    auto element2 = _mapaUgaoDuzi[angle].at(1);
-
-                    bool prviVeci = false;
-                    if (element1.x2() >= element2.x2())
-                        prviVeci = true;
-
-                    if (prviVeci) {
-                        if (d.x2() > element1.x2()) {
-                            _mapaUgaoDuzi[angle].pop_back();
-                            _mapaUgaoDuzi[angle].pop_back();
-                            _mapaUgaoDuzi[angle].push_back(element2);
-                            _mapaUgaoDuzi[angle].push_back(d);
-                        }
-                        else if (d.x2() < element2.x2()) {
-                            _mapaUgaoDuzi[angle].pop_back();
-                            _mapaUgaoDuzi[angle].pop_back();
-                            _mapaUgaoDuzi[angle].push_back(element1);
-                            _mapaUgaoDuzi[angle].push_back(d);
-                        }
-                    }
-                    else {
-                        if (d.x2() > element2.x2()){
-                           _mapaUgaoDuzi[angle].pop_back();
-                           _mapaUgaoDuzi[angle].pop_back();
-                           _mapaUgaoDuzi[angle].push_back(element1);
-                           _mapaUgaoDuzi[angle].push_back(d);
-                        }
-                        else if (d.x2() < element1.x2()) {
-                            _mapaUgaoDuzi[angle].pop_back();
-                            _mapaUgaoDuzi[angle].pop_back();
-                            _mapaUgaoDuzi[angle].push_back(d);
-                            _mapaUgaoDuzi[angle].push_back(element2);
-                        }
-                   }
-                }
-                /* paralelne sa x osom */
-                else if (pomocneFunkcije::bliski(d.y1(), d.y2())){
-                    auto element1 = _mapaUgaoDuzi[angle].at(0);
-                    auto element2 = _mapaUgaoDuzi[angle].at(1);
-
-                    bool prviVeci = false;
-                    if (element1.y2() > element2.y2())
-                        prviVeci = true;
-
-                    if (prviVeci) {
-                        if (d.y2() > element1.y2()) {
-                            _mapaUgaoDuzi[angle].pop_back();
-                            _mapaUgaoDuzi[angle].pop_back();
-                            _mapaUgaoDuzi[angle].push_back(d);
-                            _mapaUgaoDuzi[angle].push_back(element2);
-                        }
-                        else if (d.y2() < element2.y2()) {
-                            _mapaUgaoDuzi[angle].pop_back();
-                            _mapaUgaoDuzi[angle].pop_back();
-                            _mapaUgaoDuzi[angle].push_back(element1);
-                            _mapaUgaoDuzi[angle].push_back(d);
-                        }
-                    }
-                    else {
-                        if (d.y2() > element2.y2()){
-                           _mapaUgaoDuzi[angle].pop_back();
-                           _mapaUgaoDuzi[angle].pop_back();
-                           _mapaUgaoDuzi[angle].push_back(d);
-                           _mapaUgaoDuzi[angle].push_back(element1);
-                        }
-                        else if (d.y2() < element1.y2()) {
-                            _mapaUgaoDuzi[angle].pop_back();
-                            _mapaUgaoDuzi[angle].pop_back();
-                            _mapaUgaoDuzi[angle].push_back(element2);
-                            _mapaUgaoDuzi[angle].push_back(d);
-                        }
-                   }
-                }
-            }
+            _mapaUgaoDuzi[angle].push_back(d);
         }
     }
 
