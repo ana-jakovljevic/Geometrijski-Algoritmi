@@ -1,5 +1,5 @@
-#ifndef DCEL_H
-#define DCEL_H 
+#ifndef DCEL2_H
+#define DCEL2_H 
 
 #include <iostream>
 #include <vector>
