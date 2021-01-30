@@ -4,7 +4,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 LIBS += -lglut -lGLU
 
-CONFIG += c++14
+CONFIG += c++17
 
 INCLUDEPATH += \
     $$PWD/algoritmi_sa_vezbi \
@@ -22,6 +22,14 @@ SOURCES += \
     algoritmi_sa_vezbi/ga06_dceldemo.cpp \
     algoritmi_sa_vezbi/ga07_triangulation.cpp \
     algoritmi_studentski_projekti/ga15_collisiondetection.cpp \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/convex_hull.cpp \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/dcel.cpp \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/delaunay.cpp \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/graph.cpp \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/largest_empty_circle.cpp \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/lec.cpp \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/utility.cpp \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/voronoi.cpp \
     animacijanit.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -49,6 +57,14 @@ HEADERS += \
     algoritmi_sa_vezbi/ga07_triangulation.h \
     algoritmi_studentski_projekti/ga15_collisiondetection.h \
     algoritmi_studentski_projekti/ga15_datastructures.h \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/convex_hull.h \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/dcel.h \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/delaunay.h \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/graph.h \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/largest_empty_circle.h \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/lec.h \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/utility.h \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/voronoi.h \
     animacijanit.h \
     config.h \
     mainwindow.h \

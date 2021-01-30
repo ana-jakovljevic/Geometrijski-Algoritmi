@@ -326,6 +326,10 @@ void MainWindow::napraviNoviAlgoritam()
         _pAlgoritamBaza = new ConvexHullLineIntersections(_pOblastCrtanja, _duzinaPauze, _naivni,
                                                           _imeDatoteke, _brojSlucajnihObjekata);
         break;
+    case TipAlgoritma::NAJVECI_PRAZAN_KRUG:
+        _pAlgoritamBaza = new lec(_pOblastCrtanja, _duzinaPauze, _naivni,
+                                  _imeDatoteke, _brojSlucajnihObjekata);
+        break;
     default: /* ako nije algoritam uopste */
         break;
     }

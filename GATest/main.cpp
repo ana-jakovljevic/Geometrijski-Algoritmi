@@ -6,11 +6,11 @@
 #include "tst_ga00_PreseciDuzi.h"
 #include "tst_ga00_DCEL.h"
 #include "tst_ga00_Triangulation.h"
-
 #include "tst_ga06_PresekPravougaonika.h"
 #include "tst_ga09_klasterovanje.h"
 #include "tst_ga15_CollisionDetection.h"
 #include "tst_ga17_convexhulllineintersections.h"
+#include "tst_ga20_largest_empty_circle.h"
 
 int main(int argc, char *argv[])
 {

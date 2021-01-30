@@ -16,6 +16,7 @@
 #include "ga09_klasterovanje.h"
 #include "ga15_collisiondetection.h"
 #include "ga17_convexhulllineintersections.h"
+#include "ga20_largest_empty_circle/lec.h"
 
 TimeMeasurementThread::TimeMeasurementThread(TipAlgoritma tipAlgoritma, int minValue, int step, int maxValue)
     : QThread(), _algorithmType(tipAlgoritma), _minValue(minValue), _step(step), _maxValue(maxValue)
@@ -71,6 +72,9 @@ void TimeMeasurementThread::run()
             break;
         case TipAlgoritma::CONVEX_HULL_LINE_INTERSECTIONS:
             pAlgorithm = new ConvexHullLineIntersections(nullptr, 0, false, "", i);
+            break;
+        case TipAlgoritma::NAJVECI_PRAZAN_KRUG:
+            pAlgorithm = new lec(nullptr, 0, false, "", i);
             break;
         default:
             break;
