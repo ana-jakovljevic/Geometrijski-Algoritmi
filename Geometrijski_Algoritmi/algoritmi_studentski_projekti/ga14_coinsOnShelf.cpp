@@ -4,8 +4,8 @@ void CoinsOnShelf::printSpan(QPainter *painter, bool naive) const
 {
     /* Calculate span that we need to display. Naive boolean value is
      * used to differ shelfs when calculating */
-    float span;
-    float x, y;
+    double span;
+    double x, y;
     if(!naive) {
         x = _shelf.back()->footprint() + _shelf.back()->radius();
         y = _shelf.front()->footprint() - _shelf.front()->radius();
@@ -57,19 +57,19 @@ void CoinsOnShelf::printSpanFinal(QPainter *painter) const
     painter->restore();
 }
 
-float CoinsOnShelf::calculateSpan()
+double CoinsOnShelf::calculateSpan()
 {
     /* Span in this case couldn't be calculated only from first and last disc
      * One example: if we have very large disc that's second on shelf and first disc is very very
      * small. In that case, left edge of that large disc is what we want, not left edge of first (small)
      * disc
      */
-    float x = 0;
+    double x = 0;
     for(auto disc: _shelfNaive)
         if(disc->footprint() + disc->radius() > x)
             x = disc->footprint() + disc->radius();
 
-    float y = 99999;
+    double y = 99999;
     for(auto disc: _shelfNaive)
         if(disc->footprint() - disc->radius() < y)
             y = disc->footprint() - disc->radius();
@@ -82,14 +82,14 @@ void CoinsOnShelf::naiveSpecialCase()
 {
     /* For each permutation, display it, calcluate it's span
      * and update minSpan if it's smaller */
-    float minSpan = 99999;
+    double minSpan = 99999;
 
     vector<unsigned> indexes;
     for(unsigned j = 0; j < _n; j++)
         indexes.push_back(j);
 
     do {
-        AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock()
         _shelfNaive.resize(0);
         for(auto disc: _discs)
             disc->setFootprint(0);
@@ -101,7 +101,7 @@ void CoinsOnShelf::naiveSpecialCase()
             //AlgoritamBaza_updateCanvasAndBlock();
 
             if(_shelfNaive.size() == _n) {
-                float currentSpan = calculateSpan();
+                double currentSpan = calculateSpan();
                 if(minSpan > currentSpan) {
                     minSpan = currentSpan;
                     _shelfNaiveFinal.resize(0);
@@ -127,7 +127,7 @@ void CoinsOnShelf::naiveGeneralCase()
      * discs could be moved apart to fill new disc in new permutation
      * If we used previous method, some discs could overlap
      */
-    float minSpan = 99999;
+    double minSpan = 99999;
 
     vector<unsigned> indexes;
     for(unsigned j = 0; j < _n; j++)
@@ -143,25 +143,25 @@ void CoinsOnShelf::naiveGeneralCase()
             _shelfNaive.push_back( _discs[indexes[j]] );
             updateFootprintAB( _discs[indexes[j-1]], _discs[indexes[j]], true);
 
-            for(int k = j-1; k >= 0; k--) {
+            for(int k = static_cast<int>(j)-1; k >= 0; k--) {
                 Disk* current = _discs[indexes[j]];
-                Disk* prev = _discs[indexes[k]];
+                Disk* prev = _discs[indexes[static_cast<unsigned>(k)]];
 
-                float radiusDiff = current->radius() - prev->radius();
+                double radiusDiff = current->radius() - prev->radius();
                 radiusDiff = radiusDiff*radiusDiff;
 
-                float footDiff = current->footprint() - prev->footprint();
+                double footDiff = current->footprint() - prev->footprint();
                 footDiff = footDiff*footDiff;
 
-                float centerdist = footDiff + radiusDiff;
+                double centerdist = footDiff + radiusDiff;
                 centerdist = sqrt(centerdist);
 
-                float diff = centerdist - current->radius() - prev->radius();
+                double diff = centerdist - current->radius() - prev->radius();
 
                 if(diff < -0.05) {
-                    float radiusDist = current->radius() + prev->radius();
+                    double radiusDist = current->radius() + prev->radius();
                     radiusDist = radiusDist * radiusDist;
-                    float x = radiusDist - radiusDiff;
+                    double x = radiusDist - radiusDiff;
                     x = sqrt(x);
                     x = x + prev->footprint();
                     current->setFootprint(x);
@@ -169,7 +169,7 @@ void CoinsOnShelf::naiveGeneralCase()
             }
 
             if(_shelfNaive.size() == _n) {
-                float currentSpan = calculateSpan();
+                double currentSpan = calculateSpan();
                 if(minSpan > currentSpan) {
                     minSpan = currentSpan;
                     _shelfNaiveFinal.resize(0);
@@ -183,7 +183,7 @@ void CoinsOnShelf::naiveGeneralCase()
             }
         }
 
-        AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock()
     } while( next_permutation(indexes.begin(), indexes.end()));
 
     _ended = true;
@@ -226,10 +226,10 @@ CoinsOnShelf::CoinsOnShelf(QWidget *pCrtanje, int pauzaKoraka, const bool &naivn
     std::sort(_discs.begin(), _discs.end(), compDiscs());
 
     // Now we have disks loaded, so we decide if go with special case or general
-    float max = _discs[0]->radius();
-    float min = _discs[_n-1]->radius();
+    double max = _discs[0]->radius();
+    double min = _discs[_n-1]->radius();
 
-    if(max/min < 2.0)
+    if(max/min < 2)
         _algorithm = SPECIAL;
     else
         _algorithm = GENERAL;
@@ -258,7 +258,7 @@ void CoinsOnShelf::pokreniAlgoritam()
 
 
     _ended = true;
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
     //qDebug() << getSpan();
     emit animacijaZavrsila();
 }
@@ -278,9 +278,9 @@ void CoinsOnShelf::crtajAlgoritam(QPainter *painter) const
 
     // Draw all discs
     for(Disk* disc: _shelf) {
-        float radius = disc->radius();
-        float x = disc->footprint() + 450;
-        float y = disc->radius() + 70;
+        double radius = disc->radius();
+        double x = disc->footprint() + 450;
+        double y = disc->radius() + 70;
         QPointF center(x,y);
         painter->drawEllipse(center, radius, radius);
     }
@@ -294,14 +294,14 @@ void CoinsOnShelf::crtajAlgoritam(QPainter *painter) const
         redPen.setColor(Qt::red);
         painter->setPen(redPen);
 
-        float x = _shelf.front()->footprint() + 450 - _shelf.front()->radius() - 2;
+        double x = _shelf.front()->footprint() + 450 - _shelf.front()->radius() - 2;
         QPointF leftDown(x, 70);
         QPointF leftUp(x, 70 + _shelf.front()->radius() * 2.5);
         painter->drawLine(leftDown, leftUp);
 
         x = _shelf.back()->footprint() + 450 + _shelf.back()->radius() + 2;
-        QPoint rightDown(x, 70);
-        QPoint rightUp(x, 70 + _shelf.back()->radius() * 2.5);
+        QPointF rightDown(x, 70);
+        QPointF rightUp(x, 70 + _shelf.back()->radius() * 2.5);
         painter->drawLine(rightDown, rightUp);
     }
 }
@@ -317,7 +317,7 @@ void CoinsOnShelf::pokreniNaivniAlgoritam()
     }
 
     _ended = true;
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
     //qDebug() << getSpanNaive();
     emit animacijaZavrsila();
 }
@@ -340,9 +340,9 @@ void CoinsOnShelf::crtajNaivniAlgoritam(QPainter *painter) const
 
         // Draw disks
         for(Disk* disc: _shelfNaive) {
-            float radius = disc->radius();
-            float x = disc->footprint() + 120;
-            float y = disc->radius() + 70;
+            double radius = disc->radius();
+            double x = disc->footprint() + 120;
+            double y = disc->radius() + 70;
             QPointF center(x,y);
             painter->drawEllipse(center, radius, radius);
         }
@@ -356,7 +356,7 @@ void CoinsOnShelf::crtajNaivniAlgoritam(QPainter *painter) const
             redPen.setColor(Qt::red);
             painter->setPen(redPen);
 
-            float y = 99999;
+            double y = 99999;
             for(auto disc: _shelfNaive) {
                 if (disc->footprint() - disc->radius() < y)
                     y = disc->footprint() - disc->radius();
@@ -365,12 +365,12 @@ void CoinsOnShelf::crtajNaivniAlgoritam(QPainter *painter) const
             QPointF leftUp(y+120, 150);
             painter->drawLine(leftDown, leftUp);
 
-            float x = 0;
+            double x = 0;
             for(auto disc: _shelfNaive)
                 if (disc->footprint() + disc->radius() > x)
                     x = disc->footprint() + disc->radius();
-            QPoint rightDown(x+120, 70);
-            QPoint rightUp(x+120, 150);
+            QPointF rightDown(x+120, 70);
+            QPointF rightUp(x+120, 150);
             painter->drawLine(rightDown, rightUp);
         }
     }
@@ -378,9 +378,9 @@ void CoinsOnShelf::crtajNaivniAlgoritam(QPainter *painter) const
         printSpanFinal(painter);
 
         for(Disk* disc: _shelfNaiveFinal) {
-            float radius = disc->radius();
-            float x = disc->footprint() + 120;
-            float y = disc->radius() + 70;
+            double radius = disc->radius();
+            double x = disc->footprint() + 120;
+            double y = disc->radius() + 70;
             QPointF center(x,y);
             painter->drawEllipse(center, radius, radius);
         }
@@ -390,7 +390,7 @@ void CoinsOnShelf::crtajNaivniAlgoritam(QPainter *painter) const
         redPen.setColor(Qt::red);
         painter->setPen(redPen);
 
-        float y = 99999;
+        double y = 99999;
         for(auto disc: _shelfNaiveFinal) {
             if (disc->footprint() - disc->radius() < y)
                 y = disc->footprint() - disc->radius();
@@ -399,23 +399,23 @@ void CoinsOnShelf::crtajNaivniAlgoritam(QPainter *painter) const
         QPointF leftUp(y+120, 150);
         painter->drawLine(leftDown, leftUp);
 
-        float x = 0;
+        double x = 0;
         for(auto disc: _shelfNaiveFinal)
             if (disc->footprint() + disc->radius() > x)
                 x = disc->footprint() + disc->radius();
-        QPoint rightDown(x+120, 70);
-        QPoint rightUp(x+120, 150);
+        QPointF rightDown(x+120, 70);
+        QPointF rightUp(x+120, 150);
         painter->drawLine(rightDown, rightUp);
 
     }
 }
 
-int CoinsOnShelf::getShelfSize()
+unsigned long CoinsOnShelf::getShelfSize()
 {
     return _shelf.size();
 }
 
-int CoinsOnShelf::getNaiveShelfSize()
+unsigned long CoinsOnShelf::getNaiveShelfSize()
 {
     return _shelfNaiveFinal.size();
 }
@@ -448,35 +448,35 @@ void CoinsOnShelf::specialCaseEvenDiscs()
 {
     // This method follow schema in documentation
     _shelf.push_back(_discs[0]);
-    int j = 1;
-    AlgoritamBaza_updateCanvasAndBlock();
+    unsigned j = 1;
+    AlgoritamBaza_updateCanvasAndBlock()
 
     while(true) {
-        if(_shelf.back()->radius() == _discs[_n - j]->radius())
+        if(pomocneFunkcije::bliski(_shelf.back()->radius(), _discs[_n - j]->radius()))
             break;
         updateFootprintAB(_shelf.back(), _discs[_n - j], true);
         _shelf.push_back(_discs[_n - j]);
-        AlgoritamBaza_updateCanvasAndBlock();
-        if(_shelf.back()->radius() == _discs[j]->radius())
+        AlgoritamBaza_updateCanvasAndBlock()
+        if(pomocneFunkcije::bliski(_shelf.back()->radius(), _discs[j]->radius()))
             break;
         updateFootprintAB(_shelf.back(), _discs[j], true);
         _shelf.push_back(_discs[j]);
-        AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock()
         j += 2;
     }
 
     j = 2;
     while(true) {
-        if(_shelf.front()->radius() == _discs[_n - j]->radius())
+        if(pomocneFunkcije::bliski(_shelf.front()->radius(), _discs[_n - j]->radius()))
             break;
         updateFootprintAB(_shelf.front(), _discs[_n - j], false);
         _shelf.push_front(_discs[_n - j]);
-        AlgoritamBaza_updateCanvasAndBlock();
-        if(_shelf.front()->radius() == _discs[j]->radius())
+        AlgoritamBaza_updateCanvasAndBlock()
+        if(pomocneFunkcije::bliski(_shelf.front()->radius(), _discs[j]->radius()))
             break;
         updateFootprintAB(_shelf.front(), _discs[j], false);
         _shelf.push_front(_discs[j]);
-        AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock()
         j += 2;
     }
 }
@@ -485,23 +485,23 @@ void CoinsOnShelf::specialCaseOddDiscs()
 {
     // This method follows schema in documentation
     _shelf.push_back(_discs[0]);
-    int j = 2;
+    unsigned j = 2;
     unsigned i = 0;
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
 
     while(true) {
         if(i < (_n/2 - 1)) {
             updateFootprintAB(_shelf.front(), _discs[_n - j], false);
             _shelf.push_front(_discs[_n - j]);
             ++i;
-            AlgoritamBaza_updateCanvasAndBlock();
+            AlgoritamBaza_updateCanvasAndBlock()
         }
         else break;
         if(i < (_n/2 - 1)) {
             updateFootprintAB(_shelf.front(), _discs[j], false);
             _shelf.push_front(_discs[j]);
             ++i;
-            AlgoritamBaza_updateCanvasAndBlock();
+            AlgoritamBaza_updateCanvasAndBlock()
         }
         else break;
         j += 2;
@@ -509,7 +509,7 @@ void CoinsOnShelf::specialCaseOddDiscs()
 
     updateFootprintAB(_discs[0], _discs[1], true);
     _shelf.push_back(_discs[1]);
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
     j = 3;
     i = 0;
     while(true) {
@@ -517,14 +517,14 @@ void CoinsOnShelf::specialCaseOddDiscs()
             updateFootprintAB(_shelf.back(), _discs[_n - j], true);
             _shelf.push_back(_discs[_n - j]);
             ++i;
-            AlgoritamBaza_updateCanvasAndBlock();
+            AlgoritamBaza_updateCanvasAndBlock()
         }
         else break;
         if(i < (_n/2 - 1)) {
             updateFootprintAB(_shelf.back(), _discs[j], true);
             _shelf.push_back(_discs[j]);
             ++i;
-            AlgoritamBaza_updateCanvasAndBlock();
+            AlgoritamBaza_updateCanvasAndBlock()
         }
         else break;
         j += 2;
@@ -538,19 +538,19 @@ void CoinsOnShelf::specialCaseOddDiscs()
         updateFootprintAB(_shelf.front(), _discs[_n-1], false);
         _shelf.push_front(_discs[_n-1]);
     }
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
 }
 
 void CoinsOnShelf::generalCase()
 {
     // Put first two discs, adjust footprint for smaller, add gap to queue
     _shelf.push_back(_discs[0]);
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
     _shelf.push_back(_discs[1]);
     updateFootprintAB(_discs[0], _discs[1], true);
     MaxGap* newEntry = new MaxGap(_discs[0], _discs[1]);
     _queue.push(newEntry);
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
 
     for(unsigned i = 2; i < _n; ++i) {
         if(_queue.top()->maxGapRadius() >= _discs[i]->radius()) {
@@ -560,7 +560,7 @@ void CoinsOnShelf::generalCase()
 
             // We insert disc between left and right on shelf
             list<Disk*>::iterator it = _shelf.begin();
-            while((*it)->radius() != right->radius())
+            while(!pomocneFunkcije::bliski((*it)->radius(), right->radius()))
                 it++;
             _shelf.insert(it, _discs[i]);
 
@@ -569,13 +569,13 @@ void CoinsOnShelf::generalCase()
             if(left->radius() < right->radius()) {
                 updateFootprintAB(left, _discs[i], true);
 
-                MaxGap *newEntry = new MaxGap(left, _discs[i]);
+                newEntry = new MaxGap(left, _discs[i]);
                 _queue.push(newEntry);
 
                 MaxGap *newEntry2 = new MaxGap(_discs[i], right);
 
                                                 // Code bellow will calculate gap size //
-                float z = pow( (left->radius() + _discs[i]->radius()) , 2) - pow( (left->radius() - _discs[i]->radius()) ,2);
+                double z = pow( (left->radius() + _discs[i]->radius()) , 2) - pow( (left->radius() - _discs[i]->radius()) ,2);
                 z = sqrt(z);
                 z = fabs(right->footprint() - left->footprint()) - z;
                 z = z / (2 * (sqrt(_discs[i]->radius()) + sqrt(right->radius())));
@@ -590,13 +590,13 @@ void CoinsOnShelf::generalCase()
                 // Right disc iz smaller, so this disk will touch right disc on its left side
                 updateFootprintAB(right, _discs[i], false);
 
-                MaxGap *newEntry = new MaxGap(_discs[i], right);
+                newEntry = new MaxGap(_discs[i], right);
                 _queue.push(newEntry);
 
                 MaxGap *newEntry2 = new MaxGap(left, _discs[i]);
 
                                                 // Code bellow will calculate gap size //
-                float z = pow( (right->radius() + _discs[i]->radius()) , 2) - pow( (right->radius() - _discs[i]->radius()) ,2);
+                double z = pow( (right->radius() + _discs[i]->radius()) , 2) - pow( (right->radius() - _discs[i]->radius()) ,2);
                 z = sqrt(z);
                 z = fabs(right->footprint() - left->footprint()) - z;
                 z = z / (2 * (sqrt(_discs[i]->radius()) + sqrt(left->radius())));
@@ -608,28 +608,28 @@ void CoinsOnShelf::generalCase()
             }
             // Remove this gap becouse it's now filled
             _queue.pop();
-            AlgoritamBaza_updateCanvasAndBlock();
+            AlgoritamBaza_updateCanvasAndBlock()
         }
         else {
             // Disc cannot be fitted into gap, so we must add it to either side of shelf
             Disk* leftmost = _shelf.front();
             Disk* rightmost = _shelf.back();
 
-            float leftFootprintCandidate = 2 * sqrt( leftmost->radius() * _discs[i]->radius());
-            float rightFootprintCandidate = 2 * sqrt( rightmost->radius() * _discs[i]->radius());
+            double leftFootprintCandidate = 2 * sqrt( leftmost->radius() * _discs[i]->radius());
+            double rightFootprintCandidate = 2 * sqrt( rightmost->radius() * _discs[i]->radius());
 
             if(leftFootprintCandidate <= leftmost->radius()) {
                 // We can fit disk I at leftmost point on shelf, without increasing span
                 _shelf.push_front(_discs[i]);
                 updateFootprintAB(leftmost,_discs[i], false);
-                MaxGap* newEntry = new MaxGap(_discs[i], leftmost);
+                newEntry = new MaxGap(_discs[i], leftmost);
                 _queue.push(newEntry);
             }
             else if(rightFootprintCandidate <= rightmost->radius()) {
                 // We can fit disk I at rightmost point on shelf, without increasing span
                 _shelf.push_back(_discs[i]);
                 updateFootprintAB(rightmost, _discs[i], true);
-                MaxGap* newEntry = new MaxGap(rightmost, _discs[i]);
+                newEntry = new MaxGap(rightmost, _discs[i]);
                 _queue.push(newEntry);
             }
             else {
@@ -637,17 +637,17 @@ void CoinsOnShelf::generalCase()
                 if(leftmost->radius() > rightmost->radius()) {
                     _shelf.push_front(_discs[i]);
                     updateFootprintAB(leftmost,_discs[i], false);
-                    MaxGap* newEntry = new MaxGap(_discs[i], leftmost);
+                    newEntry = new MaxGap(_discs[i], leftmost);
                     _queue.push(newEntry);
                 }
                 else {
                     _shelf.push_back(_discs[i]);
                     updateFootprintAB(rightmost, _discs[i], true);
-                    MaxGap* newEntry = new MaxGap(rightmost, _discs[i]);
+                    newEntry = new MaxGap(rightmost, _discs[i]);
                     _queue.push(newEntry);
                 }
             }
-            AlgoritamBaza_updateCanvasAndBlock();
+            AlgoritamBaza_updateCanvasAndBlock()
         }
     }
 
@@ -664,7 +664,7 @@ void CoinsOnShelf::debugShelf()
 
 void CoinsOnShelf::updateFootprintAB(Disk *A, Disk *B, bool directionBIsRightsideA)
 {
-    float increment = 2 * sqrt(A->radius() * B->radius());
+    double increment = 2 * sqrt(A->radius() * B->radius());
     if(directionBIsRightsideA) {    // Disk B is on A rightside
         B->setFootprint( A->footprint() + increment);
     }
@@ -705,12 +705,12 @@ MaxGap::MaxGap(Disk *A, Disk *B)
     _B = B;
 
     // Calculate gap
-    float divider = sqrt(_A->radius()) + sqrt(_B->radius());
+    double divider = sqrt(_A->radius()) + sqrt(_B->radius());
     divider = pow(divider, 2);
     _maxGapRadius = (_A->radius() * _B->radius()) / divider;
 }
 
-float MaxGap::maxGapRadius()
+double MaxGap::maxGapRadius()
 {
     return _maxGapRadius;
 }
@@ -725,7 +725,7 @@ Disk *MaxGap::rightDisk()
     return _B;
 }
 
-void MaxGap::setGapRadiusManual(float newRadius)
+void MaxGap::setGapRadiusManual(double newRadius)
 {
     _maxGapRadius = newRadius;
 }

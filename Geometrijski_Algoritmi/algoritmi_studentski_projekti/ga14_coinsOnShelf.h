@@ -54,14 +54,14 @@ class MaxGap
 {
 public:
     MaxGap(Disk *A, Disk *B);
-    float maxGapRadius();
+    double maxGapRadius();
     Disk* leftDisk();
     Disk* rightDisk();
-    void setGapRadiusManual(float newRadius);
+    void setGapRadiusManual(double newRadius);
 private:
     Disk *_A;
     Disk *_B;
-    float _maxGapRadius;
+    double _maxGapRadius;
 };
 
 /* Class for STL sorting of gaps */
@@ -81,7 +81,7 @@ public:
                  std::string imeDatoteke = "",
                  int brojDiskova = 10);
 
-    ~CoinsOnShelf();
+    virtual ~CoinsOnShelf() override;
 
     /* Base class methods */
     void pokreniAlgoritam() final;
@@ -90,8 +90,8 @@ public:
     void crtajNaivniAlgoritam(QPainter *painter) const final;
 
     /* Methods that could be used for tests */
-    int getShelfSize();
-    int getNaiveShelfSize();
+    unsigned long getShelfSize();
+    unsigned long getNaiveShelfSize();
     list<Disk *> getShelfDisks();
     vector<Disk*> getShelfNaiveDisks();
     double getSpan();
@@ -109,7 +109,7 @@ public:
     void updateFootprintAB(Disk* A, Disk* B, bool directionBIsRightsideA);
     void printSpan(QPainter *painter, bool naive) const;
     void printSpanFinal(QPainter *painter) const;
-    float calculateSpan();
+    double calculateSpan();
 
 
 private:
@@ -119,9 +119,9 @@ private:
     vector<Disk*> _shelfNaiveFinal;
     priority_queue<MaxGap*, vector<MaxGap*>, compMaxGaps> _queue;
     AlgoType _algorithm;
-    unsigned _n;
+    unsigned long _n;
     bool _ended = false;
-    float _naiveMinSpan;
+    double _naiveMinSpan;
 };
 
 #endif // COINSONSHELF_H

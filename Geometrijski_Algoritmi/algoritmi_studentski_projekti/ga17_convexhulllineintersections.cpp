@@ -182,7 +182,7 @@ void ConvexHullLineIntersections::crtajAlgoritam(QPainter *painter) const
     painter->setPen(pen);
 
     /* Iscrtavanje konveksnog omotaca */
-    for(unsigned i = 1; i < _konveksniOmotac.size(); i++) {
+    for(i = 1; i < _konveksniOmotac.size(); i++) {
        painter->drawLine(_konveksniOmotac[i-1],
                          _konveksniOmotac[i]);
     }
@@ -343,11 +343,11 @@ void ConvexHullLineIntersections::crtajNaivniAlgoritam(QPainter *painter) const
     /* Iscrtavanje konveksnog omotaca */
     if (!_naivniOmotac.empty()) {
 
-        for(unsigned i = 0; i < _naivniOmotac.size(); i++) {
+        for(i = 0; i < _naivniOmotac.size(); i++) {
            painter->drawLine(_naivniOmotac[i]);
         }
     } else if (!_naivniOmotacGrem.empty()) {
-        for(unsigned i = 1; i < _naivniOmotacGrem.size(); i++) {
+        for(i = 1; i < _naivniOmotacGrem.size(); i++) {
            painter->drawLine(_naivniOmotacGrem[i-1],
                              _naivniOmotacGrem[i]);
         }
@@ -485,7 +485,7 @@ void ConvexHullLineIntersections::gremovAlgoritam(bool naivni) {
 //        }
 //        myfile.close();
     }
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
     emit animacijaZavrsila();
 }
 

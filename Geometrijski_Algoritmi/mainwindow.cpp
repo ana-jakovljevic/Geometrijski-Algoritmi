@@ -208,7 +208,7 @@ void MainWindow::on_tipAlgoritma_currentIndexChanged(int index)
             ui->merenjeButton->setEnabled(false);
 
         /* DCEL i naredni nemaju naivne algoritme */
-        [[clang::fallthrough]];
+        [[fallthrough]];
         case TipAlgoritma::DEMO_ISCRTAVANJA:
         case TipAlgoritma::BRISUCA_PRAVA:
         case TipAlgoritma::_3D_ISCRTAVANJE:

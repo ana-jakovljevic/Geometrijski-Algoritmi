@@ -18,8 +18,8 @@ TEST(ga14_CoinsOnShelf, bothShelfsSameSizeRadnom)
     cos.pokreniNaivniAlgoritam();
 
     // Act
-    int sizeNaive = cos.getNaiveShelfSize();
-    int size = cos.getShelfSize();
+    const auto sizeNaive = cos.getNaiveShelfSize();
+    const auto size = cos.getShelfSize();
 
     // Assert
     EXPECT_EQ(size, sizeNaive);

@@ -33,7 +33,7 @@ void Klasterovanje::pokreniAlgoritam()
 
            if(i != j){
                double trenutnoRastojanje = izracunajDistancuSkupova(i, j);
-               AlgoritamBaza_updateCanvasAndBlock();
+               AlgoritamBaza_updateCanvasAndBlock()
 
                if (trenutnoRastojanje > _maksimalnoRastojanje){
                    _maksimalnoRastojanje = trenutnoRastojanje;
@@ -44,7 +44,7 @@ void Klasterovanje::pokreniAlgoritam()
    }
 
    _trenutniKlasteri = _klasteri;
-   AlgoritamBaza_updateCanvasAndBlock();
+   AlgoritamBaza_updateCanvasAndBlock()
    emit animacijaZavrsila();
 }
 
@@ -65,7 +65,7 @@ void Klasterovanje::pokreniNaivniAlgoritam()
 
            if(i != j){
                double rastojanje = izracunajDistancuSkupovaNaivni(i,j);
-               AlgoritamBaza_updateCanvasAndBlock();
+               AlgoritamBaza_updateCanvasAndBlock()
                if (rastojanje > _maksimalnoRastojanjeNaivnog){
                    _maksimalnoRastojanjeNaivnog = rastojanje;
                    _klasteriNaivnog = _trenutniKlasteriNaivnog;
@@ -75,7 +75,7 @@ void Klasterovanje::pokreniNaivniAlgoritam()
    }
 
    _trenutniKlasteriNaivnog = _klasteriNaivnog;
-   AlgoritamBaza_updateCanvasAndBlock();
+   AlgoritamBaza_updateCanvasAndBlock()
    emit animacijaZavrsila();
 }
 
@@ -677,38 +677,3 @@ double Klasterovanje::maksimalnoRastojanje() const
 {
    return _maksimalnoRastojanje;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

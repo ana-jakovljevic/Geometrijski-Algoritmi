@@ -4,7 +4,7 @@
 #include "algoritambaza.h"
 
 #include <csetjmp>
-#include <experimental/optional>
+#include <optional>
 #include <ext/pb_ds/assoc_container.hpp>
 
 /* Makro za proveru performansi algoritma */
@@ -277,7 +277,7 @@ private:
     /* Pomocna polja za lepsu animaciju */
     int _brisucaPravaY;
     std::vector<double> _podele;
-    std::experimental::optional<unsigned int> _pocetakNovih;
+    std::optional<unsigned int> _pocetakNovih;
 
 #ifndef GA06_BENCHMARK
     /* Staticki bafer za daleki skok */

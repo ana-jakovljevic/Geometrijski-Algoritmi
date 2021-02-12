@@ -30,7 +30,7 @@ CollisionDetection::CollisionDetection(QWidget *pCrtanje,
 
 void CollisionDetection::pokreniAlgoritam()
 {
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
 
     fillEventQueue(WhichPolygon::LEFT);
     fillEventQueue(WhichPolygon::RIGHT);
@@ -73,7 +73,7 @@ void CollisionDetection::pokreniAlgoritam()
             dist = horizontalDistance(*it->vertex, **edgeQueueToFindCollision.begin());
         }
 
-        AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock()
 
         if(dist < _minDistance)
         {
@@ -93,7 +93,7 @@ void CollisionDetection::pokreniAlgoritam()
     if(_pCrtanje)
         shiftLeftPolygon(_minDistance);
 
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
     emit animacijaZavrsila();
 }
 
@@ -105,7 +105,7 @@ void CollisionDetection::crtajAlgoritam(QPainter *painter) const
 
     drawPolygons(painter);
 
-    if (_sweepLineY != 0)
+    if (_sweepLineY > 0)
     {
         QLineF sweepLine(0, _sweepLineY, _pCrtanje->width(), _sweepLineY);
         drawLine(painter, sweepLine, Qt::green, 2);
@@ -122,7 +122,7 @@ void CollisionDetection::crtajAlgoritam(QPainter *painter) const
 
 void CollisionDetection::pokreniNaivniAlgoritam()
 {
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
 
     findCollisionVertexInPolygonNaive(WhichPolygon::LEFT);
     findCollisionVertexInPolygonNaive(WhichPolygon::RIGHT);
@@ -131,7 +131,7 @@ void CollisionDetection::pokreniNaivniAlgoritam()
     if(_pCrtanje)
         shiftLeftPolygon(_minDistanceNaive);
 
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
     emit animacijaZavrsila();
 }
 
@@ -141,7 +141,7 @@ void CollisionDetection::crtajNaivniAlgoritam(QPainter *painter) const
 
     drawPolygons(painter);
 
-    if(_horizontalLineY != 0)
+    if(_horizontalLineY > 0)
     {
         QLineF horizontalLine(0, _horizontalLineY, _pCrtanje->width(), _horizontalLineY);
         drawLine(painter, horizontalLine, Qt::green, 2);
@@ -226,7 +226,7 @@ void CollisionDetection::findCollisionVertexInPolygonNaive(WhichPolygon whichPol
                 _collisionVertexNaive = &vertex;
             }
 
-            AlgoritamBaza_updateCanvasAndBlock();
+            AlgoritamBaza_updateCanvasAndBlock()
         }
     }
 
@@ -270,7 +270,7 @@ double CollisionDetection::horizontalDistance(const QPointF &point, const QLineF
 
 void CollisionDetection::shiftLeftPolygon(double distanceToShift)
 {
-    if (distanceToShift == DBL_INFINITY)
+    if (distanceToShift >= DBL_INFINITY)
         distanceToShift = _pCrtanje ? _pCrtanje->width() : CANVAS_WIDTH;
 
     double step = 30;
@@ -282,8 +282,8 @@ void CollisionDetection::shiftLeftPolygon(double distanceToShift)
             step -= (shifted-distanceToShift);
             stop = true;
         }
-        _leftPolygon.translate(step, 0);
-        AlgoritamBaza_updateCanvasAndBlock();
+        _leftPolygon.translate(static_cast<int>(step), 0);
+        AlgoritamBaza_updateCanvasAndBlock()
     }
 }
 
@@ -296,10 +296,11 @@ void CollisionDetection::generateRandomPolygons(int numberOfPoints)
     int width = _pCrtanje ? _pCrtanje->width() : CANVAS_WIDTH;
     for (int i = 0; i < numberOfPoints; i++)
     {
-        if (points[i].x() < width/2)
-            leftPoints.emplace_back(points[i]);
+        const auto ui = static_cast<unsigned>(i);
+        if (points[ui].x() < width/2)
+            leftPoints.emplace_back(points[ui]);
         else
-            rightPoints.emplace_back(points[i]);
+            rightPoints.emplace_back(points[ui]);
     }
 
     pomocneFunkcije::sortirajTackeZaProstPoligon(leftPoints);
