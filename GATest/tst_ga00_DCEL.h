@@ -11,10 +11,10 @@ static constexpr auto dat = "../Geometrijski_Algoritmi/input_files/ga00_DCELDemo
 
 TEST(ga06_dcel, konstruktorTest){
     DCEL mushroom(dat, 2, 2);
-    EXPECT_EQ(226, mushroom.vsize());
+    EXPECT_EQ(226u, mushroom.vsize());
     //mushroom.off ima 240 strana plus jednu spoljasnju
-    EXPECT_EQ(241, mushroom.fsize());
-    EXPECT_EQ(928, mushroom.esize());
+    EXPECT_EQ(241u, mushroom.fsize());
+    EXPECT_EQ(928u, mushroom.esize());
 }
 TEST(ga06_dcel, twinEdgeTest){
    DCEL mushroom(dat, 2, 2);

@@ -1,22 +1,4 @@
-#include "timemeasurementthread.h"
-
-#include "config.h"
 #include "mainwindow.h"
-#include "algoritambaza.h"
-
-/* Ovde ukluciti zaglavlja novih algoritama. */
-#include "ga00_demoiscrtavanja.h"
-#include "ga01_brisucaprava.h"
-#include "ga02_3discrtavanje.h"
-#include "ga03_konveksniomotac.h"
-#include "ga04_konveksniomotac3d.h"
-#include "ga05_preseciduzi.h"
-
-#include "ga06_presekPravougaonika.h"
-#include "ga09_klasterovanje.h"
-#include "ga15_collisiondetection.h"
-#include "ga17_convexhulllineintersections.h"
-#include "ga20_largest_empty_circle/lec.h"
 
 TimeMeasurementThread::TimeMeasurementThread(TipAlgoritma tipAlgoritma, int minValue, int step, int maxValue)
     : QThread(), _algorithmType(tipAlgoritma), _minValue(minValue), _step(step), _maxValue(maxValue)
@@ -26,7 +8,7 @@ TimeMeasurementThread::TimeMeasurementThread(TipAlgoritma tipAlgoritma, int minV
 void TimeMeasurementThread::run()
 {
     clock_t begin, end;
-    double optimalTime, naiveTime;
+    double optimalTime = 0, naiveTime = 0;
 
     AlgoritamBaza *pAlgorithm = nullptr;
 
@@ -73,6 +55,9 @@ void TimeMeasurementThread::run()
         case TipAlgoritma::CONVEX_HULL_LINE_INTERSECTIONS:
             pAlgorithm = new ConvexHullLineIntersections(nullptr, 0, false, "", i);
             break;
+        case TipAlgoritma::COINS_ON_SHELF:
+            pAlgorithm = new CoinsOnShelf(nullptr, 0, false, "", i);
+            break;
         case TipAlgoritma::NAJVECI_PRAZAN_KRUG:
             pAlgorithm = new lec(nullptr, 0, false, "", i);
             break;
@@ -92,10 +77,12 @@ void TimeMeasurementThread::run()
 #endif
 
 #ifndef SKIP_NAIVE
+            if (_algorithmType != TipAlgoritma::COINS_ON_SHELF) {
             begin = clock();
             pAlgorithm->pokreniNaivniAlgoritam();
             end = clock();
             naiveTime = double(end - begin) / CLOCKS_PER_SEC;
+            }
 #else
             naiveTime = 0;
 #endif

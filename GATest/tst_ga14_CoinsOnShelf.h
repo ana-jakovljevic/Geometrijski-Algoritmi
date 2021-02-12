@@ -3,10 +3,12 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock-matchers.h>
-#include <./ga14_coinsOnShelf.h>
+
+#include "ga14_coinsOnShelf.h"
+
 using namespace testing;
 
-const string specialCase1File = "../Geometrijski_Algoritmi/input_files/ga14_coinsOnShelf/test5.naive.special";
+static constexpr auto specialCase1File = "../Geometrijski_Algoritmi/input_files/ga14_coinsOnShelf/test5.naive.special";
 
 TEST(ga14_CoinsOnShelf, bothShelfsSameSizeRadnom)
 {
@@ -57,11 +59,6 @@ TEST(ga14_CoinsOnShelf, footprintsConsecutive)
         fst++;
         snd++;
     }
-
-
-
-
-
 }
 
 #endif // TST_GA14_COINSONSHELF_H

@@ -753,14 +753,19 @@
             </property>
            </item>
            <item>
-             <property name="text">
-              <string>Konveksni omotac preseka duzi</string>
-             </property>
+            <property name="text">
+             <string>Konveksni omotac preseka duzi</string>
+            </property>
            </item>
            <item>
-             <property name="text">
-              <string>Najveci prazan krug</string>
-             </property>
+            <property name="text">
+             <string>CoinsOnShelf</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Najveci prazan krug</string>
+            </property>
            </item>
           </widget>
          </item>
@@ -841,7 +846,7 @@
      <x>0</x>
      <y>0</y>
      <width>1183</width>
-     <height>28</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

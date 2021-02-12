@@ -16,10 +16,10 @@ static constexpr auto ulaz5 = "../Geometrijski_Algoritmi/input_files/ga17_Convex
 static constexpr auto ulaz6 = "../Geometrijski_Algoritmi/input_files/ga17_ConvexHullLineIntersections/random_generated.txt";
 
 /* Staticki brojevi linija za test primere */
-static constexpr auto brojLinija1 = 10;
-static constexpr auto brojLinija2 = 100;
-static constexpr auto brojLinija3 = 200;
-static constexpr auto brojLinija4 = 500;
+static constexpr auto brojLinija1 = 10u;
+static constexpr auto brojLinija2 = 100u;
+static constexpr auto brojLinija3 = 200u;
+static constexpr auto brojLinija4 = 500u;
 
 
 TEST(ga17_convexhulllineintersections, input10)
@@ -350,7 +350,7 @@ TEST(ga17_convexhulllineintersections, testGenerisiLinijeInput0)
     const auto brojLinija = chli->generisiNasumicneLinije(0);
 
     /* ASSERT: potvrda ocekivanja test primera */
-    ASSERT_EQ(brojLinija.size(), 0);
+    ASSERT_EQ(brojLinija.size(), 0u);
 
     delete chli;
 }

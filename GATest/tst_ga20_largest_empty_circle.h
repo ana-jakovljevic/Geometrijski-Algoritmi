@@ -508,7 +508,8 @@ TEST(dcel, get_highest_vertex_index)
     d.add(dceltype::vertex{{7,4}});
     ASSERT_EQ(d.get_highest_vertex_index(), 0);
     d.add(dceltype::vertex{{7,9}});
-    ASSERT_EQ(d.get_highest_vertex_index(), d.vertices().size()-1);
+    ASSERT_EQ(d.get_highest_vertex_index(),
+              static_cast<int>(d.vertices().size()-1));
 }
 
 TEST(dcel, get_direction)
@@ -797,7 +798,7 @@ TEST(convex_hull, edges1)
     delaunay del = {{{0, 0}, {0, 1.1}, {1, 0}, {1, 1}, {2,3.4}, {0.2,1.6}}};
     convex_hull ch{del.triangulation()};
     auto edges = ch.edges();
-    ASSERT_EQ(edges.size(), 5);
+    ASSERT_EQ(edges.size(), 5u);
     ASSERT_TRUE(edges[0] == util::line_segment(util::point(0.2,1.6),util::point(0,1.1)));
     ASSERT_TRUE(edges[1] == util::line_segment(util::point(0,1.1),util::point(0,0)));
     ASSERT_TRUE(edges[2] == util::line_segment(util::point(0,0),util::point(1,0)));
@@ -810,7 +811,7 @@ TEST(convex_hull, edges2)
     delaunay del = {{{0, 0}, {0, 1}, {1, 0}, {1, 1}, {0.5,0.5}}};
     convex_hull ch{del.triangulation()};
     auto edges = ch.edges();
-    ASSERT_EQ(edges.size(), 4);
+    ASSERT_EQ(edges.size(), 4u);
     ASSERT_TRUE(edges[0] == util::line_segment(util::point(0,1),util::point(0,0)));
     ASSERT_TRUE(edges[1] == util::line_segment(util::point(0,0),util::point(1,0)));
     ASSERT_TRUE(edges[2] == util::line_segment(util::point(1,0),util::point(1,1)));
@@ -822,7 +823,7 @@ TEST(convex_hull, edges3)
     delaunay del = {{{9, 1}, {2, 1.9}, {2, 0}, {0, 1.54}, {2,3.4}, {0.2,1.6}, {1.2,2.6}, {24, 12}}};
     convex_hull ch{del.triangulation()};
     auto edges = ch.edges();
-    ASSERT_EQ(edges.size(), 5);
+    ASSERT_EQ(edges.size(), 5u);
     ASSERT_TRUE(edges[0] == util::line_segment(util::point(2,3.4),util::point(0,1.54)));
     ASSERT_TRUE(edges[1] == util::line_segment(util::point(0,1.54),util::point(2,0)));
     ASSERT_TRUE(edges[2] == util::line_segment(util::point(2,0),util::point(9,1)));
@@ -835,7 +836,7 @@ TEST(convex_hull, edges4)
     delaunay del = {{{4,4},{3,12},{15,4},{12,17},{2,19},{6,10},{2,13},{4,12},{14,13},{16,7},{12,4},{3,8},{3,3},{13,19},{3,16},{15,2},{16,17},{13,14},{6,4},{3,11}}};
     convex_hull ch{del.triangulation()};
     auto edges = ch.edges();
-    ASSERT_EQ(edges.size(), 7);
+    ASSERT_EQ(edges.size(), 7u);
     ASSERT_TRUE(edges[0] == util::line_segment(util::point(2,19),util::point(2,13)));
     ASSERT_TRUE(edges[1] == util::line_segment(util::point(2,13),util::point(3,3)));
     ASSERT_TRUE(edges[2] == util::line_segment(util::point(3,3),util::point(15,2)));
@@ -892,7 +893,7 @@ TEST(voronoi, edge_count1)
     delaunay del{{{0, 0}, {0, 1}, {1, 0}, {1, 1}, {0.5,0.5}}};
     voronoi vor{del.triangulation()};
     auto voronoi_edges = vor.get_edges();
-    ASSERT_EQ(voronoi_edges.size(), 8);
+    ASSERT_EQ(voronoi_edges.size(), 8u);
 }
 
 TEST(voronoi, edge_count2)
@@ -900,7 +901,7 @@ TEST(voronoi, edge_count2)
     delaunay del{{{0, 0}, {0, 1}, {1, 0}, {1, 1}}};
     voronoi vor{del.triangulation()};
     auto voronoi_edges = vor.get_edges();
-    ASSERT_EQ(voronoi_edges.size(), 4);
+    ASSERT_EQ(voronoi_edges.size(), 4u);
 }
 
 TEST(voronoi, edge_count3)
@@ -908,7 +909,7 @@ TEST(voronoi, edge_count3)
     delaunay del{{{0, 0}, {0, 1.1}, {1, 0}, {1, 1}, {2,3.4}, {0.2,1.6}}};
     voronoi vor{del.triangulation()};
     auto voronoi_edges = vor.get_edges();
-    ASSERT_EQ(voronoi_edges.size(), 10);
+    ASSERT_EQ(voronoi_edges.size(), 10u);
 }
 
 TEST(voronoi, edge_count4)
@@ -916,7 +917,7 @@ TEST(voronoi, edge_count4)
     delaunay del{{{0, 0}, {0, 1.1}, {1, 0}, {1, 1}}};
     voronoi vor{del.triangulation()};
     auto voronoi_edges = vor.get_edges();
-    ASSERT_EQ(voronoi_edges.size(), 5);
+    ASSERT_EQ(voronoi_edges.size(), 5u);
 }
 
 TEST(voronoi, edge_count5)
@@ -924,7 +925,7 @@ TEST(voronoi, edge_count5)
     delaunay del{{{9, 1}, {2, 1.9}, {2, 0}, {0, 1.54}, {2,3.4}, {0.2,1.6}, {1.2,2.6}, {24, 12}}};
     voronoi vor{del.triangulation()};
     auto voronoi_edges = vor.get_edges();
-    ASSERT_EQ(voronoi_edges.size(), 16);
+    ASSERT_EQ(voronoi_edges.size(), 16u);
 }
 
 TEST(voronoi, edge_count6)
@@ -932,7 +933,7 @@ TEST(voronoi, edge_count6)
     delaunay del{{{9, 1}, {2, 1.9}, {2, 0}, {5,5}, {1.2,4.9}, {2,3.4}, {0.2,1.6}, {1.2,2.6}, {24, 12}}};
     voronoi vor{del.triangulation()};
     auto voronoi_edges = vor.get_edges();
-    ASSERT_EQ(voronoi_edges.size(), 19);
+    ASSERT_EQ(voronoi_edges.size(), 19u);
 }
 
 TEST(voronoi, edge_count7)
@@ -940,7 +941,7 @@ TEST(voronoi, edge_count7)
     delaunay del{{{15,6},{0,3},{17,6},{4,0},{18,5},{9,17},{4,7},{4,12},{10,4},{16,13}}};
     voronoi vor{del.triangulation()};
     auto voronoi_edges = vor.get_edges();
-    ASSERT_EQ(voronoi_edges.size(), 21);
+    ASSERT_EQ(voronoi_edges.size(), 21u);
 }
 
 TEST(voronoi, edge_count8)
@@ -948,12 +949,12 @@ TEST(voronoi, edge_count8)
     delaunay del{{{4,4},{3,12},{15,4},{12,17},{2,19},{6,10},{2,13},{4,12},{14,13},{16,7},{12,4},{3,8},{3,3},{13,19},{3,16},{15,2},{16,17},{13,14},{6,4},{3,11}}};
     voronoi vor{del.triangulation()};
     auto voronoi_edges = vor.get_edges();
-    ASSERT_EQ(voronoi_edges.size(), 50);
+    ASSERT_EQ(voronoi_edges.size(), 50u);
 }
 
 TEST(largest_empty_circle, circle_and_candidates)
 {
-    auto check_circle_and_candidates = [](std::vector<util::point> points, int expected_candidate_size, const util::circle& expected_largest_circle) {
+    auto check_circle_and_candidates = [](std::vector<util::point> points, unsigned expected_candidate_size, const util::circle& expected_largest_circle) {
         delaunay del{std::move(points)};
         voronoi vor{del.triangulation()};
 

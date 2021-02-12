@@ -6,11 +6,10 @@
 
 #include "ga09_klasterovanje.h"
 
-static const auto datoteka1klasterovanje = "../Geometrijski_Algoritmi/input_files/ga09_klasterovanje/input1.txt";
-static const auto datoteka2klasterovanje = "../Geometrijski_Algoritmi/input_files/ga09_klasterovanje/input2.txt";
-static const auto datoteka3klasterovanje = "../Geometrijski_Algoritmi/input_files/ga09_klasterovanje/input3.txt";
-static const auto datoteka4klasterovanje = "../Geometrijski_Algoritmi/input_files/ga09_klasterovanje/input4.txt";
-
+static constexpr auto datoteka1klasterovanje = "../Geometrijski_Algoritmi/input_files/ga09_klasterovanje/input1.txt";
+static constexpr auto datoteka2klasterovanje = "../Geometrijski_Algoritmi/input_files/ga09_klasterovanje/input2.txt";
+static constexpr auto datoteka3klasterovanje = "../Geometrijski_Algoritmi/input_files/ga09_klasterovanje/input3.txt";
+static constexpr auto datoteka4klasterovanje = "../Geometrijski_Algoritmi/input_files/ga09_klasterovanje/input4.txt";
 
 using namespace testing;
 
