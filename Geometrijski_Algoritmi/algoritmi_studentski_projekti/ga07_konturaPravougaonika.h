@@ -89,10 +89,10 @@ private:
     double _brisucaPravaY;
 
     std::vector<QLineF*> iviceKonture;
-    std::set<ivica, poredjenjeIvicaPoY> _ivice;
+    std::multiset<ivica, poredjenjeIvicaPoY> _ivice;
     std::multiset<ivica*, poredjenjeIvicaPoX> ph1_vertikalneIvice;
     // koristim multiset umesto set jer sa set samo prvi poziv dodajVertikalnuIvicu uspesno ubacuje element
-    std::set<tacka1d*, poredjenje1d> ph1_tackeUKonturi;
+    std::multiset<tacka1d*, poredjenje1d> ph1_tackeUKonturi;
 };
 
 #endif // GA07_KONTURA_H

@@ -30,17 +30,21 @@ void KonturaPravougaonika::crtajAlgoritam(QPainter *painter) const
 }
 
 void KonturaPravougaonika::dodajVertikalnuIvicu(ivica* iv) {
-    if (iv->duz->y1() != iv->duz->y2())
-    ph1_vertikalneIvice.insert(iv);
-    iviceKonture.push_back(iv->duz);
+    if (iv->duz->y1() != iv->duz->y2()) {
+        const auto tmp = iviceKonture.size();
+        ph1_vertikalneIvice.insert(iv);
+        iviceKonture.push_back(iv->duz);
+        if (tmp == iviceKonture.size()) std::cout << "GRESKA JE OVDE" << std::endl;
+    }
 }
 void KonturaPravougaonika::dodajHorizontalnuIvicu(QLineF *duz) {
-    if (duz->x1() != duz->x2())
-    iviceKonture.push_back(duz);
+    if (duz->x1() != duz->x2()) {
+        iviceKonture.push_back(duz);
+    }
 }
 
 void KonturaPravougaonika::pocetakPravougaonika(ivica* iv) {
-    std::cout << "Od " << iv->duz->y1() << " do " << iv->duz->y2() << std::endl;
+//    std::cout << "Od " << iv->duz->y1() << " do " << iv->duz->y2() << std::endl;
     if (ph1_tackeUKonturi.size() == 0) {
         dodajVertikalnuIvicu(iv);
         ph1_tackeUKonturi.emplace(new tacka1d(_tip::ULAZ, iv->duz->y1()));
@@ -123,13 +127,19 @@ void KonturaPravougaonika::krajPravougaonika(ivica* iv) {
         i++;
     }
     auto found = std::find_if(ph1_tackeUKonturi.begin(), ph1_tackeUKonturi.end(), [&](const auto &val) {
-        return val->vr == iv->duz->y1();
+        return val->vr == iv->duz->y1() && val->tip == _tip::ULAZ;
     });
     if (found != ph1_tackeUKonturi.end()) ph1_tackeUKonturi.erase(found);
+    else {
+        std::cout << "Nije pronadjeno 1" << std::endl;
+    }
     found = std::find_if(ph1_tackeUKonturi.begin(), ph1_tackeUKonturi.end(), [&](const auto &val) {
-        return val->vr == iv->duz->y2();
+        return val->vr == iv->duz->y2() && val->tip == _tip::IZLAZ;
     });
     if (found != ph1_tackeUKonturi.end()) ph1_tackeUKonturi.erase(found);
+    else {
+        std::cout << "Nije pronadjeno 2" << std::endl;
+    }
 }
 
 void KonturaPravougaonika::faza2() {
@@ -149,17 +159,16 @@ void KonturaPravougaonika::faza2() {
     std::cout << "faza 2.3 sortirano " << ph2_ivice.size() << std::endl;
 
     for (unsigned long k = 0; k < ph2_ivice.size()/2; k++) {
-
-        std::cout << "faza 2.4 " << std::endl;
         auto a = ph2_ivice[2*k];
         auto b = ph2_ivice[2*k + 1];
 
-        float _y2 = a->y1() > b->y1() ? a->y1() : b->y1();
-        float _y1 = a->y1() < b->y1() ? a->y1() : b->y1();
+        float _y2 = a->y1() > a->y2() ? a->y1() : a->y2();
+        float _y1 = a->y1() < a->y2() ? a->y1() : a->y2();
 
         bool isDownward = ph1_vertikalneIvice.end() == std::find_if(ph1_vertikalneIvice.begin(), ph1_vertikalneIvice.end(), [&](const auto &e) {
             return e->duz->x1() == a->x1() && e->duz->y1() == _y1 && e->duz->y2() == _y2;
-        });;
+        });
+//        std::cout << "faza 2.4 " << isDownward << std::endl;
 
         float maxX = a->x1() > b->x1() ? a->x1() : b->x1();
         float minX = a->x1() < b->x1() ? a->x1() : b->x1();
@@ -183,6 +192,7 @@ void KonturaPravougaonika::pokreniNaivniAlgoritam()
         ivicePragougaonika.push_back(new ivica(_tip::IZLAZ, desna));
     }
     std::sort(ivicePragougaonika.begin(), ivicePragougaonika.end(), [](ivica* a, ivica* b) {
+        if (b->duz->x1() == a->duz->x1()) return b->duz->y1() > a->duz->y1();
         return b->duz->x1() > a->duz->x1();
     });
     for (ivica* iv : ivicePragougaonika) {
@@ -255,39 +265,47 @@ void KonturaPravougaonika::pokreniNaivniAlgoritam()
 
 void KonturaPravougaonika::crtajNaivniAlgoritam(QPainter *painter) const
 {
-    /* Odustajanje u slucaju greske */
     if (!painter) return;
 
-    /* Iscrtavanje svakog pravougaonika */
+    auto olovka = painter->pen();
+    olovka.setColor(Qt::black);
+    olovka.setWidth(3);
+    painter->setPen(olovka);
     for (auto pr : _pravougaonici) {
         painter->drawRect(pr);
+        painter->fillRect(pr, QBrush(QColor(0, 0, 255, 100)));
     }
 
-    /* Podesavanje stila fonta */
-    auto font = painter->font();
-    font.setWeight(font.Bold);
-    font.setPointSizeF(1.3*font.pointSizeF());
-    painter->setFont(font);
+//    /* Podesavanje stila fonta */
+//    auto font = painter->font();
+//    font.setWeight(font.Bold);
+//    font.setPointSizeF(1.3*font.pointSizeF());
+//    painter->setFont(font);
 
-    /* Naglasavanje trenutnih duzi */
-//    naglasiTrenutnu(painter, _i);
-//    naglasiTrenutnu(painter, _j);
-
-    /* Podesavanje stila olovke */
-    auto olovka = painter->pen();
-    olovka.setColor(Qt::yellow);
-    olovka.setWidth(2*olovka.width());
+    olovka.setColor(Qt::red);
     painter->setPen(olovka);
-
     for (const auto duz: iviceKonture) {
         painter->drawLine(*duz);
+        qreal arrowSize = 20;
+        if (duz->length() > arrowSize) {
+            double angle = std::atan2(-duz->dy(), duz->dx());
+            QPointF arrowP1 = duz->p1() + QPointF(sin(angle + M_PI / 3) * arrowSize,
+                                                  cos(angle + M_PI / 3) * arrowSize);
+            QPointF arrowP2 = duz->p1() + QPointF(sin(angle + M_PI - M_PI / 3) * arrowSize,
+                                                  cos(angle + M_PI - M_PI / 3) * arrowSize);
+
+            QPolygonF arrowHead;
+            arrowHead.clear();
+            arrowHead << arrowP2 << duz->p1() << arrowP1 << duz->p1();
+            painter->drawPolygon(arrowHead);
+        }
     }
 
 //    std::cout << "kontura duzine " << _kontura.size() << std::endl;
     for (const auto presek: _kontura) {
 //        std::cout << "Tacka " << presek->x() << " " << presek->y() << std::endl;
-        painter->drawPoint(*presek);
-    }
+//        painter->drawPoint(*presek);
+    }/*
     if (_kontura.size()) {
 //        std::cout << "kontura linija " << std::endl;
         QPainterPath path;
@@ -298,7 +316,7 @@ void KonturaPravougaonika::crtajNaivniAlgoritam(QPainter *painter) const
         path.closeSubpath();
         QBrush cetka(Qt::GlobalColor::red, Qt::BrushStyle::Dense6Pattern);
         painter->fillPath(path, cetka);
-    }
+    }*/
 //    std::cout << "kontura nacrtana " << std::endl;
 }
 
