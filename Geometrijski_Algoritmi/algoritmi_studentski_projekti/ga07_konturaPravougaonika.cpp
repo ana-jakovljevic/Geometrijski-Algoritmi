@@ -133,64 +133,14 @@ void KonturaPravougaonika::pokreniNaivniAlgoritam() {
         } else {
             bf_krajPravougaonika(iv);
         }
-//        AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock();
     }
     AlgoritamBaza_updateCanvasAndBlock();
     faza2();
     emit animacijaZavrsila();
 }
 
-void KonturaPravougaonika::crtajNaivniAlgoritam(QPainter *painter) const
-{
-    if (!painter) return;
-
-    auto olovka = painter->pen();
-    olovka.setColor(Qt::black);
-    olovka.setWidth(3);
-    painter->setPen(olovka);
-    for (auto pr : _pravougaonici) {
-        painter->drawRect(pr);
-        painter->fillRect(pr, QBrush(QColor(0, 0, 255, 100)));
-    }
-    olovka.setColor(Qt::red);
-    painter->setPen(olovka);
-    for (const auto duz: iviceKonture) {
-        painter->drawLine(*duz);
-        qreal arrowSize = 20;
-        if (duz->length() > arrowSize) {
-            double angle = std::atan2(-duz->dy(), duz->dx());
-            QPointF arrowP1 = duz->p1() + QPointF(sin(angle + M_PI / 3) * arrowSize,
-                                                  cos(angle + M_PI / 3) * arrowSize);
-            QPointF arrowP2 = duz->p1() + QPointF(sin(angle + M_PI - M_PI / 3) * arrowSize,
-                                                  cos(angle + M_PI - M_PI / 3) * arrowSize);
-
-            QPolygonF arrowHead;
-            arrowHead.clear();
-            arrowHead << arrowP2 << duz->p1() << arrowP1 << duz->p1();
-            painter->drawPolygon(arrowHead);
-        }
-    }
-
-//    std::cout << "kontura duzine " << _kontura.size() << std::endl;
-//    for (const auto presek: _kontura) {
-//        std::cout << "Tacka " << presek->x() << " " << presek->y() << std::endl;
-//        painter->drawPoint(*presek);
-//    }
-    /*
-    if (_kontura.size()) {
-//        std::cout << "kontura linija " << std::endl;
-        QPainterPath path;
-        path.moveTo((*_kontura.begin())->x(), (*_kontura.begin())->y());
-        for (const auto presek: _kontura) {
-            path.lineTo(presek->x(), presek->y());
-        }
-        path.closeSubpath();
-        QBrush cetka(Qt::GlobalColor::red, Qt::BrushStyle::Dense6Pattern);
-        painter->fillPath(path, cetka);
-    }*/
-//    std::cout << "kontura nacrtana " << std::endl;
-}
-
+void KonturaPravougaonika::crtajNaivniAlgoritam(QPainter *painter) const { _crtajAlgoritam(painter); }
 
 /**
  * SEGMENT TREE
@@ -341,40 +291,7 @@ void KonturaPravougaonika::pokreniAlgoritam() {
     emit animacijaZavrsila();
 }
 
-void KonturaPravougaonika::crtajAlgoritam(QPainter *painter) const
-{
-    if (!painter) return;
-
-
-    auto olovka = painter->pen();
-    olovka.setColor(Qt::black);
-    olovka.setWidth(3);
-    painter->setPen(olovka);
-    for (auto pr : _pravougaonici) {
-        painter->drawRect(pr);
-        painter->fillRect(pr, QBrush(QColor(0, 0, 255, 100)));
-    }
-    olovka.setColor(Qt::red);
-    painter->setPen(olovka);
-    for (const auto duz: iviceKonture) {
-        painter->drawLine(*duz);
-        qreal arrowSize = 20;
-        if (duz->length() > arrowSize) {
-            double angle = std::atan2(-duz->dy(), duz->dx());
-            QPointF arrowP1 = duz->p1() + QPointF(sin(angle + M_PI / 3) * arrowSize,
-                                                  cos(angle + M_PI / 3) * arrowSize);
-            QPointF arrowP2 = duz->p1() + QPointF(sin(angle + M_PI - M_PI / 3) * arrowSize,
-                                                  cos(angle + M_PI - M_PI / 3) * arrowSize);
-
-            QPolygonF arrowHead;
-            arrowHead.clear();
-            arrowHead << arrowP2 << duz->p1() << arrowP1 << duz->p1();
-            painter->drawPolygon(arrowHead);
-        }
-    }
-
-}
-
+void KonturaPravougaonika::crtajAlgoritam(QPainter *painter) const { _crtajAlgoritam(painter); }
 
 /**
  * ZAJEDNICKO
@@ -427,6 +344,38 @@ void KonturaPravougaonika::faza2() {
             dodajHorizontalnuIvicu(new QLineF(maxX, a->y1(), minX, a->y1()));
         }
         AlgoritamBaza_updateCanvasAndBlock();
+    }
+}
+
+void KonturaPravougaonika::_crtajAlgoritam(QPainter *painter) const
+{
+    if (!painter) return;
+
+    auto olovka = painter->pen();
+    olovka.setColor(Qt::black);
+    olovka.setWidth(3);
+    painter->setPen(olovka);
+    for (auto pr : _pravougaonici) {
+        painter->drawRect(pr);
+        painter->fillRect(pr, QBrush(QColor(0, 0, 255, 100)));
+    }
+    olovka.setColor(Qt::red);
+    painter->setPen(olovka);
+    for (const auto duz: iviceKonture) {
+        painter->drawLine(*duz);
+        qreal arrowSize = 20;
+        if (duz->length() > arrowSize) {
+            double angle = std::atan2(-duz->dy(), duz->dx());
+            QPointF arrowP1 = duz->p1() + QPointF(sin(angle + M_PI / 3) * arrowSize,
+                                                  cos(angle + M_PI / 3) * arrowSize);
+            QPointF arrowP2 = duz->p1() + QPointF(sin(angle + M_PI - M_PI / 3) * arrowSize,
+                                                  cos(angle + M_PI - M_PI / 3) * arrowSize);
+
+            QPolygonF arrowHead;
+            arrowHead.clear();
+            arrowHead << arrowP2 << duz->p1() << arrowP1 << duz->p1();
+            painter->drawPolygon(arrowHead);
+        }
     }
 }
 

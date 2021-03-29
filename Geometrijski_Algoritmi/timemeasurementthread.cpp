@@ -13,6 +13,7 @@
 #include "ga05_preseciduzi.h"
 
 #include "ga06_presekPravougaonika.h"
+#include "ga07_konturaPravougaonika.h"
 
 TimeMeasurementThread::TimeMeasurementThread(TipAlgoritma tipAlgoritma, int minValue, int step, int maxValue)
     : QThread(), _algorithmType(tipAlgoritma), _minValue(minValue), _step(step), _maxValue(maxValue)
@@ -59,6 +60,9 @@ void TimeMeasurementThread::run()
             break;
         case TipAlgoritma::PRESEK_PRAVOUGAONIKA:
             pAlgorithm = new PresekPravougaonika(nullptr, 0, false, "", i);
+            break;
+        case TipAlgoritma::KONTURA_PRAVOUGAONIKA:
+            pAlgorithm = new KonturaPravougaonika(nullptr, 0, false, "", i);
             break;
         default:
             break;

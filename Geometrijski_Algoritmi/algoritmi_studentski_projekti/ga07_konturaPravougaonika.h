@@ -116,6 +116,7 @@ public:
     void pokreniNaivniAlgoritam() final;
     void crtajNaivniAlgoritam(QPainter *painter) const final;
 private:
+    void _crtajAlgoritam(QPainter *painter) const;
     std::vector<QRectF> generisiNasumicnePravougaonike(int brojDuzi = BROJ_SLUCAJNIH_OBJEKATA) const;
     std::vector<QRectF> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
 
