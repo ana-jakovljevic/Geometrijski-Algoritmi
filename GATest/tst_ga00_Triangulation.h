@@ -18,10 +18,10 @@ TEST(ga07_triangulation, datotekaTest1){
     const auto &diag = tr.getNaiveDiagonals();
 
     /* Unapred poznate vrednosti prema datoteci */
-    EXPECT_EQ(diag.size(), 4);
-    EXPECT_EQ(poly.vsize(), 7);
-    EXPECT_EQ(poly.fsize(), 2);
-    EXPECT_EQ(poly.esize(), 14);
+    EXPECT_EQ(diag.size(), 4u);
+    EXPECT_EQ(poly.vsize(), 7u);
+    EXPECT_EQ(poly.fsize(), 2u);
+    EXPECT_EQ(poly.esize(), 14u);
 }
 
 TEST(ga07_triangulation, datotekaTest2){
@@ -31,10 +31,10 @@ TEST(ga07_triangulation, datotekaTest2){
     const auto &diag = tr.getNaiveDiagonals();
 
     /* Unapred poznate vrednosti prema datoteci */
-    EXPECT_EQ(diag.size(), 12);
-    EXPECT_EQ(poly.vsize(), 15);
-    EXPECT_EQ(poly.fsize(), 2);
-    EXPECT_EQ(poly.esize(), 30);
+    EXPECT_EQ(diag.size(), 12u);
+    EXPECT_EQ(poly.vsize(), 15u);
+    EXPECT_EQ(poly.fsize(), 2u);
+    EXPECT_EQ(poly.esize(), 30u);
 }
 
 TEST(ga07_triangulation, randomTest1){
@@ -55,7 +55,7 @@ TEST(ga07_triangulation, randomTest1){
     /* Odnosi velicina prema n */
     EXPECT_EQ(diag.size(), n-3);
     EXPECT_EQ(poly.vsize(), n);
-    EXPECT_EQ(poly.fsize(), 2);
+    EXPECT_EQ(poly.fsize(), 2u);
     EXPECT_EQ(poly.esize(), 2*n);
 }
 
@@ -77,7 +77,7 @@ TEST(ga07_triangulation, randomTest2){
     /* Odnosi velicina prema n */
     EXPECT_EQ(diag.size(), n-3);
     EXPECT_EQ(poly.vsize(), n);
-    EXPECT_EQ(poly.fsize(), 2);
+    EXPECT_EQ(poly.fsize(), 2u);
     EXPECT_EQ(poly.esize(), 2*n);
 }
 

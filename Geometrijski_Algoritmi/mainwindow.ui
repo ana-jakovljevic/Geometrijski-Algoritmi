@@ -747,6 +747,31 @@
              <string>Kontura pravougaonika</string>
             </property>
            </item>
+           <item>
+            <property name="text">
+             <string>Klasterovanje</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Detekcija kolizija</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Konveksni omotac preseka duzi</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>CoinsOnShelf</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Najveci prazan krug</string>
+            </property>
+           </item>
           </widget>
          </item>
         </layout>

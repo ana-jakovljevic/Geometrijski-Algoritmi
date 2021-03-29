@@ -16,7 +16,6 @@ TEST(ga02_konveksniomotac, firstRandomTest)
     EXPECT_EQ(ch1.getKonveksniOmotac().size() - 1, ch1.getNaivniOmotac().size());
 }
 
-
 TEST(ga02_konveksniomotac, secondRandomTest)
 {
     KonveksniOmotac ch1(nullptr, 0, false, "", 100);

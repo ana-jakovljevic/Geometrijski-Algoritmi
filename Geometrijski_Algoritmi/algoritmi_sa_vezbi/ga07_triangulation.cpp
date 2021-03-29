@@ -368,7 +368,7 @@ void Triangulation::triangulacija(Face *f)
                                                                 poslednji->origin()->coordinates()))) {
                     vracam_vrh = false;
                     _allDiagonals.emplace_back(e->origin(), poslednji->origin());
-                    AlgoritamBaza_updateCanvasAndBlock();
+                    AlgoritamBaza_updateCanvasAndBlock()
                     _stekTriangulacije.pop_back();
                 } else {
                     break;
@@ -386,7 +386,7 @@ void Triangulation::triangulacija(Face *f)
         } else {
 
             while(!_stekTriangulacije.empty()) {
-                auto poslednji = _stekTriangulacije.back();
+                poslednji = _stekTriangulacije.back();
 
                 if (_stekTriangulacije.size() != 1){
 
@@ -408,7 +408,7 @@ void Triangulation::triangulacija(Face *f)
 
     for (auto it = _stekTriangulacije.begin()+1; it != _stekTriangulacije.end()-1; it++) {
         _allDiagonals.emplace_back((*it)->origin(), curr_node->origin());
-        AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock()
     }
 
     _stekTriangulacije.clear();
@@ -554,53 +554,17 @@ std::vector<QPointF> Triangulation::ucitajPodatkeIzDatoteke(std::string imeDatot
 
 std::vector<QPointF> Triangulation::generisiNasumicneTacke(int brojTacaka) const
 {
-    static int constexpr DRAWING_BORDER = 10;
-
-    srand(static_cast<unsigned>(time(nullptr)));
-    int xMax;
-    int yMax;
-
-    if (_pCrtanje)
-    {
-        xMax = _pCrtanje->width() - DRAWING_BORDER;
-        yMax = _pCrtanje->height() - DRAWING_BORDER;
-    }
-    else
-    {
-        xMax = CANVAS_WIDTH;
-        yMax = CANVAS_HEIGHT;
-    }
-
-    int xMin = DRAWING_BORDER;
-    int yMin = DRAWING_BORDER;
-
-    std::vector<QPointF> randomPoints;
-
-    int xDiff = xMax-xMin;
-    int yDiff = yMax-yMin;
-    for(int i=0; i < brojTacaka; i++)
-        randomPoints.emplace_back(xMin + rand()%xDiff, yMin + rand()%yDiff);
-
+    std::vector<QPoint> randomPointsInt = AlgoritamBaza::generisiNasumicneTacke(brojTacaka);
+    std::vector<QPointF> randomPoints{std::cbegin(randomPointsInt),
+                                      std::cend(randomPointsInt)};
     return randomPoints;
 }
 
 std::vector<QPointF> Triangulation::ucitajNasumicneTacke(int brojTacaka) const
 {
-    std::vector<QPointF> tacke = generisiNasumicneTacke(brojTacaka);
-
-    QPointF maxTacka = tacke[0];
-
-    for (auto i = 1ul; i < tacke.size(); i++) {
-        if (tacke[i].x() > maxTacka.x() ||
-           (pomocneFunkcije::bliski(tacke[i].x(), maxTacka.x()) && tacke[i].y() < maxTacka.y()))
-            maxTacka = tacke[i];
-    }
-
-    std::sort(tacke.begin(), tacke.end(), [&](const auto& lhs, const auto& rhs) {
-        return pomocneFunkcije::konveksan(maxTacka, lhs, rhs);
-    });
-
-    return tacke;
+    std::vector<QPointF> randomPoints = generisiNasumicneTacke(brojTacaka);
+    pomocneFunkcije::sortirajTackeZaProstPoligon(randomPoints);
+    return randomPoints;
 }
 
 /**********************************************************************************/

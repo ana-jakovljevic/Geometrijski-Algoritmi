@@ -6,7 +6,7 @@ OblastCrtanja::OblastCrtanja(QWidget *parent)
     : QWidget(parent), _pAlgoritamBaza(nullptr), _obrisiSve(false)
 {
     QPalette pal = palette();
-    pal.setColor(QPalette::Background, Qt::white);
+    pal.setColor(QPalette::Window, Qt::white);
     setAutoFillBackground(true);
     setPalette(pal);
     setMouseTracking(true);

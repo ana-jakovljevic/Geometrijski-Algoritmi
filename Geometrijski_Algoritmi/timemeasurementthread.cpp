@@ -1,6 +1,3 @@
-#include "timemeasurementthread.h"
-
-#include "config.h"
 #include "mainwindow.h"
 #include "algoritambaza.h"
 
@@ -11,7 +8,6 @@
 #include "ga03_konveksniomotac.h"
 #include "ga04_konveksniomotac3d.h"
 #include "ga05_preseciduzi.h"
-
 #include "ga06_presekPravougaonika.h"
 #include "ga07_konturaPravougaonika.h"
 
@@ -23,7 +19,7 @@ TimeMeasurementThread::TimeMeasurementThread(TipAlgoritma tipAlgoritma, int minV
 void TimeMeasurementThread::run()
 {
     clock_t begin, end;
-    double optimalTime, naiveTime;
+    double optimalTime = 0, naiveTime = 0;
 
     AlgoritamBaza *pAlgorithm = nullptr;
 
@@ -63,6 +59,20 @@ void TimeMeasurementThread::run()
             break;
         case TipAlgoritma::KONTURA_PRAVOUGAONIKA:
             pAlgorithm = new KonturaPravougaonika(nullptr, 0, false, "", i);
+        case TipAlgoritma::KLASTEROVANJE:
+            pAlgorithm = new Klasterovanje(nullptr, 0, false, "", i);
+            break;
+        case TipAlgoritma::COLLISION_DETECTION:
+            pAlgorithm = new CollisionDetection(nullptr, 0, false, "", i);
+            break;
+        case TipAlgoritma::CONVEX_HULL_LINE_INTERSECTIONS:
+            pAlgorithm = new ConvexHullLineIntersections(nullptr, 0, false, "", i);
+            break;
+        case TipAlgoritma::COINS_ON_SHELF:
+            pAlgorithm = new CoinsOnShelf(nullptr, 0, false, "", i);
+            break;
+        case TipAlgoritma::NAJVECI_PRAZAN_KRUG:
+            pAlgorithm = new lec(nullptr, 0, false, "", i);
             break;
         default:
             break;
@@ -80,10 +90,12 @@ void TimeMeasurementThread::run()
 #endif
 
 #ifndef SKIP_NAIVE
+            if (_algorithmType != TipAlgoritma::COINS_ON_SHELF) {
             begin = clock();
             pAlgorithm->pokreniNaivniAlgoritam();
             end = clock();
             naiveTime = double(end - begin) / CLOCKS_PER_SEC;
+            }
 #else
             naiveTime = 0;
 #endif

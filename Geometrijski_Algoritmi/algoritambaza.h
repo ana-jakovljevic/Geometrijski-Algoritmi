@@ -33,6 +33,8 @@
 #include "animacijanit.h"
 #include "config.h"
 
+#include "pomocnefunkcije.h"
+
 #define AlgoritamBaza_updateCanvasAndBlock() \
     if (updateCanvasAndBlock()) \
     { \
