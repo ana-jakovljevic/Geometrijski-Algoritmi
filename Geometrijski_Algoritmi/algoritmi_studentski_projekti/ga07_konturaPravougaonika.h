@@ -5,6 +5,8 @@
 #include <QLineF>
 #include <QRect>
 #include <set>
+#include <stack>
+#include <math.h>
 
 #include "algoritambaza.h"
 #include "pomocnefunkcije.h"
@@ -28,9 +30,10 @@ struct vertikalnaIvica {
 };
 
 struct tacka1d {
-    tacka1d(const _tip &_t, float _vr) : tip(_t), vr(_vr) {}
+    tacka1d(const _tip &_t, float _vr) : tip(_t), vr(_vr), normalizovanY(-1) {}
     const _tip tip;
     float vr;
+    int normalizovanY;
 };
 
 struct poredjenje1d {
@@ -59,6 +62,46 @@ struct poredjenjeTacakaPoX {
     }
 };
 
+class Tacka : public QPointF {
+    using QPointF::QPointF;
+public:
+    int normalizovanY = 0;
+};
+class st_Ivica {
+public:
+    Tacka* pt1;
+    Tacka* pt2;
+    _tip tip;
+
+    st_Ivica(Tacka* _pt1, Tacka* _pt2, _tip __tip) : pt1(_pt1), pt2(_pt2), tip(__tip) {};
+};
+
+enum class SegStatus {
+    EMPTY,
+    PARTIAL,
+    FULL,
+};
+
+struct Segment {
+    float b;
+    float e;
+    int c = 0;
+    SegStatus status = SegStatus::EMPTY;
+    Segment* lson = 0;
+    Segment* rson = 0;
+
+    Segment(float _b, float _e) {
+//         if (b > e) throw new Error(`B > E`);
+        b = _b;
+        e = _e;
+        c = 0;
+        if (e - b > 1) {
+            lson = new Segment(b, floor((b + e) / 2));
+            rson = new Segment(floor((b + e) / 2), e);
+        }
+    }
+};
+
 class KonturaPravougaonika : public AlgoritamBaza
 {
 public:
@@ -77,10 +120,17 @@ private:
     std::vector<QRectF> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
 
     // Naivni algoritam - faza 1
-    void pocetakPravougaonika(ivica* iv);
-    void krajPravougaonika(ivica* iv);
+    void bf_pocetakPravougaonika(ivica* iv);
+    void bf_krajPravougaonika(ivica* iv);
     void dodajVertikalnuIvicu(ivica* iv);
     void dodajHorizontalnuIvicu(QLineF* duz);
+
+    // Segmentno drvo - faza 1
+    void comp(Segment* v, bool inFull);
+    void updateStatus(Segment* v);
+    void lp_insert(float b, float e, Segment* v, bool inFull = false);
+    void lp_delete(float b, float e, Segment* v, bool inFull = false);
+    std::vector<Tacka*> normalizeEdgesForSegmentTree(std::vector<st_Ivica*> inEdges, std::vector<st_Ivica*> outEdges);
 
     void faza2();
 
@@ -89,10 +139,9 @@ private:
     double _brisucaPravaY;
 
     std::vector<QLineF*> iviceKonture;
-    std::multiset<ivica, poredjenjeIvicaPoY> _ivice;
     std::multiset<ivica*, poredjenjeIvicaPoX> ph1_vertikalneIvice;
-    // koristim multiset umesto set jer sa set samo prvi poziv dodajVertikalnuIvicu uspesno ubacuje element
-    std::multiset<tacka1d*, poredjenje1d> ph1_tackeUKonturi;
+    std::multiset<tacka1d*, poredjenje1d> bf_tackeUKonturi;
+    std::vector<float> st_stack;
 };
 
 #endif // GA07_KONTURA_H
