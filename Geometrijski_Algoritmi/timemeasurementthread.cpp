@@ -1,15 +1,4 @@
 #include "mainwindow.h"
-#include "algoritambaza.h"
-
-/* Ovde ukluciti zaglavlja novih algoritama. */
-#include "ga00_demoiscrtavanja.h"
-#include "ga01_brisucaprava.h"
-#include "ga02_3discrtavanje.h"
-#include "ga03_konveksniomotac.h"
-#include "ga04_konveksniomotac3d.h"
-#include "ga05_preseciduzi.h"
-#include "ga06_presekPravougaonika.h"
-#include "ga07_konturaPravougaonika.h"
 
 TimeMeasurementThread::TimeMeasurementThread(TipAlgoritma tipAlgoritma, int minValue, int step, int maxValue)
     : QThread(), _algorithmType(tipAlgoritma), _minValue(minValue), _step(step), _maxValue(maxValue)

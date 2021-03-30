@@ -115,6 +115,8 @@ public:
     void crtajAlgoritam(QPainter *painter) const final;
     void pokreniNaivniAlgoritam() final;
     void crtajNaivniAlgoritam(QPainter *painter) const final;
+
+    std::vector<QLineF*> iviceKonture;
 private:
     void _crtajAlgoritam(QPainter *painter) const;
     std::vector<QRectF> generisiNasumicnePravougaonike(int brojDuzi = BROJ_SLUCAJNIH_OBJEKATA) const;
@@ -139,7 +141,6 @@ private:
     std::vector<QPointF*> _kontura;
     double _brisucaPravaY;
 
-    std::vector<QLineF*> iviceKonture;
     std::multiset<ivica*, poredjenjeIvicaPoX> ph1_vertikalneIvice;
     std::multiset<tacka1d*, poredjenje1d> bf_tackeUKonturi;
     std::vector<float> st_stack;

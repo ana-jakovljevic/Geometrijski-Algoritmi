@@ -22,11 +22,13 @@ HEADERS += \
     tst_ga00_DCEL.h \
     tst_ga00_Triangulation.h \
     tst_ga06_PresekPravougaonika.h \
+    tst_ga07_KonturaPragougaonika.h \
     tst_ga09_klasterovanje.h \
     tst_ga14_CoinsOnShelf.h \
     tst_ga15_CollisionDetection.h \
     tst_ga17_convexhulllineintersections.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.h \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga07_konturaPravougaonika.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga09_klasterovanje.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga14_coinsOnShelf.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga15_collisiondetection.h \
@@ -69,6 +71,7 @@ INCLUDEPATH += \
 
 SOURCES += main.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.cpp \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga07_konturaPravougaonika.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga09_klasterovanje.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga14_coinsOnShelf.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga15_collisiondetection.cpp \

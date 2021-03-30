@@ -116,6 +116,8 @@ void KonturaPravougaonika::bf_krajPravougaonika(ivica* iv) {
 }
 
 void KonturaPravougaonika::pokreniNaivniAlgoritam() {
+    iviceKonture.clear();
+    ph1_vertikalneIvice.clear();
     std::vector<ivica*> ivicePragougaonika = {};
     for (QRectF &pravou : _pravougaonici) {
         QLineF *leva = new QLineF(pravou.left(), pravou.top(), pravou.left(), pravou.bottom());
@@ -243,6 +245,8 @@ std::vector<Tacka*> KonturaPravougaonika::normalizeEdgesForSegmentTree(std::vect
 }
 
 void KonturaPravougaonika::pokreniAlgoritam() {
+    iviceKonture.clear();
+    ph1_vertikalneIvice.clear();
     std::vector<st_Ivica*> inEdges = {};
     std::vector<st_Ivica*> outEdges = {};
     for (auto r : _pravougaonici) {
@@ -251,7 +255,6 @@ void KonturaPravougaonika::pokreniAlgoritam() {
     }
     Segment* tree = new Segment(0, inEdges.size() * 2 - 1);
     auto sortedPoints = normalizeEdgesForSegmentTree(inEdges, outEdges);
-    // data.contourEdges = [];
     std::vector<st_Ivica*> edges = inEdges;
     edges.insert(edges.end(), outEdges.begin(), outEdges.end());
     std::sort(edges.begin(), edges.end(), [](st_Ivica* a, st_Ivica* b) {
@@ -285,7 +288,6 @@ void KonturaPravougaonika::pokreniAlgoritam() {
         st_stack.clear();
         AlgoritamBaza_updateCanvasAndBlock();
     };
-
     AlgoritamBaza_updateCanvasAndBlock();
     faza2();
     emit animacijaZavrsila();
@@ -312,7 +314,7 @@ void KonturaPravougaonika::dodajHorizontalnuIvicu(QLineF *duz) {
 // todo pretvori ph1_vertikalneIvice u parametar
 void KonturaPravougaonika::faza2() {
     std::vector<QLineF*> ph2_ivice = {};
-    std::cout << "faza 2 " << iviceKonture.size() << " " << ph1_vertikalneIvice.size() << std::endl;
+//    std::cout << "faza 2 " << iviceKonture.size() << " " << ph1_vertikalneIvice.size() << std::endl;
     for (auto iv: ph1_vertikalneIvice) {
 //        iviceKonture.push_back(iv->duz);
         ph2_ivice.push_back(iv->duz);
@@ -403,11 +405,11 @@ std::vector<QRectF> KonturaPravougaonika::generisiNasumicnePravougaonike(int bro
 }
 
 std::vector<QRectF> KonturaPravougaonika::ucitajPodatkeIzDatoteke(std::string imeDatoteke) const
-{
+{   
     std::ifstream inputFile(imeDatoteke);
     std::vector<QRectF> pravougaonici;
 
-    double xA, yA, xB, yB;
+    int xA, yA, xB, yB;
 
     while(inputFile >> xA >> yA >> xB >> yB)
     {
@@ -415,7 +417,7 @@ std::vector<QRectF> KonturaPravougaonika::ucitajPodatkeIzDatoteke(std::string im
         auto x2 = xA < xB ? xB : xA;
         auto y1 = yA < yB ? yA : yB;
         auto y2 = yA < yB ? yB : yA;
-        pravougaonici.emplace_back(x1, y1, x2, y2);
+        pravougaonici.emplace_back(x1, y1, x2 - x1, y2 - y1);
     }
 
     return pravougaonici;
