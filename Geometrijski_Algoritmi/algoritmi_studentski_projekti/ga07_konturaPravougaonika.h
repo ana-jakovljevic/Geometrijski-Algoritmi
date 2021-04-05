@@ -144,6 +144,8 @@ private:
     std::multiset<ivica*, poredjenjeIvicaPoX> ph1_vertikalneIvice;
     std::multiset<tacka1d*, poredjenje1d> bf_tackeUKonturi;
     std::vector<float> st_stack;
+
+    float brisuca_prava_x = 0;
 };
 
 #endif // GA07_KONTURA_H

@@ -118,6 +118,7 @@ void KonturaPravougaonika::bf_krajPravougaonika(ivica* iv) {
 void KonturaPravougaonika::pokreniNaivniAlgoritam() {
     iviceKonture.clear();
     ph1_vertikalneIvice.clear();
+    brisuca_prava_x = 0;
     std::vector<ivica*> ivicePragougaonika = {};
     for (QRectF &pravou : _pravougaonici) {
         QLineF *leva = new QLineF(pravou.left(), pravou.top(), pravou.left(), pravou.bottom());
@@ -130,6 +131,7 @@ void KonturaPravougaonika::pokreniNaivniAlgoritam() {
         return b->duz->x1() > a->duz->x1();
     });
     for (ivica* iv : ivicePragougaonika) {
+        brisuca_prava_x = iv->duz->x1();
         if (iv->tip == _tip::ULAZ) {
             bf_pocetakPravougaonika(iv);
         } else {
@@ -138,6 +140,7 @@ void KonturaPravougaonika::pokreniNaivniAlgoritam() {
         AlgoritamBaza_updateCanvasAndBlock();
     }
     AlgoritamBaza_updateCanvasAndBlock();
+    brisuca_prava_x = 3000;
     faza2();
     emit animacijaZavrsila();
 }
@@ -247,6 +250,7 @@ std::vector<Tacka*> KonturaPravougaonika::normalizeEdgesForSegmentTree(std::vect
 void KonturaPravougaonika::pokreniAlgoritam() {
     iviceKonture.clear();
     ph1_vertikalneIvice.clear();
+    brisuca_prava_x = 0;
     std::vector<st_Ivica*> inEdges = {};
     std::vector<st_Ivica*> outEdges = {};
     for (auto r : _pravougaonici) {
@@ -264,6 +268,7 @@ void KonturaPravougaonika::pokreniAlgoritam() {
         return a->pt1->x() < b->pt1->x();
     });
     for (auto edge : edges) {
+        brisuca_prava_x = edge->pt1->x();
         if (edge->tip == _tip::ULAZ) { // insert
             lp_insert(edge->pt1->normalizovanY, edge->pt2->normalizovanY, tree, false);
         } else { // remove
@@ -289,6 +294,7 @@ void KonturaPravougaonika::pokreniAlgoritam() {
         AlgoritamBaza_updateCanvasAndBlock();
     };
     AlgoritamBaza_updateCanvasAndBlock();
+    brisuca_prava_x = 3000;
     faza2();
     emit animacijaZavrsila();
 }
@@ -354,8 +360,11 @@ void KonturaPravougaonika::_crtajAlgoritam(QPainter *painter) const
     if (!painter) return;
 
     auto olovka = painter->pen();
-    olovka.setColor(Qt::black);
+    olovka.setColor(Qt::yellow);
     olovka.setWidth(3);
+    painter->setPen(olovka);
+    painter->drawLine(brisuca_prava_x, 0, brisuca_prava_x, _pCrtanje->height());
+    olovka.setColor(Qt::black);
     painter->setPen(olovka);
     for (auto pr : _pravougaonici) {
         painter->drawRect(pr);
@@ -363,7 +372,9 @@ void KonturaPravougaonika::_crtajAlgoritam(QPainter *painter) const
     }
     olovka.setColor(Qt::red);
     painter->setPen(olovka);
+    std::cout << std::endl;
     for (const auto duz: iviceKonture) {
+        std::cout << duz->x2() << " " << duz->y2() << " " << duz->x1() << " " << duz->y1() << std::endl;
         painter->drawLine(*duz);
         qreal arrowSize = 20;
         if (duz->length() > arrowSize) {
