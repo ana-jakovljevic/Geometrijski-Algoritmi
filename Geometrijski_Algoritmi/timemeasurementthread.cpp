@@ -48,6 +48,7 @@ void TimeMeasurementThread::run()
             break;
         case TipAlgoritma::KONTURA_PRAVOUGAONIKA:
             pAlgorithm = new KonturaPravougaonika(nullptr, 0, false, "", i);
+            break;
         case TipAlgoritma::KLASTEROVANJE:
             pAlgorithm = new Klasterovanje(nullptr, 0, false, "", i);
             break;
