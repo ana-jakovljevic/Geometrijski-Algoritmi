@@ -24,6 +24,7 @@ HEADERS += \
     tst_ga06_PresekPravougaonika.h \
     tst_ga07_KonturaPragougaonika.h \
     tst_ga09_klasterovanje.h \
+    tst_ga11_kernel.h \
     tst_ga14_CoinsOnShelf.h \
     tst_ga15_CollisionDetection.h \
     tst_ga17_convexhulllineintersections.h \

@@ -338,6 +338,10 @@ void MainWindow::napraviNoviAlgoritam()
         _pAlgoritamBaza = new lec(_pOblastCrtanja, _duzinaPauze, _naivni,
                                   _imeDatoteke, _brojSlucajnihObjekata);
         break;
+    case TipAlgoritma::KERNEL:
+        _pAlgoritamBaza = new Kernel(_pOblastCrtanja, _duzinaPauze, _naivni,
+                                     _imeDatoteke, _brojSlucajnihObjekata);
+        break;
     default: /* ako nije algoritam uopste */
         break;
     }

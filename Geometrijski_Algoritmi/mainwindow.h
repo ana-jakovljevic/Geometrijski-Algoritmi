@@ -21,6 +21,7 @@
 #include "ga06_presekPravougaonika.h"
 #include "ga07_konturaPravougaonika.h"
 #include "ga09_klasterovanje.h"
+#include "ga11_kernel.h"
 #include "ga14_coinsOnShelf.h"
 #include "ga15_collisiondetection.h"
 #include "ga17_convexhulllineintersections.h"
@@ -45,7 +46,8 @@ enum class TipAlgoritma {
     COLLISION_DETECTION,
     CONVEX_HULL_LINE_INTERSECTIONS,
     COINS_ON_SHELF,
-    NAJVECI_PRAZAN_KRUG
+    NAJVECI_PRAZAN_KRUG,
+    KERNEL
 };
 
 /* Enumeracija tabova */

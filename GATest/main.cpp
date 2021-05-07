@@ -7,12 +7,13 @@
 #include "tst_ga00_Triangulation.h"
 
 #include "tst_ga06_PresekPravougaonika.h"
-#include "tst_ga07_KonturaPragougaonika.h"
-#include "tst_ga09_klasterovanje.h"
-#include "tst_ga14_CoinsOnShelf.h"
-#include "tst_ga15_CollisionDetection.h"
-#include "tst_ga17_convexhulllineintersections.h"
-#include "tst_ga20_largest_empty_circle.h"
+//#include "tst_ga07_KonturaPragougaonika.h"
+//#include "tst_ga09_klasterovanje.h"
+#include "tst_ga11_kernel.h"
+//#include "tst_ga14_CoinsOnShelf.h"
+//#include "tst_ga15_CollisionDetection.h"
+//#include "tst_ga17_convexhulllineintersections.h"
+//#include "tst_ga20_largest_empty_circle.h"
 
 int main(int argc, char *argv[])
 {

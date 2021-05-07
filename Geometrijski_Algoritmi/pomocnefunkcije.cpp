@@ -166,3 +166,78 @@ qreal pomocneFunkcije::ugaoDuzi(const QLineF& line)
 {
     return line.angle();
 }
+
+
+
+
+std::pair<QPolygonF::const_iterator, QPolygonF::const_iterator> pomocneFunkcije::tackeOslonca(
+        const QPointF &refTacka, const QPolygonF &poligon)
+{
+    auto ugaoPosle = ugaoIzmedjuTriTacke(refTacka, *poligon.begin(), *(poligon.begin() + 1));
+    auto ugaoPre = ugaoIzmedjuTriTacke(refTacka, *poligon.begin(), *poligon.end());
+    PravaOsloncaSlucaj slucaj;
+    if (ugaoPosle > 0) {
+        if (ugaoPre > 0) slucaj = PravaOsloncaSlucaj::RASTE_OPADA;
+        else slucaj = PravaOsloncaSlucaj::RASTE_OPADA_RASTE;
+    } else {
+        if (ugaoPre < 0) slucaj = PravaOsloncaSlucaj::OPADA_RASTE;
+        else slucaj = PravaOsloncaSlucaj::OPADA_RASTE_OPADA;
+    }
+
+    auto first = poligon.begin();
+    auto second = poligon.end();
+    switch (slucaj) {
+        case PravaOsloncaSlucaj::RASTE_OPADA:
+            second = binarnaPretragaUglovaPoligona(refTacka, poligon, true);
+            break;
+        case PravaOsloncaSlucaj::RASTE_OPADA_RASTE:
+            break;
+        case PravaOsloncaSlucaj::OPADA_RASTE:
+            second = binarnaPretragaUglovaPoligona(refTacka, poligon, false);
+            break;
+        case PravaOsloncaSlucaj::OPADA_RASTE_OPADA:
+            break;
+    }
+    return std::make_pair(first, second);
+}
+
+
+qreal pomocneFunkcije::ugaoIzmedjuTriTacke(const QPointF &O, const QPointF &X, const QPointF &Y)
+{
+    return QLineF(X, O).angleTo(QLineF(Y, O));
+}
+
+#include <QDebug>
+QPolygonF::const_iterator pomocneFunkcije::binarnaPretragaUglovaPoligona(const QPointF &refTacka,
+                                                                   const QPolygonF &poligon, bool findMax)
+{
+    uint16_t l = 0, d = poligon.size()-1;
+    while (l < d) {
+        auto mid = (l + d) / 2;
+        auto midUgao = ugaoIzmedjuTriTacke(refTacka, poligon[mid], poligon[0]);
+        auto lUgao = ugaoIzmedjuTriTacke(refTacka, poligon[mid-1], poligon[0]);
+        auto dUgao = ugaoIzmedjuTriTacke(refTacka, poligon[mid+1], poligon[0]);
+        if (findMax) {
+            if (l + 1 == d && midUgao < dUgao) {
+               return poligon.begin() + d + 1;
+            }
+            if (lUgao < midUgao && midUgao > dUgao)
+                return (poligon.begin() + mid + 1);
+            else if (lUgao < midUgao && midUgao < dUgao)
+                l = mid;
+
+            else
+                d = mid;
+        } else {
+            if (lUgao > midUgao && midUgao < dUgao)
+                return (poligon.begin() + mid);
+            else if (lUgao < midUgao && midUgao < dUgao)
+                d = mid;
+
+            else
+                l = mid;
+        }
+    }
+
+    return poligon.begin();
+}

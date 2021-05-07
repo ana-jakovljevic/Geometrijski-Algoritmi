@@ -21,6 +21,7 @@ SOURCES += \
     algoritmi_sa_vezbi/ga06_dcel.cpp \
     algoritmi_sa_vezbi/ga06_dceldemo.cpp \
     algoritmi_sa_vezbi/ga07_triangulation.cpp \
+    algoritmi_studentski_projekti/ga11_kernel.cpp \
     animacijanit.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -57,6 +58,7 @@ HEADERS += \
     algoritmi_sa_vezbi/ga06_dceldemo.h \
     algoritmi_sa_vezbi/ga07_datastructures.h \
     algoritmi_sa_vezbi/ga07_triangulation.h \
+    algoritmi_studentski_projekti/ga11_kernel.h \
     animacijanit.h \
     config.h \
     mainwindow.h \
