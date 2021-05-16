@@ -169,13 +169,20 @@ qreal pomocneFunkcije::ugaoDuzi(const QLineF& line)
 
 
 
+#include <QDebug>
 
 std::pair<QPolygonF::const_iterator, QPolygonF::const_iterator> pomocneFunkcije::tackeOslonca(
         const QPointF &refTacka, const QPolygonF &poligon)
 {
-    auto ugaoPosle = ugaoIzmedjuTriTacke(refTacka, *poligon.begin(), *(poligon.begin() + 1));
-    auto ugaoPre = ugaoIzmedjuTriTacke(refTacka, *poligon.begin(), *poligon.end());
+    auto ugaoPosle = ugaoIzmedjuTriTacke(refTacka, poligon.at(1), poligon.front());
+    auto ugaoPre = ugaoIzmedjuTriTacke(refTacka, poligon.back(), poligon.front());
     PravaOsloncaSlucaj slucaj;
+//    for (const auto& tacka: poligon) {
+//        qInfo() << ugaoIzmedjuTriTacke(refTacka, tacka, poligon.front());
+//    }
+//    qInfo() << "ugaoPre " << ugaoPre << poligon.front() << poligon.at(1);
+//    qInfo() << "ugaoPosle " << ugaoPosle << poligon.front() << poligon.back();
+
     if (ugaoPosle > 0) {
         if (ugaoPre > 0) slucaj = PravaOsloncaSlucaj::RASTE_OPADA;
         else slucaj = PravaOsloncaSlucaj::RASTE_OPADA_RASTE;
@@ -186,58 +193,123 @@ std::pair<QPolygonF::const_iterator, QPolygonF::const_iterator> pomocneFunkcije:
 
     auto first = poligon.begin();
     auto second = poligon.end();
+    auto mid = first;
+    QPolygonF leviDeo, desniDeo;
     switch (slucaj) {
         case PravaOsloncaSlucaj::RASTE_OPADA:
-            second = binarnaPretragaUglovaPoligona(refTacka, poligon, true);
+//            qInfo() << "RASTE_OPADA";
+            second = binarnaPretragaUglovaPoligona(refTacka, poligon.begin(), poligon.end(), TipBinarnePretrage::MAX);
             break;
         case PravaOsloncaSlucaj::RASTE_OPADA_RASTE:
+            mid = binarnaPretragaUglovaPoligona(refTacka, poligon.begin(), poligon.end(), TipBinarnePretrage::NULA);
+//            qInfo() << "RASTE_OPADA_RASTE " << std::distance(first, mid);
+            first = binarnaPretragaUglovaPoligona(refTacka, poligon.begin(), mid+1, TipBinarnePretrage::MAX);
+//            qInfo() << "leviDeo: " << leviDeo << "---" <<  *first;
+            std::copy(mid + 1, poligon.end(), std::back_inserter(desniDeo));
+            second = binarnaPretragaUglovaPoligona(refTacka, mid+1, poligon.end(), TipBinarnePretrage::MIN);
+//            qInfo() << "desniDeo: " << desniDeo << "---" << *second;
             break;
         case PravaOsloncaSlucaj::OPADA_RASTE:
-            second = binarnaPretragaUglovaPoligona(refTacka, poligon, false);
+//            qInfo() << "OPADA_RASTE";
+            second = binarnaPretragaUglovaPoligona(refTacka, poligon.begin(), poligon.end(), TipBinarnePretrage::MIN);
             break;
         case PravaOsloncaSlucaj::OPADA_RASTE_OPADA:
+//            qInfo() << "OPADA_RASTE_OPADA";
+            mid = binarnaPretragaUglovaPoligona(refTacka, poligon.begin(), poligon.end(), TipBinarnePretrage::NULA);
+//            qInfo() << "mid: " << *(mid-1);
+            std::copy(poligon.begin(), mid, std::back_inserter(leviDeo));
+            first = binarnaPretragaUglovaPoligona(refTacka, poligon.begin(), mid, TipBinarnePretrage::MIN);
+            std::copy(mid, poligon.end(), std::back_inserter(desniDeo));
+            second = binarnaPretragaUglovaPoligona(refTacka, mid, poligon.end(), TipBinarnePretrage::MAX);
             break;
     }
+//    qInfo() << "results:" << *first << *second;
     return std::make_pair(first, second);
 }
 
-
+#include <QDebug>
+#include <iostream>
 qreal pomocneFunkcije::ugaoIzmedjuTriTacke(const QPointF &O, const QPointF &X, const QPointF &Y)
 {
-    return QLineF(X, O).angleTo(QLineF(Y, O));
+    auto angle = QLineF(X, O).angleTo(QLineF(Y, O));
+    return angle < 180 ? angle : angle - 360;
 }
 
-#include <QDebug>
 QPolygonF::const_iterator pomocneFunkcije::binarnaPretragaUglovaPoligona(const QPointF &refTacka,
-                                                                   const QPolygonF &poligon, bool findMax)
+    const QPolygonF::const_iterator first,
+    const QPolygonF::const_iterator last,
+    const TipBinarnePretrage tip)
 {
-    uint16_t l = 0, d = poligon.size()-1;
+    auto startUgao = ugaoIzmedjuTriTacke(refTacka, *(first+1), *first);
+    uint16_t l = 0, d = std::distance(first, last) - 1;
+//    if (tip == TipBinarnePretrage::MAX) {
+//        qInfo() << "Points: ";
+//        auto tmp = first;
+//        while(tmp != last) {
+//            qInfo() << *tmp;
+//            tmp++;
+//    }
+//    }
     while (l < d) {
         auto mid = (l + d) / 2;
-        auto midUgao = ugaoIzmedjuTriTacke(refTacka, poligon[mid], poligon[0]);
-        auto lUgao = ugaoIzmedjuTriTacke(refTacka, poligon[mid-1], poligon[0]);
-        auto dUgao = ugaoIzmedjuTriTacke(refTacka, poligon[mid+1], poligon[0]);
-        if (findMax) {
+        auto midUgao = ugaoIzmedjuTriTacke(refTacka, *(first + mid), *first);
+        auto lUgao = ugaoIzmedjuTriTacke(refTacka, *(first + mid - 1), *first);
+        auto dUgao = ugaoIzmedjuTriTacke(refTacka, *(first + mid + 1), *first);
+        if (tip == TipBinarnePretrage::MAX) {
+//            qInfo() << "l: " << l << " mid: " << mid << " d: " << d;
+
+//            qInfo() << "lUgao: " << lUgao << " midUgao: " << midUgao << " dUgao: " << dUgao;
+//            qInfo() << "-------------------------------";
+
             if (l + 1 == d && midUgao < dUgao) {
-               return poligon.begin() + d + 1;
+//               qInfo() << "poligon.begin()" << *(first);
+//               qInfo() << "poligon.begin() + d" << *(first + d);
+//               qInfo() << "poligon.end()" << *(last);
+               return first + d;
             }
             if (lUgao < midUgao && midUgao > dUgao)
-                return (poligon.begin() + mid + 1);
+                return (first + mid+1);
             else if (lUgao < midUgao && midUgao < dUgao)
                 l = mid;
-
             else
                 d = mid;
-        } else {
+        } else if (tip == TipBinarnePretrage::MIN){
+//            qInfo() << "l: " << l << " mid: " << mid << " d: " << d;
+
+//            qInfo() << "lUgao: " << lUgao << " midUgao: " << midUgao << " dUgao: " << dUgao;
+//            qInfo() << "-------------------------------";
+            if (l + 1 == d && midUgao > dUgao) {
+               return first + d;
+            }
             if (lUgao > midUgao && midUgao < dUgao)
-                return (poligon.begin() + mid);
+                return first + mid;
             else if (lUgao < midUgao && midUgao < dUgao)
                 d = mid;
-
             else
                 l = mid;
+        } else { //TipBinarnePretrage::NULA
+//            qInfo() << "l: " << l << " mid: " << mid << " d: " << d;
+
+//            qInfo() << "lUgao: " << lUgao << " midUgao: " << midUgao << " dUgao: " << dUgao;
+//            qInfo() << "-------------------------------";
+
+            if (midUgao / dUgao < 0) {
+                   if (dUgao > 0) return first + d;
+                   else return first + mid;
+            }
+
+            else if (lUgao / midUgao < 0) {
+                if (lUgao > 0) return first + l;
+                else return first + mid;
+            }
+            if (midUgao > 0) {
+                startUgao > 0 ? l = mid : d = mid;
+            } else {
+                startUgao < 0 ? l = mid : d = mid;
+            }
         }
     }
 
-    return poligon.begin();
+    return first;
 }
+

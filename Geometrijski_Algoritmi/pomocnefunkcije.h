@@ -44,7 +44,7 @@ double povrsinaTrouglaF(const QPointF& A, const QPointF& B, const QPointF& C);
  * @param O
  * @param X
  * @param Y
- * @return
+ * @return [-180, 180] opseg uglova
  */
 qreal inline ugaoIzmedjuTriTacke(const QPointF& O, const QPointF& X, const QPointF& Y);
 
@@ -54,6 +54,7 @@ enum class PravaOsloncaSlucaj {
     RASTE_OPADA_RASTE,
     OPADA_RASTE_OPADA
 };
+
 /**
  * @brief tackeOslonca Funkcija u vremenu O(log n) vraca presecne tacke pravih oslonca sa poligonom
  * @see https://en.wikipedia.org/wiki/Supporting_line
@@ -64,6 +65,14 @@ enum class PravaOsloncaSlucaj {
  */
 std::pair<QPolygonF::const_iterator, QPolygonF::const_iterator> tackeOslonca(const QPointF& refTacka, const QPolygonF& poligon);
 
+
+
+enum class TipBinarnePretrage {
+    MAX,
+    MIN,
+    NULA
+};
+
 /**
  * @brief binarnaPretragaUglovaPoligona Pomocna funkcija za pronalazak tacke oslonca
  *          koja nalazi peak niza uglova binarnom pretragom
@@ -73,7 +82,10 @@ std::pair<QPolygonF::const_iterator, QPolygonF::const_iterator> tackeOslonca(con
  * @param findMax
  * @return
  */
-QPolygonF::const_iterator binarnaPretragaUglovaPoligona(const QPointF& refTacka, const QPolygonF& poligon, bool findMax);
+QPolygonF::const_iterator binarnaPretragaUglovaPoligona(const QPointF& refTacka,
+                                                        const QPolygonF::const_iterator first,
+                                                        const QPolygonF::const_iterator last,
+                                                        const TipBinarnePretrage tip);
 
 }
 
