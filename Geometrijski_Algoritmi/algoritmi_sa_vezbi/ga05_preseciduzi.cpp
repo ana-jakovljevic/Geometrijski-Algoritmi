@@ -284,7 +284,7 @@ std::vector<QLineF> PreseciDuzi::ucitajPodatkeIzDatoteke(std::string imeDatoteke
 
     while(inputFile >> x1 >> y1 >> x2 >> y2)
     {
-        if (y1 < y2 || (fabs(y1-y2) < EPS && x2 < x1)) {
+        if (y1 < y2 || (pomocneFunkcije::bliski(y1, y2) && x2 < x1)) {
             auto tmp_y = y1;
             auto tmp_x = x1;
             y1 = y2;

@@ -7,8 +7,7 @@ DCELDemo::DCELDemo(QWidget *pCrtanje,
                    int) /* brojTacaka, odnosno nasumicno ne koristimo u ovom primeru */
     :AlgoritamBaza(pCrtanje, pauzaKoraka, naivni),
      _polygon(imeDatoteke, pCrtanje->height(), pCrtanje->width())
-{
-}
+{}
 
 void DCELDemo::pokreniAlgoritam() {
     emit animacijaZavrsila();
@@ -18,7 +17,7 @@ void DCELDemo::crtajAlgoritam(QPainter *painter) const {
     if (!painter) return;
 
     QPen pen = painter->pen();
-    for(auto i=0ul; i<_polygon.edges().size(); i++)
+    for(auto i=0ul; i<_polygon.esize(); i++)
     {
         /* Crta se poligon */
         pen.setColor(Qt::yellow);
@@ -28,7 +27,6 @@ void DCELDemo::crtajAlgoritam(QPainter *painter) const {
 
         /* Crta se poligon "u suprotnom smeru", koriscenjem twin. Da bi se video efekat
          * na crtezu, koordinate su za malo pomerene u odnosu na originalnu tacku. */
-
         pen.setColor(Qt::red);
         painter->setPen(pen);
         painter->drawLine(QPointF(_polygon.edge(i)->twin()->origin()->x() + 5,
@@ -57,7 +55,6 @@ void DCELDemo::crtajAlgoritam(QPainter *painter) const {
        /* Ponistavanje transformacija */
        painter->restore();
     }
-
 }
 
 void DCELDemo::pokreniNaivniAlgoritam() {

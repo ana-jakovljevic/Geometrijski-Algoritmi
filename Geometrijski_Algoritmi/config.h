@@ -24,4 +24,6 @@
 #define EPS                      (1e-6)
 #define EPSf                     (1e-6f)
 
+#define DBL_INFINITY             (std::numeric_limits<double>::infinity())
+
 #endif // CONFIG_H

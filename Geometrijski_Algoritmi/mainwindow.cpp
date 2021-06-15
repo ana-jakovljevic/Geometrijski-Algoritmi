@@ -208,7 +208,7 @@ void MainWindow::on_tipAlgoritma_currentIndexChanged(int index)
             ui->merenjeButton->setEnabled(false);
 
         /* DCEL i naredni nemaju naivne algoritme */
-        [[clang::fallthrough]];
+        [[fallthrough]];
         case TipAlgoritma::DEMO_ISCRTAVANJA:
         case TipAlgoritma::BRISUCA_PRAVA:
         case TipAlgoritma::_3D_ISCRTAVANJE:
@@ -313,6 +313,30 @@ void MainWindow::napraviNoviAlgoritam()
     case TipAlgoritma::PRESEK_PRAVOUGAONIKA:
         _pAlgoritamBaza = new PresekPravougaonika(_pOblastCrtanja, _duzinaPauze, _naivni,
                                                   _imeDatoteke, _brojSlucajnihObjekata);
+        break;
+    case TipAlgoritma::KONTURA_PRAVOUGAONIKA:
+        _pAlgoritamBaza = new KonturaPravougaonika(_pOblastCrtanja, _duzinaPauze, _naivni,
+                                                  _imeDatoteke, _brojSlucajnihObjekata);
+        break;
+    case TipAlgoritma::KLASTEROVANJE:
+        _pAlgoritamBaza = new Klasterovanje(_pOblastCrtanja, _duzinaPauze, _naivni,
+                                            _imeDatoteke, _brojSlucajnihObjekata);
+        break;
+    case TipAlgoritma::COLLISION_DETECTION:
+        _pAlgoritamBaza = new CollisionDetection(_pOblastCrtanja, _duzinaPauze, _naivni,
+                                                  _imeDatoteke, _brojSlucajnihObjekata);
+        break;
+    case TipAlgoritma::CONVEX_HULL_LINE_INTERSECTIONS:
+        _pAlgoritamBaza = new ConvexHullLineIntersections(_pOblastCrtanja, _duzinaPauze, _naivni,
+                                                          _imeDatoteke, _brojSlucajnihObjekata);
+        break;
+    case TipAlgoritma::COINS_ON_SHELF:
+        _pAlgoritamBaza = new CoinsOnShelf(_pOblastCrtanja, _duzinaPauze, _naivni,
+                                           _imeDatoteke, _brojSlucajnihObjekata);
+        break;
+    case TipAlgoritma::NAJVECI_PRAZAN_KRUG:
+        _pAlgoritamBaza = new lec(_pOblastCrtanja, _duzinaPauze, _naivni,
+                                  _imeDatoteke, _brojSlucajnihObjekata);
         break;
     default: /* ako nije algoritam uopste */
         break;

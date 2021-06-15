@@ -2,6 +2,16 @@
 
 #include <QtGlobal>
 
+bool pomocneFunkcije::bliski(float a, float b)
+{
+    return fabsf(a - b) < EPSf;
+}
+
+bool pomocneFunkcije::bliski(double a, double b)
+{
+    return fabs(a - b) < EPS;
+}
+
 int pomocneFunkcije::povrsinaTrougla(const QPoint& A, const QPoint& B, const QPoint& C)
 {
     /* (Dvostruka) Povrsina trougla.
@@ -28,12 +38,12 @@ bool pomocneFunkcije::kolinearne3D(const QVector3D& a, const QVector3D& b, const
      * |ax-bx  ay-by  az-bz| = (0, 0, 0)
      * |ax-cx  ay-cy  az-cz|
      */
-    return (fabsf((c.z() - a.z()) * (b.y() - a.y()) -
-              (b.z() - a.z()) * (c.y() - a.y())) < EPSf) &&
-           (fabsf((b.z() - a.z()) * (c.x() - a.x()) -
-              (b.x() - a.x()) * (c.z() - a.z())) < EPSf) &&
-           (fabsf((b.x() - a.x()) * (c.y() - a.y()) -
-              (b.y() - a.y()) * (c.x() - a.x())) < EPSf);
+    return bliski((c.z() - a.z()) * (b.y() - a.y()),
+                  (b.z() - a.z()) * (c.y() - a.y())) &&
+           bliski((b.z() - a.z()) * (c.x() - a.x()),
+                  (b.x() - a.x()) * (c.z() - a.z())) &&
+           bliski((b.x() - a.x()) * (c.y() - a.y()),
+                  (b.y() - a.y()) * (c.x() - a.x()));
 }
 
 
@@ -70,20 +80,38 @@ bool pomocneFunkcije::presekDuzi(const QLineF& l1, const QLineF& l2, QPointF& pr
 #endif
 }
 
+bool pomocneFunkcije::paralelneDuzi(const QLineF &l1, const QLineF &l2)
+{
+    QPointF presek;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    return l1.intersects(l2, &presek) == QLineF::NoIntersection;
+#else
+    return l1.intersect(l2, &presek) == QLineF::NoIntersection;
+#endif
+}
+
 double pomocneFunkcije::distanceKvadratF(const QPointF& A, const QPointF& B)
 {
     return (A.x() - B.x())*(A.x() - B.x()) + (A.y() - B.y())*(A.y() - B.y());
 }
 
+double pomocneFunkcije::povrsinaTrouglaF(const QPointF& A, const QPointF& B, const QPointF& C)
+{
+    /* (Dvostruka) Povrsina trougla.
+     * 2P(Trougla) = |ax ay 1|
+     *               |bx by 1|
+     *               |cx cy 1|
+     */
+    return (B.x() - A.x())*(C.y() - A.y()) - (C.x() - A.x())*(B.y() - A.y());
+}
+
 bool pomocneFunkcije::ispod(const QPointF &A, const QPointF &B)
 {
-    if(A.y() < B.y())
+    if (A.y() < B.y())
         return true;
-    else if(fabs(A.y() - B.y()) < EPS)
-    {
-       if(A.x() > B.x()) return true;
-    }
-    return false;
+    else if (bliski(A.y(), B.y()))
+        return A.x() > B.x();
+    else return false;
 }
 
 bool pomocneFunkcije::konveksan(const QPointF &A, const QPointF &B, const QPointF &C)
@@ -93,4 +121,48 @@ bool pomocneFunkcije::konveksan(const QPointF &A, const QPointF &B, const QPoint
      return (P > 0) ||
             (fabs(P) < EPS && pomocneFunkcije::distanceKvadratF(A, B)
                             < pomocneFunkcije::distanceKvadratF(A, C));
+}
+
+void pomocneFunkcije::sortirajTackeZaProstPoligon(std::vector<QPoint> &tacke)
+{
+    /*
+     *  Sortiramo tacke tako da kada se obilaze redom predstavljaju
+     *  temena PROSTOG poligona u smeru suprotnom od kazaljke na satu.
+     */
+    QPoint maxTacka = tacke[0];
+
+    for (auto i = 1ul; i < tacke.size(); i++) {
+        if (tacke[i].x() > maxTacka.x() ||
+           (tacke[i].x() == maxTacka.x() && tacke[i].y() < maxTacka.y()))
+            maxTacka = tacke[i];
+    }
+
+    std::sort(tacke.begin(), tacke.end(), [&](const auto& lhs, const auto& rhs) {
+        return pomocneFunkcije::konveksan(maxTacka, lhs, rhs);
+    });
+}
+
+
+void pomocneFunkcije::sortirajTackeZaProstPoligon(std::vector<QPointF> &tacke)
+{
+    /*
+     *  Sortiramo tacke tako da kada se obilaze redom predstavljaju
+     *  temena PROSTOG poligona u smeru suprotnom od kazaljke na satu.
+     */
+    QPointF maxTacka = tacke[0];
+
+    for (auto i = 1ul; i < tacke.size(); i++) {
+        if (tacke[i].x() > maxTacka.x() ||
+           (pomocneFunkcije::bliski(tacke[i].x(), maxTacka.x()) && tacke[i].y() < maxTacka.y()))
+            maxTacka = tacke[i];
+    }
+
+    std::sort(tacke.begin(), tacke.end(), [&](const auto& lhs, const auto& rhs) {
+        return pomocneFunkcije::konveksan(maxTacka, lhs, rhs);
+    });
+}
+
+qreal pomocneFunkcije::ugaoDuzi(const QLineF& line)
+{
+    return line.angle();
 }

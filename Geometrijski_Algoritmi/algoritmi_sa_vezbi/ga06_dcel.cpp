@@ -17,8 +17,8 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
         exit(EXIT_FAILURE);
     }
 
-    unsigned vertexNum, edgeNum, fieldNum;
-    in >> vertexNum >> fieldNum >> edgeNum;
+    unsigned vertexNum, edgeNum, faceNum;
+    in >> vertexNum >> faceNum >> edgeNum;
 
     /* citamo teme po teme iz fajla
      * i pamtimo ga u nizu temena */
@@ -36,8 +36,8 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
     /* za svaki poligon (polje)
      * za svako teme tog poligona napravimo polustranicu sa tim temenom kao pocetkom
      * zatim prodjemo kroz napravljene polustranice i popunimo prethodnu i sledecu */
-    for(auto i=0ul; i<fieldNum; i++) {
-        Field* f = new Field();
+    for(auto i=0ul; i<faceNum; i++) {
+        auto f = new Face();
         unsigned broj_temena;
         in >> broj_temena;
         std::vector<HalfEdge*> edges;
@@ -55,14 +55,14 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
             edges[j]->setIncidentFace(f);
         }
         f->setOuterComponent(edges[0]);
-        _fields.push_back(f);
+        _faces.push_back(f);
     }
 
     /* mapa u kojoj mozemo naci stranicu na osnovu temena na koji "pokazuje"
      * u njoj cemo pamtiti spoljasnje ivice i koristimo je da bi ih kasnije povezali */
     std::map<Vertex*, HalfEdge*> spoljasnje_ivice;
 
-    Field * spoljasnost = new Field();
+    auto spoljasnost = new Face();
 
     /* za svaku polustranicu AB pokusavamo da nadjemo polustranicu BA
      * ako takva ne postoji to znaci da smo naisli na spoljasnju polustranicu
@@ -96,7 +96,7 @@ DCEL::DCEL(std::string imeDatoteke, int h, int w)
     }
 
     spoljasnost->setInnerComponent(spoljasnje_ivice.begin()->second);
-    _fields.push_back(spoljasnost);
+    _faces.push_back(spoljasnost);
 }
 
 DCEL::DCEL(const std::vector<QPointF> &tacke)
@@ -111,8 +111,13 @@ DCEL::~DCEL() {
     for (auto e: _edges)
         delete e;
 
-    for (auto f: _fields)
+    for (auto f: _faces)
         delete f;
+}
+
+size_t DCEL::vsize() const
+{
+    return _vertices.size();
 }
 
 Vertex *DCEL::vertex(size_t i) const
@@ -120,9 +125,19 @@ Vertex *DCEL::vertex(size_t i) const
     return _vertices[i];
 }
 
+const QPointF &DCEL::coordinates(size_t i) const
+{
+    return _vertices[i]->coordinates();
+}
+
 const std::vector<Vertex *> &DCEL::vertices() const
 {
     return _vertices;
+}
+
+size_t DCEL::esize() const
+{
+    return _edges.size();
 }
 
 HalfEdge *DCEL::edge(size_t i) const
@@ -136,21 +151,26 @@ const std::vector<HalfEdge *> &DCEL::edges() const
     return _edges;
 }
 
-Field *DCEL::field(size_t i) const
+size_t DCEL::fsize() const
 {
-    return _fields[i];
+    return _faces.size();
+}
+
+Face *DCEL::face(size_t i) const
+{
+    return _faces[i];
 }
 
 
-const std::vector<Field *> &DCEL::fields() const
+const std::vector<Face *> &DCEL::faces() const
 {
-    return _fields;
+    return _faces;
 }
 
 
-void DCEL::setFields(const std::vector<Field *> &fileds)
+void DCEL::setFaces(const std::vector<Face *> &faces)
 {
-    _fields = fileds;
+    _faces = faces;
 }
 
 void DCEL::loadData(const std::vector<QPointF> &tacke)
@@ -158,11 +178,11 @@ void DCEL::loadData(const std::vector<QPointF> &tacke)
     /* tacke moraju biti zadate u smeru suprotnom kazaljci na satu
        inace ova metoda nije validna */
 
-    auto inner = new Field();
-    auto outer = new Field();
+    auto inner = new Face();
+    auto outer = new Face();
 
-    _fields.push_back(outer);
-    _fields.push_back(inner);
+    _faces.push_back(outer);
+    _faces.push_back(inner);
 
     for(auto &tacka : tacke) {
         auto newVertex = new Vertex(tacka);
@@ -224,9 +244,9 @@ void DCEL::insertEdge(HalfEdge *e)
     _edges.push_back(e);
 }
 
-void DCEL::insertFiled(Field *f)
+void DCEL::insertFace(Face *f)
 {
-    _fields.push_back(f);
+    _faces.push_back(f);
 }
 
 HalfEdge *DCEL::findEdge(Vertex *start, Vertex *end)
@@ -295,7 +315,7 @@ HalfEdge::HalfEdge()
     : _origin{nullptr}, _twin{nullptr}, _next{nullptr}, _prev{nullptr}, _incidentFace{nullptr}
 {}
 
-HalfEdge::HalfEdge(Vertex *origin, HalfEdge *twin, HalfEdge *next, HalfEdge *prev, Field *incidentFace)
+HalfEdge::HalfEdge(Vertex *origin, HalfEdge *twin, HalfEdge *next, HalfEdge *prev, Face *incidentFace)
     : _origin(origin), _twin(twin), _next(next), _prev(prev), _incidentFace(incidentFace)
 {}
 
@@ -339,55 +359,55 @@ void HalfEdge::setPrev(HalfEdge *prev)
     _prev = prev;
 }
 
-Field *HalfEdge::incidentFace() const
+Face *HalfEdge::incidentFace() const
 {
     return _incidentFace;
 }
 
-void HalfEdge::setIncidentFace(Field *incidentFace)
+void HalfEdge::setIncidentFace(Face *incidentFace)
 {
     _incidentFace = incidentFace;
 }
 
 /*
 ***********************************************************************
-*                             FIELD                                   *
+*                             FACE (FIELD)                            *
 ***********************************************************************
 */
-Field::Field()
+Face::Face()
     :_outerComponent{nullptr}
 {}
 
-Field::Field(HalfEdge *outerComponent, const std::vector<HalfEdge *> &innerComponent)
+Face::Face(HalfEdge *outerComponent, const std::vector<HalfEdge *> &innerComponent)
     :_outerComponent{outerComponent}, _innerComponents{innerComponent}
 {}
 
-HalfEdge *Field::outerComponent() const
+HalfEdge *Face::outerComponent() const
 {
     return _outerComponent;
 }
 
-void Field::setOuterComponent(HalfEdge *outerComponent)
+void Face::setOuterComponent(HalfEdge *outerComponent)
 {
     _outerComponent = outerComponent;
 }
 
-const std::vector<HalfEdge *> &Field::innerComponents() const
+const std::vector<HalfEdge *> &Face::innerComponents() const
 {
     return _innerComponents;
 }
 
-HalfEdge *Field::innerComponent() const
+HalfEdge *Face::innerComponent() const
 {
     return _innerComponents.empty() ? nullptr : _innerComponents.front();
 }
 
-void Field::setInnerComponents(const std::vector<HalfEdge *> &innerComponents)
+void Face::setInnerComponents(const std::vector<HalfEdge *> &innerComponents)
 {
     _innerComponents = innerComponents;
 }
 
-void Field::setInnerComponent(HalfEdge* innerComponent)
+void Face::setInnerComponent(HalfEdge* innerComponent)
 {
     _innerComponents.push_back(innerComponent);
 }

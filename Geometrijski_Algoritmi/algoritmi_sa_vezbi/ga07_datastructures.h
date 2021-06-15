@@ -13,8 +13,8 @@ struct EventQueueCompTriangulation
     bool operator()(const Vertex* levi, const Vertex* desni) const
     {
         return levi->coordinates().y() > desni->coordinates().y() ||
-              (fabs(levi->coordinates().y() - desni->coordinates().y()) < EPS &&
-               levi->coordinates().x() < desni->coordinates().y());
+              (pomocneFunkcije::bliski(levi->coordinates().y(), desni->coordinates().y()) &&
+                                       levi->coordinates().x() < desni->coordinates().y());
     }
 };
 
@@ -69,7 +69,7 @@ public:
         Vertex* v2 = line2->origin() != _vertex ? line2->origin() :
                                                   line2->twin()->origin();
 
-        return (!pomocneFunkcije::konveksan(_vertex->coordinates(), v1->coordinates(), v2->coordinates()));
+        return !pomocneFunkcije::konveksan(_vertex->coordinates(), v1->coordinates(), v2->coordinates());
     }
 };
 
@@ -84,8 +84,9 @@ struct EventQueueCompTriangulation2
 {
     bool operator()(const HalfEdge* lhs, const HalfEdge* rhs) const
     {
-        return (lhs->origin()->y() > rhs->origin()->y())||
-                (lhs->origin()->y() == rhs->origin()->y() && lhs->origin()->x()<rhs->origin()->x());
+        return lhs->origin()->y() > rhs->origin()->y() ||
+              (pomocneFunkcije::bliski(lhs->origin()->y(), rhs->origin()->y()) &&
+                                       lhs->origin()->x() < rhs->origin()->x());
 
     }
 };

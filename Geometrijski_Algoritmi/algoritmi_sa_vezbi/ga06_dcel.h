@@ -6,15 +6,14 @@
 
 class Vertex;
 class HalfEdge;
-class Field;
+class Face;
 
 ///
 /// \brief The DCEL class
 /// Dvostruko povezna lista (Doubly-Connected Edge List)
 /// Vise procitati u knjizi Computational Geometry
 ///
-class DCEL
-{
+class DCEL {
 public:
     DCEL(std::string imeDatoteke, int h, int w);
 
@@ -27,22 +26,26 @@ public:
     DCEL() = default;
     virtual ~DCEL();
 
+    size_t vsize() const;
     Vertex *vertex(size_t i) const;
+    const QPointF &coordinates(size_t i) const;
     const std::vector<Vertex *> &vertices() const;
+    size_t esize() const;
     HalfEdge *edge(size_t i) const;
     const std::vector<HalfEdge *> &edges() const;
-    Field *field(size_t i) const;
-    const std::vector<Field *> &fields() const;
-    void setFields(const std::vector<Field *> &fileds);
+    size_t fsize() const;
+    Face *face(size_t i) const;
+    const std::vector<Face *> &faces() const;
+    void setFaces(const std::vector<Face *> &faces);
     void loadData(const std::vector<QPointF> &tacke);
     void insertEdge(HalfEdge *e);
-    void insertFiled(Field *f);
+    void insertFace(Face *f);
     HalfEdge *findEdge(Vertex *start, Vertex *end);
 
 private:
     std::vector<Vertex *> _vertices;
     std::vector<HalfEdge *> _edges;
-    std::vector<Field *> _fields;
+    std::vector<Face *> _faces;
 };
 
 ///
@@ -57,7 +60,7 @@ enum class VertexType {START, SPLIT, END, MERGE, REGULAR};
 /// Teme poligona
 /// Sadrzi koordinate
 /// i jednu incident (proizvoljnu) HalfEdge
-class Vertex{
+class Vertex {
 public:
     Vertex();
     Vertex(float x, float y);
@@ -92,12 +95,12 @@ private:
 /// Origin je Vrtex koji je pocetak HalfEdge
 /// Vise o ovoj strukturi procitati u Computational Geoemtry
 ///
-class HalfEdge{
+class HalfEdge {
 public:
     HalfEdge();
     HalfEdge(Vertex *origin, HalfEdge *twin = nullptr,
              HalfEdge *next = nullptr, HalfEdge *prev = nullptr,
-             Field *incidentFace = nullptr);
+             Face *incidentFace = nullptr);
 
     Vertex *origin() const;
     void setOrigin(Vertex *origin);
@@ -107,19 +110,19 @@ public:
     void setNext(HalfEdge *next);
     HalfEdge *prev() const;
     void setPrev(HalfEdge *prev);
-    Field *incidentFace() const;
-    void setIncidentFace(Field *incidentFace);
+    Face *incidentFace() const;
+    void setIncidentFace(Face *incidentFace);
 
 private:
     Vertex *_origin;
     HalfEdge *_twin;
     HalfEdge *_next;
     HalfEdge *_prev;
-    Field *_incidentFace;
+    Face *_incidentFace;
 };
 
 ///
-/// \brief The Field class
+/// \brief The Face class
 /// Sadrzi dva niza HalfEdge
 /// Prvi je OuterComponent i pokazuje na one HalfEdge koje su na granici (boundary) posmatrane stranice
 /// Za one stranice koje nemaju granicu, tj. koje su nepovezane taj niz je nil (tj. prazan)
@@ -127,10 +130,10 @@ private:
 /// Moze biti prazan
 /// Vise o ovoj strukturi procitati u Computational Geoemtry
 ///
-class Field{
+class Face {
 public:
-    Field();
-    Field(HalfEdge *outerComponent, const std::vector<HalfEdge *> &innerComponents);
+    Face();
+    Face(HalfEdge *outerComponent, const std::vector<HalfEdge *> &innerComponents);
 
     HalfEdge *outerComponent() const;
     void setOuterComponent(HalfEdge *outerComponent);

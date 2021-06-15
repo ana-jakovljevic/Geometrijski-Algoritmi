@@ -4,7 +4,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 LIBS += -lglut -lGLU
 
-CONFIG += c++14
+CONFIG += c++17
 
 INCLUDEPATH += \
     $$PWD/algoritmi_sa_vezbi \
@@ -28,7 +28,20 @@ SOURCES += \
     oblastcrtanjaopengl.cpp \
     pomocnefunkcije.cpp \
     timemeasurementthread.cpp \
-    algoritmi_studentski_projekti/ga06_presekPravougaonika.cpp
+    algoritmi_studentski_projekti/ga06_presekPravougaonika.cpp \
+    algoritmi_studentski_projekti/ga07_konturaPravougaonika.cpp \
+    algoritmi_studentski_projekti/ga09_klasterovanje.cpp \
+    algoritmi_studentski_projekti/ga14_coinsOnShelf.cpp \
+    algoritmi_studentski_projekti/ga15_collisiondetection.cpp \
+    algoritmi_studentski_projekti/ga17_convexhulllineintersections.cpp \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/convex_hull.cpp \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/dcel.cpp \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/delaunay.cpp \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/graph.cpp \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/largest_empty_circle.cpp \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/lec.cpp \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/utility.cpp \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/voronoi.cpp
 
 HEADERS += \
     algoritambaza.h \
@@ -51,7 +64,21 @@ HEADERS += \
     oblastcrtanjaopengl.h \
     pomocnefunkcije.h \
     timemeasurementthread.h \
-    algoritmi_studentski_projekti/ga06_presekPravougaonika.h
+    algoritmi_studentski_projekti/ga06_presekPravougaonika.h \
+    algoritmi_studentski_projekti/ga07_konturaPravougaonika.h \
+    algoritmi_studentski_projekti/ga09_klasterovanje.h \
+    algoritmi_studentski_projekti/ga14_coinsOnShelf.h \
+    algoritmi_studentski_projekti/ga15_collisiondetection.h \
+    algoritmi_studentski_projekti/ga15_datastructures.h \
+    algoritmi_studentski_projekti/ga17_convexhulllineintersections.h \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/convex_hull.h \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/dcel.h \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/delaunay.h \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/graph.h \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/largest_empty_circle.h \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/lec.h \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/utility.h \
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/voronoi.h
 
 FORMS += \
     mainwindow.ui

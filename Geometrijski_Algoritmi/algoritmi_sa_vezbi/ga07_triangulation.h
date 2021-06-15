@@ -22,6 +22,9 @@ public:
     void pokreniNaivniAlgoritam() final;
     void crtajNaivniAlgoritam(QPainter *painter) const final;
 
+    const DCEL &getNaivePolygon() const;
+    const std::vector<std::pair<Vertex *, Vertex *>> &getNaiveDiagonals() const;
+
     /* Pomocne funkcije */
 private:
     std::vector<QPointF> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
@@ -58,6 +61,8 @@ private:
     void connectDiagonalsDCEL();
     bool sameDirectionVectors(HalfEdge* e1, HalfEdge* e2);
 
+    // pomocna funkcija u naivnom algoritmu
+    bool checkDiagonal(Vertex* v, Vertex* u);
     /* Triangulacija */
 private:
     /*
@@ -66,7 +71,7 @@ private:
      * Brojevi koji stoje u komentarima implementacije ove metode
      * odgovara brojevima u pseudo kodu u knjizi
      */
-    void triangulacija(Field *f);
+    void triangulacija(Face *f);
     bool istiLanac(HalfEdge *e1, HalfEdge *e2);
     bool leviLanac(HalfEdge *e1, HalfEdge *e2);
     bool desniLanac(HalfEdge *e1, HalfEdge *e2);
@@ -76,18 +81,21 @@ private:
     DCEL _polygon;
 
     /* MOTONE PARTITION */
-    std::set<Vertex*, EventQueueCompTriangulation> _eventQueue;
-    std::set<HalfEdge*, StatusQueueCompTriangulation> _statusQueue;
+    std::set<Vertex *, EventQueueCompTriangulation> _eventQueue;
+    std::set<HalfEdge *, StatusQueueCompTriangulation> _statusQueue;
     /* neuredjena jer koristimo samo ubacivanje i pretragu,
      * pa bolje da budu oba u vremenu O(1) umesto O(logn) */
-    std::unordered_map<HalfEdge*, Vertex*> _helpers;
-    std::vector<std::pair<Vertex*, Vertex*>> _allDiagonals;
-    // potrebno samo za crtanje
+    std::unordered_map<HalfEdge *, Vertex *> _helpers;
+    std::vector<std::pair<Vertex *, Vertex *>> _allDiagonals;
+    /* potrebno samo za crtanje */
     bool _monotone;
 
     /* TRIANGULATION  */
-    std::vector<HalfEdge*> _stekTriangulacije;
-    std::set<HalfEdge*, EventQueueCompTriangulation2> _eventQueueTriangulation;
+    std::vector<HalfEdge *> _stekTriangulacije;
+    std::set<HalfEdge *, EventQueueCompTriangulation2> _eventQueueTriangulation;
+
+    DCEL _naivePolygon;
+    std::vector<std::pair<Vertex *, Vertex *>> _naiveDiagonals;
 };
 
 

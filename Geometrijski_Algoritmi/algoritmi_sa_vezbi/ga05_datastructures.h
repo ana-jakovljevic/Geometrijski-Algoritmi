@@ -29,7 +29,8 @@ struct poredjenjeDogadjaja {
     bool operator()(const tackaDogadjaja &prva, const tackaDogadjaja &druga) const {
 
         return (prva.tacka.y() > druga.tacka.y()) ||
-               (fabs(prva.tacka.y() - druga.tacka.y()) < EPS && prva.tacka.x() < druga.tacka.x());
+               (pomocneFunkcije::bliski(prva.tacka.y(), druga.tacka.y()) &&
+                                        prva.tacka.x() < druga.tacka.x());
     }
 };
 
