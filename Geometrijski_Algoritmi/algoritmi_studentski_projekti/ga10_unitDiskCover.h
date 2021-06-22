@@ -3,6 +3,7 @@
 
 #include "algoritambaza.h"
 #include "pomocnefunkcije.h"
+
 #include <iostream>
 #include <fstream>
 #include <sys/time.h>
@@ -67,10 +68,10 @@ struct StripComp
 };
 
 enum AlgorithmType {
-    G,
-    LL,
-    BLMS,
-    GHS,
+    G1991,
+    LL2014,
+    BLMS2017,
+    GHS2019,
 };
 
 class UnitDiskCover : public AlgoritamBaza
@@ -81,7 +82,7 @@ public:
                   const bool &naivni = false,
                   std::string imeDatoteke = "",
                   int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA,
-                  AlgorithmType algorithm = AlgorithmType::GHS);
+                  AlgorithmType algorithm = AlgorithmType::GHS2019);
 
     void pokreniAlgoritam() final;
     void crtajAlgoritam(QPainter *painter) const final;
@@ -108,12 +109,11 @@ private:
     std::vector<QPointF> _cover;
     std::vector<QPointF> _naiveCover;
 
-    /* Biniaz, Liu, Maheshwari, Smid algorithm */
-    void BLMS2017();
-    void paintBLMS(QPainter* painter) const;
-    std::set<EventPoint*, EventQueueComp> _eventQueue;
-    std::set<EventPoint*, StatusComp> _status;
-    double _sweepLine = 0;
+    /* Gonzalez algorithm */
+    void G1991();
+    void paintG(QPainter* painter) const;
+    std::map<int, std::set<QPointF, StripComp>> _S;
+    std::vector<QPointF> _squares;
 
     /* Liu, Lu algorithm */
     void LL2014();
@@ -122,16 +122,18 @@ private:
     double _xOfRestrictionLine = 0;
     double _right = 0;
 
+    /* Biniaz, Liu, Maheshwari, Smid algorithm */
+    void BLMS2017();
+    void paintBLMS(QPainter* painter) const;
+    std::set<EventPoint*, EventQueueComp> _eventQueue;
+    std::set<EventPoint*, StatusComp> _status;
+    double _sweepLine = 0;
+
     /* Ghosh, Hicks, Shevchenko algorithm */
     void GHS2019();
     void paintGHS(QPainter* painter) const;
 
-    /* Gonzalez algorithm */
-    void G1991();
-    void paintG(QPainter* painter) const;
-    std::map<int, std::set<QPointF, StripComp>> _S;
-    std::vector<QPointF> _squares;
-
+    /* for naive random algorithm */
     QPointF generateRandomPoint();
 };
 

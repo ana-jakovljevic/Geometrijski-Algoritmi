@@ -64,16 +64,16 @@ void UnitDiskCover::pokreniAlgoritam()
 
     switch(_algorithm)
     {
-    case AlgorithmType::G:
+    case AlgorithmType::G1991:
         G1991();
         break;
-    case AlgorithmType::LL:
+    case AlgorithmType::LL2014:
         LL2014();
         break;
-    case AlgorithmType::BLMS:
+    case AlgorithmType::BLMS2017:
         BLMS2017();
         break;
-    case AlgorithmType::GHS:
+    case AlgorithmType::GHS2019:
         GHS2019();
         break;
      default:
@@ -183,6 +183,12 @@ void UnitDiskCover::LL2014()
              });
 
     int n = _points.size();
+    if (n == 0)
+    {
+        _cover = std::vector<QPointF>();
+        return;
+    }
+
     long unsigned minCoverSize = n+1;
 
     /* shiftng strategy */
@@ -361,17 +367,21 @@ void UnitDiskCover::G1991()
        /* structure containing points from two neighbor strips */
        std::set<QPointF, StripComp> R;
 
-       auto S1 = std::begin(_S)->second;
-       auto S2 = std::next(std::begin(_S))->second;
-       auto j  = std::next(std::next(std::begin(_S)));
+       auto S1 = std::begin(_S);
+       auto S2 = std::next(std::begin(_S));
+       auto j = std::end(_S);
 
-       R.merge(S1);
-       R.merge(S2);
+       R.merge(S1->second);
+       if(std::next(S1) != std::end(_S))
+       {
+           j  = std::next(S2);
+           R.merge(S2->second);
+       }
 
        /* creation of square coverage */
        while(R.size() > 0)
        {
-            /* smalles element in R along x axis */
+            /* smallest element in R along x axis */
             auto q = *R.begin();
 
             /* Q is the set of points in R at a distance <= sqrt(2) (with respect to x only) from q; R = R\Q */
@@ -442,16 +452,16 @@ void UnitDiskCover::crtajAlgoritam(QPainter *painter) const
 
     switch(_algorithm)
     {
-    case AlgorithmType::G:
+    case AlgorithmType::G1991:
        paintG(painter);
        break;
-    case AlgorithmType::LL:
+    case AlgorithmType::LL2014:
         paintLL(painter);
         break;
-    case AlgorithmType::BLMS:
+    case AlgorithmType::BLMS2017:
         paintBLMS(painter);
         break;
-    case AlgorithmType::GHS:
+    case AlgorithmType::GHS2019:
         paintGHS(painter);
         break;
      default:
