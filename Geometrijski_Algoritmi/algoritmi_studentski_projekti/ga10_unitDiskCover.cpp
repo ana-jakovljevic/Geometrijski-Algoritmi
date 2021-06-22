@@ -4,8 +4,9 @@ UnitDiskCover::UnitDiskCover(QWidget *pCrtanje,
                               int pauzaKoraka,
                               const bool &naivni,
                               std::string imeDatoteke,
-                              int brojTacaka)
-    : AlgoritamBaza(pCrtanje,pauzaKoraka,naivni)
+                              int brojTacaka,
+                              AlgorithmType algorithm)
+    : AlgoritamBaza(pCrtanje,pauzaKoraka,naivni), _algorithm(algorithm)
 {
     if(imeDatoteke == "")
     {
@@ -22,24 +23,68 @@ UnitDiskCover::UnitDiskCover(QWidget *pCrtanje,
     }
 }
 
-
 unsigned long UnitDiskCover::coverSize() const
 {
     return _cover.size();
 }
 
+int UnitDiskCover::countUncovered(const std::vector<QPointF>& cover) const
+{
+    std::vector<QPointF> points(_points);
+    for(const QPointF& disk: cover)
+    {
+        auto it = std::begin(points);
+        while(it != std::end(points))
+        {
+            /* eliminate all points at distance DISK_RADIUS (thay are covered) with allowed error EPS=1e-6 */
+            if(pomocneFunkcije::distanceKvadratF(disk, *it) <= (DISK_RADIUS*DISK_RADIUS) + EPS)
+            {
+                it = points.erase(it);
+            }
+            else
+            {
+                it++;
+            }
+        }
+    }
+
+    /* number of uncovered points */
+    return points.size();
+}
+
+bool UnitDiskCover::checkCoverage() const
+{
+   return countUncovered(_cover) == 0;
+}
+
 void UnitDiskCover::pokreniAlgoritam()
 {
-    struct timeval begin, end;
-    gettimeofday(&begin, NULL);
-    // BLMS2017();
-    GHS2019();
-    //LL2014();
-    //G1991();
-    gettimeofday(&end, NULL);
+    //struct timeval begin, end;
+    //gettimeofday(&begin, NULL);
 
-    std::cout << "Time of execution: " << (end.tv_sec - begin.tv_sec) + (end.tv_usec - begin.tv_usec)/1000000.0 << std::endl;
-    std::cout << "Number of disks in _cover: " << _cover.size() << std::endl;
+    switch(_algorithm)
+    {
+    case AlgorithmType::G:
+        G1991();
+        break;
+    case AlgorithmType::LL:
+        LL2014();
+        break;
+    case AlgorithmType::BLMS:
+        BLMS2017();
+        break;
+    case AlgorithmType::GHS:
+        GHS2019();
+        break;
+     default:
+        pokreniNaivniAlgoritam();
+    };
+
+    //gettimeofday(&end, NULL);
+
+    //std::cout << "Time of execution: " << (end.tv_sec - begin.tv_sec) + (end.tv_usec - begin.tv_usec)/1000000.0 << std::endl;
+    //std::cout << "Number of disks in _cover: " << _cover.size() << std::endl;
+    //std::cout << "Check coverage: " << checkCoverage() << std::endl;
 
     AlgoritamBaza_updateCanvasAndBlock();
     emit animacijaZavrsila();
@@ -60,6 +105,9 @@ void UnitDiskCover::BLMS2017()
     {
         auto eventPoint = *(_eventQueue.begin());
         _eventQueue.erase(_eventQueue.begin());
+
+        _sweepLine = eventPoint->point->x();
+        AlgoritamBaza_updateCanvasAndBlock();
 
         /* if event is deletion event: erase corresponding site point from status */
         if (eventPoint->eventType == BLMSEventType::DeletionEvent)
@@ -108,9 +156,9 @@ void UnitDiskCover::BLMS2017()
                 QPointF intersec1, intersec2;
                 auto p = eventPoint->point;
 
-                intersec1.setX(p->x() + 0.866025404*DISK_RADIUS);
+                intersec1.setX(p->x() + sqrt(3)/2*DISK_RADIUS);
                 intersec1.setY(p->y() - 0.5*DISK_RADIUS);
-                intersec2.setX(p->x() + 0.866025404*DISK_RADIUS);
+                intersec2.setX(p->x() + sqrt(3)/2*DISK_RADIUS);
                 intersec2.setY(p->y() + 0.5*DISK_RADIUS);
 
                 /* adding centers of new disks in _cover */
@@ -118,6 +166,8 @@ void UnitDiskCover::BLMS2017()
                 _cover.emplace_back(QPointF(intersec1.x(),intersec1.y()-DISK_RADIUS));
                 _cover.emplace_back(QPointF(intersec2.x(),intersec2.y()+DISK_RADIUS));
                 _cover.emplace_back(QPointF(p->x()+ 2*sqrt(pomocneFunkcije::distanceKvadratF(*p,QLineF(intersec1,intersec2).center())),p->y()));
+
+                AlgoritamBaza_updateCanvasAndBlock();
             }
         }
     }
@@ -138,20 +188,23 @@ void UnitDiskCover::LL2014()
     /* shiftng strategy */
     for(int i=0; i<6; i++)
     {
-        /* cover contains disks found in current iteration i */
-        std::vector<QPointF> cover = std::vector<QPointF>();
+        _LLcover.clear();
         int current = 0;
-        double right = _points[current].x() + DISK_RADIUS*i*sqrt(3)/6.0;
+
+        /* right boundary of strip  */
+        _right = _points[current].x() + DISK_RADIUS*i*sqrt(3)/6.0;
 
         while (current < n)
         {
             int index = current;
             auto segments = std::vector<std::pair<QPointF, QPointF>>();
             double y, d;
-            double xOfRestrictionLine = right - DISK_RADIUS*sqrt(3)/2.0;
+            _xOfRestrictionLine = _right - DISK_RADIUS*sqrt(3)/2.0;
+
+            AlgoritamBaza_updateCanvasAndBlock();
 
             /* finding all points belonging to current strip */
-            while (_points[current].x() < right && current < n)
+            while (_points[current].x() < _right && current < n)
             {
                 current++;
             }
@@ -160,12 +213,12 @@ void UnitDiskCover::LL2014()
             for(int j = index; j < current; j++)
             {
                 /* calculate the distance from restriction line */
-                d = _points[j].x() - xOfRestrictionLine;
+                d = _points[j].x() - _xOfRestrictionLine;
 
                 /* calculate position of the segment on restriction line */
                 y = sqrt(DISK_RADIUS*DISK_RADIUS - d*d);
-                auto upperPoint = QPointF(xOfRestrictionLine, _points[j].y() + y);
-                auto lowerPoint = QPointF(xOfRestrictionLine, _points[j].y() - y);
+                auto upperPoint = QPointF(_xOfRestrictionLine, _points[j].y() + y);
+                auto lowerPoint = QPointF(_xOfRestrictionLine, _points[j].y() - y);
 
                 auto segment = std::pair<QPointF, QPointF>(upperPoint, lowerPoint);
                 segments.push_back(segment);
@@ -184,7 +237,9 @@ void UnitDiskCover::LL2014()
                 y = segments.back().second.y();
 
                 /* position circle as low as possible while still covering the topmost uncovered point */
-                cover.push_back(QPointF(xOfRestrictionLine, y));
+                _LLcover.push_back(QPointF(_xOfRestrictionLine, y));
+                AlgoritamBaza_updateCanvasAndBlock();
+
                 segments.pop_back();
 
                 /* eliminate all segments that are covered by this circle */
@@ -195,17 +250,17 @@ void UnitDiskCover::LL2014()
             }
 
             /* current is index of first point from next strip; moving to the next strip of size DISK_RADIUS*sqrt(3) */
-            right += DISK_RADIUS*sqrt(3);
-            while((_points[current].x() - right) > DISK_RADIUS*sqrt(3))
+            _right += DISK_RADIUS*sqrt(3);
+            while((_points[current].x() - _right) > DISK_RADIUS*sqrt(3))
             {
-                right += DISK_RADIUS*sqrt(3);
+                _right += DISK_RADIUS*sqrt(3);
             }
        }
 
         /* update best found cover based on size */
-        if (cover.size() < minCoverSize)
+        if (_LLcover.size() < minCoverSize)
         {
-            _cover = cover;
+            _cover = _LLcover;
             minCoverSize = _cover.size();
         }
     }
@@ -232,6 +287,7 @@ void UnitDiskCover::GHS2019()
             /* point is not covered, so cover it now */
             hashTable[v].insert(h);
             _cover.push_back(QPointF(squareSize*v+squareSize/2.0, squareSize*h+squareSize/2.0));
+            AlgoritamBaza_updateCanvasAndBlock();
         }
         else if( point.x() >= squareSize*(v+1.5)-DISK_RADIUS && hashTable.find(v+1) != hashTable.end() && hashTable[v+1].find(h) != hashTable[v+1].end()
                    && sqrt(pomocneFunkcije::distanceKvadratF(point, QPointF(squareSize*(v+1)+squareSize/2.0, squareSize*h+squareSize/2.0))) <= DISK_RADIUS)
@@ -253,6 +309,7 @@ void UnitDiskCover::GHS2019()
             /* p is not covered, so cover it now */
             hashTable[v].insert(h);
             _cover.push_back(QPointF(squareSize*v+squareSize/2.0, squareSize*h+squareSize/2.0));
+            AlgoritamBaza_updateCanvasAndBlock();
         }
     }
 }
@@ -270,16 +327,12 @@ void UnitDiskCover::G1991()
         if(int(floor(point.y()/squareSize)) % 2 == 1)
         {
             P1.push_back(point);
-
         }
         else
         {
             P2.push_back(point);
         }
     }
-
-    /* solution contain squares covering all points */
-    std::vector<QPointF> solution;
 
     /* same algorithm is performed on both set of horizontal strips (if they aren't empty) */
     std::vector<std::vector<QPointF>> sets;
@@ -296,21 +349,21 @@ void UnitDiskCover::G1991()
 
     for(std::vector<QPointF> set: sets)
     {
-       std::map<int, std::set<QPointF, StripComp>> S;
-
+       _S.clear();
        /* partitioning points in separate sets based on their belonging to vertical strips */
        for(QPointF &point: set)
        {
            auto ixp = int(floor(point.x()/squareSize));
-           S[ixp].insert(point);
+           _S[ixp].insert(point);
        }
 
+       AlgoritamBaza_updateCanvasAndBlock();
        /* structure containing points from two neighbor strips */
        std::set<QPointF, StripComp> R;
 
-       auto S1 = std::begin(S)->second;
-       auto S2 = std::next(std::begin(S))->second;
-       auto j  = std::next(std::next(std::begin(S)));
+       auto S1 = std::begin(_S)->second;
+       auto S2 = std::next(std::begin(_S))->second;
+       auto j  = std::next(std::next(std::begin(_S)));
 
        R.merge(S1);
        R.merge(S2);
@@ -340,13 +393,14 @@ void UnitDiskCover::G1991()
             }
 
             /* Put square whose left boundary includes q and whose top boundary conicides with the top boundary of the slab in solution */
-            solution.push_back(QPointF(q.x(), floor(q.y()/squareSize)*squareSize));
+            _squares.push_back(QPointF(q.x(), floor(q.y()/squareSize)*squareSize));
+            AlgoritamBaza_updateCanvasAndBlock();
 
             /* R contains elements from at most one of the sets of S*/
             bool flag = true;
 
             /* while there not visited S sets and while R containts elements from at most one of the sets of S: expand R */
-            while(j != S.end() && flag)
+            while(j != _S.end() && flag)
             {
                 if(R.size() <= 0)
                     flag = true;
@@ -375,46 +429,261 @@ void UnitDiskCover::G1991()
     }
 
     /* for every square in solution place matching disk */
-    for(QPointF &center: solution)
+    for(QPointF &center: _squares)
     {
          _cover.emplace_back(center.x() + squareSize/2,
                              center.y() + squareSize/2);
     }
 }
 
-
 void UnitDiskCover::crtajAlgoritam(QPainter *painter) const
 {
     if(!painter) return;
 
-    QPen p = painter->pen();
-
-    for(const QPointF& pt: _points)
+    switch(_algorithm)
     {
-        p.setWidth(2);
-        p.setColor(Qt::black);
-        painter->setPen(p);
-        painter->drawPoint(pt);
+    case AlgorithmType::G:
+       paintG(painter);
+       break;
+    case AlgorithmType::LL:
+        paintLL(painter);
+        break;
+    case AlgorithmType::BLMS:
+        paintBLMS(painter);
+        break;
+    case AlgorithmType::GHS:
+        paintGHS(painter);
+        break;
+     default:
+        crtajNaivniAlgoritam(painter);
     }
 
+    QPen p = painter->pen();
+
+    p.setWidth(2);
+    p.setColor(Qt::red);
+    painter->setPen(p);
     for(const QPointF& pt: _cover)
     {
-        p.setWidth(2);
-        p.setColor(Qt::red);
-        //painter->setBrush(Qt::red);
-        painter->setPen(p);
         painter->drawEllipse(pt, DISK_RADIUS, DISK_RADIUS);
     }
 
 }
 
+void UnitDiskCover::paintBLMS(QPainter* painter) const
+{
+    QPen p = painter->pen();
+    p.setWidth(2);
+
+    p.setColor(Qt::blue);
+    p.setStyle(Qt::DashLine);
+    painter->setPen(p);
+    painter->drawLine(_sweepLine, 0, _sweepLine, 700);
+
+    for(const QPointF& pt: _points)
+    {
+        if(pt.x() <= _sweepLine - 2*DISK_RADIUS)
+        {
+            p.setColor(Qt::red);
+            painter->setPen(p);
+        }
+        else if(pt.x() < _sweepLine )
+        {
+            p.setColor(Qt::green);
+            painter->setPen(p);
+        }
+        else
+        {
+            p.setColor(Qt::black);
+            painter->setPen(p);
+        }
+
+        painter->drawPoint(pt);
+    }
+}
+
+void UnitDiskCover::paintG(QPainter *painter) const
+{
+    QPen p = painter->pen();
+
+    p.setWidth(1);
+    p.setColor(Qt::black);
+    p.setStyle(Qt::DashLine);
+    painter->setPen(p);
+    for(int i=0;i<CANVAS_HEIGHT;i++)
+    {
+        painter->drawLine(0,i*sqrt(2)*DISK_RADIUS, 1100, i*sqrt(2)*DISK_RADIUS);
+    }
+
+    p.setStyle(Qt::SolidLine);
+    p.setColor(Qt::black);
+    painter->setPen(p);
+    for(auto s: _S)
+    {
+        painter->drawLine(s.first * sqrt(2)*DISK_RADIUS, 2, s.first*sqrt(2)*DISK_RADIUS, 590);
+        painter->drawLine( (1 + s.first) * sqrt(2)*DISK_RADIUS, 0, (1 + s.first*sqrt(2)*DISK_RADIUS), 590);
+        painter->setBrush(Qt::lightGray);
+        painter->drawRect(s.first * sqrt(2)*DISK_RADIUS, 2, sqrt(2)*DISK_RADIUS, 590);
+    }
+
+    p.setWidth(2);
+    p.setColor(Qt::blue);
+    painter->setPen(p);
+    painter->setBrush(Qt::NoBrush);
+    for(const QPointF& point: _squares)
+    {
+        painter->drawRect(point.x(),point.y(), sqrt(2)*DISK_RADIUS, sqrt(2)*DISK_RADIUS);
+    }
+
+    p.setColor(Qt::black);
+    painter->setPen(p);
+    for(const QPointF& point: _points)
+    {
+        painter->drawPoint(point);
+    }
+
+}
+
+void UnitDiskCover::paintLL(QPainter *painter) const
+{
+    QPen p = painter->pen();
+
+    p.setWidth(1);
+    p.setColor(Qt::blue);
+    p.setStyle(Qt::DashLine);
+    painter->setPen(p);
+    painter->drawLine(_xOfRestrictionLine, 0, _xOfRestrictionLine, CANVAS_HEIGHT);
+
+    p.setColor(Qt::black);
+    p.setStyle(Qt::SolidLine);
+    painter->setPen(p);
+    painter->drawLine(_right, 0, _right, CANVAS_HEIGHT);
+    painter->drawLine(_right - DISK_RADIUS*sqrt(3), 0, _right - DISK_RADIUS*sqrt(3), CANVAS_HEIGHT);
+
+    p.setWidth(2);
+    p.setColor(Qt::black);
+    painter->setPen(p);
+    for(const QPointF& pt: _points)
+    {
+        painter->drawPoint(pt);
+    }
+
+    for(const QPointF& pt: _LLcover)
+    {
+        painter->drawEllipse(pt, DISK_RADIUS, DISK_RADIUS);
+    }
+}
+
+void UnitDiskCover::paintGHS(QPainter *painter) const
+{
+    QPen p = painter->pen();
+
+    p.setWidth(1);
+    p.setColor(Qt::black);
+    painter->setPen(p);
+
+    for(int i = 0; i < CANVAS_WIDTH; i++)
+    {
+        painter->drawLine(i*sqrt(2)*DISK_RADIUS, 0, i*sqrt(2)*DISK_RADIUS, CANVAS_HEIGHT);
+        painter->drawLine(0,i*sqrt(2)*DISK_RADIUS, CANVAS_WIDTH, i*sqrt(2)*DISK_RADIUS);
+    }
+
+    p.setWidth(2);
+    p.setColor(Qt::black);
+    painter->setPen(p);
+    for(const QPointF& pt: _points)
+    {
+        painter->drawPoint(pt);
+    }
+}
+
+QPointF UnitDiskCover::generateRandomPoint()
+{
+    int xMax, yMax;
+
+    if (_pCrtanje)
+    {
+        xMax = _pCrtanje->width() - 10;
+        yMax = _pCrtanje->height() - 10;
+    }
+    else
+    {
+        xMax = CANVAS_WIDTH;
+        yMax = CANVAS_HEIGHT;
+    }
+
+    int xMin = 10;
+    int yMin = 10;
+
+    std::vector<QPoint> randomPoints;
+
+    int xDiff = xMax-xMin;
+    int yDiff = yMax-yMin;
+
+    randomPoints.emplace_back(xMin + rand()%xDiff, yMin + rand()%yDiff);
+
+    return QPointF(xMin + rand()% xDiff, yMin +rand()% yDiff);
+}
+
 void UnitDiskCover::pokreniNaivniAlgoritam()
 {
+    srand(static_cast<unsigned>(time(nullptr)));
+
+    /* all points are uncovered at beginng */
+    int numberOfUncoveredPoints = _points.size();
+
+    /* generate random circles until all points are covered */
+    while(true)
+    {
+        QPointF randomPoint = generateRandomPoint();
+
+        _naiveCover.push_back(randomPoint);
+        AlgoritamBaza_updateCanvasAndBlock();
+
+        /* if added disk doesn't change number of covered points it should be eliminated */
+        if(countUncovered(_naiveCover) == numberOfUncoveredPoints)
+        {
+            _naiveCover.pop_back();
+            AlgoritamBaza_updateCanvasAndBlock();
+        }
+        /* if it covers some point it should be retained */
+        else
+        {
+            numberOfUncoveredPoints = countUncovered(_naiveCover);
+            AlgoritamBaza_updateCanvasAndBlock();
+        }
+
+        /* if all points are covered algorithm is done */
+        if(numberOfUncoveredPoints == 0)
+        {
+            break;
+        }
+    }
+
     AlgoritamBaza_updateCanvasAndBlock()
     emit animacijaZavrsila();
 }
 
 void UnitDiskCover::crtajNaivniAlgoritam(QPainter *painter) const
 {
+    if(!painter) return;
 
+    QPen p = painter->pen();
+
+    p.setWidth(2);
+    p.setColor(Qt::black);
+    painter->setPen(p);
+    for(const QPointF& pt: _points)
+    {
+        painter->drawPoint(pt);
+    }
+
+    p.setWidth(2);
+    p.setColor(Qt::red);
+    painter->setPen(p);
+
+    for(const QPointF& pt: _naiveCover)
+    {
+        painter->drawEllipse(pt, DISK_RADIUS, DISK_RADIUS);
+    }
 }

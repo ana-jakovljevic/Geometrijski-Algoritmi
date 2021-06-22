@@ -19,7 +19,6 @@ void TimeMeasurementThread::run()
      */
     for(int i= _minValue; i <= _maxValue; i += _step)
     {
-
         /* Ovde kreirati instancu klase algoritma. */
         switch (_algorithmType) {
         case TipAlgoritma::DEMO_ISCRTAVANJA:
@@ -63,6 +62,9 @@ void TimeMeasurementThread::run()
             break;
         case TipAlgoritma::NAJVECI_PRAZAN_KRUG:
             pAlgorithm = new lec(nullptr, 0, false, "", i);
+            break;
+        case TipAlgoritma::UNIT_DISK_COVER:
+            pAlgorithm = new UnitDiskCover(nullptr, 0, false, "", i);
             break;
         default:
             break;

@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <map>
 
-#define DISK_RADIUS 30
+#define DISK_RADIUS 50
 
 enum BLMSEventType
 {
@@ -31,11 +31,12 @@ struct EventPoint
 
     QPointF* point;
     BLMSEventType eventType;
+
     /* sitePoint is nullptr for site events */
     EventPoint* sitePoint;
 };
 
-/* BLMS: comparator for event queue */
+/* [BLMS] comparator for event queue */
 struct EventQueueComp
 {
     bool operator()(const EventPoint* left, const EventPoint* right) const
@@ -46,7 +47,7 @@ struct EventQueueComp
     }
 };
 
-/* BLMS: comparator for BST structure _status */
+/* [BLMS] comparator for BST structure _status */
 struct StatusComp
 {
     bool operator()(const EventPoint* left, const EventPoint* right) const
@@ -56,7 +57,7 @@ struct StatusComp
     }
 };
 
-/* G1991: comparator for sets of vertical stripes */
+/* [G1991] comparator for vertical strips */
 struct StripComp
 {
     bool operator()(const QPointF& left, const QPointF& right) const
@@ -65,7 +66,12 @@ struct StripComp
     }
 };
 
-
+enum AlgorithmType {
+    G,
+    LL,
+    BLMS,
+    GHS,
+};
 
 class UnitDiskCover : public AlgoritamBaza
 {
@@ -74,29 +80,59 @@ public:
                   int pauzaKoraka,
                   const bool &naivni = false,
                   std::string imeDatoteke = "",
-                  int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA);
+                  int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA,
+                  AlgorithmType algorithm = AlgorithmType::GHS);
 
     void pokreniAlgoritam() final;
     void crtajAlgoritam(QPainter *painter) const final;
     void pokreniNaivniAlgoritam() final;
     void crtajNaivniAlgoritam(QPainter *painter) const final;
 
+    /* returns number of circles in cover */
     unsigned long coverSize() const;
 
+    /* return number of uncovered points by current disks in cover */
+    int countUncovered(const std::vector<QPointF>& cover) const;
+
+    /* checking that all points are covered (returns true if they are) */
+    bool checkCoverage() const;
+
 private:
+    /* type of algorithm */
+    int _algorithm;
 
+    /* points to be covered */
     std::vector<QPointF> _points;
-    std::vector<QPointF> _cover;
 
+    /* center position of every circle in cover */
+    std::vector<QPointF> _cover;
+    std::vector<QPointF> _naiveCover;
+
+    /* Biniaz, Liu, Maheshwari, Smid algorithm */
     void BLMS2017();
+    void paintBLMS(QPainter* painter) const;
     std::set<EventPoint*, EventQueueComp> _eventQueue;
     std::set<EventPoint*, StatusComp> _status;
+    double _sweepLine = 0;
 
+    /* Liu, Lu algorithm */
     void LL2014();
-    double _xOfRestrictionLine;
+    void paintLL(QPainter* painter) const;
+    std::vector<QPointF> _LLcover;
+    double _xOfRestrictionLine = 0;
+    double _right = 0;
 
+    /* Ghosh, Hicks, Shevchenko algorithm */
     void GHS2019();
+    void paintGHS(QPainter* painter) const;
+
+    /* Gonzalez algorithm */
     void G1991();
+    void paintG(QPainter* painter) const;
+    std::map<int, std::set<QPointF, StripComp>> _S;
+    std::vector<QPointF> _squares;
+
+    QPointF generateRandomPoint();
 };
 
 #endif // GA10_UNITDISKCOVER_H
