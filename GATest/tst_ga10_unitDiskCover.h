@@ -9,14 +9,14 @@
 using namespace testing;
 
 static constexpr auto inputFile = "../Geometrijski_Algoritmi/input_files/ga10_unitDiskCover/file1.txt";
-
+int diskRadius = 10;
 
 /****** G1991 ******/
 
 /* no points */
-TEST(ga10_unitDiskCoverTests, G1)
+TEST(ga10_unitDiskCoverTests, NoPointsG1991)
 {
-    UnitDiskCover algorithm(nullptr, 0, false, "", 0, AlgorithmType::G1991);
+    UnitDiskCover algorithm(nullptr, 0, false, "", 0, diskRadius, AlgorithmType::G1991);
     algorithm.pokreniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkCoverage());
@@ -24,9 +24,9 @@ TEST(ga10_unitDiskCoverTests, G1)
 }
 
 /* more points on same position */
-TEST(ga10_unitDiskCoverTests, G2)
+TEST(ga10_unitDiskCoverTests, EqualPointsG1991)
 {
-    UnitDiskCover algorithm(nullptr, 0, false, inputFile, 1, AlgorithmType::G1991);
+    UnitDiskCover algorithm(nullptr, 0, false, inputFile, 1, diskRadius, AlgorithmType::G1991);
 
     algorithm.pokreniAlgoritam();
 
@@ -35,9 +35,16 @@ TEST(ga10_unitDiskCoverTests, G2)
 }
 
 /* generate random points and check if every point is covered */
-TEST(ga10_unitDiskCoverTests, G3)
+TEST(ga10_unitDiskCoverTests, RandomInput1G1991)
 {
-    UnitDiskCover algorithm(nullptr, 0, false, "", 20, AlgorithmType::G1991);
+    UnitDiskCover algorithm(nullptr, 0, false, "", 20, diskRadius, AlgorithmType::G1991);
+    algorithm.pokreniAlgoritam();
+
+    EXPECT_TRUE(algorithm.checkCoverage());
+}
+TEST(ga10_unitDiskCoverTests, RandomInput2G1991)
+{
+    UnitDiskCover algorithm(nullptr, 0, false, "", 500, diskRadius, AlgorithmType::G1991);
     algorithm.pokreniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkCoverage());
@@ -47,9 +54,9 @@ TEST(ga10_unitDiskCoverTests, G3)
 /****** LL2014 ******/
 
 /* no points */
-TEST(ga10_unitDiskCoverTests, LL1)
+TEST(ga10_unitDiskCoverTests, NoPointsLL2014)
 {
-    UnitDiskCover algorithm(nullptr, 0, false, "", 0, AlgorithmType::LL2014);
+    UnitDiskCover algorithm(nullptr, 0, false, "", 0, diskRadius, AlgorithmType::LL2014);
     algorithm.pokreniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkCoverage());
@@ -57,9 +64,9 @@ TEST(ga10_unitDiskCoverTests, LL1)
 }
 
 /* more points on same position */
-TEST(ga10_unitDiskCoverTests, LL2)
+TEST(ga10_unitDiskCoverTests, EqualPointsLL2014)
 {
-    UnitDiskCover algorithm(nullptr, 0, false, inputFile, 1, AlgorithmType::LL2014);
+    UnitDiskCover algorithm(nullptr, 0, false, inputFile, 1, diskRadius, AlgorithmType::LL2014);
 
     algorithm.pokreniAlgoritam();
 
@@ -68,21 +75,28 @@ TEST(ga10_unitDiskCoverTests, LL2)
 }
 
 /* generate random points and check if every point is covered */
-TEST(ga10_unitDiskCoverTests, LL3)
+TEST(ga10_unitDiskCoverTests, RandomInput1LL2014)
 {
-    UnitDiskCover algorithm(nullptr, 0, false, "", 20, AlgorithmType::LL2014);
+    UnitDiskCover algorithm(nullptr, 0, false, "", 20, diskRadius, AlgorithmType::LL2014);
     algorithm.pokreniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkCoverage());
 }
 
+TEST(ga10_unitDiskCoverTests, RandomInput2LL2014)
+{
+    UnitDiskCover algorithm(nullptr, 0, false, "", 500, diskRadius, AlgorithmType::LL2014);
+    algorithm.pokreniAlgoritam();
+
+    EXPECT_TRUE(algorithm.checkCoverage());
+}
 
 /****** BLMS2017 ******/
 
 /* no points */
-TEST(ga10_unitDiskCoverTests, BLMS1)
+TEST(ga10_unitDiskCoverTests, NoPointsBLMS2017)
 {
-    UnitDiskCover algorithm(nullptr, 0, false, "", 0, AlgorithmType::BLMS2017);
+    UnitDiskCover algorithm(nullptr, 0, false, "", 0, diskRadius, AlgorithmType::BLMS2017);
     algorithm.pokreniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkCoverage());
@@ -90,9 +104,9 @@ TEST(ga10_unitDiskCoverTests, BLMS1)
 }
 
 /* more points on same position */
-TEST(ga10_unitDiskCoverTests, BLMS2)
+TEST(ga10_unitDiskCoverTests, EqualPointsBLMS2017)
 {
-    UnitDiskCover algorithm(nullptr, 0, false, inputFile, 1, AlgorithmType::BLMS2017);
+    UnitDiskCover algorithm(nullptr, 0, false, inputFile, 1, diskRadius, AlgorithmType::BLMS2017);
 
     algorithm.pokreniAlgoritam();
 
@@ -101,9 +115,17 @@ TEST(ga10_unitDiskCoverTests, BLMS2)
 }
 
 /* generate random points and check if every point is covered */
-TEST(ga10_unitDiskCoverTests, BLMS3)
+TEST(ga10_unitDiskCoverTests, RandomInput1BLMS2017)
 {
-    UnitDiskCover algorithm(nullptr, 0, false, "", 20, AlgorithmType::BLMS2017);
+    UnitDiskCover algorithm(nullptr, 0, false, "", 20, diskRadius, AlgorithmType::BLMS2017);
+    algorithm.pokreniAlgoritam();
+
+    EXPECT_TRUE(algorithm.checkCoverage());
+}
+
+TEST(ga10_unitDiskCoverTests, RandomInput2BLMS2017)
+{
+    UnitDiskCover algorithm(nullptr, 0, false, "", 500, diskRadius, AlgorithmType::BLMS2017);
     algorithm.pokreniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkCoverage());
@@ -113,9 +135,9 @@ TEST(ga10_unitDiskCoverTests, BLMS3)
 /****** GHS2019 ******/
 
 /* no points */
-TEST(ga10_unitDiskCoverTests, GHS1)
+TEST(ga10_unitDiskCoverTests, NoPointsGHS2019)
 {
-    UnitDiskCover algorithm(nullptr, 0, false, "", 0, AlgorithmType::GHS2019);
+    UnitDiskCover algorithm(nullptr, 0, false, "", 0, diskRadius, AlgorithmType::GHS2019);
     algorithm.pokreniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkCoverage());
@@ -123,9 +145,9 @@ TEST(ga10_unitDiskCoverTests, GHS1)
 }
 
 /* more points on same position */
-TEST(ga10_unitDiskCoverTests, GHS2)
+TEST(ga10_unitDiskCoverTests, EqualPointsGHS2019)
 {
-    UnitDiskCover algorithm(nullptr, 0, false, inputFile, 1, AlgorithmType::GHS2019);
+    UnitDiskCover algorithm(nullptr, 0, false, inputFile, 1, diskRadius, AlgorithmType::GHS2019);
 
     algorithm.pokreniAlgoritam();
 
@@ -134,13 +156,104 @@ TEST(ga10_unitDiskCoverTests, GHS2)
 }
 
 /* generate random points and check if every point is covered */
-TEST(ga10_unitDiskCoverTests, GHS3)
+TEST(ga10_unitDiskCoverTests, RandomInput1GHS2019)
 {
-    UnitDiskCover algorithm(nullptr, 0, false, "", 20, AlgorithmType::GHS2019);
+    UnitDiskCover algorithm(nullptr, 0, false, "", 20, diskRadius, AlgorithmType::GHS2019);
     algorithm.pokreniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkCoverage());
 }
+
+TEST(ga10_unitDiskCoverTests, RandomInput2GHS2019)
+{
+    UnitDiskCover algorithm(nullptr, 0, false, "", 500, diskRadius, AlgorithmType::GHS2019);
+    algorithm.pokreniAlgoritam();
+
+    EXPECT_TRUE(algorithm.checkCoverage());
+}
+
+/****** RandomAlgorithm1 ******/
+
+/* no points */
+TEST(ga10_unitDiskCoverTests, NoPointsRandom1)
+{
+    UnitDiskCover algorithm(nullptr, 0, false, "", 0, diskRadius, AlgorithmType::RANDOM1);
+    algorithm.pokreniAlgoritam();
+
+    EXPECT_TRUE(algorithm.checkNaiveCoverage());
+    ASSERT_EQ(algorithm.naiveCoverSize(), 0);
+}
+
+/* more points on same position */
+TEST(ga10_unitDiskCoverTests, EqualPointsRandom1)
+{
+    UnitDiskCover algorithm(nullptr, 0, false, inputFile, 1, diskRadius, AlgorithmType::RANDOM1);
+
+    algorithm.pokreniAlgoritam();
+
+    EXPECT_TRUE(algorithm.checkNaiveCoverage());
+    ASSERT_EQ(algorithm.naiveCoverSize(), 1);
+}
+
+/* generate random points and check if every point is covered */
+TEST(ga10_unitDiskCoverTests, RandomInput1Random1)
+{
+    UnitDiskCover algorithm(nullptr, 0, false, "", 20, diskRadius, AlgorithmType::RANDOM1);
+    algorithm.pokreniAlgoritam();
+
+    EXPECT_TRUE(algorithm.checkNaiveCoverage());
+}
+
+TEST(ga10_unitDiskCoverTests, RandomInput2Random1)
+{
+    UnitDiskCover algorithm(nullptr, 0, false, "", 50, diskRadius, AlgorithmType::RANDOM1);
+    algorithm.pokreniAlgoritam();
+
+    EXPECT_TRUE(algorithm.checkNaiveCoverage());
+}
+
+
+/****** RandomAlgorithm2 ******/
+
+/* no points */
+TEST(ga10_unitDiskCoverTests, NoPointsRandom2)
+{
+    UnitDiskCover algorithm(nullptr, 0, false, "", 0, diskRadius, AlgorithmType::RANDOM2);
+    algorithm.pokreniAlgoritam();
+
+    EXPECT_TRUE(algorithm.checkNaiveCoverage());
+    ASSERT_EQ(algorithm.naiveCoverSize(), 0);
+}
+
+/* more points on same position */
+TEST(ga10_unitDiskCoverTests, EqualPointsRandom2)
+{
+    UnitDiskCover algorithm(nullptr, 0, false, inputFile, 1, diskRadius, AlgorithmType::RANDOM2);
+
+    algorithm.pokreniAlgoritam();
+
+    EXPECT_TRUE(algorithm.checkNaiveCoverage());
+    ASSERT_EQ(algorithm.naiveCoverSize(), 1);
+}
+
+/* generate random points and check if every point is covered */
+TEST(ga10_unitDiskCoverTests, RandomInput1Random2)
+{
+    UnitDiskCover algorithm(nullptr, 0, false, "", 20, diskRadius, AlgorithmType::RANDOM2);
+    algorithm.pokreniAlgoritam();
+
+    EXPECT_TRUE(algorithm.checkNaiveCoverage());
+}
+
+TEST(ga10_unitDiskCoverTests, RandomInput2Random2)
+{
+    UnitDiskCover algorithm(nullptr, 0, false, "", 50, diskRadius, AlgorithmType::RANDOM2);
+    algorithm.pokreniAlgoritam();
+
+    EXPECT_TRUE(algorithm.checkNaiveCoverage());
+}
+
+
 
 
 

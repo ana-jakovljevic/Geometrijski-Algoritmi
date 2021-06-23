@@ -6,14 +6,12 @@
 
 #include <iostream>
 #include <fstream>
+#include <random>
 #include <sys/time.h>
-
 #include <unordered_set>
 #include <set>
 #include <unordered_map>
 #include <map>
-
-#define DISK_RADIUS 50
 
 enum BLMSEventType
 {
@@ -72,6 +70,8 @@ enum AlgorithmType {
     LL2014,
     BLMS2017,
     GHS2019,
+    RANDOM1,
+    RANDOM2
 };
 
 class UnitDiskCover : public AlgoritamBaza
@@ -82,7 +82,9 @@ public:
                   const bool &naivni = false,
                   std::string imeDatoteke = "",
                   int brojTacaka = BROJ_SLUCAJNIH_OBJEKATA,
-                  AlgorithmType algorithm = AlgorithmType::GHS2019);
+                  int diskRadius = 50,
+                  AlgorithmType algorithm = AlgorithmType::GHS2019
+                  );
 
     void pokreniAlgoritam() final;
     void crtajAlgoritam(QPainter *painter) const final;
@@ -91,14 +93,17 @@ public:
 
     /* returns number of circles in cover */
     unsigned long coverSize() const;
-
-    /* return number of uncovered points by current disks in cover */
-    int countUncovered(const std::vector<QPointF>& cover) const;
+    unsigned long naiveCoverSize() const;
 
     /* checking that all points are covered (returns true if they are) */
     bool checkCoverage() const;
+    bool checkNaiveCoverage() const;
 
 private:
+
+    /* fixed radius of disks */
+    int _diskRadius;
+
     /* type of algorithm */
     int _algorithm;
 
@@ -109,30 +114,35 @@ private:
     std::vector<QPointF> _cover;
     std::vector<QPointF> _naiveCover;
 
+    /* return number of uncovered points by current disks in cover */
+    int countUncovered(const std::vector<QPointF>& cover) const;
+
     /* Gonzalez algorithm */
     void G1991();
-    void paintG(QPainter* painter) const;
+    void paintG1991(QPainter* painter) const;
     std::map<int, std::set<QPointF, StripComp>> _S;
     std::vector<QPointF> _squares;
 
     /* Liu, Lu algorithm */
     void LL2014();
-    void paintLL(QPainter* painter) const;
+    void paintLL2014(QPainter* painter) const;
     std::vector<QPointF> _LLcover;
     double _xOfRestrictionLine = 0;
     double _right = 0;
 
     /* Biniaz, Liu, Maheshwari, Smid algorithm */
     void BLMS2017();
-    void paintBLMS(QPainter* painter) const;
+    void paintBLMS2017(QPainter* painter) const;
     std::set<EventPoint*, EventQueueComp> _eventQueue;
     std::set<EventPoint*, StatusComp> _status;
     double _sweepLine = 0;
 
     /* Ghosh, Hicks, Shevchenko algorithm */
     void GHS2019();
-    void paintGHS(QPainter* painter) const;
+    void paintGHS2019(QPainter* painter) const;
 
+    void randomAlgorithm1();
+    void randomAlgorithm2();
     /* for naive random algorithm */
     QPointF generateRandomPoint();
 };
