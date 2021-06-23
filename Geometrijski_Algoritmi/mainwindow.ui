@@ -772,6 +772,11 @@
              <string>Najveci prazan krug</string>
             </property>
            </item>
+           <item>
+            <property name="text">
+             <string>Unit Disk Cover</string>
+            </property>
+           </item>
           </widget>
          </item>
         </layout>
