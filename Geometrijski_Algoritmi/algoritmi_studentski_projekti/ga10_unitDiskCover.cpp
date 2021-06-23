@@ -731,8 +731,15 @@ void UnitDiskCover::randomAlgorithm2()
 
 void UnitDiskCover::pokreniNaivniAlgoritam()
 {
-    randomAlgorithm1();
-    /*randomAlgorithm2();*/
+    switch(_algorithm)
+    {
+    case AlgorithmType::RANDOM1:
+        randomAlgorithm1();
+        break;
+    case AlgorithmType::RANDOM2:
+    default:
+        randomAlgorithm2();
+    }
 
     AlgoritamBaza_updateCanvasAndBlock()
     emit animacijaZavrsila();

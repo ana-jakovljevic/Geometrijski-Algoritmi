@@ -178,7 +178,7 @@ TEST(ga10_unitDiskCoverTests, RandomInput2GHS2019)
 TEST(ga10_unitDiskCoverTests, NoPointsRandom1)
 {
     UnitDiskCover algorithm(nullptr, 0, false, "", 0, diskRadius, AlgorithmType::RANDOM1);
-    algorithm.pokreniAlgoritam();
+    algorithm.pokreniNaivniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkNaiveCoverage());
     ASSERT_EQ(algorithm.naiveCoverSize(), 0);
@@ -189,7 +189,7 @@ TEST(ga10_unitDiskCoverTests, EqualPointsRandom1)
 {
     UnitDiskCover algorithm(nullptr, 0, false, inputFile, 1, diskRadius, AlgorithmType::RANDOM1);
 
-    algorithm.pokreniAlgoritam();
+    algorithm.pokreniNaivniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkNaiveCoverage());
     ASSERT_EQ(algorithm.naiveCoverSize(), 1);
@@ -199,7 +199,7 @@ TEST(ga10_unitDiskCoverTests, EqualPointsRandom1)
 TEST(ga10_unitDiskCoverTests, RandomInput1Random1)
 {
     UnitDiskCover algorithm(nullptr, 0, false, "", 20, diskRadius, AlgorithmType::RANDOM1);
-    algorithm.pokreniAlgoritam();
+    algorithm.pokreniNaivniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkNaiveCoverage());
 }
@@ -207,7 +207,7 @@ TEST(ga10_unitDiskCoverTests, RandomInput1Random1)
 TEST(ga10_unitDiskCoverTests, RandomInput2Random1)
 {
     UnitDiskCover algorithm(nullptr, 0, false, "", 50, diskRadius, AlgorithmType::RANDOM1);
-    algorithm.pokreniAlgoritam();
+    algorithm.pokreniNaivniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkNaiveCoverage());
 }
@@ -219,7 +219,7 @@ TEST(ga10_unitDiskCoverTests, RandomInput2Random1)
 TEST(ga10_unitDiskCoverTests, NoPointsRandom2)
 {
     UnitDiskCover algorithm(nullptr, 0, false, "", 0, diskRadius, AlgorithmType::RANDOM2);
-    algorithm.pokreniAlgoritam();
+    algorithm.pokreniNaivniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkNaiveCoverage());
     ASSERT_EQ(algorithm.naiveCoverSize(), 0);
@@ -230,7 +230,7 @@ TEST(ga10_unitDiskCoverTests, EqualPointsRandom2)
 {
     UnitDiskCover algorithm(nullptr, 0, false, inputFile, 1, diskRadius, AlgorithmType::RANDOM2);
 
-    algorithm.pokreniAlgoritam();
+    algorithm.pokreniNaivniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkNaiveCoverage());
     ASSERT_EQ(algorithm.naiveCoverSize(), 1);
@@ -240,7 +240,7 @@ TEST(ga10_unitDiskCoverTests, EqualPointsRandom2)
 TEST(ga10_unitDiskCoverTests, RandomInput1Random2)
 {
     UnitDiskCover algorithm(nullptr, 0, false, "", 20, diskRadius, AlgorithmType::RANDOM2);
-    algorithm.pokreniAlgoritam();
+    algorithm.pokreniNaivniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkNaiveCoverage());
 }
@@ -248,7 +248,7 @@ TEST(ga10_unitDiskCoverTests, RandomInput1Random2)
 TEST(ga10_unitDiskCoverTests, RandomInput2Random2)
 {
     UnitDiskCover algorithm(nullptr, 0, false, "", 50, diskRadius, AlgorithmType::RANDOM2);
-    algorithm.pokreniAlgoritam();
+    algorithm.pokreniNaivniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkNaiveCoverage());
 }
