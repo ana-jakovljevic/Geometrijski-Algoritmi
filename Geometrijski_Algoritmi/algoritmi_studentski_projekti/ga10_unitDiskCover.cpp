@@ -703,22 +703,21 @@ void UnitDiskCover::randomAlgorithm1()
 void UnitDiskCover::randomAlgorithm2()
 {
     std::default_random_engine generator(time(nullptr));
-    std::uniform_real_distribution<double> distribution(-1*_diskRadius*sqrt(2)/2.0,_diskRadius*sqrt(2)/2.0);
+    std::uniform_real_distribution<double> distribution(-1*_diskRadius*sqrt(2)/2.0, _diskRadius*sqrt(2)/2.0);
     std::vector<QPointF> points(_points);
 
     while(points.size() > 0)
     {
         double r1 = distribution(generator);
-        int randX = points.begin()->x() + r1;
+        double randX = points.begin()->x() + r1;
         double r2 = distribution(generator);
-        int randY = points.begin()->y() + r2;
+        double randY = points.begin()->y() + r2;
 
         QPointF center(randX, randY);
         _naiveCover.push_back(center);
-        //AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock();
 
         auto it = std::begin(points);
-        it = points.erase(it);
         while(it != std::end(points))
         {
             if(pomocneFunkcije::distanceKvadratF(*it, center) <= _diskRadius*_diskRadius)
