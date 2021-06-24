@@ -173,7 +173,7 @@ void UnitDiskCover::G1991()
        _S.clear();
 
        /* partitioning points in separate sets based on their belonging to vertical strips */
-       for(QPointF &point: _points)
+       for(QPointF &point: set)
        {
            auto ixp = int(floor(point.x()/squareSize));
            _S[ixp].insert(point);
@@ -549,10 +549,10 @@ void UnitDiskCover::paintG1991(QPainter *painter) const
     painter->setPen(p);
     for(auto s: _S)
     {
-        painter->drawLine(s.first * sqrt(2)*_diskRadius, 2, s.first*sqrt(2)*_diskRadius, 590);
-        painter->drawLine( (1 + s.first) * sqrt(2)*_diskRadius, 0, (1 + s.first*sqrt(2)*_diskRadius), 590);
+        painter->drawLine(s.first * sqrt(2)*_diskRadius, 2, s.first*sqrt(2)*_diskRadius, _pCrtanje->height());
+        painter->drawLine( (1 + s.first) * sqrt(2)*_diskRadius, 0, (1 + s.first*sqrt(2)*_diskRadius), _pCrtanje->height());
         painter->setBrush(Qt::lightGray);
-        painter->drawRect(s.first * sqrt(2)*_diskRadius, 2, sqrt(2)*_diskRadius, 590);
+        painter->drawRect(s.first * sqrt(2)*_diskRadius, 2, sqrt(2)*_diskRadius, _pCrtanje->height());
     }
 
     p.setWidth(2);
