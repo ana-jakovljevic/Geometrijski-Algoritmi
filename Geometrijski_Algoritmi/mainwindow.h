@@ -25,6 +25,7 @@
 #include "ga15_collisiondetection.h"
 #include "ga17_convexhulllineintersections.h"
 #include "ga20_largest_empty_circle/lec.h"
+#include "ga10_unitDiskCover.h"
 
 /* Enumeracija algoritama */
 enum class TipAlgoritma {
@@ -45,7 +46,8 @@ enum class TipAlgoritma {
     COLLISION_DETECTION,
     CONVEX_HULL_LINE_INTERSECTIONS,
     COINS_ON_SHELF,
-    NAJVECI_PRAZAN_KRUG
+    NAJVECI_PRAZAN_KRUG,
+    UNIT_DISK_COVER
 };
 
 /* Enumeracija tabova */
