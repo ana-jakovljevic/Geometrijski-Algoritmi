@@ -6,8 +6,7 @@ CONFIG += thread
 CONFIG += qt
 CONFIG += thread
 
-
-QT += core gui charts widgets
+QT += core gui charts widgets opengl
 
 # Ova opcija omogucava da se qDebug ne ispisuje u Release modu.
 # Nikada ne zelimo da imamo debug poruke u kodu na kojem se mere performanse,
