@@ -9,7 +9,7 @@
 using namespace testing;
 
 static constexpr auto inputFile = "../Geometrijski_Algoritmi/input_files/ga10_unitDiskCover/file1.txt";
-int diskRadius = 10;
+static constexpr auto diskRadius = 10;
 
 /****** G1991 ******/
 
@@ -20,7 +20,7 @@ TEST(ga10_unitDiskCoverTests, NoPointsG1991)
     algorithm.pokreniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkCoverage());
-    ASSERT_EQ(algorithm.coverSize(), 0);
+    ASSERT_EQ(algorithm.coverSize(), 0ul);
 }
 
 /* more points on same position */
@@ -31,7 +31,7 @@ TEST(ga10_unitDiskCoverTests, EqualPointsG1991)
     algorithm.pokreniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkCoverage());
-    ASSERT_EQ(algorithm.coverSize(), 1);
+    ASSERT_EQ(algorithm.coverSize(), 1ul);
 }
 
 /* generate random points and check if every point is covered */
@@ -60,7 +60,7 @@ TEST(ga10_unitDiskCoverTests, NoPointsLL2014)
     algorithm.pokreniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkCoverage());
-    ASSERT_EQ(algorithm.coverSize(), 0);
+    ASSERT_EQ(algorithm.coverSize(), 0ul);
 }
 
 /* more points on same position */
@@ -71,7 +71,7 @@ TEST(ga10_unitDiskCoverTests, EqualPointsLL2014)
     algorithm.pokreniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkCoverage());
-    ASSERT_EQ(algorithm.coverSize(), 1);
+    ASSERT_EQ(algorithm.coverSize(), 1ul);
 }
 
 /* generate random points and check if every point is covered */
@@ -100,7 +100,7 @@ TEST(ga10_unitDiskCoverTests, NoPointsBLMS2017)
     algorithm.pokreniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkCoverage());
-    ASSERT_EQ(algorithm.coverSize(), 0);
+    ASSERT_EQ(algorithm.coverSize(), 0ul);
 }
 
 /* more points on same position */
@@ -111,7 +111,7 @@ TEST(ga10_unitDiskCoverTests, EqualPointsBLMS2017)
     algorithm.pokreniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkCoverage());
-    ASSERT_EQ(algorithm.coverSize(), 4);
+    ASSERT_EQ(algorithm.coverSize(), 4ul);
 }
 
 /* generate random points and check if every point is covered */
@@ -141,7 +141,7 @@ TEST(ga10_unitDiskCoverTests, NoPointsGHS2019)
     algorithm.pokreniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkCoverage());
-    ASSERT_EQ(algorithm.coverSize(), 0);
+    ASSERT_EQ(algorithm.coverSize(), 0ul);
 }
 
 /* more points on same position */
@@ -152,7 +152,7 @@ TEST(ga10_unitDiskCoverTests, EqualPointsGHS2019)
     algorithm.pokreniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkCoverage());
-    ASSERT_EQ(algorithm.coverSize(), 1);
+    ASSERT_EQ(algorithm.coverSize(), 1ul);
 }
 
 /* generate random points and check if every point is covered */
@@ -181,7 +181,7 @@ TEST(ga10_unitDiskCoverTests, NoPointsRandom1)
     algorithm.pokreniNaivniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkNaiveCoverage());
-    ASSERT_EQ(algorithm.naiveCoverSize(), 0);
+    ASSERT_EQ(algorithm.naiveCoverSize(), 0ul);
 }
 
 /* more points on same position */
@@ -192,7 +192,7 @@ TEST(ga10_unitDiskCoverTests, EqualPointsRandom1)
     algorithm.pokreniNaivniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkNaiveCoverage());
-    ASSERT_EQ(algorithm.naiveCoverSize(), 1);
+    ASSERT_EQ(algorithm.naiveCoverSize(), 1ul);
 }
 
 /* generate random points and check if every point is covered */
@@ -203,7 +203,7 @@ TEST(ga10_unitDiskCoverTests, RandomInputRandom1)
     algorithm.pokreniNaivniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkNaiveCoverage());
-    ASSERT_EQ(algorithm.naiveCoverSize(), 1);
+    ASSERT_EQ(algorithm.naiveCoverSize(), 1ul);
 }
 
 
@@ -215,7 +215,7 @@ TEST(ga10_unitDiskCoverTests, NoPointsRandom2)
     UnitDiskCover algorithm(nullptr, 0, false, "", 0, diskRadius, AlgorithmType::RANDOM2);
     algorithm.pokreniNaivniAlgoritam();
     EXPECT_TRUE(algorithm.checkNaiveCoverage());
-    ASSERT_EQ(algorithm.naiveCoverSize(), 0);
+    ASSERT_EQ(algorithm.naiveCoverSize(), 0ul);
 }
 
 /* more points on same position */
@@ -226,7 +226,7 @@ TEST(ga10_unitDiskCoverTests, EqualPointsRandom2)
     algorithm.pokreniNaivniAlgoritam();
 
     EXPECT_TRUE(algorithm.checkNaiveCoverage());
-    ASSERT_EQ(algorithm.naiveCoverSize(), 1);
+    ASSERT_EQ(algorithm.naiveCoverSize(), 1ul);
 }
 
 /* generate random points and check if every point is covered */
@@ -246,7 +246,4 @@ TEST(ga10_unitDiskCoverTests, RandomInput2Random2)
     EXPECT_TRUE(algorithm.checkNaiveCoverage());
 }
 
-
-
 #endif // TST_GA10_UNITDISKCOVER_H
-
