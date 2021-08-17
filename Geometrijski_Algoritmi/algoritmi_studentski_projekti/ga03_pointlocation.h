@@ -1,11 +1,12 @@
 #ifndef GA03_POINTLOCATION_H
 #define GA03_POINTLOCATION_H
+
 #include "algoritambaza.h"
 
-class ga03_pointlocation : public AlgoritamBaza
+class pointlocation : public AlgoritamBaza
 {
 public:
-    ga03_pointlocation(QWidget *pCrtanje,
+    pointlocation(QWidget *pCrtanje,
                         int pauzaKoraka,
                         const bool &naivni = false,
                         std::string imeDatoteke = "",
@@ -18,7 +19,7 @@ public:
 private:
     void generisiNasumicnuMapu(int);
     std::vector<QPoint> _tacke;
-    int velicina;
+    int _velicina;
 };
 
 #endif // GA03_POINTLOCATION_H

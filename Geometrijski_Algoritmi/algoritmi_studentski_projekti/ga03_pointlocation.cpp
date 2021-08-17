@@ -1,6 +1,6 @@
 #include "ga03_pointlocation.h"
 
-ga03_pointlocation::ga03_pointlocation(QWidget *pCrtanje,
+pointlocation::pointlocation(QWidget *pCrtanje,
                                        int pauzaKoraka,
                                        const bool &naivni,
                                        std::string imeDatoteke,
@@ -11,19 +11,20 @@ ga03_pointlocation::ga03_pointlocation(QWidget *pCrtanje,
               _tacke = generisiNasumicneTacke(brojTacaka);
           else
               _tacke = ucitajPodatkeIzDatoteke(imeDatoteke);
-          velicina = _tacke.size();
+          _velicina = _tacke.size();
       }
-void ga03_pointlocation::pokreniAlgoritam(){
+void pointlocation::pokreniAlgoritam(){
+    //odredjujemo prvo segmente
 
 }
-void ga03_pointlocation::crtajAlgoritam(QPainter *) const{
+void pointlocation::crtajAlgoritam(QPainter *) const{
 
 
 }
-void ga03_pointlocation::pokreniNaivniAlgoritam(){
+void pointlocation::pokreniNaivniAlgoritam(){
 
 }
 
-void ga03_pointlocation::crtajNaivniAlgoritam(QPainter *) const {
+void pointlocation::crtajNaivniAlgoritam(QPainter *) const {
 
 }
