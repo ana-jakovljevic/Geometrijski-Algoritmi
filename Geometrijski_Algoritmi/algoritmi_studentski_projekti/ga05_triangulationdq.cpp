@@ -1,7 +1,8 @@
 #include <fstream>
 #include <iostream>
-#include "ga05_triangulationdq.h"
 
+#include "algoritambaza.h"
+#include "ga05_triangulationdq.h"
 
 
 triangulationDQ::triangulationDQ(QWidget *pCrtanje,
@@ -17,20 +18,56 @@ triangulationDQ::triangulationDQ(QWidget *pCrtanje,
         else
             tacke = ucitajNasumicneTacke(brojTacaka);
 
-
+      edges_ = QuadList();
       generateRandomVerts(tacke);
-      for(auto& tacka : tacke){
+      vertices_ = tacke;
+/*
+      for(auto& tacka : vertices_){
           std::cout << tacka.x() << " " << tacka.y() << std::endl;
-      }
+      }*/
 
 }
 void triangulationDQ::pokreniAlgoritam(){
-    delaunay(tacke);
-
+    std::cout << "Pozovi triangulate" << std::endl;
+    EdgePartition tuple = triangulate(vertices_);
+    std::cout << "Pozovi GetVoronoi" << std::endl;
+    GetVoronoi();
+    std::cout << "Velicina edges_" << std::endl;
+    std::cout << edges_.size() << std::endl;
     AlgoritamBaza_updateCanvasAndBlock()
 
     emit animacijaZavrsila();
 
+}
+void triangulationDQ::DrawEdge(EdgeDQ *e, QPainter* p) const{
+    if(e->draw==true)
+        p->drawLine(e->origin(), e->destination());
+}
+QuadList triangulationDQ::GetVoronoi(){
+    for (auto i = edges_.begin(); i != edges_.end(); i++)
+        {
+            EdgeDQ* e = (*i)->edges;
+
+            // If we're not on the exterior
+            if (CCW(e[0].origin(), e[0].destination(), e[0].Onext()->destination())
+                && CCW(e[0].origin(), e[0].Oprev()->destination(), e[0].destination()))
+            {
+                e[1].setOrigin((Circumcenter(e[0].origin(), e[0].destination(), e[0].Onext()->destination())));
+                e[3].setOrigin((Circumcenter(e[0].origin(), e[0].Oprev()->destination(), e[0].destination())));
+            }
+        }
+
+        return edges_;
+}
+QPointF triangulationDQ::Circumcenter(QPointF a, QPointF b, QPointF c){
+    auto d = 2* (a.x() * (b.y() - c.y()) + b.x() * (c.y() - a.y()) + c.x() * (a.y() - b.y()));
+    auto a_lengthsquared = a.x()*a.x() + a.y()*a.y();
+    auto b_lengthsquared = b.x()*b.x() + b.y()*b.y();
+    auto c_lengthsquared = c.x()*c.x() + c.y()*c.y();
+
+    qreal x = static_cast<qreal>(a_lengthsquared * (b.y() - c.y()) + b_lengthsquared * (c.y() - a.y()) + c_lengthsquared * (a.y() - b.y())) / d;
+    qreal y = static_cast<qreal>(a_lengthsquared * (c.x() - b.x()) + b_lengthsquared * (a.x() - c.x()) + c_lengthsquared * (b.x() - a.x())) / d;
+    return QPointF(x,y);
 }
 void triangulationDQ::crtajAlgoritam(QPainter *painter) const{
     if(!painter) return;
@@ -47,21 +84,23 @@ void triangulationDQ::crtajAlgoritam(QPainter *painter) const{
     magneta.setWidth(2);
 
 
-    for(const auto &pt : tacke){
+    for(const auto &pt : vertices_){
         painter->setPen(regular);
         painter->drawPoint(pt);
     }
 
-    for(const auto &edge : edges){
-        painter->setPen(magneta);
-        if(edge->data == false)
-         painter->drawLine(edge->_org, edge->_dest);
 
+    for(auto i=edges_.begin(); i != edges_.end(); ++i){
+        painter->setPen(magneta);
+
+        if((*i)->edges[0].draw)
+            painter->drawLine((*i)->edges->origin(),(*i)->edges->destination());
     }
 
 
-
 }
+
+
 void triangulationDQ::pokreniNaivniAlgoritam(){
     emit animacijaZavrsila();
 }
@@ -110,191 +149,299 @@ void triangulationDQ::generateRandomVerts(std::vector<QPointF>& tacke){
 
 }
 
-void triangulationDQ::delaunay(std::vector<QPointF> points){
-    if(points.size() < 2){
-        return;
+
+EdgePartition triangulationDQ::triangulate(std::vector<QPointF> points){
+    if(points.size()==2){
+        return LinePrimitive(points);
     }
-    edges.clear();
-
-    triangulate(points);
-
-   /* for(auto e : edges){
-        std::cout << e;
-        std::cout << e.sym;
-        std::cout << e.onext;
-        std::cout << e.oprev;
-    }*/
-
-    //std::remove_if(edges.begin(), edges.end(), [](const auto &i){return i->data==false;});
-
-}
-std::vector<EdgeDQ*> triangulationDQ::triangulate(std::vector<QPointF> points){
-    if(points.size() == 2){
-        EdgeDQ* a = make_edge(points[0], points[1]);
-        std::vector<EdgeDQ*> v;
-        v.push_back(a);
-        v.push_back(a->sym);
-        return v;
+    if (points.size() == 3)
+    {
+        return TrianglePrimitive(points);
     }
-    if(points.size() == 3){
-        auto p1 = points[0], p2 = points[1], p3 =  points[2];
-        EdgeDQ *a = make_edge(p1, p2);
-        EdgeDQ* b = make_edge(p2, p3);
-        splice(a->sym, b);
-        if(right_of(p3, a)){
-            connect(b,a);
-            std::vector<EdgeDQ*> v;
-            v.push_back(a);
-            v.push_back(b->sym);
-            return v;
-        }else if(left_of(p3, a)){
-            EdgeDQ* c = connect(b,a);
-            std::vector<EdgeDQ*> v;
-            v.push_back(c->sym);
-            v.push_back(c);
-            return v;
-        }else{
-            std::vector<EdgeDQ*> v;
-            v.push_back(a);
-            v.push_back(b->sym);
-            return v;
-        }
-    }else{
-        unsigned long m = (points.size()+1) / 2;
-        std::vector<QPointF> L(points.begin(), points.begin()+m);
-        std::cout << "L" << std::endl;
-        for(auto& tacka : L){
-            std::cout << tacka.x() << " " << tacka.y() << std::endl;
-        }
+    PointsPartition partition = SplitPoints(points);
 
-        std::cout << "R" << std::endl;
+    EdgePartition left = triangulate(std::get<0>(partition));
+    EdgePartition right = triangulate(std::get<1>(partition));
 
-        std::vector<QPointF> R(points.begin()+m, points.end());
-        for(auto& tacka : R){
-            std::cout << tacka.x() << " " << tacka.y() << std::endl;
-        }
+    EdgeDQ* right_inner = std::get<0>(right)[0];
+    EdgeDQ* left_inner = std::get<1>(left)[0];
 
-        std::vector<EdgeDQ*> ld = triangulate(L);
-        std::vector<EdgeDQ*> rd = triangulate(R);
-        EdgeDQ *ldo = ld[0], *ldi = ld[1];
-        EdgeDQ *rdi = rd[0], *rdo = rd[1];
+    EdgeDQ* left_outer = std::get<0>(left)[0];
+    EdgeDQ* right_outer = std::get<1>(right)[0];
 
-        while(true){
-            if(right_of(rdi->_org, ldi)){
-                ldi = ldi->sym->onext;
-            }else if(left_of(ldi->_org, rdi)){
-                rdi = rdi->sym->oprev;
-            }else{
-                break;
-            }
-        }
-        EdgeDQ* base = connect(ldi->sym,rdi);
-        if((ldi->_org.x() == ldo->_org.x()) && ldi->_org.y() == ldo->_org.y()){
-            ldo = base;
-        }
-        if(rdi->_org.x() == rdo->_org.x() && rdi->_org.y() == rdo->_org.y()){
-            rdo = base->sym;
-        }
-        // merge
-        while(true){
-            EdgeDQ *rcand = base->sym->onext;
-            EdgeDQ *lcand = base->oprev;
-            bool v_rcand = right_of(rcand->_dest, base);
-            bool v_lcand = right_of(lcand->_dest, base);
-            if(! (v_rcand || v_lcand)){
-                break;
-            }
-            if(v_rcand){
-                while(right_of(rcand->onext->_dest, base) && in_circle(base->_dest, base->_org, rcand->_dest, rcand->onext->_dest)){
-                    EdgeDQ* t = rcand->onext;
-                    delete_edge(rcand);
-                    rcand = t;
-                }
-            }
-            if(v_lcand){
-                while(right_of(lcand->oprev->_dest, base) && in_circle(base->_dest, base->_org, lcand->_dest, lcand->oprev->_dest)){
-                    EdgeDQ* t = lcand->oprev;
-                    delete_edge(lcand);
-                    lcand = t;
-                }
-            }
-            if(!v_rcand || (v_lcand && in_circle(rcand->_dest, rcand->_org, lcand->_org, lcand->_dest))){
-                base = connect(lcand, base->sym);
-            }else{
-                base = connect(base->sym, rcand->sym);
-            }
-        }
-        std::vector<EdgeDQ*> v;
-        v.push_back(ldo);
-        v.push_back(rdo);
-        return v;
+    EdgeDQ* base_edge = LowestCommonTangent(left_inner, right_inner);
+
+    if (left_inner->origin() == left_outer->origin())
+    {
+        left_outer = base_edge->Sym();
     }
-
-
+    if (right_inner->origin() == right_outer->origin())
+    {
+        right_outer = base_edge;
+    }
+    MergeHulls(base_edge);
+    return EdgePartition({left_outer}, {right_outer});
 }
 bool triangulationDQ::in_circle(QPointF a, QPointF b, QPointF c, QPointF d){
-    auto a1 = a.x()-d.x();
-    auto a2 = a.y() - d.y();
-    auto b1 = b.x() - d.x();
-    auto b2 = b.y() - d.y();
-    auto c1 = c.x() - d.x();
-    auto c2 = c.y() - d.y();
-    auto a3 = a1 * a1 + a2 * a2;
-    auto b3 = b1 * b1 + b2 * b2;
-    auto c3 = c1 * c1 + c2 * c2;
-    auto det = a1*b2*c3 + a2*b3*c1 + a3*b1*c2 - (a3*b2*c1 + a1*b3*c2 + a2*b1*c3);
-    return det < 0;
-}
-bool triangulationDQ::right_of(QPointF p, EdgeDQ* e){
-    QPointF a = e->_org;
-    QPointF b = e->_dest;
-    auto det = (a.x()-p.x())*(b.y()-p.y()) - (a.y()-p.y())*(b.x()-p.x());
-    return det > 0;
-}
-bool triangulationDQ::left_of(QPointF p, EdgeDQ* e){
-    QPointF a = e->_org;
-    QPointF b = e->_dest;
-    auto det = (a.x()-p.x())*(b.y()-p.y()) - (a.y()-p.y())*(b.x()-p.x());
-    return det < 0;
-}
-EdgeDQ* triangulationDQ::make_edge(QPointF org, QPointF dest){
-    EdgeDQ *e = new EdgeDQ(org, dest);
-    EdgeDQ *es = new EdgeDQ (dest, org);
-    e->sym = es;
-    es->sym = e;
-    e->onext = e;
-    e->oprev = e;
-    es->onext = es;
-    es->oprev = es;
-    edges.push_back(e);
+    auto a_lengthsquared = a.x()*a.x()+a.y()*a.y();
+    auto b_lengthsquared = b.x()*b.x()+b.y()*b.y();
+    auto c_lengthsquared = c.x()*c.x()+c.y()*c.y();
+    auto d_lengthsquared = d.x()*d.x()+d.y()*d.y();
+    double m[4][4] = {	{ a.x(), b.x(), c.x(), d.x() },
+                         { a.y(), b.y(), c.y(), d.y() },
+                         { a_lengthsquared, b_lengthsquared, c_lengthsquared, d_lengthsquared},
+                            { 1, 1, 1, 1 } };
 
-    return e;
-
+        // Return true if our determinant is positive
+        return Det4x4(m[0], m[1], m[2], m[3]) > 0;
 }
+double triangulationDQ::Det4x4(double *col_0, double *col_1, double *col_2, double *col_3){
+    double a = col_0[0];
+    double b = col_1[0];
+    double c = col_2[0];
+    double d = col_3[0];
+    double e = col_0[1];
+    double f = col_1[1];
+    double g = col_2[1];
+    double h = col_3[1];
+    double i = col_0[2];
+    double j = col_1[2];
+    double k = col_2[2];
+    double l = col_3[2];
+    double m = col_0[3];
+    double n = col_1[3];
+    double o = col_2[3];
+    double p = col_3[3];
+
+    // Compute 3x3 determinants
+    double adet = a * ((f * k * p) - (f * l * o) - (g * j * p) + (g * l * n) + (h * j * o) - (h * k * n));
+    double bdet = b * ((e * k * p) - (e * l * o) - (g * i * p) + (g * l * m) + (h * i * o) - (h * k * m));
+    double cdet = c * ((e * j * p) - (e * l * n) - (f * i * p) + (f * l * m) + (h * i * n) - (h * j * m));
+    double ddet = d * ((e * j * o) - (e * k * n) - (f * i * o) + (f * k * m) + (g * i * n) - (g * j * m));
+
+    // Return their alternating sum
+    double det = adet - bdet + cdet - ddet;
+    return det;
+}
+double triangulationDQ::Det3x3(double* col_0, double* col_1, double* col_2)
+{
+    // Gets the determinant of a 3x3 matrix, where the arguments are 3-long column vectors
+
+    // Names all the objects in the matrix for my convenience
+    double a = col_0[0];
+    double b = col_1[0];
+    double c = col_2[0];
+    double d = col_0[1];
+    double e = col_1[1];
+    double f = col_2[1];
+    double g = col_0[2];
+    double h = col_1[2];
+    double i = col_2[2];
+
+    // Return the alternating sum of the 2x2 determinants of the coproducts
+    double det = a * (e * i - f * h) - b * (d * i - f * g) + c * (d * h - e * g);
+    return det;
+}
+
+bool triangulationDQ::right_of(EdgeDQ* e, QPointF p){
+   return CCW(p, e->destination(), e->origin());
+}
+bool triangulationDQ::CCW(QPointF a, QPointF b, QPointF c){
+    float a_x = a.x();
+    float a_y = a.y();
+    float b_x = b.x();
+    float b_y = b.y();
+    float c_x = c.x();
+    float c_y = c.y();
+
+    // Set up a matrix
+    double m[3][3] = { { a_x, b_x, c_x }, { a_y, b_y, c_y }, { 1, 1, 1 } };
+
+    // Return true if our determinant is positive
+    return Det3x3(m[0], m[1], m[2]) > 0;
+}
+bool triangulationDQ::left_of( EdgeDQ* e, QPointF p ){
+    return CCW(p, e->origin(), e->destination());
+}
+
 void triangulationDQ::splice(EdgeDQ* a, EdgeDQ* b){
-    if(a == b){
-        return;
-    }
-    a->onext->oprev = b;
-    b->onext->oprev = a;
-    a->onext = b->onext;
-    b->onext = a->onext;
-    AlgoritamBaza_updateCanvasAndBlock()
+    EdgeDQ* alpha = a->Onext()->Rot();
+    EdgeDQ* beta = b->Onext()->Rot();
 
+    EdgeDQ* t1 = b->Onext();
+    EdgeDQ* t2 = a->Onext();
+    EdgeDQ* t3 = beta->Onext();
+    EdgeDQ* t4 = alpha->Onext();
+
+    a->setNext(t1);
+    b->setNext(t2);
+    alpha->setNext(t3);
+    beta->setNext(t4);
+
+    AlgoritamBaza_updateCanvasAndBlock()
     emit animacijaZavrsila();
 }
-EdgeDQ* triangulationDQ::connect(EdgeDQ* a, EdgeDQ* b){
-    EdgeDQ * e = make_edge(a->_dest,b->_org);
-    splice(e, a->sym->oprev);
-    splice(e->sym, b);
+
+void triangulationDQ::Kill(EdgeDQ *edge){
+    splice(edge, edge->Oprev());
+    splice(edge->Sym(), edge->Sym()->Oprev());
+
+   // Free the quad edge that the edge belongs to
+    QuadEdge* raw = (QuadEdge*)(edge - (edge->index()));
+    edges_.erase(std::remove(edges_.begin(), edges_.end(), raw));
+    delete raw;
+    AlgoritamBaza_updateCanvasAndBlock()
+    emit animacijaZavrsila();
+}
+PointsPartition triangulationDQ::SplitPoints(const PointsList &points){
+    auto halfway = (points.size() / 2);
+
+    PointsList left(points.begin(), points.begin() + halfway);
+    PointsList right(points.begin() + halfway, points.end());
+
+    return PointsPartition(left, right);
+}
+EdgeDQ* triangulationDQ::MakeEdgeBetween(int a, int b, const PointsList &points){
+ EdgeDQ* e = Make(edges_);
+
+ e->setOrigin(points[a]);
+ e->setDestination(points[b]);
+ return e;
+}
+
+EdgeDQ* triangulationDQ::Connect(EdgeDQ* a, EdgeDQ* b){
+    EdgeDQ* e = Make(edges_);
+
+    e->setOrigin(a->destination());
+    // Set it to end at the beginning of a, thus giving it a coherent orientation
+    e->setDestination(b->origin());
+    // Perform splice operations -- I'm still not quite sure why
+    splice(e, a->Lnext());
+    splice(e->Sym(), b);
+
+    // Return a pointer to our new edge
     return e;
 }
-void triangulationDQ::delete_edge(EdgeDQ* e){
-    splice(e, e->oprev);
-    splice(e->sym, e->sym->oprev);
-    e->data = true;
-    e->sym->data = true;
-    AlgoritamBaza_updateCanvasAndBlock()
-
-    emit animacijaZavrsila();
+EdgePartition triangulationDQ::LinePrimitive(const PointsList &points){
+    EdgeDQ * e = MakeEdgeBetween(0,1,points);
+    EdgeDQ * e_sym = e->Sym();
+    return EdgePartition({e}, {e_sym});
 }
+EdgePartition triangulationDQ::TrianglePrimitive(const PointsList &points){
+    EdgeDQ* a = MakeEdgeBetween(0, 1, points);
+    EdgeDQ* b = MakeEdgeBetween(1, 2, points);
+
+    // Do the splice thing; I'm not sure why
+    splice(a->Sym(), b);
+
+    // We want a consistent face orientation, so determine which way we're going here
+    if (CCW(points[0], points[1], points[2]))
+    {
+        EdgeDQ* c = Connect(b, a);
+        return EdgePartition({ a }, { b->Sym() });
+    }
+    else if (CCW(points[0], points[2], points[1]))
+    {
+        EdgeDQ* c = Connect(b, a);
+        return EdgePartition({ c->Sym() }, { c });
+    }
+    else
+    {
+        // The points are collinear
+        return EdgePartition({ a }, { b->Sym() });
+    }
+}
+EdgeDQ* triangulationDQ::LowestCommonTangent(EdgeDQ *&left_inner, EdgeDQ *&right_inner){
+        while (true)
+        {
+            if (left_of(left_inner,right_inner->origin()))
+            {
+                left_inner = left_inner->Lnext();
+            }
+            else if (right_of(right_inner,left_inner->origin()))
+            {
+                right_inner = right_inner->Rprev();
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        // Create the base edge once we hit the bottom
+        EdgeDQ* base_edge = Connect(right_inner->Sym(), left_inner);
+        return base_edge;
+}
+
+EdgeDQ* triangulationDQ::LeftCandidate(EdgeDQ *base_edge){
+    EdgeDQ* left_candidate = base_edge->Sym()->Onext();
+
+    if (Valid(left_candidate, base_edge))
+    {
+        while (in_circle(base_edge->destination(), base_edge->origin(),
+                         left_candidate->destination(),
+                         left_candidate->Onext()->destination()))
+        {
+            EdgeDQ* t = left_candidate->Onext();
+            Kill(left_candidate);
+            left_candidate = t;
+        }
+    }
+
+    return left_candidate;
+}
+EdgeDQ* triangulationDQ::RightCandidate(EdgeDQ* base_edge)
+{
+    // Picks out a "candidate" edge from the right half of the domain
+    EdgeDQ* right_candidate = base_edge->Oprev();
+
+    if (Valid(right_candidate, base_edge))
+    {
+        while (in_circle(base_edge->destination(), base_edge->origin(),
+                         right_candidate->destination(),
+                         right_candidate->Oprev()->destination()))
+        {
+            EdgeDQ* t = right_candidate->Oprev();
+            Kill(right_candidate);
+            right_candidate = t;
+        }
+    }
+
+    return right_candidate;
+}
+void triangulationDQ::MergeHulls(EdgeDQ *&base_edge){
+    while (true)
+    {
+        // Get our candidate edges (really becaue we care about their vertices)
+        EdgeDQ* left_candidate = LeftCandidate(base_edge);
+        EdgeDQ* right_candidate = RightCandidate(base_edge);
+
+        if (!Valid(left_candidate, base_edge) &&
+            !Valid(right_candidate, base_edge))
+        {
+            // If neither is valid, we have nothing more to do because we've reached the top
+            break;
+        }
+        else if (	!Valid(left_candidate, base_edge) ||
+                    in_circle(left_candidate->destination(), left_candidate->origin(), right_candidate->origin(), right_candidate->destination()))
+        {
+            // Otherwise, if we can rule out the left guy, connect the right edge to the base and set the new base edge
+            // This ruling out comes either from creating an invalid hypothetical triangle or from being beneath the base edge
+            base_edge = Connect(right_candidate, base_edge->Sym());
+        }
+        else
+        {
+            // If we can't do that, then the left edge must be valid and we connect it to the base and set the new base edge
+            base_edge = Connect(base_edge->Sym(), left_candidate->Sym());
+        }
+    }
+}
+bool triangulationDQ::Valid(EdgeDQ *e, EdgeDQ *base_edge){
+    return right_of(base_edge,e->destination());
+}
+EdgeDQ* triangulationDQ::Make(std::vector<QuadEdge*>& list){
+   //return new EdgeDQ();
+   list.push_back(new QuadEdge());
+   return list.back()->edges;
+}
+

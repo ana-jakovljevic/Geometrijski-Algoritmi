@@ -1,10 +1,14 @@
 #ifndef TRIANGULATIONDQ_H
 #define TRIANGULATIONDQ_H
 
-#include "algoritambaza.h"
 
 #include "ga05_EdgeDQ.h"
 
+typedef std::vector<EdgeDQ*> EdgeList;
+typedef std::vector<QPointF> PointsList;
+typedef std::vector<QuadEdge*> QuadList;
+typedef std::tuple<EdgeList, EdgeList> EdgePartition;
+typedef std::tuple<PointsList, PointsList>	PointsPartition;
 
 
 class triangulationDQ : public AlgoritamBaza
@@ -24,14 +28,17 @@ public:
     void generateRandomVerts(std::vector<QPointF>& tacke);
 
     void delaunay(std::vector<QPointF> points);
-    std::vector<EdgeDQ*> triangulate(std::vector<QPointF> points);
+    EdgePartition triangulate(std::vector<QPointF> points);
     bool in_circle(QPointF a, QPointF b, QPointF c, QPointF d);
-    bool right_of(QPointF p, EdgeDQ* e);
-    bool left_of(QPointF p, EdgeDQ* e);
+    bool right_of(EdgeDQ* e, QPointF p);
+    bool left_of( EdgeDQ* e, QPointF p);
     EdgeDQ* make_edge(QPointF org, QPointF dest);
     void splice(EdgeDQ* a, EdgeDQ* b);
-    EdgeDQ* connect(EdgeDQ* a, EdgeDQ* b);
     void delete_edge(EdgeDQ* e);
+
+    void DrawEdge(EdgeDQ* e, QPainter* p) const;
+    QuadList GetVoronoi();
+    QPointF Circumcenter(QPointF a, QPointF b, QPointF c);
 
 private:
     std::vector<QPointF> ucitajPodatkeIzDatoteke(std::string imeDatoteke) const;
@@ -47,10 +54,26 @@ private:
 
 public:
     std::vector<QPointF> tacke;
-    std::vector<EdgeDQ*> edges;
-
-
-
+    //std::vector<EdgeDQ*> edges;
+    PointsList vertices_;
+    QuadList edges_;
+    QuadList quads_;
+    PointsPartition SplitPoints(const PointsList& points);
+    EdgeDQ* MakeEdgeBetween(int a, int b, const PointsList& points);
+    EdgeDQ* Connect(EdgeDQ* a, EdgeDQ* b);
+    void Kill(EdgeDQ* edge);
+    EdgePartition LinePrimitive(const PointsList& points);
+    EdgePartition TrianglePrimitive(const PointsList& points);
+    EdgeDQ* LowestCommonTangent(EdgeDQ*& left_inner, EdgeDQ*& right_inner);
+    EdgeDQ* LeftCandidate(EdgeDQ* base_edge);
+    EdgeDQ*	RightCandidate(EdgeDQ* base_edge);
+    void MergeHulls(EdgeDQ*& base_edge);
+    QuadList getTriangulation();
+    bool CCW(QPointF a, QPointF b, QPointF c);
+    double Det4x4(double* col_0, double* col_1, double* col_2, double* col_3);
+    double Det3x3(double* col_0, double* col_1, double* col_2);
+    bool Valid(EdgeDQ* e, EdgeDQ *base_edge);
+    EdgeDQ* Make(std::vector<QuadEdge*>& list);
 };
 
 #endif // TRIANGULATIONDQ_H
