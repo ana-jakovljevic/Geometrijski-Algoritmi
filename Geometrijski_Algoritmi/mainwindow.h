@@ -18,6 +18,7 @@
 #include "ga06_dceldemo.h"
 #include "ga07_triangulation.h"
 
+#include "ga05_triangulationdq.h"
 #include "ga06_presekPravougaonika.h"
 #include "ga07_konturaPravougaonika.h"
 #include "ga09_klasterovanje.h"
@@ -47,7 +48,8 @@ enum class TipAlgoritma {
     CONVEX_HULL_LINE_INTERSECTIONS,
     COINS_ON_SHELF,
     NAJVECI_PRAZAN_KRUG,
-    UNIT_DISK_COVER
+    UNIT_DISK_COVER,
+    TRIANGULACIJADQ
 };
 
 /* Enumeracija tabova */

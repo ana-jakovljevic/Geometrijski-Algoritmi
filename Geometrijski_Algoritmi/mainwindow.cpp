@@ -342,6 +342,10 @@ void MainWindow::napraviNoviAlgoritam()
         _pAlgoritamBaza = new UnitDiskCover(_pOblastCrtanja, _duzinaPauze, _naivni,
                                             _imeDatoteke, _brojSlucajnihObjekata);
         break;
+    case TipAlgoritma::TRIANGULACIJADQ:
+        _pAlgoritamBaza = new triangulationDQ(_pOblastCrtanja, _duzinaPauze, _naivni,
+                                            _imeDatoteke, _brojSlucajnihObjekata);
+        break;
     default: /* ako nije algoritam uopste */
         break;
     }

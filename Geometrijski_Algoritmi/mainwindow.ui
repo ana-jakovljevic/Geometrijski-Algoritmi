@@ -777,6 +777,11 @@
              <string>Unit Disk Cover</string>
             </property>
            </item>
+           <item>
+            <property name="text">
+             <string>Triangulacija Divide and Conquer</string>
+            </property>
+           </item>
           </widget>
          </item>
         </layout>

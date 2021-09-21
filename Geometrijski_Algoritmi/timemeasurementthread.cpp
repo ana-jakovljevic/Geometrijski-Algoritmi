@@ -66,6 +66,9 @@ void TimeMeasurementThread::run()
         case TipAlgoritma::UNIT_DISK_COVER:
             pAlgorithm = new UnitDiskCover(nullptr, 0, false, "", i);
             break;
+        case TipAlgoritma::TRIANGULACIJADQ:
+            pAlgorithm = new triangulationDQ(nullptr, 0, false, "", i);
+            break;
         default:
             break;
         }
