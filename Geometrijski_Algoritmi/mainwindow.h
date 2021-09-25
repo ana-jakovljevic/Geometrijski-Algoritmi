@@ -26,6 +26,7 @@
 #include "ga17_convexhulllineintersections.h"
 #include "ga20_largest_empty_circle/lec.h"
 #include "ga10_unitDiskCover.h"
+#include "ga03_pointlocation.h"
 
 /* Enumeracija algoritama */
 enum class TipAlgoritma {
@@ -40,6 +41,7 @@ enum class TipAlgoritma {
     TRIANGULACIJA,
     SEPARATOR,
     STUDENTSKI_PROJEKTI,
+    LOKACIJA_TACKE,
     PRESEK_PRAVOUGAONIKA,
     KONTURA_PRAVOUGAONIKA,
     KLASTEROVANJE,
@@ -96,6 +98,8 @@ private slots:
     void on_naivniCheck_stateChanged(int);
 
     void na_krajuAnimacije();
+
+    void on_tipAlgoritma_currentIndexChanged(const QString &arg1);
 
 private:
     void animacijaButtonAktivni(bool param_aktivnosti);

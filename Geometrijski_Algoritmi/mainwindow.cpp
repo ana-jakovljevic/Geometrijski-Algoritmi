@@ -14,7 +14,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->tipAlgoritma->insertSeparator(static_cast<int>(TipAlgoritma::SEPARATOR));
+
     animacijaButtonAktivni(false);
+
     animacijaParametriButtonAktivni(true);
     _naivni = ui->naivniCheck->isChecked();
 
@@ -76,6 +78,7 @@ void MainWindow::animacijaButtonAktivni(bool param_aktivnosti)
     ui->Zaustavi_dugme->setEnabled(param_aktivnosti);
     ui->Zapocni_dugme->setEnabled(param_aktivnosti);
     ui->merenjeButton->setEnabled(param_aktivnosti);
+
 }
 
 void MainWindow::animacijaParametriButtonAktivni(bool param_aktivnosti)
@@ -88,6 +91,7 @@ void MainWindow::animacijaParametriButtonAktivni(bool param_aktivnosti)
 
 void MainWindow::on_datoteka_dugme_clicked()
 {
+
     QString imeDatoteke = QFileDialog::getOpenFileName(this,
                               tr("Datoteka sa koordinatama tacaka"), "./ulazni_podaci/", "*.*");
     if (imeDatoteke.isEmpty())
@@ -140,7 +144,6 @@ void MainWindow::on_Zapocni_dugme_clicked()
     animacijaParametriButtonAktivni(true);
     ui->merenjeButton->setEnabled(false);
     ui->naivniCheck->setEnabled(false);
-
     if (_pAlgoritamBaza)
         _pAlgoritamBaza->pokreniAnimaciju();
 }
@@ -199,6 +202,8 @@ void MainWindow::on_tipAlgoritma_currentIndexChanged(int index)
         {
             ui->Nasumicni_dugme->setEnabled(false);
             ui->merenjeButton->setEnabled(false);
+        } else if(tipAlgoritma == TipAlgoritma::LOKACIJA_TACKE){
+            ui->Nasumicni_dugme->setEnabled(false);
         }
 
         switch (tipAlgoritma) {
@@ -342,6 +347,10 @@ void MainWindow::napraviNoviAlgoritam()
         _pAlgoritamBaza = new UnitDiskCover(_pOblastCrtanja, _duzinaPauze, _naivni,
                                             _imeDatoteke, _brojSlucajnihObjekata);
         break;
+    case TipAlgoritma::LOKACIJA_TACKE:
+        _pAlgoritamBaza = new PointLocation (_pOblastCrtanja, _duzinaPauze, _naivni,
+                                            _imeDatoteke, _brojSlucajnihObjekata);
+        break;
     default: /* ako nije algoritam uopste */
         break;
     }
@@ -363,4 +372,9 @@ void MainWindow::on_naivniCheck_stateChanged(int)
     _naivni = ui->naivniCheck->isChecked();
     _pOblastCrtanja->update();
     _pOblastCrtanjaOpenGL->update();
+}
+
+void MainWindow::on_tipAlgoritma_currentIndexChanged(const QString &arg1)
+{
+
 }

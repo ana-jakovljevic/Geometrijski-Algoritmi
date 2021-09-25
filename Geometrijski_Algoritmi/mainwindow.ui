@@ -739,6 +739,11 @@
            </item>
            <item>
             <property name="text">
+             <string>Lokacija tacke</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
              <string>Presek pravougaonika</string>
             </property>
            </item>
@@ -856,7 +861,7 @@
      <x>0</x>
      <y>0</y>
      <width>1183</width>
-     <height>22</height>
+     <height>29</height>
     </rect>
    </property>
   </widget>
