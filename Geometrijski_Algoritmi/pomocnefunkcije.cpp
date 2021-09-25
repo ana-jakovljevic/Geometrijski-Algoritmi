@@ -2,6 +2,25 @@
 
 #include <QtGlobal>
 
+//funkcija koja odredjuje da li tacka C pripada segmentu AB
+bool pomocneFunkcije::pripada(QPointF A, QPointF C, QPointF B) {
+    if (C.x() <= std::max(A.x(), B.x()) && C.x() >= std::min(A.x(), B.x()) &&
+        C.y() <= std::max(A.y(), B.y()) && C.y() >= std::min(A.y(), B.y()))
+       return true;
+
+    return false;
+}
+//funkcija vraca 0 ako su tacke kolinearne, 1 ako su orijentisane
+//u smeru kazaljke na satu i 2 inace
+int pomocneFunkcije::orijentacija(QPointF A, QPointF B, QPointF C) {
+    int br = (C.x() - B.x())*(B.y() - A.y())   -
+              (B.x() - A.x()) * (C.y() - B.y());
+
+    if (br == 0) return 0;
+    else if(br>0) return 1;
+    return 2;
+}
+
 bool pomocneFunkcije::bliski(float a, float b)
 {
     return fabsf(a - b) < EPSf;

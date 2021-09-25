@@ -17,6 +17,7 @@ void TimeMeasurementThread::run()
      * i poredi se vreme izvrsavanja efikasnog i naivnog algoritma
      * nad tih _i_ nasumicnih tacaka.
      */
+
     for(int i= _minValue; i <= _maxValue; i += _step)
     {
         /* Ovde kreirati instancu klase algoritma. */
@@ -65,6 +66,9 @@ void TimeMeasurementThread::run()
             break;
         case TipAlgoritma::UNIT_DISK_COVER:
             pAlgorithm = new UnitDiskCover(nullptr, 0, false, "", i);
+            break;
+        case TipAlgoritma::LOKACIJA_TACKE:
+            pAlgorithm = new PointLocation(nullptr, 0, false, "", i%10);
             break;
         default:
             break;
