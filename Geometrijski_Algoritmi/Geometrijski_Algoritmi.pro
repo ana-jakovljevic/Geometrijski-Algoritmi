@@ -21,7 +21,7 @@ SOURCES += \
     algoritmi_sa_vezbi/ga06_dcel.cpp \
     algoritmi_sa_vezbi/ga06_dceldemo.cpp \
     algoritmi_sa_vezbi/ga07_triangulation.cpp \
-    algoritmi_studentski_projekti/ga05_triangulationdq.cpp \
+    algoritmi_studentski_projekti/ga03_pointlocation.cpp \
     algoritmi_studentski_projekti/ga10_unitDiskCover.cpp \
     animacijanit.cpp \
     main.cpp \
@@ -43,7 +43,9 @@ SOURCES += \
     algoritmi_studentski_projekti/ga20_largest_empty_circle/largest_empty_circle.cpp \
     algoritmi_studentski_projekti/ga20_largest_empty_circle/lec.cpp \
     algoritmi_studentski_projekti/ga20_largest_empty_circle/utility.cpp \
-    algoritmi_studentski_projekti/ga20_largest_empty_circle/voronoi.cpp
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/voronoi.cpp \
+    algoritmi_studentski_projekti/ga05_triangulationdq.cpp
+
 
 HEADERS += \
     algoritambaza.h \
@@ -59,9 +61,8 @@ HEADERS += \
     algoritmi_sa_vezbi/ga06_dceldemo.h \
     algoritmi_sa_vezbi/ga07_datastructures.h \
     algoritmi_sa_vezbi/ga07_triangulation.h \
-    algoritmi_studentski_projekti/ga05_EdgeDQ.h \
-    algoritmi_studentski_projekti/ga05_pomocneFunkcije.h \
-    algoritmi_studentski_projekti/ga05_triangulationdq.h \
+    algoritmi_studentski_projekti/ga03_pointlocation.h \
+    algoritmi_studentski_projekti/ga03_strukture.h \
     algoritmi_studentski_projekti/ga10_unitDiskCover.h \
     animacijanit.h \
     config.h \
@@ -84,7 +85,10 @@ HEADERS += \
     algoritmi_studentski_projekti/ga20_largest_empty_circle/largest_empty_circle.h \
     algoritmi_studentski_projekti/ga20_largest_empty_circle/lec.h \
     algoritmi_studentski_projekti/ga20_largest_empty_circle/utility.h \
-    algoritmi_studentski_projekti/ga20_largest_empty_circle/voronoi.h
+    algoritmi_studentski_projekti/ga20_largest_empty_circle/voronoi.h \
+    algoritmi_studentski_projekti/ga05_EdgeDQ.h \
+    algoritmi_studentski_projekti/ga05_pomocneFunkcije.h \
+    algoritmi_studentski_projekti/ga05_triangulationdq.h
 
 FORMS += \
     mainwindow.ui

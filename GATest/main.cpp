@@ -7,6 +7,8 @@
 #include "tst_ga00_DCEL.h"
 #include "tst_ga00_Triangulation.h"
 
+
+#include "tst_ga03_PointLocation.h"
 #include "tst_ga05_triangulationdq.h"
 #include "tst_ga06_PresekPravougaonika.h"
 #include "tst_ga07_KonturaPragougaonika.h"

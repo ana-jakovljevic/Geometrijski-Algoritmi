@@ -23,7 +23,7 @@ HEADERS += \
     tst_ga00_PreseciDuzi.h \
     tst_ga00_DCEL.h \
     tst_ga00_Triangulation.h \
-    tst_ga05_triangulationdq.h \
+    tst_ga03_PointLocation.h \
     tst_ga06_PresekPravougaonika.h \
     tst_ga07_KonturaPragougaonika.h \
     tst_ga09_klasterovanje.h \
@@ -31,9 +31,9 @@ HEADERS += \
     tst_ga14_CoinsOnShelf.h \
     tst_ga15_CollisionDetection.h \
     tst_ga17_convexhulllineintersections.h \
-    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga05_EdgeDQ.h \
-    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga05_triangulationdq.h \
-    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga05_pomocneFunkcije.h \
+    tst_ga05_triangulationdq.h
+
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga03_pointlocation.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga07_konturaPravougaonika.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga09_klasterovanje.h \
@@ -65,7 +65,11 @@ HEADERS += \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga06_dceldemo.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga07_datastructures.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga07_triangulation.h \
-    tst_ga20_largest_empty_circle.h
+
+    tst_ga20_largest_empty_circle.h \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga05_EdgeDQ.h \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga05_triangulationdq.h \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga05_pomocneFunkcije.h \
 
 INCLUDEPATH += \
     ../Geometrijski_Algoritmi \
@@ -78,7 +82,7 @@ INCLUDEPATH += \
 }
 
 SOURCES += main.cpp \
-    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga05_triangulationdq.cpp \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga03_pointlocation.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga07_konturaPravougaonika.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga09_klasterovanje.cpp \
@@ -105,4 +109,6 @@ SOURCES += main.cpp \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga05_preseciduzi.cpp \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga06_dcel.cpp \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga06_dceldemo.cpp \
-    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga07_triangulation.cpp
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga07_triangulation.cpp \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga05_triangulationdq.cpp
+
