@@ -351,6 +351,10 @@ void MainWindow::napraviNoviAlgoritam()
         _pAlgoritamBaza = new PointLocation (_pOblastCrtanja, _duzinaPauze, _naivni,
                                             _imeDatoteke, _brojSlucajnihObjekata);
         break;
+    case TipAlgoritma::CLOSEST_PAIR:
+        _pAlgoritamBaza = new ClosestPair(_pOblastCrtanja, _duzinaPauze, _naivni,
+                                          _imeDatoteke, _brojSlucajnihObjekata);
+        break;
     default: /* ako nije algoritam uopste */
         break;
     }

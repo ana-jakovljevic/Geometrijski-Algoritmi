@@ -23,6 +23,7 @@ SOURCES += \
     algoritmi_sa_vezbi/ga07_triangulation.cpp \
     algoritmi_studentski_projekti/ga03_pointlocation.cpp \
     algoritmi_studentski_projekti/ga10_unitDiskCover.cpp \
+    algoritmi_studentski_projekti/ga12_closestpair.cpp \
     animacijanit.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -62,6 +63,7 @@ HEADERS += \
     algoritmi_studentski_projekti/ga03_pointlocation.h \
     algoritmi_studentski_projekti/ga03_strukture.h \
     algoritmi_studentski_projekti/ga10_unitDiskCover.h \
+    algoritmi_studentski_projekti/ga12_closestpair.h \
     animacijanit.h \
     config.h \
     mainwindow.h \

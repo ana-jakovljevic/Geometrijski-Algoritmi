@@ -28,6 +28,7 @@ HEADERS += \
     tst_ga07_KonturaPragougaonika.h \
     tst_ga09_klasterovanje.h \
     tst_ga10_unitDiskCover.h \
+    tst_ga12_closestpair.h \
     tst_ga14_CoinsOnShelf.h \
     tst_ga15_CollisionDetection.h \
     tst_ga17_convexhulllineintersections.h \
@@ -36,6 +37,7 @@ HEADERS += \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga07_konturaPravougaonika.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga09_klasterovanje.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga10_unitdiskcover.h \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga12_closestpair.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga14_coinsOnShelf.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga15_collisiondetection.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga17_convexhulllineintersections.h \
@@ -81,6 +83,7 @@ SOURCES += main.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga07_konturaPravougaonika.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga09_klasterovanje.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga10_unitDiskCover.cpp \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga12_closestpair.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga14_coinsOnShelf.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga15_collisiondetection.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga17_convexhulllineintersections.cpp \
