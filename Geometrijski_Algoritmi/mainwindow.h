@@ -22,6 +22,7 @@
 #include "ga06_presekPravougaonika.h"
 #include "ga07_konturaPravougaonika.h"
 #include "ga09_klasterovanje.h"
+#include "ga12_closestpair.h"
 #include "ga14_coinsOnShelf.h"
 #include "ga15_collisiondetection.h"
 #include "ga17_convexhulllineintersections.h"
@@ -42,6 +43,7 @@ enum class TipAlgoritma {
     TRIANGULACIJA,
     SEPARATOR,
     STUDENTSKI_PROJEKTI,
+    CLOSEST_PAIR,
     LOKACIJA_TACKE,
     PRESEK_PRAVOUGAONIKA,
     KONTURA_PRAVOUGAONIKA,
@@ -101,11 +103,8 @@ private slots:
 
     void na_krajuAnimacije();
 
-<<<<<<< HEAD
-    void on_Zaustavi_dugme_windowTitleChanged(const QString &title);
-=======
+
     void on_tipAlgoritma_currentIndexChanged(const QString &arg1);
->>>>>>> 0b6af484f431fc6681d0abe494ffa29c4e258951
 
 private:
     void animacijaButtonAktivni(bool param_aktivnosti);

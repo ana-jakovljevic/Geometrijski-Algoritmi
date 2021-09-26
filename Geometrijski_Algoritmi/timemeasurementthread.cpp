@@ -70,6 +70,9 @@ void TimeMeasurementThread::run()
         case TipAlgoritma::LOKACIJA_TACKE:
             pAlgorithm = new PointLocation(nullptr, 0, false, "", i%10);
             break;
+        case TipAlgoritma::CLOSEST_PAIR:
+            pAlgorithm = new ClosestPair(nullptr, 0, false, "", i);
+            break;
         case TipAlgoritma::TRIANGULACIJADQ:
             pAlgorithm = new triangulationDQ(nullptr, 0, false, "", i);
             break;
