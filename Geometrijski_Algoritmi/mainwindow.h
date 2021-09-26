@@ -99,6 +99,8 @@ private slots:
 
     void na_krajuAnimacije();
 
+    void on_Zaustavi_dugme_windowTitleChanged(const QString &title);
+
 private:
     void animacijaButtonAktivni(bool param_aktivnosti);
 

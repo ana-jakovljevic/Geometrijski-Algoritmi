@@ -1,5 +1,0 @@
-#ifndef GA05_QUADEDGE_H
-#define GA05_QUADEDGE_H
-
-
-#endif // GA05_QUADEDGE_H

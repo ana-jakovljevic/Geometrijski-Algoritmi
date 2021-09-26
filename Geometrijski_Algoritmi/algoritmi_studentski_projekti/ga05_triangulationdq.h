@@ -3,6 +3,7 @@
 
 
 #include "ga05_EdgeDQ.h"
+#include <set>
 
 typedef std::vector<EdgeDQ*> EdgeList;
 typedef std::vector<QPointF> PointsList;
@@ -43,10 +44,10 @@ private:
 
 
 public:
-    QuadList GetVoronoi();
     QuadList getTriangulation();
 
     EdgePartition triangulate(std::vector<QPointF> points);
+    void triangulateNaive(std::vector<QPointF> points);
 
     /*funkcije za triangulaciju */
     EdgePartition LinePrimitive(const PointsList& points);
@@ -64,16 +65,11 @@ public:
     EdgeDQ*	RightCandidate(EdgeDQ* base_edge);
     EdgeDQ* Make(std::vector<QuadEdge*>& list);
 
-public:
-    //pomocne funkcije
-    bool CCW(QPointF a, QPointF b, QPointF c);
-    double Det4x4(double* col_0, double* col_1, double* col_2, double* col_3);
-    double Det3x3(double* col_0, double* col_1, double* col_2);
-    bool Valid(EdgeDQ* e, EdgeDQ *base_edge);
-    QPointF Circumcenter(QPointF a, QPointF b, QPointF c);
-    bool in_circle(QPointF a, QPointF b, QPointF c, QPointF d);
-    bool right_of(EdgeDQ* e, QPointF p);
-    bool left_of( EdgeDQ* e, QPointF p);
+    PointsList getVertices() const;
+    QuadList getEdges() const;
+
+
+
 
 private:
     PointsList vertices_;

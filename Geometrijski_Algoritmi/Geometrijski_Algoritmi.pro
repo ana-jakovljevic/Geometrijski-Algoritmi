@@ -60,6 +60,7 @@ HEADERS += \
     algoritmi_sa_vezbi/ga07_datastructures.h \
     algoritmi_sa_vezbi/ga07_triangulation.h \
     algoritmi_studentski_projekti/ga05_EdgeDQ.h \
+    algoritmi_studentski_projekti/ga05_pomocneFunkcije.h \
     algoritmi_studentski_projekti/ga05_triangulationdq.h \
     algoritmi_studentski_projekti/ga10_unitDiskCover.h \
     animacijanit.h \
