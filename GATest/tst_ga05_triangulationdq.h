@@ -53,7 +53,7 @@ TEST(ga05_triangulationDQ, input3){
         EXPECT_TRUE((*it)->edges[0].draw);
     }
 }
-TEST(ga05_triangulationDQ, trianglePrimitive){
+TEST(ga05_triangulationDQ, ThreePoints){
     // input is 3 points, check if triangulation calls TrianglePrimitive
     triangulationDQ triangle(nullptr, 0, false, input2);
     auto primitive = triangle.TrianglePrimitive(triangle.getVertices());
@@ -61,7 +61,7 @@ TEST(ga05_triangulationDQ, trianglePrimitive){
     EXPECT_EQ(*(std::get<0>(primitive)[0]), *(std::get<0>(triangulation)[0]));
     EXPECT_EQ(*(std::get<1>(primitive)[0]), *(std::get<1>(triangulation)[0]));
 }
-TEST(ga05_triangulationDQ, linePrimitive){
+TEST(ga05_triangulationDQ, TwoPoints){
     // input is 2 points, check if triangulation calls LinePrimitive
     triangulationDQ line(nullptr, 0, false, "" ,2);
     auto primitive = line.LinePrimitive(line.getVertices());
@@ -71,7 +71,7 @@ TEST(ga05_triangulationDQ, linePrimitive){
     // line must have to symetric edges
     EXPECT_EQ(*(std::get<0>(primitive)[0]), *(std::get<1>(primitive)[0]->Sym()));
 }
-TEST(ga05_triangulationDQ, isSorted){
+TEST(ga05_triangulationDQ, IsSorted){
     triangulationDQ triangulation(nullptr, 0, false, "" ,100);
     auto vertices = triangulation.getVertices();
     for(auto i=0u; i<(vertices.size()-1); i++){

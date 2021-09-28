@@ -71,7 +71,6 @@ void triangulationDQ::pokreniAlgoritam(){
     triangulate(vertices_);
     AlgoritamBaza_updateCanvasAndBlock()
 
-    emit animacijaZavrsila();
 
 }
 void triangulationDQ::crtajAlgoritam(QPainter *painter) const{
@@ -258,6 +257,7 @@ void triangulationDQ::MergeHulls(EdgeDQ *&base_edge){
             base_edge = Connect(right_candidate, base_edge->Sym());
             AlgoritamBaza_updateCanvasAndBlock()
 
+
         }
         else
         {
@@ -266,14 +266,13 @@ void triangulationDQ::MergeHulls(EdgeDQ *&base_edge){
             AlgoritamBaza_updateCanvasAndBlock()
 
 
+
         }
-        AlgoritamBaza_updateCanvasAndBlock()
     }
-    emit animacijaZavrsila();
 }
 
 
-//funkcije za manipulaciju sa granam
+//funkcije za manipulaciju granam
 void triangulationDQ::splice(EdgeDQ* a, EdgeDQ* b){
     EdgeDQ* alpha = a->Onext()->Rot();
     EdgeDQ* beta = b->Onext()->Rot();
@@ -288,8 +287,6 @@ void triangulationDQ::splice(EdgeDQ* a, EdgeDQ* b){
     alpha->setNext(t3);
     beta->setNext(t4);
 
-    AlgoritamBaza_updateCanvasAndBlock()
-    emit animacijaZavrsila();
 }
 void triangulationDQ::Kill(EdgeDQ *edge){
     splice(edge, edge->Oprev());
@@ -300,7 +297,6 @@ void triangulationDQ::Kill(EdgeDQ *edge){
     edges_.erase(std::remove(edges_.begin(), edges_.end(), raw));
     delete raw;
     AlgoritamBaza_updateCanvasAndBlock()
-    emit animacijaZavrsila();
 }
 EdgeDQ* triangulationDQ::MakeEdgeBetween(int a, int b, const PointsList &points){
  EdgeDQ* e = Make(edges_);
