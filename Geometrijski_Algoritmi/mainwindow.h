@@ -103,9 +103,6 @@ private slots:
 
     void na_krajuAnimacije();
 
-
-    void on_tipAlgoritma_currentIndexChanged(const QString &arg1);
-
 private:
     void animacijaButtonAktivni(bool param_aktivnosti);
 

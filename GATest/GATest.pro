@@ -16,7 +16,6 @@ QT += core gui charts widgets opengl
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 HEADERS += \
-    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga10_unitDiskCover.h \
     tst_ga00_PrimerTest.h \
     tst_ga00_KonveksniOmotac.h \
     tst_ga00_KonveksniOmotac3D.h \
@@ -28,17 +27,19 @@ HEADERS += \
     tst_ga07_KonturaPragougaonika.h \
     tst_ga09_klasterovanje.h \
     tst_ga10_unitDiskCover.h \
-    tst_ga12_closestpair.h \
     tst_ga14_CoinsOnShelf.h \
     tst_ga15_CollisionDetection.h \
     tst_ga17_convexhulllineintersections.h \
-    tst_ga05_triangulationdq.h
-
+    tst_ga05_triangulationdq.h \
+    tst_ga20_largest_empty_circle.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga03_pointlocation.h \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga05_EdgeDQ.h \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga05_triangulationdq.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga07_konturaPravougaonika.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga09_klasterovanje.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga10_unitdiskcover.h \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga10_unitDiskCover.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga12_closestpair.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga14_coinsOnShelf.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga15_collisiondetection.h \
@@ -66,12 +67,8 @@ HEADERS += \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga06_dcel.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga06_dceldemo.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga07_datastructures.h \
-    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga07_triangulation.h \
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga07_triangulation.h
 
-    tst_ga20_largest_empty_circle.h \
-    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga05_EdgeDQ.h \
-    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga05_triangulationdq.h \
-    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga05_pomocneFunkcije.h \
 
 INCLUDEPATH += \
     ../Geometrijski_Algoritmi \
