@@ -69,9 +69,10 @@ void triangulationDQ::pokreniAlgoritam(){
         return;
     }
     triangulate(vertices_);
+
     AlgoritamBaza_updateCanvasAndBlock()
 
-
+    emit animacijaZavrsila();
 }
 void triangulationDQ::crtajAlgoritam(QPainter *painter) const{
     if(!painter) return;
@@ -107,7 +108,32 @@ void triangulationDQ::crtajAlgoritam(QPainter *painter) const{
 
 }
 void triangulationDQ::pokreniNaivniAlgoritam(){
+    edges_naive.clear();
+    auto size = vertices_.size();
+    for(auto i=0u; i<size; i++){
+        for(auto j=i+1; j<size; j++){
+            for(auto k=j+1; k<size; k++){
+                bool flag = true;
+                for(auto r=0; r<size; r++){
+                    if(i==r || j==r || k==r){
+                        if(in_circle(vertices_[i],vertices_[j], vertices_[k], vertices_[r])){
+                            flag = false;
+                            break;
+                        }
+                    }
+                }
+                if(flag){
+                    edges_naive.push_back(new EdgeDQ{vertices_[i],vertices_[j]});
+                    edges_naive.push_back(new EdgeDQ{vertices_[i],vertices_[k]});
+                    edges_naive.push_back(new EdgeDQ{vertices_[k],vertices_[j]});
 
+                }
+            }
+        }
+    }
+    AlgoritamBaza_updateCanvasAndBlock()
+
+    emit animacijaZavrsila();
 }
 void triangulationDQ::crtajNaivniAlgoritam(QPainter *painter) const{
     if(!painter) return;
@@ -129,11 +155,9 @@ void triangulationDQ::crtajNaivniAlgoritam(QPainter *painter) const{
         painter->drawPoint(pt);
     }
 
-    std::cout << edges_.size() << std::endl;
-    for(auto i=edges_.begin(); i != edges_.end(); ++i){
+    for(auto i=edges_naive.begin(); i != edges_naive.end(); ++i){
         painter->setPen(magneta);
-        if((*i)->edges[0].draw)
-            painter->drawLine((*i)->edges->origin(),(*i)->edges->destination());
+        painter->drawLine((*i)->origin(),(*i)->_dest);
     }
 
 
@@ -268,6 +292,8 @@ void triangulationDQ::MergeHulls(EdgeDQ *&base_edge){
 
 
         }
+        AlgoritamBaza_updateCanvasAndBlock()
+
     }
 }
 
@@ -286,6 +312,7 @@ void triangulationDQ::splice(EdgeDQ* a, EdgeDQ* b){
     b->setNext(t2);
     alpha->setNext(t3);
     beta->setNext(t4);
+    AlgoritamBaza_updateCanvasAndBlock()
 
 }
 void triangulationDQ::Kill(EdgeDQ *edge){
@@ -366,4 +393,29 @@ PointsList triangulationDQ::getVertices() const{
 }
 QuadList triangulationDQ::getEdges() const{
     return edges_;
+}
+
+bool triangulationDQ::isSorted()  {
+    for(auto i=0u; i<(vertices_.size()-1); i++){
+        if(vertices_[i].x() > vertices_[i+1].x()){
+                return false;
+        }
+        if(vertices_[i].x() == vertices_[i+1].x()){
+            if(vertices_[i].y() >  vertices_[i+1].y()){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+bool triangulationDQ::checkSym(){
+    for(auto it=edges_.begin(); it!=edges_.end(); it++){
+        // check if the third edge is Symetric to the first
+        if((*it)->edges[0].Sym()->Sym() != (*it)->edges[2].Sym()){
+            return false;
+        }
+        if(!(*it)->edges[0].draw)
+            return false;
+    }
+    return true;
 }

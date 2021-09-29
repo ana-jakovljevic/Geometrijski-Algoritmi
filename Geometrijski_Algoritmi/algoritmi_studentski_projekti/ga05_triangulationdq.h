@@ -68,12 +68,15 @@ public:
     PointsList getVertices() const;
     QuadList getEdges() const;
 
-
+    // funkcije za testove
+    bool isSorted();
+    bool checkSym();
 
 
 private:
     PointsList vertices_;
     QuadList edges_;
+    EdgeList edges_naive;
 
 };
 

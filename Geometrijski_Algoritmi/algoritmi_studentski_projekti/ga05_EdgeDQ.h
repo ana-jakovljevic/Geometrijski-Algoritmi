@@ -10,18 +10,18 @@ class QuadEdge;
 class EdgeDQ{
 private:
     QPointF _org;
-    QPointF _dest;
     int index_;
     EdgeDQ* _next;
     friend QuadEdge;
 
 public:
-
+    QPointF _dest;
     bool draw = false;
 
     EdgeDQ(){}
     ~EdgeDQ(){}
     EdgeDQ(QPointF org) : _org(org){}
+    EdgeDQ(QPointF org, QPointF dest) : _org(org), _dest(dest){}
 
     void setNext(EdgeDQ* next){
         _next = next;

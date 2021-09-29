@@ -1,6 +1,7 @@
 #ifndef GA05_POMOCNEFUNKCIJE_H
 #define GA05_POMOCNEFUNKCIJE_H
 
+#include <cmath>
 #include "ga05_EdgeDQ.h"
 
 
@@ -64,7 +65,9 @@ bool CCW(QPointF a, QPointF b, QPointF c){
     // Return true if our determinant is positive
     return Det3x3(m[0], m[1], m[2]) > 0;
 }
-
+bool intersect(QPointF a, QPointF b, QPointF c, QPointF d){
+    return CCW(a,c,d) != CCW(b,c,d) && CCW(a,b,c) != CCW(a,b,d);
+}
 QPointF Circumcenter(QPointF a, QPointF b, QPointF c){
     auto d = 2* (a.x() * (b.y() - c.y()) + b.x() * (c.y() - a.y()) + c.x() * (a.y() - b.y()));
     auto a_lengthsquared = a.x()*a.x() + a.y()*a.y();
@@ -87,6 +90,19 @@ bool in_circle(QPointF a, QPointF b, QPointF c, QPointF d){
 
         // Return true if our determinant is positive
         return Det4x4(m[0], m[1], m[2], m[3]) > 0;
+}
+
+bool in_circle(QPointF a, QPointF b, QPointF c){
+    QPointF center;
+    center.setX((a.x()+b.x())/2);
+    center.setY((a.y()+b.y())/2);
+    auto dx = c.x() - center.x();
+    auto dy = c.y() - center.y();
+    auto distP = dx*dx+dy*dy;
+    auto radius = std::pow((a.x()-center.x()),2) + std::pow((a.y()-center.y()),2);
+    std::cout << std::sqrt(distP) << " " << std::sqrt(radius) << std::endl;
+    return std::sqrt(distP) < std::sqrt(radius);
+
 }
 bool right_of(EdgeDQ* e, QPointF p){
     return CCW(p, e->destination(), e->origin());
