@@ -33,6 +33,7 @@ HEADERS += \
     tst_ga05_triangulationdq.h \
     tst_ga20_largest_empty_circle.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga03_pointlocation.h \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga05_pomocneFunkcije.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga05_EdgeDQ.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga05_triangulationdq.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga06_presekPravougaonika.h \

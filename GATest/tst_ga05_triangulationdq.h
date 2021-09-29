@@ -19,11 +19,8 @@ TEST(ga05_triangulationDQ, input2){
     EXPECT_EQ(vertices.size(), 3);
     // 3*n-3-h (h number of points on convex hull, h=3)
     EXPECT_EQ(edges.size(), 3);
-    for(auto it=edges.begin(); it!=edges.end(); it++){
-        // check if the third edge is Symetric to the first
-        EXPECT_EQ((*it)->edges[0].getSym(),(*it)->edges[2]);
-        EXPECT_TRUE((*it)->edges[0].draw);
-    }
+    EXPECT_TRUE(trougao.checkSym());
+
 }
 TEST(ga05_triangulationDQ, input1){
     triangulationDQ triangulation(nullptr,0, false, input1);
@@ -33,11 +30,8 @@ TEST(ga05_triangulationDQ, input1){
     EXPECT_EQ(vertices.size(), 10);
     // 3*n-3-h (h number of points on convex hull, h=6)
     EXPECT_EQ(edges.size(), 21);
-    for(auto it=edges.begin(); it!=edges.end(); it++){
-        // check if the third edge is Symetric to the first
-        EXPECT_EQ((*it)->edges[0].getSym(),(*it)->edges[2]);
-        EXPECT_TRUE((*it)->edges[0].draw);
-    }
+    EXPECT_TRUE(triangulation.checkSym());
+
 }
 TEST(ga05_triangulationDQ, input3){
     triangulationDQ triangulation(nullptr,0, false, input3);
@@ -47,11 +41,7 @@ TEST(ga05_triangulationDQ, input3){
     EXPECT_EQ(vertices.size(), 12);
     // 3*n-3-h (h number of points on convex hull, h=7)
     EXPECT_EQ(edges.size(), 26);
-    for(auto it=edges.begin(); it!=edges.end(); it++){
-        // check if the third edge is Symetric to the first
-        EXPECT_EQ((*it)->edges[0].getSym(),(*it)->edges[2]);
-        EXPECT_TRUE((*it)->edges[0].draw);
-    }
+    EXPECT_TRUE(triangulation.checkSym());
 }
 TEST(ga05_triangulationDQ, ThreePoints){
     // input is 3 points, check if triangulation calls TrianglePrimitive
@@ -71,16 +61,19 @@ TEST(ga05_triangulationDQ, TwoPoints){
     // line must have to symetric edges
     EXPECT_EQ(*(std::get<0>(primitive)[0]), *(std::get<1>(primitive)[0]->Sym()));
 }
-TEST(ga05_triangulationDQ, IsSorted){
+TEST(ga05_triangulationDQ, IsSorted100){
     triangulationDQ triangulation(nullptr, 0, false, "" ,100);
-    auto vertices = triangulation.getVertices();
-    for(auto i=0u; i<(vertices.size()-1); i++){
-        EXPECT_LE(vertices[i].x(), vertices[i+1].x());
-        if(vertices[i].x() == vertices[i+1].x()){
-            EXPECT_LE(vertices[i].y(), vertices[i+1].y());
-        }
-    }
+    EXPECT_TRUE(triangulation.isSorted());
 }
 
+TEST(ga05_triangulationDQ, IsSorted1000){
+    triangulationDQ triangulation(nullptr, 0, false, "" ,1000);
+    EXPECT_TRUE(triangulation.isSorted());
+}
+TEST(ga05_triangulationDQ, Random){
+    triangulationDQ triangulation(nullptr,0, false, "", 1000);
+    triangulation.pokreniAlgoritam();
+    EXPECT_TRUE(triangulation.checkSym());
+}
 
 #endif // TST_GA05_TRIANGULATIONDQ_H
