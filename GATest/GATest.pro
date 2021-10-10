@@ -16,6 +16,7 @@ QT += core gui charts widgets opengl
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 HEADERS += \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga18_shortestpath.h \
     tst_ga00_PrimerTest.h \
     tst_ga00_KonveksniOmotac.h \
     tst_ga00_KonveksniOmotac3D.h \
@@ -68,7 +69,8 @@ HEADERS += \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga06_dcel.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga06_dceldemo.h \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga07_datastructures.h \
-    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga07_triangulation.h
+    ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga07_triangulation.h \
+    tst_ga18_ShortestPath.h
 
 
 INCLUDEPATH += \
@@ -91,6 +93,7 @@ SOURCES += main.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga14_coinsOnShelf.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga15_collisiondetection.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga17_convexhulllineintersections.cpp \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga18_shortestpath.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga20_largest_empty_circle/convex_hull.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga20_largest_empty_circle/dcel.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga20_largest_empty_circle/delaunay.cpp \

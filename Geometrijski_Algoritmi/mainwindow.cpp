@@ -347,7 +347,6 @@ void MainWindow::napraviNoviAlgoritam()
         _pAlgoritamBaza = new UnitDiskCover(_pOblastCrtanja, _duzinaPauze, _naivni,
                                             _imeDatoteke, _brojSlucajnihObjekata);
         break;
-
     case TipAlgoritma::LOKACIJA_TACKE:
         _pAlgoritamBaza = new PointLocation (_pOblastCrtanja, _duzinaPauze, _naivni,
                                             _imeDatoteke, _brojSlucajnihObjekata);
@@ -359,6 +358,10 @@ void MainWindow::napraviNoviAlgoritam()
     case TipAlgoritma::TRIANGULACIJADQ:
         _pAlgoritamBaza = new triangulationDQ(_pOblastCrtanja, _duzinaPauze, _naivni,
                                               _imeDatoteke, _brojSlucajnihObjekata);
+        break;
+    case TipAlgoritma::NAJKRACI_PUTEVI:
+        _pAlgoritamBaza = new ShortestPath(_pOblastCrtanja, _duzinaPauze, _naivni,
+                                           _imeDatoteke, _brojSlucajnihObjekata);
         break;
     default: /* ako nije algoritam uopste */
         break;

@@ -18,17 +18,18 @@
 #include "ga06_dceldemo.h"
 #include "ga07_triangulation.h"
 
+#include "ga03_pointlocation.h"
 #include "ga05_triangulationdq.h"
 #include "ga06_presekPravougaonika.h"
 #include "ga07_konturaPravougaonika.h"
 #include "ga09_klasterovanje.h"
+#include "ga10_unitDiskCover.h"
 #include "ga12_closestpair.h"
 #include "ga14_coinsOnShelf.h"
 #include "ga15_collisiondetection.h"
 #include "ga17_convexhulllineintersections.h"
+#include "ga18_shortestpath.h"
 #include "ga20_largest_empty_circle/lec.h"
-#include "ga10_unitDiskCover.h"
-#include "ga03_pointlocation.h"
 
 /* Enumeracija algoritama */
 enum class TipAlgoritma {
@@ -53,7 +54,8 @@ enum class TipAlgoritma {
     COINS_ON_SHELF,
     NAJVECI_PRAZAN_KRUG,
     UNIT_DISK_COVER,
-    TRIANGULACIJADQ
+    TRIANGULACIJADQ,
+    NAJKRACI_PUTEVI
 };
 
 /* Enumeracija tabova */

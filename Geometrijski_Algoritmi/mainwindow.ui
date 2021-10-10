@@ -792,6 +792,11 @@
              <string>Triangulacija Divide and Conquer</string>
             </property>
            </item>
+           <item>
+            <property name="text">
+             <string>Najkraci putevi</string>
+            </property>
+           </item>
           </widget>
          </item>
         </layout>

@@ -76,6 +76,9 @@ void TimeMeasurementThread::run()
         case TipAlgoritma::TRIANGULACIJADQ:
             pAlgorithm = new triangulationDQ(nullptr, 0, false, "", i);
             break;
+        case TipAlgoritma::NAJKRACI_PUTEVI:
+            pAlgorithm = new PresekPravougaonika(nullptr, 0, false, "", i);
+            break;
         default:
             break;
         }
