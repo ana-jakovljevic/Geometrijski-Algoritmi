@@ -23,25 +23,25 @@ KonturaPravougaonika::KonturaPravougaonika(QWidget *pCrtanje,
 void KonturaPravougaonika::bf_pocetakPravougaonika(ivica* iv) {
 //    std::cout << "Od " << iv->duz->y1() << " do " << iv->duz->y2() << std::endl;
     if (bf_tackeUKonturi.size() == 0) {
-        dodajVertikalnuIvicu(iv);
+        dodajVertikalnuIvicu(iv, false);
         bf_tackeUKonturi.emplace(new tacka1d(_tip::ULAZ, iv->duz->y1()));
         bf_tackeUKonturi.emplace(new tacka1d(_tip::IZLAZ, iv->duz->y2()));
         return;
     }
     if (iv->duz->y1() < (*bf_tackeUKonturi.begin())->vr && iv->duz->y2() < (*bf_tackeUKonturi.begin())->vr) {
         // ivica je levo od postojećeg J i nema preseka
-        dodajVertikalnuIvicu(iv);
+        dodajVertikalnuIvicu(iv, false);
     }
     else if (iv->duz->y1() > (*bf_tackeUKonturi.rbegin())->vr && iv->duz->y2() > (*bf_tackeUKonturi.rbegin())->vr) {
         // ivica je desno od postojećeg J i nema preseka
-        dodajVertikalnuIvicu(iv);
+        dodajVertikalnuIvicu(iv, false);
     }
     else {
         auto i = bf_tackeUKonturi.begin();
-        int _y = 0;
-        float x = iv->duz->x1();
+        double _y = 0;
+        auto x = iv->duz->x1();
         int counter = 0;
-        float startFrom = iv->duz->y1();
+        auto startFrom = iv->duz->y1();
         while (i != bf_tackeUKonturi.end() && (*i)->vr <= iv->duz->y2()) {
             _y = (*i)->vr;
             if ((*i)->tip == _tip::ULAZ) {
@@ -75,10 +75,10 @@ void KonturaPravougaonika::bf_pocetakPravougaonika(ivica* iv) {
 
 void KonturaPravougaonika::bf_krajPravougaonika(ivica* iv) {
     auto i = bf_tackeUKonturi.begin();
-    float _y = 0;
-    float x = iv->duz->x1();
-    float counter = 0;
-    float startFrom = iv->duz->y1();
+    double _y = 0;
+    auto x = iv->duz->x1();
+    int counter = 0;
+    auto startFrom = iv->duz->y1();
     while (i != bf_tackeUKonturi.end() && (*i)->vr <= iv->duz->y2()) {
         _y = (*i)->vr;
         if ((*i)->tip == _tip::ULAZ) {
@@ -127,7 +127,7 @@ void KonturaPravougaonika::pokreniNaivniAlgoritam() {
         ivicePragougaonika.push_back(new ivica(_tip::IZLAZ, desna));
     }
     std::sort(ivicePragougaonika.begin(), ivicePragougaonika.end(), [](ivica* a, ivica* b) {
-        if (b->duz->x1() == a->duz->x1()) return b->duz->y1() > a->duz->y1();
+        if (pomocneFunkcije::bliski(b->duz->x1(), a->duz->x1())) return b->duz->y1() > a->duz->y1();
         return b->duz->x1() > a->duz->x1();
     });
     for (ivica* iv : ivicePragougaonika) {
@@ -137,9 +137,9 @@ void KonturaPravougaonika::pokreniNaivniAlgoritam() {
         } else {
             bf_krajPravougaonika(iv);
         }
-        AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock()
     }
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
     brisuca_prava_x = 3000;
     faza2();
     emit animacijaZavrsila();
@@ -155,7 +155,7 @@ void KonturaPravougaonika::comp(Segment* v, bool inFull) {
     // console.log(`comp ${v.b}, ${v.e}, ${v.status}`, inFull);
     if (inFull) return;
     if (v->status == SegStatus::EMPTY) {
-        if (st_stack.size() && v->b == st_stack.back()) {
+        if (st_stack.size() && pomocneFunkcije::bliski(v->b, st_stack.back())) {
             st_stack.pop_back();
         } else {
             st_stack.push_back(v->b);
@@ -172,7 +172,7 @@ void KonturaPravougaonika::updateStatus(Segment* v) {
         v->status = SegStatus::FULL;
         return;
     }
-    if (v->lson == 0 || v->rson == 0) {
+    if (v->lson == nullptr || v->rson == nullptr) {
         v->status = SegStatus::EMPTY; // leaf
         return;
     }
@@ -238,12 +238,12 @@ std::vector<Tacka*> KonturaPravougaonika::normalizeEdgesForSegmentTree(std::vect
         p->normalizovanY = i;
         i++;
     }
-    i = 0;
+    unsigned long j = 0;
     for (auto edge : inEdges) {
-        outEdges[i]->pt1->normalizovanY = edge->pt1->normalizovanY;
-        outEdges[i]->pt2->normalizovanY = edge->pt2->normalizovanY;
-        i++;
-    };
+        outEdges[j]->pt1->normalizovanY = edge->pt1->normalizovanY;
+        outEdges[j]->pt2->normalizovanY = edge->pt2->normalizovanY;
+        j++;
+    }
     return points;
 }
 
@@ -257,12 +257,12 @@ void KonturaPravougaonika::pokreniAlgoritam() {
         inEdges.push_back(new st_Ivica(new Tacka(r.left(), r.top()), new Tacka(r.left(), r.bottom()), _tip::ULAZ));
         outEdges.push_back(new st_Ivica(new Tacka(r.right(), r.top()), new Tacka(r.right(), r.bottom()), _tip::IZLAZ));
     }
-    Segment* tree = new Segment(0, inEdges.size() * 2 - 1);
+    Segment tree(0, inEdges.size() * 2 - 1);
     auto sortedPoints = normalizeEdgesForSegmentTree(inEdges, outEdges);
     std::vector<st_Ivica*> edges = inEdges;
     edges.insert(edges.end(), outEdges.begin(), outEdges.end());
     std::sort(edges.begin(), edges.end(), [](st_Ivica* a, st_Ivica* b) {
-        if (a->pt1->x() == b->pt1->x()) {
+        if (pomocneFunkcije::bliski(a->pt1->x(), b->pt1->x())) {
             return a->tip == _tip::ULAZ;
         }
         return a->pt1->x() < b->pt1->x();
@@ -270,13 +270,13 @@ void KonturaPravougaonika::pokreniAlgoritam() {
     for (auto edge : edges) {
         brisuca_prava_x = edge->pt1->x();
         if (edge->tip == _tip::ULAZ) { // insert
-            lp_insert(edge->pt1->normalizovanY, edge->pt2->normalizovanY, tree, false);
+            lp_insert(edge->pt1->normalizovanY, edge->pt2->normalizovanY, &tree, false);
         } else { // remove
-            lp_delete(edge->pt1->normalizovanY, edge->pt2->normalizovanY, tree, false);
+            lp_delete(edge->pt1->normalizovanY, edge->pt2->normalizovanY, &tree, false);
         }
         for (unsigned long i = 0; i < st_stack.size(); i += 2) {
-            auto actualEdgeB = sortedPoints[st_stack[i]];
-            auto actualEdgeE = sortedPoints[st_stack[i + 1]];
+            auto actualEdgeB = sortedPoints[static_cast<unsigned long>(st_stack[i])];
+            auto actualEdgeE = sortedPoints[static_cast<unsigned long>(st_stack[i + 1])];
             // Ako je izlazna ivica, okrecemo je
             auto y1 = edge->tip == _tip::ULAZ ? actualEdgeB->y() : actualEdgeE->y();
             auto y2 = edge->tip == _tip::ULAZ ? actualEdgeE->y() : actualEdgeB->y();
@@ -291,9 +291,9 @@ void KonturaPravougaonika::pokreniAlgoritam() {
             ));
         }
         st_stack.clear();
-        AlgoritamBaza_updateCanvasAndBlock();
-    };
-    AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock()
+    }
+    AlgoritamBaza_updateCanvasAndBlock()
     brisuca_prava_x = 3000;
     faza2();
     emit animacijaZavrsila();
@@ -305,15 +305,19 @@ void KonturaPravougaonika::crtajAlgoritam(QPainter *painter) const { _crtajAlgor
  * ZAJEDNICKO
  **/
 
-void KonturaPravougaonika::dodajVertikalnuIvicu(ivica* iv) {
-    if (iv->duz->y1() != iv->duz->y2()) {
+void KonturaPravougaonika::dodajVertikalnuIvicu(ivica* iv, bool nova) {
+    if (!pomocneFunkcije::bliski(iv->duz->y1(), iv->duz->y2())) {
         ph1_vertikalneIvice.insert(iv);
         iviceKonture.push_back(iv->duz);
+    } else if (nova) {
+        delete iv;
     }
 }
-void KonturaPravougaonika::dodajHorizontalnuIvicu(QLineF *duz) {
-    if (duz->x1() != duz->x2()) {
+void KonturaPravougaonika::dodajHorizontalnuIvicu(QLineF *duz, bool nova) {
+    if (!pomocneFunkcije::bliski(duz->x1(), duz->x2())) {
         iviceKonture.push_back(duz);
+    } else if (nova) {
+        delete duz;
     }
 }
 
@@ -328,7 +332,7 @@ void KonturaPravougaonika::faza2() {
         ph2_ivice.push_back(iv2);
     }
     std::sort(ph2_ivice.begin(), ph2_ivice.end(), [](QLineF* a, QLineF* b) {
-        if (a->y1() == b->y1()) return a->x1() < b->x1();
+        if (pomocneFunkcije::bliski(a->y1(), b->y1())) return a->x1() < b->x1();
         return a->y1() < b->y1();
     });
 
@@ -336,22 +340,22 @@ void KonturaPravougaonika::faza2() {
         auto a = ph2_ivice[2*k];
         auto b = ph2_ivice[2*k + 1];
 
-        float _y2 = a->y1() > a->y2() ? a->y1() : a->y2();
-        float _y1 = a->y1() < a->y2() ? a->y1() : a->y2();
+        auto _y2 = a->y1() > a->y2() ? a->y1() : a->y2();
+        auto _y1 = a->y1() < a->y2() ? a->y1() : a->y2();
 
         bool isDownward = ph1_vertikalneIvice.end() == std::find_if(ph1_vertikalneIvice.begin(), ph1_vertikalneIvice.end(), [&](const auto &e) {
             return e->duz->x1() == a->x1() && e->duz->y1() == _y1 && e->duz->y2() == _y2;
         });
 
-        float maxX = a->x1() > b->x1() ? a->x1() : b->x1();
-        float minX = a->x1() < b->x1() ? a->x1() : b->x1();
+        auto maxX = a->x1() > b->x1() ? a->x1() : b->x1();
+        auto minX = a->x1() < b->x1() ? a->x1() : b->x1();
 
         if ((isDownward && a->y1() < a->y2()) || (!isDownward && a->y2() < a->y1())) {
             dodajHorizontalnuIvicu(new QLineF(minX, a->y1(), maxX, a->y1()));
         } else {
             dodajHorizontalnuIvicu(new QLineF(maxX, a->y1(), minX, a->y1()));
         }
-        AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock()
     }
 }
 
@@ -363,7 +367,10 @@ void KonturaPravougaonika::_crtajAlgoritam(QPainter *painter) const
     olovka.setColor(Qt::yellow);
     olovka.setWidth(3);
     painter->setPen(olovka);
-    painter->drawLine(brisuca_prava_x, 0, brisuca_prava_x, _pCrtanje->height());
+    painter->drawLine(static_cast<int>(brisuca_prava_x),
+                      0,
+                      static_cast<int>(brisuca_prava_x),
+                      _pCrtanje->height());
     olovka.setColor(Qt::black);
     painter->setPen(olovka);
     for (auto pr : _pravougaonici) {

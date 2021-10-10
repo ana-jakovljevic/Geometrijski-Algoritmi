@@ -30,9 +30,9 @@ struct vertikalnaIvica {
 };
 
 struct tacka1d {
-    tacka1d(const _tip &_t, float _vr) : tip(_t), vr(_vr), normalizovanY(-1) {}
+    tacka1d(const _tip &_t, double _vr) : tip(_t), vr(_vr), normalizovanY(-1) {}
     const _tip tip;
-    float vr;
+    double vr;
     int normalizovanY;
 };
 
@@ -125,8 +125,8 @@ private:
     // Naivni algoritam - faza 1
     void bf_pocetakPravougaonika(ivica* iv);
     void bf_krajPravougaonika(ivica* iv);
-    void dodajVertikalnuIvicu(ivica* iv);
-    void dodajHorizontalnuIvicu(QLineF* duz);
+    void dodajVertikalnuIvicu(ivica* iv, bool nova = true);
+    void dodajHorizontalnuIvicu(QLineF* duz, bool nova = true);
 
     // Segmentno drvo - faza 1
     void comp(Segment* v, bool inFull);
@@ -145,7 +145,7 @@ private:
     std::multiset<tacka1d*, poredjenje1d> bf_tackeUKonturi;
     std::vector<float> st_stack;
 
-    float brisuca_prava_x = 0;
+    double brisuca_prava_x = 0;
 };
 
 #endif // GA07_KONTURA_H
