@@ -38,7 +38,7 @@ unsigned long UnitDiskCover::naiveCoverSize() const
     return _naiveCover.size();
 }
 
-int UnitDiskCover::countUncovered(const std::vector<QPointF>& cover) const
+unsigned long UnitDiskCover::countUncovered(const std::vector<QPointF>& cover) const
 {
     std::vector<QPointF> points(_points);
     for(const QPointF& disk: cover)
@@ -123,14 +123,14 @@ void UnitDiskCover::pokreniAlgoritam()
         break;
      default:
         pokreniNaivniAlgoritam();
-    };
+    }
 
     //gettimeofday(&end, NULL);
 
     //std::cout << "Time of execution: " << (end.tv_sec - begin.tv_sec) + (end.tv_usec - begin.tv_usec)/1000000.0 << std::endl;
     //std::cout << "Number of disks in _cover: " << _cover.size() << std::endl;
 
-    AlgoritamBaza_updateCanvasAndBlock();
+    AlgoritamBaza_updateCanvasAndBlock()
     emit animacijaZavrsila();
 }
 
@@ -179,7 +179,7 @@ void UnitDiskCover::G1991()
            _S[ixp].insert(point);
        }
 
-       AlgoritamBaza_updateCanvasAndBlock();
+       AlgoritamBaza_updateCanvasAndBlock()
 
        /* structure containing points from two neighbor strips */
        std::set<QPointF, StripComp> R;
@@ -221,7 +221,7 @@ void UnitDiskCover::G1991()
 
             /* Put square whose left boundary includes q and whose top boundary conicides with the top boundary of the slab in solution */
             _squares.push_back(QPointF(q.x(), floor(q.y()/squareSize)*squareSize));
-            AlgoritamBaza_updateCanvasAndBlock();
+            AlgoritamBaza_updateCanvasAndBlock()
 
             /* R contains elements from at most one of the sets of S*/
             bool flag = true;
@@ -236,10 +236,10 @@ void UnitDiskCover::G1991()
                     auto value = int(floor(std::begin(R)->x()/squareSize));
 
                     /* check for every element in R */
-                    for(auto it=std::prev(std::end(R)); it != std::begin(R); it--)
+                    for(auto itt=std::prev(std::end(R)); itt != std::begin(R); itt--)
                     {
                         /* there are elements from more than one set */
-                        if(int(floor(it->x()/squareSize)) != value)
+                        if(int(floor(itt->x()/squareSize)) != value)
                         {
                             flag = false;
                             break;
@@ -276,7 +276,7 @@ void UnitDiskCover::LL2014()
                  return left.x() < right.x();
              });
 
-    int n = _points.size();
+    auto n = _points.size();
     if (n == 0)
     {
         _cover = std::vector<QPointF>();
@@ -289,19 +289,19 @@ void UnitDiskCover::LL2014()
     for(int i=0; i<6; i++)
     {
         _LLcover.clear();
-        int current = 0;
+        long unsigned current = 0;
 
         /* right boundary of strip  */
         _right = _points[current].x() + _diskRadius*i*sqrt(3)/6.0;
 
         while (current < n)
         {
-            int index = current;
+            long unsigned index = current;
             auto segments = std::vector<std::pair<QPointF, QPointF>>();
             double y, d;
             _xOfRestrictionLine = _right - _diskRadius*sqrt(3)/2.0;
 
-            AlgoritamBaza_updateCanvasAndBlock();
+            AlgoritamBaza_updateCanvasAndBlock()
 
             /* finding all points belonging to current strip */
             while (_points[current].x() < _right && current < n)
@@ -310,7 +310,7 @@ void UnitDiskCover::LL2014()
             }
 
             /* for every point in current strip */
-            for(int j = index; j < current; j++)
+            for(auto j = index; j < current; j++)
             {
                 /* calculate the distance from restriction line */
                 d = _points[j].x() - _xOfRestrictionLine;
@@ -338,7 +338,7 @@ void UnitDiskCover::LL2014()
 
                 /* position circle as low as possible while still covering the topmost uncovered point */
                 _LLcover.push_back(QPointF(_xOfRestrictionLine, y));
-                AlgoritamBaza_updateCanvasAndBlock();
+                AlgoritamBaza_updateCanvasAndBlock()
 
                 segments.pop_back();
 
@@ -383,7 +383,7 @@ void UnitDiskCover::BLMS2017()
         _eventQueue.erase(_eventQueue.begin());
 
         _sweepLine = eventPoint->point->x();
-        AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock()
 
         /* if event is deletion event: erase corresponding site point from status */
         if (eventPoint->eventType == BLMSEventType::DeletionEvent)
@@ -443,7 +443,7 @@ void UnitDiskCover::BLMS2017()
                 _cover.emplace_back(QPointF(intersec2.x(),intersec2.y()+_diskRadius));
                 _cover.emplace_back(QPointF(p->x()+ 2*sqrt(pomocneFunkcije::distanceKvadratF(*p,QLineF(intersec1,intersec2).center())),p->y()));
 
-                AlgoritamBaza_updateCanvasAndBlock();
+                AlgoritamBaza_updateCanvasAndBlock()
             }
         }
     }
@@ -470,7 +470,7 @@ void UnitDiskCover::GHS2019()
             /* point is not covered, so cover it now */
             hashTable[v].insert(h);
             _cover.push_back(QPointF(squareSize*v+squareSize/2.0, squareSize*h+squareSize/2.0));
-            AlgoritamBaza_updateCanvasAndBlock();
+            AlgoritamBaza_updateCanvasAndBlock()
         }
         else if( point.x() >= squareSize*(v+1.5)-_diskRadius && hashTable.find(v+1) != hashTable.end() && hashTable[v+1].find(h) != hashTable[v+1].end()
                    && sqrt(pomocneFunkcije::distanceKvadratF(point, QPointF(squareSize*(v+1)+squareSize/2.0, squareSize*h+squareSize/2.0))) <= _diskRadius)
@@ -492,7 +492,7 @@ void UnitDiskCover::GHS2019()
             /* p is not covered, so cover it now */
             hashTable[v].insert(h);
             _cover.push_back(QPointF(squareSize*v+squareSize/2.0, squareSize*h+squareSize/2.0));
-            AlgoritamBaza_updateCanvasAndBlock();
+            AlgoritamBaza_updateCanvasAndBlock()
         }
     }
 }
@@ -541,7 +541,10 @@ void UnitDiskCover::paintG1991(QPainter *painter) const
     painter->setPen(p);
     for(int i=0;i<CANVAS_HEIGHT;i++)
     {
-        painter->drawLine(0,i*sqrt(2)*_diskRadius, 1100, i*sqrt(2)*_diskRadius);
+        painter->drawLine(0,
+                          static_cast<int>(i*sqrt(2)*_diskRadius),
+                          1100,
+                          static_cast<int>(i*sqrt(2)*_diskRadius));
     }
 
     p.setStyle(Qt::SolidLine);
@@ -549,10 +552,19 @@ void UnitDiskCover::paintG1991(QPainter *painter) const
     painter->setPen(p);
     for(auto s: _S)
     {
-        painter->drawLine(s.first * sqrt(2)*_diskRadius, 2, s.first*sqrt(2)*_diskRadius, _pCrtanje->height());
-        painter->drawLine( (1 + s.first) * sqrt(2)*_diskRadius, 0, (1 + s.first*sqrt(2)*_diskRadius), _pCrtanje->height());
+        painter->drawLine(static_cast<int>(s.first * sqrt(2)*_diskRadius),
+                          2,
+                          static_cast<int>(s.first*sqrt(2)*_diskRadius),
+                          _pCrtanje->height());
+        painter->drawLine(static_cast<int>((1 + s.first) * sqrt(2)*_diskRadius),
+                           0,
+                          static_cast<int>(1 + s.first*sqrt(2)*_diskRadius),
+                          _pCrtanje->height());
         painter->setBrush(Qt::lightGray);
-        painter->drawRect(s.first * sqrt(2)*_diskRadius, 2, sqrt(2)*_diskRadius, _pCrtanje->height());
+        painter->drawRect(static_cast<int>(s.first * sqrt(2)*_diskRadius),
+                          2,
+                          static_cast<int>(sqrt(2)*_diskRadius),
+                          _pCrtanje->height());
     }
 
     p.setWidth(2);
@@ -561,7 +573,10 @@ void UnitDiskCover::paintG1991(QPainter *painter) const
     painter->setBrush(Qt::NoBrush);
     for(const QPointF& point: _squares)
     {
-        painter->drawRect(point.x(),point.y(), sqrt(2)*_diskRadius, sqrt(2)*_diskRadius);
+        painter->drawRect(static_cast<int>(point.x()),
+                          static_cast<int>(point.y()),
+                          static_cast<int>(sqrt(2)*_diskRadius),
+                          static_cast<int>(sqrt(2)*_diskRadius));
     }
 
     p.setColor(Qt::black);
@@ -581,13 +596,22 @@ void UnitDiskCover::paintLL2014(QPainter *painter) const
     p.setColor(Qt::blue);
     p.setStyle(Qt::DashLine);
     painter->setPen(p);
-    painter->drawLine(_xOfRestrictionLine, 0, _xOfRestrictionLine, CANVAS_HEIGHT);
+    painter->drawLine(static_cast<int>(_xOfRestrictionLine),
+                      0,
+                      static_cast<int>(_xOfRestrictionLine),
+                      CANVAS_HEIGHT);
 
     p.setColor(Qt::black);
     p.setStyle(Qt::SolidLine);
     painter->setPen(p);
-    painter->drawLine(_right, 0, _right, CANVAS_HEIGHT);
-    painter->drawLine(_right - _diskRadius*sqrt(3), 0, _right - _diskRadius*sqrt(3), CANVAS_HEIGHT);
+    painter->drawLine(static_cast<int>(_right),
+                      0,
+                      static_cast<int>(_right),
+                      CANVAS_HEIGHT);
+    painter->drawLine(static_cast<int>(_right - _diskRadius*sqrt(3)),
+                      0,
+                      static_cast<int>(_right - _diskRadius*sqrt(3)),
+                      CANVAS_HEIGHT);
 
     p.setWidth(2);
     p.setColor(Qt::black);
@@ -611,7 +635,10 @@ void UnitDiskCover::paintBLMS2017(QPainter* painter) const
     p.setColor(Qt::blue);
     p.setStyle(Qt::DashLine);
     painter->setPen(p);
-    painter->drawLine(_sweepLine, 0, _sweepLine, 700);
+    painter->drawLine(static_cast<int>(_sweepLine),
+                      0,
+                      static_cast<int>(_sweepLine),
+                      700);
 
 
     for(const QPointF& pt: _points)
@@ -651,8 +678,14 @@ void UnitDiskCover::paintGHS2019(QPainter *painter) const
 
     for(int i = 0; i < CANVAS_WIDTH; i++)
     {
-        painter->drawLine(i*sqrt(2)*_diskRadius, 0, i*sqrt(2)*_diskRadius, CANVAS_HEIGHT);
-        painter->drawLine(0,i*sqrt(2)*_diskRadius, CANVAS_WIDTH, i*sqrt(2)*_diskRadius);
+        painter->drawLine(static_cast<int>(i*sqrt(2)*_diskRadius),
+                          0,
+                          static_cast<int>(i*sqrt(2)*_diskRadius),
+                          CANVAS_HEIGHT);
+        painter->drawLine(0,
+                          static_cast<int>(i*sqrt(2)*_diskRadius),
+                          CANVAS_WIDTH,
+                          static_cast<int>(i*sqrt(2)*_diskRadius));
     }
 
     p.setWidth(2);
@@ -669,7 +702,7 @@ void UnitDiskCover::randomAlgorithm1()
     srand(static_cast<unsigned>(time(nullptr)));
 
     /* all points are uncovered at beginng */
-    int numberOfUncoveredPoints = _points.size();
+    auto numberOfUncoveredPoints = _points.size();
 
     /* generate random circles until all points are covered */
     while(true)
@@ -677,19 +710,19 @@ void UnitDiskCover::randomAlgorithm1()
         QPointF randomPoint = generateRandomPoint();
 
         _naiveCover.push_back(randomPoint);
-        AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock()
 
         /* if added disk doesn't change number of covered points it should be eliminated */
         if(countUncovered(_naiveCover) == numberOfUncoveredPoints)
         {
             _naiveCover.pop_back();
-            AlgoritamBaza_updateCanvasAndBlock();
+            AlgoritamBaza_updateCanvasAndBlock()
         }
         /* if it covers some point it should be retained */
         else
         {
             numberOfUncoveredPoints = countUncovered(_naiveCover);
-            AlgoritamBaza_updateCanvasAndBlock();
+            AlgoritamBaza_updateCanvasAndBlock()
         }
 
         /* if all points are covered algorithm is done */
@@ -702,7 +735,7 @@ void UnitDiskCover::randomAlgorithm1()
 
 void UnitDiskCover::randomAlgorithm2()
 {
-    std::default_random_engine generator(time(nullptr));
+    std::default_random_engine generator(static_cast<unsigned>(time(nullptr)));
     std::uniform_real_distribution<double> distribution(-1*_diskRadius*sqrt(2)/2.0, _diskRadius*sqrt(2)/2.0);
     std::vector<QPointF> points(_points);
 
@@ -715,7 +748,7 @@ void UnitDiskCover::randomAlgorithm2()
 
         QPointF center(randX, randY);
         _naiveCover.push_back(center);
-        AlgoritamBaza_updateCanvasAndBlock();
+        AlgoritamBaza_updateCanvasAndBlock()
 
         auto it = std::begin(points);
         while(it != std::end(points))

@@ -15,7 +15,7 @@ PointLocation::PointLocation(QWidget *pCrtanje,
     trapeznamapa = TrapeznaMapa();
     trapeznamapa.novaMapa(_duzi);
     prolaz(trapeznamapa.koren);
-    tTrapez=NULL;
+    tTrapez=nullptr;
 }
 
 std::vector<Duz *> PointLocation::ucitajPodatke(std::string imeDatoteke)
@@ -36,15 +36,15 @@ std::vector<Duz *> PointLocation::ucitajPodatke(std::string imeDatoteke)
     return duzi;
 }
 void PointLocation::prolaz(Cvor *c) {
-    if(c==NULL) return;
+    if(c==nullptr) return;
     if(c->procitajImeCvora()=="List"){
          listing.emplace(c->trapezCvora());
          return;
     }
-    if (c->levi != NULL)
+    if (c->levi != nullptr)
         prolaz(c->levi);
 
-    if (c->desni != NULL)
+    if (c->desni != nullptr)
         prolaz(c->desni);
     return;
 }
@@ -75,10 +75,12 @@ void PointLocation::crtajAlgoritam(QPainter *painter) const
     painter->setPen(p);
     for(unsigned long i=0;i<_duzi.size();i++)
         painter->drawLine(_duzi[i]->leviKraj, _duzi[i]->desniKraj);
-    if(tTrapez!=NULL){
+    if(tTrapez!=nullptr){
             p.setColor(Qt::red);
             painter->setPen(p);
-            painter->drawEllipse(xt,yt, 9, 9);
+            painter->drawEllipse(static_cast<int>(xt),
+                                 static_cast<int>(yt),
+                                 9, 9);
             v=tTrapez->niztacaka();
             painter->drawLine(v[0],v[2]);
             painter->drawLine(v[1],v[3]);
@@ -117,10 +119,12 @@ void PointLocation::crtajNaivniAlgoritam(QPainter *painter) const
     painter->setPen(p);
     for(unsigned long i=0;i<_duzi.size();i++)
         painter->drawLine(_duzi[i]->leviKraj, _duzi[i]->desniKraj);
-    if(tTrapez!=NULL){
+    if(tTrapez!=nullptr){
             p.setColor(Qt::red);
             painter->setPen(p);
-            painter->drawEllipse(xt,yt, 9, 9);
+            painter->drawEllipse(static_cast<int>(xt),
+                                 static_cast<int>(yt),
+                                 9, 9);
             v=tTrapez->niztacaka();
             painter->drawLine(v[0],v[2]);
             painter->drawLine(v[1],v[3]);

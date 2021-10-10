@@ -19,7 +19,6 @@ public:
     bool draw = false;
 
     EdgeDQ(){}
-    ~EdgeDQ(){}
     EdgeDQ(QPointF org) : _org(org){}
     EdgeDQ(QPointF org, QPointF dest) : _org(org), _dest(dest){}
 

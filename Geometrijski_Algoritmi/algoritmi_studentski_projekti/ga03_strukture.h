@@ -86,7 +86,7 @@ public:
     QPointF tleviKraj;
     QPointF tdesniKraj;
 
-    Trapez(): gLevi(NULL), gDesni(NULL), dLevi(NULL), dDesni(NULL), cvorT(NULL) {}
+    Trapez(): gLevi(nullptr), gDesni(nullptr), dLevi(nullptr), dDesni(nullptr), cvorT(nullptr) {}
     std::string toString(){
         std::string rez="";
         rez+="gd "+gDuz->toString()+"\n";
@@ -140,9 +140,9 @@ public:
     //funkcija koja cita ime cvora
     virtual std::string procitajImeCvora() { return ""; }
     //funkcija koja vraca pokazivac na trapez koji odgovara cvoru, ako je cvor list, a inace vraca NULL
-    virtual Trapez* trapezCvora() { return NULL; }
+    virtual Trapez* trapezCvora() { return nullptr; }
     //funkcija koja prolazi kroz pretrazivacku strukturu
-    virtual Cvor* sledeciCvor(QPointF) { return NULL; }
+    virtual Cvor* sledeciCvor(QPointF) { return nullptr; }
 
     Cvor *levi;
     Cvor *desni;
@@ -153,25 +153,25 @@ class TCvor: public Cvor {
 public:
     QPointF A;
 
-    TCvor(QPointF A): A(A) {}
+    TCvor(QPointF Ac): A(Ac) {}
 
-    Cvor* sledeciCvor(QPointF T) {
+    Cvor* sledeciCvor(QPointF T) override {
         if (T.x() < A.x())
             return levi;
         else
             return desni;
     }
 
-    std::string procitajImeCvora() { return "Tacka"; }
+    std::string procitajImeCvora() override { return "Tacka"; }
 };
 
 class DCvor: public Cvor {
 public:
     Duz *d;
 
-    DCvor(Duz *d): d(d) {}
-    std::string procitajImeCvora() { return "Duz"; }
-    Cvor* sledeciCvor(QPointF T) {
+    DCvor(Duz *dc): d(dc) {}
+    std::string procitajImeCvora() override { return "Duz"; }
+    Cvor* sledeciCvor(QPointF T) override {
         int br = d->iznadDuzi(T);
         if (br > 0)
             return levi;
@@ -179,7 +179,7 @@ public:
             return desni;
         else
             // tacka pripada bas duzi
-            return NULL;
+            return nullptr;
     }
 };
 
@@ -187,9 +187,9 @@ class List: public Cvor {
 public:
     Trapez *t;
 
-    List(Trapez *t): t(t) {}
-    std::string procitajImeCvora() { return "List"; }
-    Trapez* trapezCvora() { return t; }
+    List(Trapez *tc): t(tc) {}
+    std::string procitajImeCvora() override { return "List"; }
+    Trapez* trapezCvora() override { return t; }
 };
 
 class TrapeznaMapa {
@@ -224,9 +224,9 @@ public:
 
     Trapez* pronadjiTrapez(QPointF t) {
         Cvor* k = koren;
-        while (k->trapezCvora()==NULL) {
+        while (k->trapezCvora()==nullptr) {
             k = k->sledeciCvor(t);
-            if(k==NULL) return NULL;
+            if(k==nullptr) return nullptr;
         }
         return k->trapezCvora();
     }
@@ -296,28 +296,28 @@ public:
             desnit->tdesniKraj = pocetniTrapez->tdesniKraj;
 
             //potrebno je azurirati pokazivace susednih trapeza pocetnog trapeza
-            if (pocetniTrapez->gLevi != NULL) {
+            if (pocetniTrapez->gLevi != nullptr) {
                 if (pocetniTrapez->gLevi->gDesni == pocetniTrapez)
                     pocetniTrapez->gLevi->gDesni = levit;
                 else
                     pocetniTrapez->gLevi->dDesni = levit;
             }
 
-            if (pocetniTrapez->dLevi != NULL) {
+            if (pocetniTrapez->dLevi != nullptr) {
                 if (pocetniTrapez->dLevi->gDesni == pocetniTrapez)
                     pocetniTrapez->dLevi->gDesni = levit;
                 else
                     pocetniTrapez->dLevi->dDesni = levit;
             }
 
-            if (pocetniTrapez->gDesni != NULL) {
+            if (pocetniTrapez->gDesni != nullptr) {
                 if (pocetniTrapez->gDesni->gLevi == pocetniTrapez)
                     pocetniTrapez->gDesni->gLevi = desnit;
                 else
                     pocetniTrapez->gDesni->dLevi = desnit;
             }
 
-            if (pocetniTrapez->dDesni != NULL) {
+            if (pocetniTrapez->dDesni != nullptr) {
                 if (pocetniTrapez->dDesni->gLevi == pocetniTrapez)
                     pocetniTrapez->dDesni->gLevi = desnit;
                 else
@@ -333,7 +333,7 @@ public:
             //prolazimo kroz sve roditelje tekuceg lista
             for (unsigned long i = 0; i < cvorLista->roditelj.size(); ++i) {
                 Cvor* rod = cvorLista->roditelj[i];
-                if(rod==NULL) continue;
+                if(rod==nullptr) continue;
                 //ako je polazni trapez bio levi cvor svog roditelja onda to postaje levicvorT
                 //inace levicvorT postavljamo kao desni cvor roditeljskih cvorova originalnog cvora koji je pamtio polazni trapez
                 if (cvorLista == rod->levi) {
@@ -392,10 +392,10 @@ public:
             while(tekuci!=poslednjiTrapez){
                 //gradimo listu presecenih trapeza
 
-                if(tekuci->gDesni!=NULL&& novaduz->iznadDuzi(tekuci->gDesni->dDuz->leviKraj)==-1){
+                if(tekuci->gDesni!=nullptr&& novaduz->iznadDuzi(tekuci->gDesni->dDuz->leviKraj)==-1){
                         preseceni.push_back(tekuci->gDesni);
                         tekuci=tekuci->gDesni;
-                }else if(tekuci->dDesni!=NULL){
+                }else if(tekuci->dDesni!=nullptr){
                         preseceni.push_back(tekuci->dDesni);
                         tekuci=tekuci->dDesni;
                 }
@@ -417,14 +417,14 @@ public:
             desniT->tleviKraj = novaduz->desniKraj;
 
             // azuriramo leve susede pocetnog levog trapeza da pokazuju na novi levi trapez
-            if (pocetniTrapez->gLevi != NULL) {
+            if (pocetniTrapez->gLevi != nullptr) {
                 if (pocetniTrapez->gLevi->gDesni == pocetniTrapez)
                     pocetniTrapez->gLevi->gDesni = leviT;
                 else
                     pocetniTrapez->gLevi->dDesni = leviT;
             }
 
-            if (pocetniTrapez->dLevi != NULL) {
+            if (pocetniTrapez->dLevi != nullptr) {
                 if (pocetniTrapez->dLevi->gDesni == pocetniTrapez)
                     pocetniTrapez->dLevi->gDesni = leviT;
                 else
@@ -440,7 +440,7 @@ public:
             //prolazimo kroz sve roditelje tekuceg lista
             for (unsigned long i = 0; i < cvorLista->roditelj.size(); ++i) {
                 Cvor* rod = cvorLista->roditelj[i];
-                if(rod==NULL) continue;
+                if(rod==nullptr) continue;
                 //ako je polazni trapez bio levi cvor svog roditelja onda to postaje levicvorT
                 //inace levicvorT postavljamo kao desni cvor roditeljskih cvorova originalnog cvora koji je pamtio polazni trapez
                 if (cvorLista == rod->levi) {
@@ -456,7 +456,7 @@ public:
             //prolazimo kroz sve roditelje tekuceg lista
             for (unsigned long i = 0; i < cvorLista->roditelj.size(); ++i) {
                 Cvor* rod = cvorLista->roditelj[i];
-                if(rod==NULL) continue;
+                if(rod==nullptr) continue;
                 if (cvorLista == rod->levi) {
                     rod->levi = desnicvorT;
                     desnicvorT->roditelj.push_back(rod);
@@ -519,25 +519,25 @@ public:
                 gornjiT->dDuz=novaduz;
                 donjiT->gDuz=novaduz;
                 //srediti prethodne trapeze i desne susede novih trapeza
-                if(preseceni[i-1]->gDesni!=NULL&&preseceni[i-1]->gDesni!=preseceni[i]){
+                if(preseceni[i-1]->gDesni!=nullptr&&preseceni[i-1]->gDesni!=preseceni[i]){
                     prethodniGornjiT->dDesni=gornjiT;
                     gornjiT->gLevi=prethodniGornjiT;
-                    gornjiT->dLevi=NULL;
-                }else if(preseceni[i-1]->gDesni!=NULL&&preseceni[i-1]->gDesni==preseceni[i]){
-                    prethodniGornjiT->dDesni=NULL;
+                    gornjiT->dLevi=nullptr;
+                }else if(preseceni[i-1]->gDesni!=nullptr&&preseceni[i-1]->gDesni==preseceni[i]){
+                    prethodniGornjiT->dDesni=nullptr;
                     prethodniGornjiT->gDesni=gornjiT;
                     gornjiT->gLevi=prethodniGornjiT;
-                    gornjiT->dLevi=NULL;
+                    gornjiT->dLevi=nullptr;
                 }
-                if(preseceni[i-1]->dDesni!=NULL&&preseceni[i-1]->dDesni!=preseceni[i]){
+                if(preseceni[i-1]->dDesni!=nullptr&&preseceni[i-1]->dDesni!=preseceni[i]){
                     prethodniDonjiT->gDesni=donjiT;
                     donjiT->gLevi=prethodniDonjiT;
-                    donjiT->dLevi=NULL;
-                }else if(preseceni[i-1]->dDesni!=NULL&&preseceni[i-1]->dDesni==preseceni[i]){
+                    donjiT->dLevi=nullptr;
+                }else if(preseceni[i-1]->dDesni!=nullptr&&preseceni[i-1]->dDesni==preseceni[i]){
                     prethodniDonjiT->gDesni=donjiT;
-                    prethodniDonjiT->dDesni=NULL;
+                    prethodniDonjiT->dDesni=nullptr;
                     donjiT->gLevi=prethodniDonjiT;
-                    donjiT->dLevi=NULL;
+                    donjiT->dLevi=nullptr;
                 }
 
                 //azuriranje pretrazivacke strukture
@@ -549,9 +549,9 @@ public:
                 duzCvor = new DCvor(novaduz);
                 cvorLista = preseceni[i]->cvorT;
                 //prolazimo kroz sve roditelje tekuceg lista
-                for (unsigned long i = 0; i < cvorLista->roditelj.size(); ++i) {
-                    Cvor* rod = cvorLista->roditelj[i];
-                    if(rod==NULL) continue;
+                for (unsigned long j = 0; j < cvorLista->roditelj.size(); ++j) {
+                    Cvor* rod = cvorLista->roditelj[j];
+                    if(rod==nullptr) continue;
                     //ako je list bio levi cvor svog roditelja onda to postaje levicvorT
                     //inace levicvorT postavljamo kao desni cvor roditeljskih cvorova originalnog cvora koji je pamtio polazni trapez
                     duzCvor->roditelj.push_back(rod);
@@ -574,22 +574,22 @@ public:
             prethodniGornjiT->tdesniKraj=novaduz->desniKraj;
             prethodniDonjiT->tdesniKraj=novaduz->desniKraj;
             prethodniGornjiT->gDesni=desniT;
-            prethodniGornjiT->dDesni=NULL;
+            prethodniGornjiT->dDesni=nullptr;
             prethodniDonjiT->gDesni=desniT;
-            prethodniDonjiT->dDesni=NULL;
+            prethodniDonjiT->dDesni=nullptr;
             //azuriramo desni trapez
             // novi trapezi postaju desni susedi novog desnog trapeza
             desniT->gLevi = prethodniGornjiT;
             desniT->dLevi = prethodniDonjiT;
 
-            if (poslednjiTrapez->gDesni != NULL) {
+            if (poslednjiTrapez->gDesni != nullptr) {
                 if (poslednjiTrapez->gDesni->gLevi == poslednjiTrapez)
                     poslednjiTrapez->gDesni->gLevi = desniT;
                 else
                     poslednjiTrapez->gDesni->dLevi = desniT;
             }
 
-            if (poslednjiTrapez->dDesni != NULL) {
+            if (poslednjiTrapez->dDesni != nullptr) {
                 if (poslednjiTrapez->dDesni->gLevi == poslednjiTrapez)
                     poslednjiTrapez->dDesni->gLevi = desniT;
                 else
@@ -624,7 +624,7 @@ public:
                     //prolazimo kroz sve roditelje tekuceg lista
                     for (unsigned long j = 0; j < cvorLista->roditelj.size(); ++j) {
                         Cvor* rod = cvorLista->roditelj[j];
-                        if(rod==NULL) continue;
+                        if(rod==nullptr) continue;
                         //ako je list bio levi cvor svog roditelja onda to postaje cvorNovogTrapeza
                         //inace cvorNovogTrapeza postavljamo kao desni cvor roditeljskih cvorova
                         //originalnog cvora koji je pamtio polazni trapez
@@ -640,7 +640,7 @@ public:
                     //prolazimo kroz sve roditelje tekuceg lista
                     for (unsigned long j = 0; j < cvorLista->roditelj.size(); ++j) {
                         Cvor* rod = cvorLista->roditelj[j];
-                        if(rod==NULL) continue;
+                        if(rod==nullptr) continue;
                         //ako je list bio levi cvor svog roditelja onda to postaje cvorNovogTrapeza
                         //inace cvorNovogTrapeza postavljamo kao desni cvor roditeljskih cvorova
                         //originalnog cvora koji je pamtio polazni trapez
@@ -672,7 +672,7 @@ public:
                     //prolazimo kroz sve roditelje tekuceg lista
                     for (unsigned long j = 0; j < cvorLista->roditelj.size(); ++j) {
                         Cvor* rod = cvorLista->roditelj[j];
-                        if(rod==NULL) continue;
+                        if(rod==nullptr) continue;
                         //ako je list bio levi cvor svog roditelja onda to postaje cvorNovogTrapeza
                         //inace cvorNovogTrapeza postavljamo kao desni cvor roditeljskih cvorova
                         //originalnog cvora koji je pamtio polazni trapez
@@ -689,7 +689,7 @@ public:
                     //prolazimo kroz sve roditelje tekuceg lista
                     for (unsigned long j = 0; j < cvorLista->roditelj.size(); ++j) {
                         Cvor* rod = cvorLista->roditelj[j];
-                        if(rod==NULL) continue;
+                        if(rod==nullptr) continue;
                         //ako je list bio levi cvor svog roditelja onda to postaje cvorNovogTrapeza
                         //inace cvorNovogTrapeza postavljamo kao desni cvor roditeljskih cvorova
                         //originalnog cvora koji je pamtio polazni trapez

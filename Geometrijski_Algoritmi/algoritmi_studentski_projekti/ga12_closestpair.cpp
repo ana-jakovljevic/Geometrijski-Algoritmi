@@ -20,19 +20,19 @@ ClosestPair::ClosestPair(QWidget *pCrtanje, int pauzaKoraka,
     m_best2 = m_tacke[1];
 }
 
-float distance(QPoint p1, QPoint p2)
+static float distance(QPoint p1, QPoint p2)
 {
-    return sqrt((p1.x() - p2.x()) * (p1.x() - p2.x()) +
-                (p1.y() - p2.y()) * (p1.y() - p2.y()));
+    return sqrtf((p1.x() - p2.x()) * (p1.x() - p2.x()) +
+                 (p1.y() - p2.y()) * (p1.y() - p2.y()));
 }
 
 
-float ClosestPair::bruteforce(int l, int r)
+float ClosestPair::bruteforce(unsigned long l, unsigned long r)
 {
     float min = FLT_MAX;
 
-    for (int i = l; i < r; i++) {
-        for (int j = i + 1; j < r; j++) {
+    for (auto i = l; i < r; i++) {
+        for (auto j = i + 1; j < r; j++) {
             float dst = distance(m_tacke[i], m_tacke[j]);
 
             if (dst < min) {  // Locally
@@ -110,14 +110,14 @@ QPoint ClosestPair::best2_naive() const
     return m_best2_naive;
 }
 
-float ClosestPair::closest_pair_pomocna(int l, int r, std::vector<QPoint> tacke_sort_y)
+float ClosestPair::closest_pair_pomocna(unsigned long l, unsigned long r, std::vector<QPoint> tacke_sort_y)
 {
-    int n = r - l;
+    auto n = r - l;
     if ((r - l) <= 3) {
         return bruteforce(l, r);
     }
 
-    int mid = l + n / 2;
+    auto mid = l + n / 2;
     QPoint srednja = m_tacke[mid];
     m_curr_mid = srednja;
 
@@ -138,7 +138,7 @@ float ClosestPair::closest_pair_pomocna(int l, int r, std::vector<QPoint> tacke_
     m_curr_d = d;
 
     std::vector<QPoint> tmp;
-    for (int i = 0; i < n; i++) {
+    for (unsigned i = 0; i < n; i++) {
         if (abs(tacke_sort_y[i].x() - srednja.x()) < d) {
             tmp.push_back(tacke_sort_y[i]);
         }
@@ -235,7 +235,7 @@ void ClosestPair::crtajAlgoritam(QPainter *painter) const
         painter->drawPoint(pt);
     }
 
-    if (m_curr_d != -1) {
+    if (!pomocneFunkcije::bliski(m_curr_d, -1)) {
         p.setWidth(3);
 
         p.setColor(Qt::red);
@@ -247,8 +247,14 @@ void ClosestPair::crtajAlgoritam(QPainter *painter) const
         p.setStyle(Qt::DotLine);
         p.setColor(Qt::yellow);
         painter->setPen(p);
-        painter->drawLine(point.x() - m_curr_d, 0, point.x() - m_curr_d, _pCrtanje->height());
-        painter->drawLine(point.x() + m_curr_d, 0, point.x() + m_curr_d, _pCrtanje->height());
+        painter->drawLine(static_cast<int>(point.x() - m_curr_d),
+                          0,
+                          static_cast<int>(point.x() - m_curr_d),
+                          _pCrtanje->height());
+        painter->drawLine(static_cast<int>(point.x() + m_curr_d),
+                          0,
+                          static_cast<int>(point.x() + m_curr_d),
+                          _pCrtanje->height());
 
         p.setStyle(Qt::DashLine);
         p.setColor(Qt::red);

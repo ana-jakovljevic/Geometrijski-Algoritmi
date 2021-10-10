@@ -13,10 +13,10 @@ bool pomocneFunkcije::pripada(QPointF A, QPointF C, QPointF B) {
 //funkcija vraca 0 ako su tacke kolinearne, 1 ako su orijentisane
 //u smeru kazaljke na satu i 2 inace
 int pomocneFunkcije::orijentacija(QPointF A, QPointF B, QPointF C) {
-    int br = (C.x() - B.x())*(B.y() - A.y())   -
-              (B.x() - A.x()) * (C.y() - B.y());
+    double br = (C.x() - B.x())*(B.y() - A.y()) -
+                (B.x() - A.x()) * (C.y() - B.y());
 
-    if (br == 0) return 0;
+    if (bliski(br, 0)) return 0;
     else if(br>0) return 1;
     return 2;
 }

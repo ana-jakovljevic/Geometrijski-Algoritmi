@@ -20,8 +20,8 @@ public:
     void pokreniNaivniAlgoritam() final;
     void crtajNaivniAlgoritam(QPainter *painter) const final;
 
-    float bruteforce(int l, int r);
-    float closest_pair_pomocna(int l, int r, std::vector<QPoint> tacke_sort_y);
+    float bruteforce(unsigned long l, unsigned long r);
+    float closest_pair_pomocna(unsigned long l, unsigned long r, std::vector<QPoint> tacke_sort_y);
     void draw();
     float nadji_najblize(std::vector<QPoint> tacke, float d);
 

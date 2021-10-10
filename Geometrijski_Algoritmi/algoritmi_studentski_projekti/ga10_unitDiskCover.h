@@ -22,10 +22,10 @@ enum BLMSEventType
 /* structure for event points: site events and deletion events */
 struct EventPoint
 {
-    EventPoint(QPointF* point,
-               const BLMSEventType eventType,
-               EventPoint* sitePoint)
-        : point(point),eventType(eventType), sitePoint(sitePoint)
+    EventPoint(QPointF* pointc,
+               const BLMSEventType eventTypec,
+               EventPoint* sitePointc)
+        : point(pointc),eventType(eventTypec), sitePoint(sitePointc)
     {}
 
     QPointF* point;
@@ -41,8 +41,8 @@ struct EventQueueComp
     bool operator()(const EventPoint* left, const EventPoint* right) const
     {
         return (left->point->x() < right->point->x())
-                || (left->point->x() == right->point->x() && left->point->y() < right->point->y())
-                || (left->point->x() == right->point->x() && left->point->y() == right->point->y() && left->eventType == SiteEvent && right->eventType == DeletionEvent);
+                || (pomocneFunkcije::bliski(left->point->x(), right->point->x()) && left->point->y() < right->point->y())
+                || (pomocneFunkcije::bliski(left->point->x(), right->point->x()) && pomocneFunkcije::bliski(left->point->y(), right->point->y()) && left->eventType == SiteEvent && right->eventType == DeletionEvent);
     }
 };
 
@@ -52,7 +52,7 @@ struct StatusComp
     bool operator()(const EventPoint* left, const EventPoint* right) const
     {
         return (left->point->y() < right->point->y())
-                || (left->point->y() == right->point->y() && left->point->x() < right->point->x());
+                || (pomocneFunkcije::bliski(left->point->y(), right->point->y()) && left->point->x() < right->point->x());
     }
 };
 
@@ -61,7 +61,7 @@ struct StripComp
 {
     bool operator()(const QPointF& left, const QPointF& right) const
     {
-        return (left.x() < right.x()) || (left.x() == right.x() && left.y() < right.y());
+        return (left.x() < right.x()) || (pomocneFunkcije::bliski(left.x(), right.x()) && left.y() < right.y());
     }
 };
 
@@ -115,7 +115,7 @@ private:
     std::vector<QPointF> _naiveCover;
 
     /* return number of uncovered points by current disks in cover */
-    int countUncovered(const std::vector<QPointF>& cover) const;
+    unsigned long countUncovered(const std::vector<QPointF>& cover) const;
 
     /* Gonzalez algorithm */
     void G1991();

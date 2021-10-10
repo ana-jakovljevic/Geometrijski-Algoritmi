@@ -20,7 +20,7 @@ bool PravougaonikComp::operator()(const Pravougaonik *l,
                                   const Pravougaonik *d) const
 {
     /* Odustajanje u slucaju greske */
-    if (!l && !d) {
+    if (!l || !d) {
         return false;
     /* Manji je levlji pravougaonik */
     } else if (l->xLevo != d->xLevo) {
@@ -450,7 +450,7 @@ void PresekPravougaonika::azurirajIndeks(unsigned int &i,
                                          unsigned int d,
                                          KandidatS k) const
 {
-    do i++; while (proveriIndeks(i, d) && _H[i]->kS != k);
+    do i++; while (proveriIndeks(i, d) && _H[i] && _H[i]->kS != k);
 }
 
 /* Odredjivanje preseka najuzih kandidata; skupovi

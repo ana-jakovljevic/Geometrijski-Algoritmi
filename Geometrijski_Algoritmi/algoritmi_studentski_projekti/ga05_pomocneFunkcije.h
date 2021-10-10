@@ -52,15 +52,8 @@ double Det3x3(double* col_0, double* col_1, double* col_2){
     return det;
 }
 bool CCW(QPointF a, QPointF b, QPointF c){
-    float a_x = a.x();
-    float a_y = a.y();
-    float b_x = b.x();
-    float b_y = b.y();
-    float c_x = c.x();
-    float c_y = c.y();
-
     // Set up a matrix
-    double m[3][3] = { { a_x, b_x, c_x }, { a_y, b_y, c_y }, { 1, 1, 1 } };
+    double m[3][3] = { { a.x(), b.x(), c.x() }, { a.y(), b.y(), c.y() }, { 1, 1, 1 } };
 
     // Return true if our determinant is positive
     return Det3x3(m[0], m[1], m[2]) > 0;

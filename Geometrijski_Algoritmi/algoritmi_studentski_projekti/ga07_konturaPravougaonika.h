@@ -73,7 +73,7 @@ public:
     Tacka* pt2;
     _tip tip;
 
-    st_Ivica(Tacka* _pt1, Tacka* _pt2, _tip __tip) : pt1(_pt1), pt2(_pt2), tip(__tip) {};
+    st_Ivica(Tacka* _pt1, Tacka* _pt2, _tip __tip) : pt1(_pt1), pt2(_pt2), tip(__tip) {}
 };
 
 enum class SegStatus {
@@ -87,8 +87,8 @@ struct Segment {
     float e;
     int c = 0;
     SegStatus status = SegStatus::EMPTY;
-    Segment* lson = 0;
-    Segment* rson = 0;
+    Segment* lson = nullptr;
+    Segment* rson = nullptr;
 
     Segment(float _b, float _e) {
 //         if (b > e) throw new Error(`B > E`);

@@ -161,7 +161,7 @@ void CollisionDetection::fillEventQueue(WhichPolygon whichPolygon)
     QPolygon &polygon = whichPolygon == WhichPolygon::LEFT ? _leftPolygon : _rightPolygon;
 
     int n = polygon.size();
-    if (n == 0) return;
+    if (n < 1) return;
     auto *prevVertex = &polygon[n-1];
     QLine *prevEdge = new QLine(polygon[0], *prevVertex);
     auto firstEdge = prevEdge;

@@ -114,7 +114,7 @@ void triangulationDQ::pokreniNaivniAlgoritam(){
         for(auto j=i+1; j<size; j++){
             for(auto k=j+1; k<size; k++){
                 bool flag = true;
-                for(auto r=0; r<size; r++){
+                for(auto r=0u; r<size; r++){
                     if(i==r || j==r || k==r){
                         if(in_circle(vertices_[i],vertices_[j], vertices_[k], vertices_[r])){
                             flag = false;
@@ -213,7 +213,7 @@ EdgePartition triangulationDQ::TrianglePrimitive(const PointsList &points){
     // We want a consistent face orientation, so determine which way we're going here
     if (CCW(points[0], points[1], points[2]))
     {
-        EdgeDQ* c = Connect(b, a);
+        Connect(b, a);
         return EdgePartition({ a }, { b->Sym() });
     }
     else if (CCW(points[0], points[2], points[1]))
@@ -229,7 +229,7 @@ EdgePartition triangulationDQ::TrianglePrimitive(const PointsList &points){
 }
 PointsPartition triangulationDQ::SplitPoints(const PointsList &points){
 
-    auto halfway = (points.size() / 2);
+    long halfway = (points.size() / 2);
 
 
     PointsList left(points.begin(), points.begin() + halfway);
@@ -320,12 +320,12 @@ void triangulationDQ::Kill(EdgeDQ *edge){
     splice(edge->Sym(), edge->Sym()->Oprev());
 
     // Free the quad edge that the edge belongs toW
-    QuadEdge* raw = (QuadEdge*)(edge - (edge->index()));
+    QuadEdge* raw = reinterpret_cast<QuadEdge*>(edge - (edge->index()));
     edges_.erase(std::remove(edges_.begin(), edges_.end(), raw));
     delete raw;
     AlgoritamBaza_updateCanvasAndBlock()
 }
-EdgeDQ* triangulationDQ::MakeEdgeBetween(int a, int b, const PointsList &points){
+EdgeDQ* triangulationDQ::MakeEdgeBetween(unsigned long a, unsigned long b, const PointsList &points){
  EdgeDQ* e = Make(edges_);
 
  e->setOrigin(points[a]);
@@ -400,7 +400,7 @@ bool triangulationDQ::isSorted()  {
         if(vertices_[i].x() > vertices_[i+1].x()){
                 return false;
         }
-        if(vertices_[i].x() == vertices_[i+1].x()){
+        if(pomocneFunkcije::bliski(vertices_[i].x(), vertices_[i+1].x())){
             if(vertices_[i].y() >  vertices_[i+1].y()){
                 return false;
             }

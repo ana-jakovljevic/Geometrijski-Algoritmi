@@ -58,7 +58,7 @@ public:
 
     /*funckije za manipulaciju grana */
     void splice(EdgeDQ* a, EdgeDQ* b);
-    EdgeDQ* MakeEdgeBetween(int a, int b, const PointsList& points);
+    EdgeDQ* MakeEdgeBetween(unsigned long a, unsigned long b, const PointsList& points);
     EdgeDQ* Connect(EdgeDQ* a, EdgeDQ* b);
     void Kill(EdgeDQ* edge);
     EdgeDQ* LeftCandidate(EdgeDQ* base_edge);
