@@ -16,7 +16,6 @@ QT += core gui charts widgets opengl
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 HEADERS += \
-    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga18_shortestpath.h \
     tst_ga00_PrimerTest.h \
     tst_ga00_KonveksniOmotac.h \
     tst_ga00_KonveksniOmotac3D.h \
@@ -46,6 +45,7 @@ HEADERS += \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga14_coinsOnShelf.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga15_collisiondetection.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga17_convexhulllineintersections.h \
+    ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga18_shortestpath.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga20_largest_empty_circle/convex_hull.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga20_largest_empty_circle/dcel.h \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga20_largest_empty_circle/delaunay.h \
@@ -115,4 +115,3 @@ SOURCES += main.cpp \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga06_dceldemo.cpp \
     ../Geometrijski_Algoritmi/algoritmi_sa_vezbi/ga07_triangulation.cpp \
     ../Geometrijski_Algoritmi/algoritmi_studentski_projekti/ga05_triangulationdq.cpp
-
